@@ -15,6 +15,9 @@ use App\Controllers\HomeController;
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
     $r->addRoute('GET', '/', [HomeController::class, 'index']);
+
+    $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
+    $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);
 });
 
 // Fetch method and URI from Server
