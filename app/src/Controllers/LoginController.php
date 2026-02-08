@@ -43,25 +43,37 @@ class LoginController
     }
 
     public function logout()
-    {
-        $_SESSION = [];
+{
+    $_SESSION = [];
 
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
-            );
-        }
+    if (ini_get('session.use_cookies')) {
+        // Get the cookie settings PHP is using (path, domain, secure, httponly)
+        $params = session_get_cookie_params();
 
-        session_destroy();
+        // Overwrite the cookie with an expired time => browser deletes it
+        setcookie(
+            session_name(),      // cookie name (usually PHPSESSID)
+            '',                  // empty value
+            time() - 42000,      // old timestamp => expired cookie
+            $params['path'],
+            $params['domain'],
+            $params['secure'],
+            $params['httponly']
+        );
+    }
 
-        header("Location: ");
+    // 3) Destroy the session on the server (removes the session file/data)
+    session_destroy();
+
+    // 4) UX: after logout, send the visitor to the home page (not a blank page)
+    //    This is for normal browser clicks (GET /logout).
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+        header('Location: /');
         exit;
     }
+
+    // 5) If logout is called via API/AJAX (POST /logout), return JSON instead.
+    header('Content-Type: application/json');
+    echo json_encode(['success' => true, 'message' => 'Logged out']);
+}
 }

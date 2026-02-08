@@ -23,6 +23,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/login',  [\App\Controllers\LoginController::class, 'login']);
     $r->addRoute('POST', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
+    // Jazz 
+    $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
 });
 
 // Fetch method and URI from Server
