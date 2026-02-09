@@ -25,6 +25,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
+    $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
+    $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
 });
 
 // Fetch method and URI from Server
