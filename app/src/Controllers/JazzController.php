@@ -9,6 +9,8 @@ class JazzController
     {
         $service = new JazzService();
         $experiences = $service->getExperiences();
+        $performers = $service->getPerformers();   
+        $recommendations = $service->getEventRecommendationsForJazz();
 
         require __DIR__ . '/../Views/jazz/home.php';
     }
@@ -22,4 +24,5 @@ class JazzController
     {
         require __DIR__ . '/../Views/jazz/tickets.php';
     }
+    
 }
