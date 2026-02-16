@@ -27,6 +27,7 @@ cache/
 storage/
 var/
 app/storage/
+app/public/assets/uploads
 app/cache/
 app/var/
 .phpunit.result.cache

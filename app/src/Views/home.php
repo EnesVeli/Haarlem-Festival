@@ -17,8 +17,9 @@
       <a class="btn btn-outline-dark" href="/jazz">Jazz</a>
 
       <?php if (!empty($_SESSION['user_id'])): ?>
-        <a class="btn btn-outline-danger" href="/logout">Logout</a>
-      <?php else: ?>
+  <a class="btn btn-outline-primary" href="/profile">Manage profile</a>
+  <a class="btn btn-outline-danger" href="/logout">Logout</a>
+<?php else: ?>
         <a class="btn btn-outline-primary" href="/login">Login</a>
         <a class="btn btn-primary" href="/register">Register</a>
       <?php endif; ?>
@@ -37,9 +38,10 @@
         </p>
 
         <div class="d-flex gap-2">
-          <a class="btn btn-dark" href="/jazz">Go to Jazz page</a>
-          <a class="btn btn-outline-danger" href="/logout">Logout</a>
-        </div>
+  <a class="btn btn-dark" href="/jazz">Go to Jazz page</a>
+  <a class="btn btn-outline-primary" href="/profile">Manage profile</a>
+  <a class="btn btn-outline-danger" href="/logout">Logout</a>
+</div>
 
       <?php else: ?>
         <h1 class="h4 mb-2">Welcome to Haarlem Festival 🎷</h1>
