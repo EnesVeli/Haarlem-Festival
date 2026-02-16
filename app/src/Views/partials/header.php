@@ -1,6 +1,3 @@
-<?php
-// app/src/Views/partials/header.php
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,9 +15,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="/assets/css/main.css" rel="stylesheet">
-    <link href="/assets/partials/header.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/partials/header.css">
     
+    <!-- Page-specific CSS -->
+    <?php if (isset($pageCSS)): ?>
+        <link rel="stylesheet" href="/assets/css/<?= $pageCSS ?>">
+    <?php endif; ?>
 </head>
 <body>
     <!-- Navigation -->

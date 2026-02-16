@@ -1,0 +1,431 @@
+/* HISTORY DETAIL PAGE STYLES */
+
+/* Hero Section */
+.detail-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-end;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    padding-bottom: 3rem;
+}
+
+.detail-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+}
+
+.detail-hero .container {
+    position: relative;
+    z-index: 2;
+}
+
+.detail-hero h1 {
+    font-size: 64px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.detail-hero-meta {
+    display: flex;
+    gap: 2rem;
+    font-size: 16px;
+    align-items: center;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.meta-icon {
+    font-size: 20px;
+}
+
+/* Breadcrumb */
+.breadcrumb-nav {
+    background: #f8f8f8;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 14px;
+    color: var(--medium-text);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.breadcrumb a {
+    color: var(--burgundy);
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb-separator {
+    color: #999;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #8B1538;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Photo Gallery Section */
+.photo-gallery-section {
+    padding: 3rem 0;
+    background: #fff;
+}
+
+.gallery-title {
+    font-size: 28px;
+    color: #8B1538;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.gallery-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.gallery-image:hover {
+    transform: scale(1.05);
+}
+
+/* Detail Content Layout */
+.detail-content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    align-items: start;
+    padding: 3rem 0;
+}
+
+.detail-main-content {
+    min-width: 0;
+}
+
+.detail-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+/* Content Sections */
+.content-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 32px;
+    color: #8B1538;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.content-section p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a4a4a;
+    margin-bottom: 1.5rem;
+}
+
+/* Special highlight sections */
+.highlight-section {
+    background: #f9f9f9;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #8B1538;
+}
+
+.highlight-section h3 {
+    font-size: 24px;
+    color: #8B1538;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.highlight-section p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+/* Special content box (like Müller Organ) */
+.special-content-box {
+    background: #fff;
+    border: 2px solid #8B1538;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.special-content-box h3 {
+    font-size: 28px;
+    color: #8B1538;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.special-content-box p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: #4a4a4a;
+    margin-bottom: 1rem;
+}
+
+.special-content-box img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+}
+
+/* Quick Facts Sidebar */
+.quick-facts-box {
+    background: #8B1538;
+    color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.quick-facts-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.fact-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.fact-item:last-child {
+    margin-bottom: 0;
+}
+
+.fact-icon {
+    font-size: 28px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.fact-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.fact-value {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Location on Route Box */
+.location-box {
+    background: #f4f4f4;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.location-box h3 {
+    font-size: 18px;
+    color: #8B1538;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.map-container {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+}
+
+.map-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Historical Significance Section */
+.historical-significance {
+    background: #f8f8f8;
+    padding: 3rem 0;
+}
+
+/* Complete Your Journey Section */
+.journey-section {
+    padding: 4rem 0;
+    background: #f8f8f8;
+}
+
+.journey-title {
+    font-size: 42px;
+    color: #8B1538;
+    margin-bottom: 3rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.journey-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.journey-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.journey-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.journey-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.journey-card-body {
+    padding: 1.5rem;
+}
+
+.journey-card h3 {
+    font-size: 24px;
+    color: #8B1538;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.journey-card p {
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.6;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.section-padding {
+    padding: 4rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .detail-content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .detail-sidebar {
+        position: relative;
+        top: 0;
+    }
+
+    .photo-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .journey-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .detail-hero h1 {
+        font-size: 42px;
+    }
+
+    .detail-hero-meta {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .photo-gallery {
+        grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 28px;
+    }
+
+    .journey-title {
+        font-size: 32px;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+}

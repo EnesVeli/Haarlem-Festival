@@ -15,6 +15,7 @@ use App\Controllers\HomeController;
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
     $r->addRoute('GET', '/', [HomeController::class, 'index']);
+    
 
     $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
     $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);   
@@ -25,6 +26,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
+    // History
+    $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
+    $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);
 });
 
 // Fetch method and URI from Server
