@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/assets/css/main.css">
 </head>
 <body class="bg-light">
-
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-sm-10 col-md-7 col-lg-5">

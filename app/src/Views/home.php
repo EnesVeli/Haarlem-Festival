@@ -20,8 +20,10 @@
         <a class="btn btn-outline-danger" href="/logout">Logout</a>
       <?php else: ?>
         <a class="btn btn-outline-primary" href="/login">Login</a>
-        <a class="btn btn-primary" href="/register">Register</a>
+        <a class="btn btn-primary" href="/register">Register</a>     
       <?php endif; ?>
+
+      <a class="btn btn-primary" href="/password-reset-request">ResetPassword</a>
     </div>
   </div>
 </nav>
@@ -42,7 +44,7 @@
         </div>
 
       <?php else: ?>
-        <h1 class="h4 mb-2">Welcome to Haarlem Festival 🎷</h1>
+        <h1 class="h4 mb-2">Welcome to Haarlem Festival</h1>
         <p class="text-muted mb-4">
           Browse events as a visitor. Login only when you want to book tickets or manage your profile.
         </p>
