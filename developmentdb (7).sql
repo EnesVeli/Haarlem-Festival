@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Feb 16, 2026 at 12:55 PM
+-- Generation Time: Feb 17, 2026 at 11:38 AM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -230,6 +230,63 @@ INSERT INTO `history_tickets` (`id`, `time_slot`, `price`, `available_spots`) VA
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `home_content`
+--
+
+CREATE TABLE `home_content` (
+  `id` int(11) NOT NULL,
+  `key` varchar(100) NOT NULL,
+  `value` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `home_content`
+--
+
+INSERT INTO `home_content` (`id`, `key`, `value`) VALUES
+(1, 'program_title', 'What Is My Program?'),
+(2, 'program_description', 'The program is a build your own festival tool, that allows you to build you own festival with activities you like. It makes planning easier by having everything in one place. It allows you to buy and book all of the needed places in one website.'),
+(3, 'events_intro', 'Discover the vibrant heart of Haarlem this July during The Festival, a unique four day celebration that transforms our historic city into a stage for culture, music, and culinary excellence. Designed to showcase Haarlem as a premier cultural capital, the program offers a diverse mix of activities that cater to every age and interest. Whether you are a history buff, a jazz enthusiast, or a foodie, you will find your perfect rhythm in our city.'),
+(4, 'events_paragraph2', 'Immerse yourself in the sounds of the city with Haarlem Jazz, featuring performances at the Patronaat and a grand free concert on the Grote Markt, or feel the beat at DANCE!, where top DJs bring electronic energy to venues across town.'),
+(5, 'events_paragraph3', 'No festival is complete without great flavors. Experience Yummy!, a culinary twist where Haarlem\'s finest restaurants offer exclusive festival menus ranging from gourmet dining to quick, delicious bites.'),
+(6, 'events_paragraph4', 'For a quieter but equally captivating experience, join Stories in Haarlem to hear fascinating tales from local and international storytellers, or take A Stroll through History to uncover the secrets behind Haarlem\'s most iconic landmarks with expert guides.'),
+(7, 'hero_image', 'Heroimage.png');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `home_events`
+--
+
+CREATE TABLE `home_events` (
+  `id` int(11) NOT NULL,
+  `title` varchar(120) NOT NULL,
+  `category` varchar(50) NOT NULL,
+  `short_description` text DEFAULT NULL,
+  `long_description` text DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `bg_class` varchar(50) DEFAULT 'default-bg',
+  `icon` varchar(50) DEFAULT 'bi-star',
+  `url` varchar(255) DEFAULT '#',
+  `button_label` varchar(80) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `home_events`
+--
+
+INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long_description`, `image`, `bg_class`, `icon`, `url`, `button_label`, `sort_order`, `is_active`) VALUES
+(1, 'Haarlem Jazz', 'Music', 'Experience world-class jazz performances across multiple venues. From smooth classics to contemporary fusion.', 'From soft saxophone melodies to energetic jam nights, Haarlem Jazz mixes tradition, modern sound, and warm summer nights...', NULL, 'jazz-bg', 'bi-music-note-beamed', '/jazz', 'Jazz', 1, 1),
+(2, 'Dance!', 'Music', 'Top DJs bring the energy with electrifying performances. Get ready to move to the best electronic beats.', 'Dance is the electronic music experience of The Festival: three nights filled with house, techno and trance across Haarlem and Bloemendaal.', NULL, 'dance-bg', 'bi-disc', '/dance', 'Dance', 2, 1),
+(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', NULL, 'food-bg', 'bi-cup-hot', '/food', 'Yummy', 3, 1),
+(4, 'A Stroll through History!', 'Culture', 'Walk through centuries of Dutch heritage. Discover Haarlem\'s historic landmarks with expert guides.', 'Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.', NULL, 'history-bg', 'bi-clock-history', '/history', 'History', 4, 1),
+(5, 'Stories in Haarlem', 'Culture', 'Immerse yourself in captivating narratives. From local legends to international storytellers.', 'During the last weekend of July, Stories in Haarlem brings live stories, podcasts and family shows to different locations across the city.', NULL, 'stories-bg', 'bi-book', '/stories', 'Stories', 5, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jazz_experiences`
 --
 
@@ -369,6 +426,19 @@ ALTER TABLE `history_tickets`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `home_content`
+--
+ALTER TABLE `home_content`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `key` (`key`);
+
+--
+-- Indexes for table `home_events`
+--
+ALTER TABLE `home_events`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
@@ -420,6 +490,18 @@ ALTER TABLE `history_highlights`
 --
 ALTER TABLE `history_tickets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `home_content`
+--
+ALTER TABLE `home_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `home_events`
+--
+ALTER TABLE `home_events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `User`
