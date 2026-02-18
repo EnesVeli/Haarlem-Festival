@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Services\MailService;
 use App\Services\PasswordResetService;
 use Exception;
 use Throwable;
@@ -36,6 +37,9 @@ class PasswordResetController
             }
             else{
                 $_SESSION['key'] = $key; // Debug only!
+                $mail_service = new MailService(); // 
+                $mail_service->sendTestMail()(); //
+
                 require __DIR__ . '/../Views/password-reset/request-success.php';
             }          
         }

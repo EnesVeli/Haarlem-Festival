@@ -26,6 +26,10 @@ class RegisterController
                 throw new Exception("Name, email, and password are required.");
             }
 
+            if(filter_var($email, FILTER_VALIDATE_EMAIL)) { // Verify if email is real
+                throw new Exception("You must provide valid email address.");
+            }
+
             $userService = new UserService();
             $userService->registerUser($name, $email, $password);
 
