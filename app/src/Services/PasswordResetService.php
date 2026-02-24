@@ -21,7 +21,7 @@ class PasswordResetService
         $this->config = new Config();
     }
 
-    public function requestPasswordReset(string $email) : ?string
+    public function requestPasswordReset(string $email) : ?array
     {
         $user = $this->user_repository->findByEmail($email);
 
@@ -45,17 +45,30 @@ class PasswordResetService
                 } 
             }
 
-            return $key;
+            $array = array(
+                "key" => $key,
+                "name" => $user['name']
+            );
+
+            return $array;
         }
     }  
 
-    public function verifyKeyAndGetToken(string $key, string $email) : ?array
+    public function verifyKey(string $key) : bool {
+        $token = $this->password_reset_token_repository->getTokenByKey($key);
+
+        return $token !== null;
+    }
+
+    public function getEmailResetToken(string $key, string $email) : ?array
     {
         $token = $this->password_reset_token_repository->getTokenByKey($key);
 
-        echo $email . ' ; ' . $token['user_id'];
+        //echo $email . ' ; ' . $token['user_id'];
 
-        if($token == null || (strtotime($token['created_at']) - time()) / 60 > 1) 
+        echo $token['created_at'] . ' ; ' . time();
+
+        if($token == null || (strtotime($token['created_at']) - time()) / 60 > Config::RESET_LINK_TIMEOUT) 
         {
             throw new Exception('Your password reset link has expired. Reenter your email to get a new one.');
         }
@@ -63,7 +76,7 @@ class PasswordResetService
         $token_user = $this->user_repository->findByUserId($token['user_id']);
         $token_email = $token_user['email'];
 
-        echo $email . ' ; ' . $token_email;
+        //echo $email . ' ; ' . $token_email;
 
         if($email == null || $email !== $token_email){
             $this->password_reset_token_repository->deleteToken($token['token_id']);
@@ -76,7 +89,7 @@ class PasswordResetService
     }
 
     public function resetPassword(string $password, string $password_confirm, array $token){
-        if($_SESSION['key_time'] == null || (strtotime($_SESSION['key_time']) - time()) / 60 > 1){
+        if($_SESSION['key_time'] == null || (strtotime($_SESSION['key_time']) - time()) / 60 > Config::RESET_LINK_SET_TIMEOUT){
             $this->password_reset_token_repository->deleteToken($token['token_id']);
             throw new Exception('Your password reset link has expired. Reenter your email to get a new one');
         }
@@ -84,5 +97,10 @@ class PasswordResetService
         if(!$this->user_repository->changePassword($token['user_id'], password_hash($password, PASSWORD_DEFAULT))){
             throw new Exception('ERROR!!!');
         }
+    }
+
+    public function sendResetEmail(string $email, string $name, string $key){
+        $mail_service = new MailService(); 
+        $mail_service->sendPasswordReset($email, $name, $key); 
     }
 }

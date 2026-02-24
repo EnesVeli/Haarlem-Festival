@@ -29,16 +29,16 @@ class PasswordResetController
         }
 
         try{
-            $key = $this->service->requestPasswordReset($email);
+            $request = $this->service->requestPasswordReset($email);
 
-            if($key == null){
+            if($request == null || $request['key'] == null){
                 $error = 'Account with this email does not exists. Check if you have entered a correct email.';
                 require __DIR__ . '/../Views/password-reset/request.php';
             }
             else{
-                $_SESSION['key'] = $key; // Debug only!
-                $mail_service = new MailService(); // 
-                $mail_service->sendTestMail()(); //
+                //$_SESSION['key'] = $request['key']; // Debug only!
+
+                //$this->service->sendResetEmail($email, $request['name'], $request['key']); 
 
                 require __DIR__ . '/../Views/password-reset/request-success.php';
             }          
@@ -53,14 +53,15 @@ class PasswordResetController
     public function startPasswordReset(){
         unset($_SESSION['key']);
 
-        if($_GET['key'] == null){
+        if($_GET['key'] !== null && $this->service->verifyKey($_GET['key'])){
+            $_SESSION['key'] = $_GET['key'];
+
+            require __DIR__ . '/../Views/password-reset/reset-confirm.php';
+        }
+        else{
             header("Location: /login");
             exit;
-        }
-
-        $_SESSION['key'] = $_GET['key'];
-
-        require __DIR__ . '/../Views/password-reset/reset-confirm.php';
+        }     
     }
 
     public function createNewPassword(){
@@ -78,7 +79,7 @@ class PasswordResetController
         }
 
         try{
-            $_SESSION['token'] = $this->service->verifyKeyAndGetToken($_SESSION['key'], $email);
+            $_SESSION['token'] = $this->service->getEmailResetToken($_SESSION['key'], $email);
             require __DIR__ . '/../Views/password-reset/reset.php';
         }
         catch(Exception $ex){

@@ -19,17 +19,18 @@ class MailService
         $mail->SMTPAuth = true;
         $mail->Username = Config::MAIL_USERNAME; // Your Mailtrap username
         $mail->Password = Config::MAIL_PASSWORD; // Your Mailtrap password
-        $mail->SMTPSecure = Config::MAIL_SMTPSECURE;
+        $mail->SMTPSecure = 'tls';
         $mail->Port = Config::MAIL_PORT;
 
         // Sender and recipient settings
         $mail->setFrom(Config::MAIL_EMAIL, 'Haarlem festival');
-        $mail->addAddress('732456@student.inholland.nl', 'tim sadko');
+        $mail->addAddress('tim.sadko@gmail.com', 'tim sadko');
 
-        // Sending plain text email
-        $mail->isHTML(false); // Set email format to plain text
-        $mail->Subject = 'TextMessage';
-        $mail->Body    = 'This is the plain text message body';
+        // Message settings 
+        $mail->isHTML(true); // Set email format to plain text
+        $mail->Subject = 'Password Reset';
+        $mail->Body    = '<h1>Send HTML Email using SMTP in PHP</h1><p>This is a test email I\'m sending using SMTP mail server with PHPMailer.</p>';
+        $mail->AltBody = 'This is a test email I\'m sending using SMTP mail server with PHPMailer.';
 
         // Send the email
         if(!$mail->send())
@@ -48,7 +49,7 @@ class MailService
         $mail->SMTPAuth = true;
         $mail->Username = Config::MAIL_USERNAME; // Your Mailtrap username
         $mail->Password = Config::MAIL_PASSWORD; // Your Mailtrap password
-        $mail->SMTPSecure = Config::MAIL_SMTPSECURE;
+        $mail->SMTPSecure = 'tls';
         $mail->Port = Config::MAIL_PORT;
 
         // Sender and recipient settings
@@ -66,5 +67,15 @@ class MailService
         {
             throw new Exception($mail->ErrorInfo);
         } 
+    }
+
+    public function sendPasswordReset(string $receiver_email, string $receiver_name, string $reset_key){
+        $this->sendHTMLMail($receiver_email, $receiver_name, 'Password Reset', '
+        <div>This is your password reset <a href="https://localhost/password-reset-start?key=' . $reset_key . '">link</a></div>
+        <div>Do not give it to anyone.</div>
+        <div>The link will expire in 15 minutes.</div>
+        ', 
+        'This is your password reset link: https://localhost/password-reset-start?key=' . $reset_key . '. \n
+        Do not give it to anyone.\nThe link will expire in 15 minutes.');
     }
 }

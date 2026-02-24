@@ -40,4 +40,3 @@ docker-compose.override.yml
 
 # Config
 app/src/config.php
-README.md
