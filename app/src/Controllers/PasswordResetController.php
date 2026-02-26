@@ -1,8 +1,10 @@
 <?php
 namespace App\Controllers;
 
+use App\Config;
 use App\Services\MailService;
 use App\Services\PasswordResetService;
+use DateException;
 use Exception;
 use Throwable;
 
@@ -36,9 +38,7 @@ class PasswordResetController
                 require __DIR__ . '/../Views/password-reset/request.php';
             }
             else{
-                //$_SESSION['key'] = $request['key']; // Debug only!
-
-                //$this->service->sendResetEmail($email, $request['name'], $request['key']); 
+                $this->service->sendResetEmail($email, $request['name'], $request['key']); 
 
                 require __DIR__ . '/../Views/password-reset/request-success.php';
             }          
@@ -53,7 +53,7 @@ class PasswordResetController
     public function startPasswordReset(){
         unset($_SESSION['key']);
 
-        if($_GET['key'] !== null && $this->service->verifyKey($_GET['key'])){
+        if($_GET['key'] !== null){
             $_SESSION['key'] = $_GET['key'];
 
             require __DIR__ . '/../Views/password-reset/reset-confirm.php';
@@ -72,7 +72,7 @@ class PasswordResetController
 
         $email = $_POST['email'];
 
-        if($email == null || empty(trim($email))){
+        if($email == null || empty(trim($email)) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
             $error = 'Please enter your email';
             require __DIR__ . '/../Views/password-reset/reset-confirm.php';
             exit;
@@ -81,6 +81,11 @@ class PasswordResetController
         try{
             $_SESSION['token'] = $this->service->getEmailResetToken($_SESSION['key'], $email);
             require __DIR__ . '/../Views/password-reset/reset.php';
+        }
+        catch(DateException $ex){
+            $error = $ex->getMessage();
+            require __DIR__ . '/../Views/password-reset/reset-confirm.php';
+            exit;
         }
         catch(Exception $ex){
             $error = $ex->getMessage();
@@ -112,10 +117,12 @@ class PasswordResetController
 
         try{
             $this->service->resetPassword($password, $password_confirm, $_SESSION['token']);
+            
             require __DIR__ . '/../Views/password-reset/reset-success.php';
         }
         catch(Exception $ex){
             $error = $ex->getMessage();
+
             require __DIR__ . '/../Views/password-reset/reset.php';
         }
     }

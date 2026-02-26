@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Config;
 use App\Repositories\UserRepository;
 use App\Repositories\PasswordResetTokenRepository;
+use DateException;
 use Exception;
 
 class PasswordResetService
@@ -27,7 +28,6 @@ class PasswordResetService
 
         if($user == null || $user['user_id'] == null){
             return null;
-            //throw new Exception("Account with this email does not exists. Checlk if you entered a correct email.");
         }
         else{
             $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
@@ -35,12 +35,12 @@ class PasswordResetService
             $key = $this->config->generateKey();
 
             if($token == null){
-                if(!$this->password_reset_token_repository->createNewToken($user['user_id'], $key)){
+                if(!$this->password_reset_token_repository->createNewToken($user['user_id'], password_hash($key, PASSWORD_DEFAULT))){
                     throw new Exception("Cannot create password reset token!");
                 }         
             }
             else{
-                if(!$this->password_reset_token_repository->updateToken($token['token_id'], $key)){
+                if(!$this->password_reset_token_repository->updateToken($token['token_id'], password_hash($key, PASSWORD_DEFAULT))){
                     throw new Exception("Cannot update password reset token!");
                 } 
             }
@@ -55,32 +55,31 @@ class PasswordResetService
     }  
 
     public function verifyKey(string $key) : bool {
-        $token = $this->password_reset_token_repository->getTokenByKey($key);
+        //echo $key . ' -> ' . password_hash($key, PASSWORD_DEFAULT);
+
+        $token = $this->password_reset_token_repository->getTokenByKey(password_hash($key, PASSWORD_DEFAULT));
 
         return $token !== null;
     }
 
     public function getEmailResetToken(string $key, string $email) : ?array
     {
-        $token = $this->password_reset_token_repository->getTokenByKey($key);
+        $user = $this->user_repository->findByEmail($email);
 
-        //echo $email . ' ; ' . $token['user_id'];
-
-        echo $token['created_at'] . ' ; ' . time();
-
-        if($token == null || (strtotime($token['created_at']) - time()) / 60 > Config::RESET_LINK_TIMEOUT) 
-        {
-            throw new Exception('Your password reset link has expired. Reenter your email to get a new one.');
+        if($user == null || $user['user_id'] == null){
+            throw new DateException('You have entered incorect email.');
         }
 
-        $token_user = $this->user_repository->findByUserId($token['user_id']);
-        $token_email = $token_user['email'];
+        $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
 
-        //echo $email . ' ; ' . $token_email;
+        if($token == null || !password_verify($key, $token['key'])) 
+        {
+            throw new Exception('Invalid key.');
+        }
 
-        if($email == null || $email !== $token_email){
-            $this->password_reset_token_repository->deleteToken($token['token_id']);
-            throw new Exception('You have entered incorect email. Request a new password reset.');
+        if((strtotime($token['created_at']) - time()) / 60 > Config::RESET_LINK_TIMEOUT) 
+        {
+            throw new Exception('Your password reset link has expired. Reenter your email to get a new one.');
         }
 
         $_SESSION['key_time'] = time();
@@ -97,6 +96,8 @@ class PasswordResetService
         if(!$this->user_repository->changePassword($token['user_id'], password_hash($password, PASSWORD_DEFAULT))){
             throw new Exception('ERROR!!!');
         }
+
+        $this->password_reset_token_repository->deleteToken($token['token_id']);
     }
 
     public function sendResetEmail(string $email, string $name, string $key){

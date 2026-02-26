@@ -69,12 +69,12 @@ class MailService
         } 
     }
 
-    public function sendPasswordReset(string $receiver_email, string $receiver_name, string $reset_key){
-        $this->sendHTMLMail($receiver_email, $receiver_name, 'Password Reset', '
-        <div>This is your password reset <a href="https://localhost/password-reset-start?key=' . $reset_key . '">link</a></div>
-        <div>Do not give it to anyone.</div>
-        <div>The link will expire in 15 minutes.</div>
-        ', 
+    public function sendPasswordReset(string $receiver_email, string $receiver_name, string $reset_key){ 
+        $html = file_get_contents(__DIR__ . '/../Views/password-reset/mail-password-reset.html');
+
+        $html = str_replace('@', 'http://127.0.0.1/password-reset-start?key=' . $reset_key, $html);
+
+        $this->sendHTMLMail($receiver_email, $receiver_name, 'Password Reset', $html, 
         'This is your password reset link: https://localhost/password-reset-start?key=' . $reset_key . '. \n
         Do not give it to anyone.\nThe link will expire in 15 minutes.');
     }

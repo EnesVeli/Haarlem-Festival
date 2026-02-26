@@ -14,13 +14,7 @@
             <div class="row justify-content-center">
                 <div class="card shadow-sm border-0 mt-5 col-12 col-sm-10 col-md-7 col-lg-5">
                     <div class="card-body p-4">
-                        <?php if($_SESSION['key'] != null): ?>
-                            <div class="alert alert-success" role="alert">
-                                <?= htmlspecialchars($_SESSION['key']) ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <div>Password reset request was sent to your email</div>
+                        <div class="alert alert-success">Password reset request was sent to your email</div>
                     </div>
                 </div>
             </div>
