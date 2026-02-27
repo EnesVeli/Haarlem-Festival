@@ -7,10 +7,11 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="/assets/css/main.css">
+  <style>
+    <?php include '/app/public/assets/css/main.css'; ?>
+  </style>
 </head>
 <body class="bg-light">
-
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-12 col-sm-10 col-md-7 col-lg-5">
@@ -63,6 +64,8 @@
               </div>
 
             </form>
+
+            <div>Forgot your password? <a href="/password-reset-request">Password reset</a></div>
           </div>
         </div>
 

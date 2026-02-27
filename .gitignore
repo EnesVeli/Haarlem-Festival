@@ -38,3 +38,5 @@ node_modules/
 # Docker overrides (optional local overrides)
 docker-compose.override.yml
 
+# Config
+app/src/config.php

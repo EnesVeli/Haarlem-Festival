@@ -7,7 +7,10 @@
     <title>Register - Haarlem Festival</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/main.css">
+
+    <style>
+        <?php include '/app/public/assets/css/main.css'; ?>
+  </style>
 </head>
 
 <body class="bg-light">
@@ -60,6 +63,8 @@
                             </div>
 
                         </form>
+
+                        <div>Forgot your password? <a href="/password-reset-request">Password reset</a></div>
                     </div>
                 </div>
 

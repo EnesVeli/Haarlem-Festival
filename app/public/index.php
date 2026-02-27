@@ -10,12 +10,13 @@ session_start();
 
 use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
+use PHPMailer\PHPMailer\PHPMailer;
 
+$test = new PHPMailer(true);
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
     $r->addRoute('GET', '/', [HomeController::class, 'index']);
-
     $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
     $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);   
     //Login/Logout
@@ -23,6 +24,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/login',  [\App\Controllers\LoginController::class, 'login']);
     $r->addRoute('POST', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
+    // Password Reset
+    $r->addRoute('GET', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'index']);
+    $r->addRoute('POST', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'requestPaawordReset']);
+    $r->addRoute('GET', '/password-reset-start', [\App\Controllers\PasswordResetController::class, 'startPasswordReset']);
+    $r->addRoute('POST', '/password-reset-confirm', [\App\Controllers\PasswordResetController::class, 'createNewPassword']);
+    $r->addRoute('POST', '/password-reset', [\App\Controllers\PasswordResetController::class, 'resetPassword']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
