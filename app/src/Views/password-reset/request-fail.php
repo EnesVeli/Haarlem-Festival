@@ -7,7 +7,9 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <link rel="stylesheet" href="/assets/css/main.css">
+        <style>
+            <?php include '/app/public/assets/css/main.css'; ?>
+        </style>
     </head>
     <body class="bg-light">
         <div class="container">

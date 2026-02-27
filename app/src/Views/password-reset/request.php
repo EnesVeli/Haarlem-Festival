@@ -7,12 +7,14 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <link rel="stylesheet" href="/assets/css/main.css">
+        <style>
+            <?php include '/app/public/assets/css/main.css'; ?>
+        </style>
     </head>
     <body class="bg-light">
       <div class="container">
         <div class="row justify-content-center">
-          <div class="card shadow-sm border-0 col-12 col-sm-10 col-md-7 col-lg-5">
+          <div class="MainBoxTop card shadow-sm border-0 col-12 col-sm-10 col-md-7 col-lg-5">
               <div class="card-body p-4">
                 <?php if(!empty($error)): ?>
                   <div class="alert alert-danger" role="alert">
@@ -28,6 +30,7 @@
 
                       <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Sent Password Reset</button>
+                        <a class="btn btn-outline-secondary" href="/login">Cancel</a>
                       </div>
                 </form>
               </div>
@@ -35,6 +38,6 @@
         </div>
       </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

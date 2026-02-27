@@ -17,7 +17,6 @@ $test = new PHPMailer(true);
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
     $r->addRoute('GET', '/', [HomeController::class, 'index']);
-
     $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
     $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);   
     //Login/Logout

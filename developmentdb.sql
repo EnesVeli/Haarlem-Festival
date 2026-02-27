@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Feb 15, 2026 at 06:18 PM
+-- Generation Time: Feb 26, 2026 at 09:18 PM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -117,6 +117,19 @@ INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `PasswordResetToken`
+--
+
+CREATE TABLE `PasswordResetToken` (
+  `token_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `key` varchar(256) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `User`
 --
 
@@ -164,6 +177,14 @@ ALTER TABLE `jazz_performers`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `PasswordResetToken`
+--
+ALTER TABLE `PasswordResetToken`
+  ADD PRIMARY KEY (`token_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `key` (`key`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
@@ -193,10 +214,26 @@ ALTER TABLE `jazz_performers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
+-- AUTO_INCREMENT for table `PasswordResetToken`
+--
+ALTER TABLE `PasswordResetToken`
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `PasswordResetToken`
+--
+ALTER TABLE `PasswordResetToken`
+  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
