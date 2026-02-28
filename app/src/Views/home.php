@@ -1,5 +1,4 @@
 <?php
-// app/src/Views/home.php
 
 $user = $user ?? null;
 $events = $events ?? [];
@@ -8,10 +7,8 @@ $pageTitle = 'Home - The Festival Haarlem';
 require __DIR__ . '/partials/header.php';
 ?>
 
-<!-- Add home-specific CSS -->
 <link href="/assets/css/home.css" rel="stylesheet">
 
-<!-- HERO SECTION -->
 <section class="hero-main">
     <div class="hero-content-wrapper">
         <div class="hero-text">
@@ -39,7 +36,6 @@ require __DIR__ . '/partials/header.php';
     </div>
 </section>
 
-<!-- HOW TO USE SECTION -->
 <section class="how-to-use">
     <div class="container">
         <h2 class="section-heading">What Is My Program?</h2>

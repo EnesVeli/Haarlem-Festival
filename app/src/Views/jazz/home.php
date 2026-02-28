@@ -1,3 +1,4 @@
+<?php use App\Framework\Session; ?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,9 +32,18 @@
       </div>
 
       <div class="d-flex gap-2">
-        <a class="pill" href="/login">Login</a>
-        <a class="pill" href="/register">Register</a>
-      </div>
+  <?php if (Session::isLoggedIn()): ?>
+    <span class="pill">
+      <?= htmlspecialchars(Session::user()['name'] ?? 'User') ?>
+    </span>
+    <form method="post" action="/logout" class="m-0">
+  <button type="submit" class="pill border-0">Logout</button>
+</form>
+  <?php else: ?>
+    <a class="pill" href="/login">Login</a>
+    <a class="pill" href="/register">Register</a>
+  <?php endif; ?>
+</div>
     </div>
   </div>
 
@@ -63,6 +73,7 @@
     <h3 class="text-center jazz-section-title mt-4">Jazz Experiences</h3>
     <p class="section-sub mb-2">Discover unique moments that bring Haarlem Jazz to life.</p>
 
+
     <div class="experiences-row mb-4">
       <?php if (!empty($experiences)): ?>
         <?php foreach ($experiences as $exp): ?>
@@ -72,7 +83,7 @@
             <div class="experience-body">
               <h4 class="experience-title"><?= htmlspecialchars($exp['title']) ?></h4>
               <p class="experience-text"><?= htmlspecialchars($exp['description']) ?></p>
-            </div>
+           </div>
           </div>
         <?php endforeach; ?>
       <?php else: ?>
