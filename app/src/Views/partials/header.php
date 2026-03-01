@@ -20,7 +20,6 @@
     <!-- Custom CSS -->
     <link href="/assets/css/main.css" rel="stylesheet">
     <link href="/assets/partials/header.css" rel="stylesheet">
-    
 </head>
 <body>
     <!-- Navigation -->
@@ -35,7 +34,7 @@
                 <li><a href="/tickets">Tickets</a></li>
                 <li><a href="/history">History</a></li>
                 <li><a href="/stories">Story</a></li>
-                <li><a href="/food">Yummy</a></li>
+                <li><a href="/yummy">Yummy</a></li>
                 <li><a href="/jazz">Jazz</a></li>
                 <li><a href="/dance">Dance</a></li>
             </ul>

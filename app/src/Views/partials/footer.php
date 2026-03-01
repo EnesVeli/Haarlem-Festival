@@ -27,7 +27,7 @@
                     </p>
                     <p class="footer-contact">
                         <i class="bi bi-envelope"></i>
-                        info@thefestival.nl
+                        info@haarlem-festival.nl
                     </p>
                 </div>
                 
@@ -37,7 +37,7 @@
                     <ul class="footer-links">
                         <li><a href="/jazz">Haarlem Jazz</a></li>
                         <li><a href="/dance">DANCE!</a></li>
-                        <li><a href="/food">Yummy!</a></li>
+                        <li><a href="/yummy">Yummy!</a></li>
                         <li><a href="/history">A Stroll through History</a></li>
                         <li><a href="/stories">Stories in Haarlem</a></li>
                     </ul>

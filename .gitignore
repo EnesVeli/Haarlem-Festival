@@ -40,3 +40,6 @@ docker-compose.override.yml
 
 # Config
 app/src/config.php
+
+# Images
+app/public/assets/css/uploads/

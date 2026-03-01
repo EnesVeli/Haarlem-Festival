@@ -124,7 +124,7 @@ require __DIR__ . '/partials/header.php';
                     <p>Gourmet dining with a twist. Haarlem's finest restaurants present exclusive festival menus.</p>
                     <p class="event-detail">From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars...</p>
                     <div class="event-venues">
-                        <small><i class="bi bi-geo-alt"></i> Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris</small>
+                        <small><i class="bi bi-geo-alt"></i> Countless restaurants, cafe and bars</small>
                     </div>
                     <a href="/food" class="btn btn-explore">Explore Yummy</a>
                 </div>
