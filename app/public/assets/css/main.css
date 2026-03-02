@@ -525,6 +525,11 @@ img {
     background: var(--navy-dark);
 }
 
+/* ==================== Password Reset ==================== */
+.MainBoxTop{
+    margin-top: 102px;
+}
+
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 992px) {
     .events-grid {
