@@ -96,7 +96,9 @@ public function updateProfile(int $userId, array $data, array $files): void
         $hash = password_hash($newPass, PASSWORD_DEFAULT);
         $this->userRepository->updatePassword($userId, $hash);
     }
-
+// user model
+//validation method
+//image upload method
     // profile picture upload (store path in profile_picture_url)
     if (!empty($files['profile_picture']['name'])) {
         $tmp  = $files['profile_picture']['tmp_name'];
@@ -106,10 +108,10 @@ public function updateProfile(int $userId, array $data, array $files): void
 
         $ext = strtolower(pathinfo($files['profile_picture']['name'], PATHINFO_EXTENSION));
         $allowed = ['jpg','jpeg','png','webp'];
-        if (!in_array($ext, $allowed, true)) throw new Exception("Only jpg, png, webp allowed.");
+        if (!in_array($ext, $allowed, true)) throw new Exception("Only jpg, png, webp allowed."); //sescure image upload handling (so no maltious code) research
 
         $dir = __DIR__ . '/../../public/assets/uploads';
-        if (!is_dir($dir)) mkdir($dir, 0777, true);
+        if (!is_dir($dir)) mkdir($dir, 0777, true); //too permissive public
 
         $filename = "user_{$userId}_" . time() . "." . $ext;
         $dest = $dir . "/" . $filename;

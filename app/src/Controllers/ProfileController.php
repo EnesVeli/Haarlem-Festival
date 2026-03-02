@@ -12,7 +12,7 @@ class ProfileController
         $this->userService = new UserService();
     }
 
-    private function mustBeLoggedIn(): void
+    private function mustBeLoggedIn(): void //base controllr
     {
         if (empty($_SESSION['user_id'])) {
             header('Location: /login');

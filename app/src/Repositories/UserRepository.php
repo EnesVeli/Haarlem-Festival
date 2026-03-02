@@ -15,7 +15,7 @@ class UserRepository extends Repository
         return $user ?: null;
     }
 
-    public function create(string $name, string $email, string $password, string $role = 'customer'): int
+    public function create(string $name, string $email, string $password, string $role = 'customer'): int //better models user ubject
     {
         $stmt = $this->connection->prepare(
             "INSERT INTO `User` (name, email, password, role, registered_at)

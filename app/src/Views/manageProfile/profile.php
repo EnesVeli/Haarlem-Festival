@@ -11,6 +11,7 @@
 
 <div class="container py-5" style="max-width: 720px;">
 
+  <a class="btn btn-outline-secondary mb-3" href="/">Back to home</a>
   <h1 class="h3 mb-3">Manage account</h1>
   <p class="text-muted">Edit your name, email, and profile picture.</p>
 
