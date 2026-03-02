@@ -6,9 +6,7 @@ use App\Services\EventService;
 class HomeController
 {
     public function index()
-    {
-        
-        
+    {      
         $eventService = new EventService();
         $events = $eventService->getHomepageEvents();
 

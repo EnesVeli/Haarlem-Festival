@@ -25,10 +25,10 @@ $restaurants = $restaurants ?? [];
     <?php if(count($guides) > 0):?>
         <?php foreach($guides as $g):?>
             <div>
-                <img src="<?'/assets/css/uploads/yummy/guides/' . $g['mini_img_path']?>">
-                <h3><?$g['mini_title']?></h3>
-                <div><?$g['mini_text']?></div>
-                <a href="<?'/yummy/guide?id=' . $g['guide_id']?>">Learn more...</a>
+                <img src="<? echo '/assets/css/uploads/yummy/guides/' . $g['mini_img_path']; ?>">
+                <h3><? echo $g['mini_title']; ?></h3>
+                <div><? echo $g['mini_text'];?></div>
+                <a href="<? echo '/yummy/guide?id=' . $g['guide_id']; ?>">Learn more...</a>
             </div>
         <?php endforeach; ?>
     <?php else: ?>
@@ -42,12 +42,12 @@ $restaurants = $restaurants ?? [];
     <?php if(count($restaurants) > 0):?>
         <?php foreach($restaurants as $res):?>
             <div>
-                <img src="<?'/assets/css/uploads/yummy/' . $g['mini_img_path']?>">
-                <h3><?$g['mini_title']?></h3>
+                <img src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res['mini_img_path']; ?>">
+                <h3><? echo $res['name'];?></h3>
                 <div>
-                    <div><?round($g['rating'], 1, PHP_ROUND_HALF_UP)?></div>
+                    <div><? echo round($res['rating'], 1, PHP_ROUND_HALF_UP); ?></div>
                     <?php
-                        $r = round($g['rating'] * 2, 0, PHP_ROUND_HALF_DOWN);
+                        $r = round($res['rating'] * 2, 0, PHP_ROUND_HALF_DOWN);
 
                         $star0 = $r >= 2 ? 2 : $r;
                         $star1 = $r - 2 >= 2 ? 2 : ($r - 2 <= 0 ? 0 : 1);
@@ -55,28 +55,28 @@ $restaurants = $restaurants ?? [];
                         $star3 = $r - 6 >= 2 ? 2 : ($r - 6 <= 0 ? 0 : 1);
                         $star4 = $r - 8 >= 2 ? 2 : ($r - 8 <= 0 ? 0 : 1);
 
-                        if($g['cost_rating'] == 3) $euro = '€€€';
-                        else if($g['cost_rating'] == 2) $euro = '€€';
+                        if($res['cost_rating'] == 3) $euro = '€€€';
+                        else if($res['cost_rating'] == 2) $euro = '€€';
                         else $euro = '€';
                     ?>
                     <div>
-                        <img src="<? '/assets/css/uploads/yummy/star/' . $star0 . '.png' ?>">
-                        <img src="<? '/assets/css/uploads/yummy/star/' . $star1 . '.png' ?>">
-                        <img src="<? '/assets/css/uploads/yummy/star/' . $star2 . '.png' ?>">
-                        <img src="<? '/assets/css/uploads/yummy/star/' . $star3 . '.png' ?>">
-                        <img src="<? '/assets/css/uploads/yummy/star/' . $star4 . '.png' ?>">
+                        <img src="<? echo '/assets/css/uploads/yummy/star/' . $star0 . '.png'; ?>">
+                        <img src="<? echo '/assets/css/uploads/yummy/star/' . $star1 . '.png'; ?>">
+                        <img src="<? echo '/assets/css/uploads/yummy/star/' . $star2 . '.png'; ?>">
+                        <img src="<? echo '/assets/css/uploads/yummy/star/' . $star3 . '.png'; ?>">
+                        <img src="<? echo '/assets/css/uploads/yummy/star/' . $star4 . '.png'; ?>">
                     </div>
-                    <div>.<?$euro?></div>
-                    <a href="<?'/yummy/restaurant?id=' . $g['restaurant_id']?>">View...</a>
+                    <div>.<? echo $euro; ?></div>
+                    <a href="<? echo '/yummy/restaurant?id=' . $res['restaurant_id']; ?>">View...</a>
                 </div>
-                <div><?$g['mini_text']?></div>     
+                <div><? echo $res['mini_text']; ?></div>     
             </div>
         <?php endforeach; ?>
     <?php else: ?>
         <div>No places found.</div>
     <?php endif; ?>
 
-    <a href="/yumm/list">View all restaurants...</a>
+    <a href="/yummy/list">View all restaurants...</a>
 </section>
 
 <?php require '/app/src/Views/partials/footer.php'; ?>

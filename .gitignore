@@ -39,7 +39,7 @@ node_modules/
 docker-compose.override.yml
 
 # Config
-app/src/config.php
+app/src/Config.php
 
 # Images
 app/public/assets/css/uploads/

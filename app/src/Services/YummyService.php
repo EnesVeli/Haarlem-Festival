@@ -2,18 +2,26 @@
 
 namespace App\Services;
 
-use App\Repositories\UserRepository;
-use App\Repositories\PasswordResetTokenRepository;
+use App\Repositories\YummyGuidesRepository;
+use App\Repositories\YummyRestaurantsRepository;
 use Exception;
 
 class YummyService
 {
-    private PasswordResetTokenRepository $password_reset_token_repository;
-    private UserRepository $user_repository;
+    private YummyGuidesRepository $guide_repository;
+    private YummyRestaurantsRepository $restaurant_repository;
 
     public function __construct()
     {
-        $this->user_repository = new UserRepository();
-        $this->password_reset_token_repository = new PasswordResetTokenRepository();
-    } 
+        $this->guide_repository = new YummyGuidesRepository();
+        $this->restaurant_repository = new YummyRestaurantsRepository();
+    }
+
+    public function getActiveGuides() : ?array {
+        return $this->guide_repository->getAllActiveGuides();
+    }
+
+    public function getActiveRestaurants() : ?array {
+        return $this->restaurant_repository->getAllActiveRestaurants();
+    }
 }

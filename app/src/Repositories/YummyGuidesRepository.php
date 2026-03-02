@@ -18,6 +18,6 @@ class YummyGuidesRepository extends Repository
         $stmt = $this->connection->prepare("SELECT * FROM `YummyGuides` WHERE `active` = 1");
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);  
+        return $stmt->fetchAll(PDO::FETCH_BOTH);  
     }
 }
