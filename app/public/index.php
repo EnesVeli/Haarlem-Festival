@@ -32,6 +32,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/password-reset', [\App\Controllers\PasswordResetController::class, 'resetPassword']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
+    // Profile (Manage account)
+    $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);
+    $r->addRoute('POST', '/profile/update', [\App\Controllers\ProfileController::class, 'update']);
+
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
     // History
