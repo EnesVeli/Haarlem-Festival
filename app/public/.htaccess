@@ -1,7 +1,0 @@
-RewriteEngine On
-
-# If the requested path is NOT a real file or folder,
-# send it to index.php so FastRoute can handle it.
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]

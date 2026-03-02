@@ -15,7 +15,16 @@ class UserRepository extends Repository
         return $user ?: null;
     }
 
-    public function create(string $name, string $email, string $password, string $role = 'customer'): int //better models user ubject
+    public function findByUserId(string $user_id): ?array
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE `user_id` = :user_id LIMIT 1");
+        $stmt->execute(['user_id' => $user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user ?: null;
+    }
+
+    public function create(string $name, string $email, string $password, string $role = 'customer'): int
     {
         $stmt = $this->connection->prepare(
             "INSERT INTO `User` (name, email, password, role, registered_at)
@@ -64,4 +73,14 @@ public function updateProfilePictureUrl(int $userId, string $url): void
     $stmt->execute(['u' => $url, 'id' => $userId]);
 }
 
+    public function changePassword(int $user_id, string $password) : bool{
+        $stmt = $this->connection->prepare(
+            "UPDATE `User` SET `password` = :password WHERE `user_id` = :user_id"
+        );
+
+        return $stmt->execute([
+            'password' => $password,
+            'user_id'  => $user_id
+        ]);
+    }
 }

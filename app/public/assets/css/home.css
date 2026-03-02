@@ -1,0 +1,451 @@
+/* ==================== HOME PAGE STYLES ==================== */
+
+/* Hero Section */
+.hero-main {
+    background: linear-gradient(135deg, #dc143c 0%, #a01012 100%);
+    color: #fff;
+    padding: 100px 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><path d="M0,300 Q300,200 600,300 T1200,300 L1200,600 L0,600 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+    opacity: 0.3;
+}
+
+.hero-content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text {
+    max-width: 700px;
+    margin-bottom: 40px;
+}
+
+.hero-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.hero-subtitle {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+}
+
+.hero-description {
+    font-size: 18px;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    font-family: 'Playfair Display', serif;
+    opacity: 0.95;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn-primary-custom {
+    background: #fff;
+    color: #dc143c;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    font-family: 'Playfair Display', serif;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 2px solid #fff;
+}
+
+.btn-primary-custom:hover {
+    background: transparent;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-custom {
+    background: transparent;
+    color: #fff;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    font-family: 'Playfair Display', serif;
+    text-decoration: none;
+    border: 2px solid #fff;
+    transition: all 0.3s;
+}
+
+.btn-outline-custom:hover {
+    background: #fff;
+    color: #dc143c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.hero-info {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.info-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    font-family: 'Playfair Display', serif;
+}
+
+.info-badge i {
+    font-size: 20px;
+}
+
+.info-badge span {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* How To Use Section */
+.how-to-use {
+    padding: 80px 2rem;
+    background: #f9f9f9;
+}
+
+.section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #dc143c;
+}
+
+.section-description {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 60px;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+.how-to-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.step-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.step-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.step-number {
+    width: 70px;
+    height: 70px;
+    background: #dc143c;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    margin: 0 auto 24px;
+}
+
+.step-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2c2c2c;
+}
+
+.step-card p {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Festival Events Section */
+.festival-events {
+    padding: 80px 2rem;
+    background: #fff;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.event-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.event-category {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #f59e0b;
+    color: #000;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Playfair Display', serif;
+    z-index: 2;
+}
+
+.event-image-placeholder {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    color: #fff;
+    position: relative;
+}
+
+.jazz-bg {
+    background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+}
+
+.dance-bg {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+}
+
+.food-bg {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.history-bg {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+}
+
+.stories-bg {
+    background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+}
+
+.event-content {
+    padding: 24px;
+}
+
+.event-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #2c2c2c;
+}
+
+.event-content p {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.event-detail {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+}
+
+.event-venues {
+    margin: 16px 0;
+    padding-top: 12px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.event-venues small {
+    font-family: 'Playfair Display', serif;
+    font-size: 12px;
+    color: #999;
+}
+
+.event-venues i {
+    color: #dc143c;
+    margin-right: 4px;
+}
+
+.btn-explore {
+    display: inline-block;
+    background: #dc143c;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 6px;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    margin-top: 12px;
+}
+
+.btn-explore:hover {
+    background: #a01012;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 20, 60, 0.3);
+}
+
+/* Newsletter Section */
+.newsletter-section {
+    padding: 60px 2rem;
+    background: #f9f9f9;
+}
+
+.newsletter-box {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.newsletter-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #dc143c;
+}
+
+.newsletter-box p {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    margin-bottom: 24px;
+    color: #666;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 12px;
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid #e5e5e5;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: 'Playfair Display', serif;
+    transition: border-color 0.3s;
+}
+
+.newsletter-form input:focus {
+    outline: none;
+    border-color: #dc143c;
+}
+
+.newsletter-form .btn-primary-custom {
+    padding: 14px 28px;
+    white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .how-to-steps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .events-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-text h1 {
+        font-size: 42px;
+    }
+    
+    .hero-subtitle {
+        font-size: 22px;
+    }
+    
+    .hero-description {
+        font-size: 16px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-primary-custom,
+    .btn-outline-custom {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .how-to-steps,
+    .events-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section-heading {
+        font-size: 32px;
+    }
+    
+    .newsletter-form {
+        flex-direction: column;
+    }
+    
+    .newsletter-form .btn-primary-custom {
+        width: 100%;
+    }
+}
