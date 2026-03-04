@@ -18,6 +18,6 @@ class YummyRestaurantsRepository extends Repository
         $stmt = $this->connection->prepare("SELECT * FROM `YummyRestaurants` WHERE `active` = 1 LIMIT 8");
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  
+        return $stmt->fetchAll(PDO::FETCH_BOTH);  
     }
 }

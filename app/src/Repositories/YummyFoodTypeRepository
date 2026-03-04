@@ -1,0 +1,27 @@
+<?php
+namespace App\Repositories;
+
+use App\Framework\Repository;
+use PDO;
+
+class YummyFoodTypeRepository extends Repository
+{
+    public function getRestaurantTypes(string $restaurant_id): ?array
+    {
+        $stmt = $this->connection->prepare("SELECT `YummyFoodTypes`.`name`, `YummyFoodTypes`.`category` FROM `YummyFoodTypes` INNER JOIN 
+        (SELECT * FROM `YummyRestaurantFoodTypes` WHERE `restaurant_id` = :restaurant_id) AS `R` ON `YummyFoodTypes`.`type_id` = `R`.`type_id`");
+
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        return $stmt->fetch(PDO::FETCH_BOTH);  
+    }
+
+    public function getAllTypes(): ?array
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM `YummyFoodTypes`");
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_BOTH);  
+    }
+}

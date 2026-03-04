@@ -16,4 +16,8 @@ class YummyController
 
         require __DIR__ . '/../Views/yummy/home.php';
     }
+
+    public function list(){
+        require __DIR__ . '/../Views/yummy/list.php';
+    }
 }

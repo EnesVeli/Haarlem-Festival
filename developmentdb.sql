@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 04, 2026 at 09:48 AM
+-- Generation Time: Mar 04, 2026 at 12:44 PM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -159,6 +159,39 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `YummyFoodTypes`
+--
+
+CREATE TABLE `YummyFoodTypes` (
+  `type_id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `category` bit(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyFoodTypes`
+--
+
+INSERT INTO `YummyFoodTypes` (`type_id`, `name`, `category`) VALUES
+(1, 'Restaurant', b'0000'),
+(2, 'Bar', b'0000'),
+(3, 'Cafe', b'0000'),
+(4, 'Breakfast', b'0001'),
+(5, 'Lunch', b'0001'),
+(6, 'Dinner', b'0001'),
+(7, 'European', b'0011'),
+(8, 'Dutch', b'0011'),
+(9, 'French', b'0011'),
+(10, 'Asian', b'0011'),
+(11, 'African', b'0011'),
+(12, 'South/Central American', b'0011'),
+(13, 'Seafood', b'0010'),
+(14, 'Vegetarian', b'0010'),
+(15, 'Vegan', b'0010');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `YummyGuides`
 --
 
@@ -180,6 +213,25 @@ INSERT INTO `YummyGuides` (`guide_id`, `mini_img_path`, `mini_title`, `mini_text
 (3, 'ec39dac2209ad74ecc7ddb524164516fb3acfdb3.jpg', 'Haarlem’s Coziest Cafés and Coffee Spots', 'Discover Haarlem’s charming cafés offering great coffee, home made cakes, relaxed brunches, and welcoming atmospheres ideal for a break while exploring the city or meeting friends.', b'1'),
 (4, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1'),
 (5, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg\r\n', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyRestaurantFoodTypes`
+--
+
+CREATE TABLE `YummyRestaurantFoodTypes` (
+  `id` int(11) NOT NULL,
+  `restaurant_id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyRestaurantFoodTypes`
+--
+
+INSERT INTO `YummyRestaurantFoodTypes` (`id`, `restaurant_id`, `type_id`) VALUES
+(2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -250,10 +302,25 @@ ALTER TABLE `User`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `YummyFoodTypes`
+--
+ALTER TABLE `YummyFoodTypes`
+  ADD PRIMARY KEY (`type_id`),
+  ADD UNIQUE KEY `name` (`name`);
+
+--
 -- Indexes for table `YummyGuides`
 --
 ALTER TABLE `YummyGuides`
   ADD PRIMARY KEY (`guide_id`);
+
+--
+-- Indexes for table `YummyRestaurantFoodTypes`
+--
+ALTER TABLE `YummyRestaurantFoodTypes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `restaurant_id` (`restaurant_id`),
+  ADD KEY `type_id` (`type_id`);
 
 --
 -- Indexes for table `YummyRestaurants`
@@ -296,10 +363,22 @@ ALTER TABLE `User`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `YummyFoodTypes`
+--
+ALTER TABLE `YummyFoodTypes`
+  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
 -- AUTO_INCREMENT for table `YummyGuides`
 --
 ALTER TABLE `YummyGuides`
   MODIFY `guide_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
+--
+ALTER TABLE `YummyRestaurantFoodTypes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
@@ -316,6 +395,13 @@ ALTER TABLE `YummyRestaurants`
 --
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+
+--
+-- Constraints for table `YummyRestaurantFoodTypes`
+--
+ALTER TABLE `YummyRestaurantFoodTypes`
+  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`),
+  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
