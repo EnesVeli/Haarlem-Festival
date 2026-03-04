@@ -6,7 +6,7 @@
 }
 
 body{ font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#fff; color:var(--ink); }
-h1,h2,h3,h4{ font-family:"Playfair Display", serif; }
+h1,h2,h3,h4{ font-family:"Playfair", serif; }
 
 .topbar{
   background: var(--burgundy);
@@ -170,7 +170,7 @@ h1,h2,h3,h4{ font-family:"Playfair Display", serif; }
 }
 
 .experience-title{
-  font-family: "Playfair Display", serif;
+  font-family: "Playfair", serif;
   font-size: 22px;
   line-height: 1.1;
   margin: 0 0 8px;
@@ -253,7 +253,7 @@ h1,h2,h3,h4{ font-family:"Playfair Display", serif; }
 
 .map-title{
   text-align:center;
-  font-family:"Playfair Display", serif;
+  font-family:"Playfair", serif;
   color: var(--burgundy);
   margin: 6px 0 10px;
   font-size: 18px;

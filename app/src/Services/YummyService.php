@@ -22,6 +22,6 @@ class YummyService
     }
 
     public function getActiveRestaurants() : ?array {
-        return $this->restaurant_repository->getAllActiveRestaurants();
+        return $this->restaurant_repository->getTopActiveRestaurants();
     }
 }

@@ -81,7 +81,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-end mt-2">
-      <h3 style="color:var(--burgundy); font-family:'Playfair Display',serif; margin:0;">Performers</h3>
+      <h3 style="color:var(--burgundy); font-family:'Playfair',serif; margin:0;">Performers</h3>
       <div class="text-muted" style="font-size:12px;">Select an artist to view their detail page</div>
     </div>
 
@@ -100,7 +100,7 @@
       <?php endif; ?>
     </div>
 
-    <p class="text-center mt-4 mb-2" style="font-family:'Playfair Display',serif;">
+    <p class="text-center mt-4 mb-2" style="font-family:'Playfair',serif;">
       Secure your spot at Haarlem Jazz 2026 — <a href="#" style="color:var(--burgundy); font-weight:700;">Buy your tickets</a> today!
     </p>
 
@@ -136,7 +136,7 @@
 
 </div>
 
-    <h3 class="mt-5" style="font-family:'Playfair Display',serif;">You might also like…</h3>
+    <h3 class="mt-5" style="font-family:'Playfair',serif;">You might also like…</h3>
 
 <div class="row g-3 mt-1 mb-4">
   <?php if (!empty($recommendations)): ?>
@@ -145,7 +145,7 @@
         <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($rec['url'] ?? '#') ?>">
           <div class="img-placeholder rec" aria-label="Recommendation image placeholder"></div>
           <div class="p-3">
-            <h4 style="font-family:'Playfair Display',serif; font-size:18px; margin:0 0 6px; color:var(--burgundy);">
+            <h4 style="font-family:'Playfair',serif; font-size:18px; margin:0 0 6px; color:var(--burgundy);">
               <?= htmlspecialchars($rec['title'] ?? '') ?>
             </h4>
             <p class="text-muted mb-0" style="font-size:12px;">

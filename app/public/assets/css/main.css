@@ -44,7 +44,7 @@
 }
 
 body {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
     background: var(--primary-color);
     color: var(--dark-text);
     line-height: 1.6;
@@ -52,7 +52,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
     font-weight: 700;
     line-height: 1.2;
 }
@@ -113,7 +113,7 @@ img {
     cursor: pointer;
     border: 2px solid transparent;
     transition: all var(--transition-base);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .btn-primary {
@@ -221,7 +221,7 @@ img {
     font-weight: 700;
     margin-bottom: 40px;
     color: var(--burgundy);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .content-box {
@@ -296,7 +296,7 @@ img {
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--dark-text);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .event-description {
@@ -379,7 +379,7 @@ img {
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--dark-text);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .culture-description {
@@ -409,7 +409,7 @@ img {
     font-weight: 700;
     margin-bottom: 24px;
     color: var(--burgundy);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .program-description {
@@ -424,7 +424,7 @@ img {
     font-weight: 700;
     margin-bottom: 30px;
     color: var(--dark-text);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .steps-grid {
@@ -457,7 +457,7 @@ img {
     font-weight: 700;
     margin-bottom: 12px;
     color: var(--burgundy);
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .step-description {
@@ -505,7 +505,7 @@ img {
     border: none;
     border-radius: 6px;
     font-size: 14px;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .newsletter-btn {
@@ -518,7 +518,7 @@ img {
     font-weight: 600;
     cursor: pointer;
     transition: background 0.3s;
-    font-family: 'Playfair Display', serif;
+    font-family: 'Playfair', serif;
 }
 
 .newsletter-btn:hover {
