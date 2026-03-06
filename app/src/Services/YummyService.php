@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyGuidesRepository;
 use App\Repositories\YummyRestaurantsRepository;
+
 use Exception;
 
 class YummyService
@@ -28,7 +29,7 @@ class YummyService
         return $this->restaurant_repository->getTopActiveRestaurants();
     }
 
-    public function loadTypes(){
-        
+    public function getTypes() : ?array {
+        return $this->type_repository->getAllTypes();     
     }
 }

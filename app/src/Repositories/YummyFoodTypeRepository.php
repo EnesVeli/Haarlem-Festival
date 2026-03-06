@@ -13,7 +13,7 @@ class YummyFoodTypeRepository extends Repository
 
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
-        return $stmt->fetch(PDO::FETCH_BOTH);  
+        return $stmt->fetchAll(PDO::FETCH_BOTH);  
     }
 
     public function getAllTypes(): ?array
@@ -22,6 +22,6 @@ class YummyFoodTypeRepository extends Repository
 
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_BOTH);  
+        return $stmt->fetchAll(PDO::FETCH_BOTH);  
     }
 }

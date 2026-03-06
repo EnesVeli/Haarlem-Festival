@@ -13,7 +13,7 @@ $cs_types = $cs_types ?? [];
     <?php include '/app/public/assets/css/yummy.css'; ?>
 </style>
 
-<main>
+<main class="list-main">
     <section>
         <button href="/yummy">&lt;- Back to Yummy Home Page</button>
 
@@ -33,7 +33,7 @@ $cs_types = $cs_types ?? [];
                 <div>Place Type:</div>
                 <? if(count($pl_types) > 0): ?>
                     <? foreach($pl_types as $t): ?>
-                        <button><? echo $t['name'] ?></button>
+                        <button id="<? echo $t['name']; ?>" class="list-filter list-filter-not-selected"><? echo $t['name'] ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>
@@ -42,7 +42,7 @@ $cs_types = $cs_types ?? [];
                 <div>Meal Type:</div>
                 <? if(count($ml_types) > 0): ?>
                     <? foreach($ml_types as $t): ?>
-                        <button><? echo $t['name'] ?></button>
+                        <button id="<? echo $t['name']; ?>" class="list-filter list-filter-not-selected"><? echo $t['name'] ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>
@@ -51,7 +51,7 @@ $cs_types = $cs_types ?? [];
                 <div>Food Type:</div>
                 <? if(count($fd_types) > 0): ?>
                     <? foreach($fd_types as $t): ?>
-                        <button><? echo $t['name'] ?></button>
+                        <button id="<? echo $t['name']; ?>" class="list-filter list-filter-not-selected"><? echo $t['name'] ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>        
@@ -60,10 +60,12 @@ $cs_types = $cs_types ?? [];
                 <div>Cuisine:</div>
                 <? if(count($cs_types) > 0): ?>
                     <? foreach($cs_types as $t): ?>
-                        <button><? echo $t['name'] ?></button>
+                        <button id="<? echo $t['name']; ?>" class="list-filter list-filter-not-selected"><? echo $t['name'] ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>
+            
+            <button>Filter</button>
         </div>
     </section>
 
@@ -87,5 +89,13 @@ $cs_types = $cs_types ?? [];
         </div>
     </section>
 </main>
+
+<script type="text/javascript">
+    let place_type = <?php echo json_encode($place_type); ?>;
+
+    for(let i = 0; i < place_type.length; i++){
+        document.getElementById(place_type[i]).className = "list-filter list-filter-selected";
+    }
+</script>
 
 <?php require '/app/src/Views/partials/footer.php'; ?>

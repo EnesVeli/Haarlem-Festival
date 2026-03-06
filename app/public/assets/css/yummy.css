@@ -731,3 +731,34 @@
         margin: auto;
     }
 }
+
+/* ========== List ========== */
+
+.list-main{
+    font-family: 'Playfair', serif;
+}
+
+.list-filter-selected{
+    background-color: var(--buttercup);
+
+    color: black;
+}
+
+.list-filter-not-selected{
+    background-color: var(--navy);
+
+    color: white;
+}
+
+.list-filter{
+    font-size: 24px;
+
+    border-style: none;
+    border-radius: 18px;
+
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    padding-left: 16px;
+    padding-right: 16px;
+}
