@@ -74,8 +74,13 @@ $cs_types = $cs_types ?? [];
             <div>x palces found</div>
             <div>
                 <div>Sorted By</div>
-                <select>
-                    <option>Popularity</option>
+                <select id="sort">
+                    <option id="sort-opt-0" value="0">Name Ascending</option>
+                    <option id="sort-opt-1" value="1">Name Descending</option>
+                    <option id="sort-opt-2" value="2">Rating Ascending</option>
+                    <option id="sort-opt-3" value="3">Rating Descending</option>
+                    <option id="sort-opt-4" value="4">Cost Rating Ascending</option>
+                    <option id="sort-opt-5" value="5">Cost Rating Descending</option>
                 </select>
             </div>
         </div>
@@ -146,6 +151,8 @@ $cs_types = $cs_types ?? [];
         document.getElementById(cuisine_type[i]).className = "list-filter list-filter-selected";
     }
 
+    document.getElementById("sort").selectedIndex = <? echo $sorting; ?>;
+
     function filterClick(sender){
         if(sender.getAttribute('class') == "list-filter list-filter-selected"){ // Unsel a filter
             sender.className = "list-filter list-filter-not-selected";
@@ -209,7 +216,7 @@ $cs_types = $cs_types ?? [];
             uri += cuisines + '&'
         }
 
-        uri += 'sorting=' + 'def';
+        uri += 'sorting=' + document.getElementById("sort").value;
 
         window.location.href = uri;
     }

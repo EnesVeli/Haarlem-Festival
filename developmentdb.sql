@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 04, 2026 at 12:44 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Mar 07, 2026 at 03:19 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -231,7 +231,57 @@ CREATE TABLE `YummyRestaurantFoodTypes` (
 --
 
 INSERT INTO `YummyRestaurantFoodTypes` (`id`, `restaurant_id`, `type_id`) VALUES
-(2, 1, 1);
+(104, 1, 1),
+(105, 1, 6),
+(106, 1, 7),
+(107, 1, 9),
+(108, 1, 13),
+(109, 2, 1),
+(110, 2, 5),
+(111, 2, 6),
+(112, 2, 7),
+(113, 4, 1),
+(114, 4, 2),
+(115, 4, 4),
+(116, 4, 5),
+(117, 4, 6),
+(118, 4, 7),
+(119, 4, 8),
+(120, 5, 3),
+(121, 5, 4),
+(122, 5, 5),
+(123, 5, 7),
+(124, 5, 8),
+(125, 5, 14),
+(126, 6, 1),
+(127, 6, 6),
+(128, 6, 7),
+(129, 6, 9),
+(130, 6, 13),
+(131, 7, 3),
+(132, 7, 4),
+(133, 7, 5),
+(134, 7, 6),
+(135, 7, 7),
+(136, 7, 8),
+(137, 7, 9),
+(138, 7, 14),
+(139, 8, 1),
+(140, 8, 3),
+(141, 8, 4),
+(142, 8, 5),
+(143, 8, 6),
+(144, 8, 7),
+(145, 8, 8),
+(146, 8, 9),
+(147, 8, 14),
+(148, 9, 1),
+(149, 9, 5),
+(150, 9, 6),
+(151, 9, 7),
+(152, 9, 9),
+(153, 9, 13),
+(154, 9, 15);
 
 -- --------------------------------------------------------
 
@@ -378,7 +428,7 @@ ALTER TABLE `YummyGuides`
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`

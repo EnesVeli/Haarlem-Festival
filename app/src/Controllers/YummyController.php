@@ -26,7 +26,7 @@ class YummyController
         $food_type = isset($_GET['food_type']) ? explode(',', $_GET['food_type']) : [];
         $cuisine_type = isset($_GET['cuisine_type']) ? explode(',', $_GET['cuisine_type']) : [];
 
-        $sorting = $_GET['sorting'] ?? '';
+        $sorting = $_GET['sorting'] ?? 0;
 
         $restaurants = $service->getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting);
 
