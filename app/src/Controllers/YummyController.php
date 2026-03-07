@@ -28,6 +28,8 @@ class YummyController
 
         $sorting = $_GET['sorting'] ?? '';
 
+        $restaurants = $service->getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting);
+
         // Load types form db
         $all_types = $service->getTypes();
 
@@ -51,7 +53,7 @@ class YummyController
                     $cs_types[] = $all_types[$i];
                     break;
             }
-        }
+        }      
 
         require __DIR__ . '/../Views/yummy/list.php';
     }

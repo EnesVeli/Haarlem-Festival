@@ -38,6 +38,7 @@
 .home-topper-img{
     position:absolute;
 
+    width: 100%;
     min-height: 600px;
 
     z-index: 1;
@@ -761,4 +762,15 @@
 
     padding-left: 16px;
     padding-right: 16px;
+}
+
+.list-restaurant-list{
+    position: relative;
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    width: 100%;
+    height: auto;
 }
