@@ -38,6 +38,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
+    // History
+    $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
+    $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);
 });
 
 // Fetch method and URI from Server

@@ -1,6 +1,3 @@
-<?php
-// app/src/Views/partials/header.php
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,24 +15,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Custom CSS -->
-    <link href="/assets/css/main.css" rel="stylesheet">
-    <link href="/assets/partials/header.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/partials/header.css">
     
+    <!-- Page-specific CSS -->
+    <?php if (isset($pageCSS)): ?>
+        <link rel="stylesheet" href="/assets/css/<?= $pageCSS ?>">
+    <?php endif; ?>
 </head>
 <body>
+<?php
+// Resolve logged-in user from session if not already set by a controller
+if (!isset($user) || !$user) {
+    if (!empty($_SESSION['user_id'])) {
+        $user = [
+            'user_id'             => $_SESSION['user_id'],
+            'name'                => $_SESSION['name']  ?? 'Account',
+            'email'               => $_SESSION['email'] ?? '',
+            'profile_picture_url' => $_SESSION['profile_picture_url'] ?? null,
+        ];
+    } else {
+        $user = null;
+    }
+}
+?>
     <!-- Navigation -->
     <nav class="top-nav">
         <div class="nav-container">
-            <a href="/" class="logo">
-                TheFestival
-            </a>
+            <a href="/" class="logo">TheFestival</a>
             
             <ul class="nav-links">
-                <li><a href="/" class="active">Home</a></li>
+                <li><a href="/">Home</a></li>
                 <li><a href="/tickets">Tickets</a></li>
                 <li><a href="/history">History</a></li>
                 <li><a href="/stories">Story</a></li>
-                <li><a href="/food">Yummy</a></li>
+                <li><a href="/yummy">Yummy</a></li>
                 <li><a href="/jazz">Jazz</a></li>
                 <li><a href="/dance">Dance</a></li>
             </ul>
@@ -46,9 +60,38 @@
                     <span>|</span>
                     <a href="?lang=nl">NL</a>
                 </div>
-                
-                <?php if (isset($user) && $user): ?>
-                    <a href="/program" class="btn-nav btn-nav-outline">My Program</a>
+
+                <?php if ($user): ?>
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger" id="profileToggle" aria-expanded="false">
+                            <?php if (!empty($user['profile_picture_url'])): ?>
+                                <img
+                                    src="<?= htmlspecialchars($user['profile_picture_url']) ?>"
+                                    alt="Profile picture"
+                                    class="profile-avatar"
+                                >
+                            <?php else: ?>
+                                <div class="profile-avatar profile-avatar-initials">
+                                    <?= htmlspecialchars(mb_strtoupper(mb_substr($user['name'], 0, 1))) ?>
+                                </div>
+                            <?php endif; ?>
+                            <span class="profile-name"><?= htmlspecialchars($user['name']) ?></span>
+                            <i class="bi bi-chevron-down profile-chevron"></i>
+                        </button>
+
+                        <div class="profile-menu" id="profileMenu">
+                            <a href="/profile" class="profile-menu-item">
+                                <i class="bi bi-person"></i> My Profile
+                            </a>
+                            <a href="/program" class="profile-menu-item">
+                                <i class="bi bi-calendar-check"></i> My Program
+                            </a>
+                            <div class="profile-menu-divider"></div>
+                            <a href="/logout" class="profile-menu-item profile-menu-item--danger">
+                                <i class="bi bi-box-arrow-right"></i> Log out
+                            </a>
+                        </div>
+                    </div>
                 <?php else: ?>
                     <a href="/login" class="btn-nav btn-nav-outline">Login</a>
                 <?php endif; ?>
@@ -66,5 +109,24 @@
             </div>
         </div>
     </nav>
+
+    <script>
+        (function () {
+            const toggle = document.getElementById('profileToggle');
+            const dropdown = toggle?.closest('.profile-dropdown');
+            if (!toggle || !dropdown) return;
+
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
+
+            document.addEventListener('click', function () {
+                dropdown.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        })();
+    </script>
 
     <main>
