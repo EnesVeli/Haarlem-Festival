@@ -23,16 +23,9 @@ class HistoryService
         return $this->repository->getAvailableTickets();
     }
 
-    public function getContent()
+  public function getContent(): array
     {
-        $contentArray = $this->repository->getAllContent();
-        $content = [];
-        
-        foreach ($contentArray as $item) {
-            $content[$item['section']] = $item;
-        }
-        
-        return $content;
+    return $this->repository->getAllContent();  // ✅ just return raw rows
     }
 
     public function getContentBySection($section)

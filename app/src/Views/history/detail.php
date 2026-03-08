@@ -1,32 +1,33 @@
 <?php
-$pageTitle = htmlspecialchars($detail['page_title']) . " - Haarlem Festival";
+/** @var \App\ViewModels\HistoryDetailViewModel $viewModel */
+$pageTitle = $viewModel->fullPageTitle();
 $pageCSS = "history-detail.css"; 
 require __DIR__ . '/../partials/header.php';
 ?>
 
 <!-- HERO SECTION -->
-<section class="detail-hero" style="background-image: url('/assets/images/<?= htmlspecialchars($detail['hero_image']) ?>');">
+<section class="detail-hero" style="background-image: url('/assets/images/<?= htmlspecialchars($viewModel->heroImage) ?>');">
     <div class="container">
-        <h1><?= htmlspecialchars($detail['page_title']) ?></h1>
+        <h1><?= htmlspecialchars($viewModel->pageTitle) ?></h1>
         <div class="detail-hero-meta">
-            <?php if (!empty($detail['location'])): ?>
+            <?php if ($viewModel->hasLocation()): ?>
             <div class="meta-item">
                 <span class="meta-icon">📍</span>
-                <span><?= htmlspecialchars($detail['location']) ?></span>
+                <span><?= htmlspecialchars($viewModel->location) ?></span>
             </div>
             <?php endif; ?>
             
-            <?php if (!empty($detail['founded_year'])): ?>
+            <?php if ($viewModel->hasFoundedYear()): ?>
             <div class="meta-item">
                 <span class="meta-icon">📅</span>
-                <span>Built: <?= htmlspecialchars($detail['founded_year']) ?></span>
+                <span>Built: <?= htmlspecialchars($viewModel->foundedYear) ?></span>
             </div>
             <?php endif; ?>
             
-            <?php if (!empty($detail['style_type'])): ?>
+            <?php if ($viewModel->hasStyleType()): ?>
             <div class="meta-item">
                 <span class="meta-icon">🏛️</span>
-                <span>Style: <?= htmlspecialchars($detail['style_type']) ?></span>
+                <span>Style: <?= htmlspecialchars($viewModel->styleType) ?></span>
             </div>
             <?php endif; ?>
         </div>
@@ -43,14 +44,14 @@ require __DIR__ . '/../partials/header.php';
 </nav>
 
 <!-- PHOTO GALLERY -->
-<?php if (!empty($gallery)): ?>
+<?php if ($viewModel->hasGallery()): ?>
 <section class="photo-gallery-section">
     <div class="container">
         <h2 class="gallery-title">Photo Gallery</h2>
         <div class="photo-gallery">
-            <?php foreach ($gallery as $image): ?>
+            <?php foreach ($viewModel->gallery as $image): ?>
                 <img src="/assets/images/<?= htmlspecialchars($image['image_path']) ?>" 
-                     alt="<?= htmlspecialchars($image['caption'] ?? $detail['page_title']) ?>" 
+                     alt="<?= htmlspecialchars($image['caption'] ?? $viewModel->pageTitle) ?>" 
                      class="gallery-image">
             <?php endforeach; ?>
         </div>
@@ -64,75 +65,44 @@ require __DIR__ . '/../partials/header.php';
         <div class="detail-content-wrapper">
             <!-- MAIN CONTENT -->
             <div class="detail-main-content">
-                <?php foreach ($sections as $section): ?>
+                <?php foreach ($viewModel->sections as $section): ?>
+
                     <?php if ($section['section_type'] === 'about'): ?>
-                        <!-- About Section -->
                         <div class="content-section">
                             <h2 class="section-title"><?= htmlspecialchars($section['section_title']) ?></h2>
-                            <?php 
-                            $paragraphs = explode("\n\n", $section['content']);
-                            foreach ($paragraphs as $paragraph): 
-                                if (trim($paragraph)): 
-                            ?>
+                            <?php foreach ($viewModel->getParagraphs($section) as $paragraph): ?>
                                 <p><?= nl2br(htmlspecialchars($paragraph)) ?></p>
-                            <?php 
-                                endif;
-                            endforeach; 
-                            ?>
+                            <?php endforeach; ?>
                         </div>
-                    
+
                     <?php elseif ($section['section_type'] === 'special'): ?>
-                        <!-- Special Content Box (like Müller Organ) -->
                         <div class="special-content-box">
                             <h3><?= htmlspecialchars($section['section_title']) ?></h3>
-                            <?php 
-                            $paragraphs = explode("\n\n", $section['content']);
-                            foreach ($paragraphs as $paragraph): 
-                                if (trim($paragraph)): 
-                            ?>
+                            <?php foreach ($viewModel->getParagraphs($section) as $paragraph): ?>
                                 <p><?= nl2br(htmlspecialchars($paragraph)) ?></p>
-                            <?php 
-                                endif;
-                            endforeach; 
-                            ?>
-                            
+                            <?php endforeach; ?>
                             <?php if (!empty($section['image_path'])): ?>
                                 <img src="/assets/images/<?= htmlspecialchars($section['image_path']) ?>" 
                                      alt="<?= htmlspecialchars($section['section_title']) ?>">
                             <?php endif; ?>
                         </div>
-                    
+
                     <?php elseif ($section['section_type'] === 'highlight'): ?>
-                        <!-- Highlight Section -->
                         <div class="highlight-section">
                             <h3><?= htmlspecialchars($section['section_title']) ?></h3>
-                            <?php 
-                            $paragraphs = explode("\n\n", $section['content']);
-                            foreach ($paragraphs as $paragraph): 
-                                if (trim($paragraph)): 
-                            ?>
+                            <?php foreach ($viewModel->getParagraphs($section) as $paragraph): ?>
                                 <p><?= nl2br(htmlspecialchars($paragraph)) ?></p>
-                            <?php 
-                                endif;
-                            endforeach; 
-                            ?>
+                            <?php endforeach; ?>
                         </div>
-                    
+
                     <?php elseif ($section['section_type'] === 'history'): ?>
-                        <!-- Historical Significance -->
                         <div class="content-section">
                             <h2 class="section-title"><?= htmlspecialchars($section['section_title']) ?></h2>
-                            <?php 
-                            $paragraphs = explode("\n\n", $section['content']);
-                            foreach ($paragraphs as $paragraph): 
-                                if (trim($paragraph)): 
-                            ?>
+                            <?php foreach ($viewModel->getParagraphs($section) as $paragraph): ?>
                                 <p><?= nl2br(htmlspecialchars($paragraph)) ?></p>
-                            <?php 
-                                endif;
-                            endforeach; 
-                            ?>
+                            <?php endforeach; ?>
                         </div>
+
                     <?php endif; ?>
                 <?php endforeach; ?>
             </div>
@@ -140,10 +110,10 @@ require __DIR__ . '/../partials/header.php';
             <!-- SIDEBAR -->
             <div class="detail-sidebar">
                 <!-- QUICK FACTS -->
-                <?php if (!empty($facts)): ?>
+                <?php if ($viewModel->hasFacts()): ?>
                 <div class="quick-facts-box">
                     <h3 class="quick-facts-title">Quick Facts</h3>
-                    <?php foreach ($facts as $fact): ?>
+                    <?php foreach ($viewModel->facts as $fact): ?>
                         <div class="fact-item">
                             <span class="fact-icon"><?= htmlspecialchars($fact['icon']) ?></span>
                             <span class="fact-label"><?= htmlspecialchars($fact['label']) ?></span>
@@ -158,7 +128,6 @@ require __DIR__ . '/../partials/header.php';
                     <h3>Location on Route</h3>
                     <div class="map-container">
                         <div class="map-placeholder">
-                            <!-- You can replace this with an actual map image or Google Maps embed -->
                             <p>Map showing location</p>
                         </div>
                     </div>
@@ -173,9 +142,7 @@ require __DIR__ . '/../partials/header.php';
     <div class="container">
         <h2 class="journey-title">Complete Your Journey</h2>
         <div class="journey-grid">
-            <!-- Other Highlights -->
-            <?php foreach ($otherHighlights as $highlight): ?>
-                <?php if (!empty($highlight['slug'])): ?>
+            <?php foreach ($viewModel->otherHighlights as $highlight): ?>
                 <a href="/history/<?= htmlspecialchars($highlight['slug']) ?>" class="journey-card">
                     <img src="/assets/images/<?= htmlspecialchars($highlight['image']) ?>" 
                          alt="<?= htmlspecialchars($highlight['title']) ?>">
@@ -184,10 +151,8 @@ require __DIR__ . '/../partials/header.php';
                         <p><?= htmlspecialchars($highlight['description']) ?></p>
                     </div>
                 </a>
-                <?php endif; ?>
             <?php endforeach; ?>
 
-            <!-- Stories in Haarlem -->
             <a href="/stories" class="journey-card">
                 <img src="/assets/images/stories-haarlem.jpg" alt="Stories in Haarlem">
                 <div class="journey-card-body">
@@ -196,7 +161,6 @@ require __DIR__ . '/../partials/header.php';
                 </div>
             </a>
 
-            <!-- Jazz -->
             <a href="/jazz" class="journey-card">
                 <img src="/assets/images/jazz-event.jpg" alt="Jazz">
                 <div class="journey-card-body">
@@ -205,7 +169,6 @@ require __DIR__ . '/../partials/header.php';
                 </div>
             </a>
 
-            <!-- Yummy -->
             <a href="/yummy" class="journey-card">
                 <img src="/assets/images/yummy-event.jpg" alt="Yummy">
                 <div class="journey-card-body">

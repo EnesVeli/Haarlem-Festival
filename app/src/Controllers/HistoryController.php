@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Services\HistoryService;
+use App\ViewModels\HistoryIndexViewModel;
+use App\ViewModels\HistoryDetailViewModel;
 
 class HistoryController
 {
@@ -18,39 +20,36 @@ class HistoryController
      */
     public function index()
     {
-        $highlights = $this->service->getHighlights();
-        $tickets = $this->service->getTickets();
-        $content = $this->service->getContent();
+        $viewModel = new HistoryIndexViewModel(
+            $this->service->getHighlights(),
+            $this->service->getTickets(),
+            $this->service->getContent()   // returns raw rows — ViewModel organizes them
+        );
 
         require __DIR__ . '/../Views/history/index.php';
     }
 
     /**
      * Display a detail page for a specific highlight
-     * 
-     * @param string $slug The URL slug for the highlight
      */
     public function detail($vars)
     {
-    // Extract slug from the vars array
-    $slug = $vars['slug'] ?? '';
-    
-    $pageData = $this->service->getDetailPage($slug);
-    
-    if (!$pageData) {
-        // Redirect to 404 or history page if not found
-        header('Location: /history');
-        exit;
-    }
+        $slug     = $vars['slug'] ?? '';
+        $pageData = $this->service->getDetailPage($slug);
 
-    $detail = $pageData['detail'];
-    $sections = $pageData['sections'];
-    $gallery = $pageData['gallery'];
-    $facts = $pageData['facts'];
-    
-    // Get other highlights for "Complete Your Journey" section
-    $otherHighlights = $this->service->getOtherHighlights($slug);
+        if (!$pageData) {
+            header('Location: /history');
+            exit;
+        }
 
-    require __DIR__ . '/../Views/history/detail.php';
+        $viewModel = new HistoryDetailViewModel(
+            $pageData['detail'],
+            $pageData['sections'],
+            $pageData['gallery'],
+            $pageData['facts'],
+            $this->service->getOtherHighlights($slug)
+        );
+
+        require __DIR__ . '/../Views/history/detail.php';
     }
 }

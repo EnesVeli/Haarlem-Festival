@@ -1,15 +1,16 @@
 <?php
+/** @var \App\ViewModels\HistoryIndexViewModel $viewModel */
 $pageTitle = "History - Haarlem Festival";
 $pageCSS = "history.css"; 
 require __DIR__ . '/../partials/header.php';
 ?>
 
 <!-- HERO SECTION -->
-<section class="history-hero" style="background-image: url('/assets/images/<?= htmlspecialchars($content['hero']['image'] ?? '') ?>'); background-size: cover; background-position: center;">
+<section class="history-hero" style="background-image: url('/assets/images/<?= htmlspecialchars($viewModel->heroImage()) ?>'); background-size: cover; background-position: center;">
     <div class="container">
         <div class="hero-content">
-            <h1><?= htmlspecialchars($content['hero']['title'] ?? "A Journey Through Haarlem's Legacy") ?></h1>
-            <p><?= htmlspecialchars($content['hero']['subtitle'] ?? "Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.") ?></p>
+            <h1><?= htmlspecialchars($viewModel->heroTitle()) ?></h1>
+            <p><?= htmlspecialchars($viewModel->heroSubtitle()) ?></p>
         </div>
     </div>
 </section>
@@ -19,8 +20,8 @@ require __DIR__ . '/../partials/header.php';
     <div class="container">
         <div class="golden-city-grid">
             <div class="golden-city-text">
-                <h2 class="section-title-burgundy"><?= htmlspecialchars($content['intro']['title'] ?? "The Golden City of the North") ?></h2>
-                <p><?= htmlspecialchars($content['intro']['subtitle'] ?? "Long before Amsterdam rose to global fame, Haarlem was the beating heart of Holland. Granted city rights in 1245, it became a powerhouse of the textile industry, beer brewing, and the arts during the Dutch Golden Age.") ?></p>
+                <h2 class="section-title-burgundy"><?= htmlspecialchars($viewModel->introTitle()) ?></h2>
+                <p><?= htmlspecialchars($viewModel->introSubtitle()) ?></p>
                 <p>It is a city of resilience—surviving the great fire of 1576 and the Spanish Siege—and a city of beauty, inspiring masters like Frans Hals and Jacob van Ruisdael. Today, its cobblestone streets still echo with the footsteps of merchants, artists, and seekers who built this magnificent city.</p>
                 
                 <div class="icon-boxes">
@@ -69,7 +70,7 @@ require __DIR__ . '/../partials/header.php';
             <div class="route-main-content">
                 <!-- Highlights Grid -->
                 <div class="highlights-grid">
-                    <?php foreach ($highlights as $highlight): ?>
+                    <?php foreach ($viewModel->highlights as $highlight): ?>
                         <div class="highlight-card">
                             <img src="/assets/images/<?= htmlspecialchars($highlight['image']) ?>" 
                                  alt="<?= htmlspecialchars($highlight['title']) ?>" 
@@ -98,15 +99,15 @@ require __DIR__ . '/../partials/header.php';
                 </div>
             </div>
 
-            <!-- RIGHT SIDE: Sidebar with Better Your Walk and Tickets -->
+            <!-- RIGHT SIDE: Sidebar -->
             <div class="route-sidebar">
                 <!-- BETTER YOUR WALK -->
                 <div class="better-walk-box">
-                    <h3><?= htmlspecialchars($content['walk']['title'] ?? 'Better Your Walk') ?></h3>
-                    <p><?= htmlspecialchars($content['walk']['subtitle'] ?? 'You can walk the route freely, but for the full story, our expert guides bring the stones to life.') ?></p>
+                    <h3><?= htmlspecialchars($viewModel->walkTitle()) ?></h3>
+                    <p><?= htmlspecialchars($viewModel->walkSubtitle()) ?></p>
                     
-                    <?php if (!empty($content['walk']['image'])): ?>
-                    <img src="/assets/images/<?= htmlspecialchars($content['walk']['image']) ?>" alt="Walk guide">
+                    <?php if ($viewModel->hasWalkImage()): ?>
+                        <img src="/assets/images/<?= htmlspecialchars($viewModel->walkImage()) ?>" alt="Walk guide">
                     <?php endif; ?>
                     
                     <div class="walk-features">
@@ -134,7 +135,7 @@ require __DIR__ . '/../partials/header.php';
                     </div>
                     
                     <div class="tickets-list">
-                        <?php foreach ($tickets as $ticket): ?>
+                        <?php foreach ($viewModel->tickets as $ticket): ?>
                             <div class="ticket-row">
                                 <div class="ticket-time"><?= htmlspecialchars($ticket['time_slot']) ?></div>
                                 <div class="ticket-price">€<?= number_format($ticket['price'], 2) ?></div>
@@ -151,13 +152,13 @@ require __DIR__ . '/../partials/header.php';
 </section>
 
 <!-- CTA SECTION -->
-<section class="section-padding" <?php if (!empty($content['cta']['image'])): ?> 
-    style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/images/<?= htmlspecialchars($content['cta']['image']) ?>'); background-size: cover; background-position: center; color: white;"
+<section class="section-padding" <?php if ($viewModel->hasCtaImage()): ?> 
+    style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/images/<?= htmlspecialchars($viewModel->ctaImage()) ?>'); background-size: cover; background-position: center; color: white;"
 <?php endif; ?>>
     <div class="container">
-        <div class="cta-box" <?= !empty($content['cta']['image']) ? 'style="background: transparent;"' : '' ?>>
-            <h2><?= htmlspecialchars($content['cta']['title'] ?? 'Ready to plan your festival weekend?') ?></h2>
-            <p><?= htmlspecialchars($content['cta']['subtitle'] ?? 'Combine Stories in Haarlem with other Festival events across the city and build your perfect weekend program.') ?></p>
+        <div class="cta-box" <?= $viewModel->hasCtaImage() ? 'style="background: transparent;"' : '' ?>>
+            <h2><?= htmlspecialchars($viewModel->ctaTitle()) ?></h2>
+            <p><?= htmlspecialchars($viewModel->ctaSubtitle()) ?></p>
             <div class="cta-buttons">
                 <a href="/tickets" class="btn btn-orange">Book tickets</a>
                 <a href="/" class="btn btn-outline-white">Back to home</a>
@@ -178,7 +179,6 @@ require __DIR__ . '/../partials/header.php';
                     <p>Guided walking tour through Haarlem with local storytellers sharing tales of the city's rich past.</p>
                 </div>
             </div>
-
             <div class="journey-card">
                 <img src="/assets/images/jazz-event.jpg" alt="Jazz">
                 <div class="journey-body">
@@ -186,7 +186,6 @@ require __DIR__ . '/../partials/header.php';
                     <p>Interactive magic and illusion show at the famous Teylers Museum, perfect for families and wonder-seekers.</p>
                 </div>
             </div>
-
             <div class="journey-card">
                 <img src="/assets/images/yummy-event.jpg" alt="Yummy">
                 <div class="journey-body">
