@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Repositories\YummyRestaurantsRepository;
 use App\Services\YummyService;
 
 class YummyController
@@ -28,7 +29,14 @@ class YummyController
 
         $sorting = $_GET['sorting'] ?? 0;
 
-        $restaurants = $service->getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting);
+        $page = $_GET['page'] ?? 0;
+
+        $out = $service->getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting, $page);
+
+        $restaurants = $out[0];
+        $count_resturants = $out[1];
+
+        $count_res_per_page = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE;
 
         // Load types form db
         $all_types = $service->getTypes();

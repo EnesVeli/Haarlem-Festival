@@ -15,6 +15,8 @@ enum RestaurantSortingOption : int{
 
 class YummyRestaurantsRepository extends Repository
 {
+    public const NUMBER_OF_RESTAURANTS_PER_PAGE = 20;
+
     public function getRestaurantById(string $restaurant_id): ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id");
@@ -30,7 +32,17 @@ class YummyRestaurantsRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_BOTH);  
     }   
 
-    public function getFilteredRestaurants($all_types, RestaurantSortingOption $sorting = RestaurantSortingOption::NameASC) : ?array {    
+    /**
+     * @param array $all_types Array with all selected filters. If empty, no filter is applied.
+     * @param int $page Selected resturant list page (e.g. if page is 0 will return resturants 0-24, if page is 1 will return 25-48 retaurants, e.t.c)
+     * @param RestaurantSortingOption $sorting Sorting method applied. If empty, sorts by name ascending
+     *
+     * @return array array with two elements. 
+     * [0] is limeted, sorted and optinaly filtered list of restaurants. 
+     * [1] is total number of restaurants that fit filter.
+     * Both of the elements can be null.
+     */
+    public function getFilteredRestaurants($all_types, $page, RestaurantSortingOption $sorting = RestaurantSortingOption::NameASC) : array {    
         if($all_types == null || count($all_types) == 0){
             $filter = null;
         }      
@@ -50,14 +62,17 @@ class YummyRestaurantsRepository extends Repository
 
         $sort_string = $this->getSortString($sorting);
 
-        echo $sort_string;
+        $limit = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE;
+        $offset = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE * $page;
 
         if($filter == null){
-            $query = "SELECT * FROM `YummyRestaurants` AS `R` $sort_string";
+            $query = "SELECT * FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1 $sort_string LIMIT $limit OFFSET $offset";
+
+            $count_query = "SELECT COUNT(*) FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1";
         }
         else{
             $query =   "SELECT *
-                        FROM `YummyRestaurants` AS `R`
+                        FROM `YummyRestaurants` AS `R`                 
                         INNER JOIN
                             (SELECT `RFT`.`restaurant_id`, `RFT`.`type_id`, COUNT(*)
                             FROM `YummyRestaurantFoodTypes` AS `RFT` 
@@ -69,18 +84,51 @@ class YummyRestaurantsRepository extends Repository
                             GROUP BY `RFT`.`restaurant_id`
                             HAVING COUNT(*) >= $count) AS `RT`
                         ON `RT`.`restaurant_id` = `R`.`restaurant_id`
-                        $sort_string";
+                        WHERE `R`.`active` = 1
+                        $sort_string
+                        LIMIT $limit OFFSET $offset";
+
+            $count_query = "SELECT COUNT(*)
+                        FROM `YummyRestaurants` AS `R`                 
+                        INNER JOIN
+                            (SELECT `RFT`.`restaurant_id`, `RFT`.`type_id`, COUNT(*)
+                            FROM `YummyRestaurantFoodTypes` AS `RFT` 
+                            INNER JOIN
+                                (SELECT `type_id`, `name` 
+                                FROM `YummyFoodTypes` 
+                                $filter) AS `T` 
+                            ON `RFT`.`type_id` = `T`.`type_id`
+                            GROUP BY `RFT`.`restaurant_id`
+                            HAVING COUNT(*) >= $count) AS `RT`
+                        ON `RT`.`restaurant_id` = `R`.`restaurant_id`
+                        WHERE `R`.`active` = 1";
         }
 
+        $output = [];
+
+        // Get list of restaurants limited, filtered and sorted
         $stmt = $this->connection->prepare($query);
 
         if($filter == null) $stmt->execute();
         else $stmt->execute($param);
 
-        return $stmt->fetchAll(PDO::FETCH_BOTH);  
-    }   
+        array_push($output, $stmt->fetchAll(PDO::FETCH_BOTH));
+        
+        // Get total number of restaurants that fit filter
+        $stmt_count = $this->connection->prepare($count_query);
 
-    private function getSortString(RestaurantSortingOption $sorting) : string{
+        if($filter == null) $stmt_count->execute();
+        else $stmt_count->execute($param);
+
+        $res_number = $stmt_count->fetch(PDO::FETCH_BOTH);
+
+        array_push($output, $res_number == null ? 0 : $res_number[0]);
+        
+        // Return limited list and total count
+        return $output;
+    }
+
+    private function getSortString(RestaurantSortingOption $sorting) : string {
         switch($sorting){
             case RestaurantSortingOption::NameASC:
                 return "ORDER BY `R`.`name` ASC";

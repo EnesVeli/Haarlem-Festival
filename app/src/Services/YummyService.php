@@ -34,7 +34,7 @@ class YummyService
         return $this->type_repository->getAllTypes();     
     }
 
-    public function getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting) : ?array {
-        return $this->restaurant_repository->getFilteredRestaurants(array_merge($place_type, $meal_type, $food_type, $cuisine_type), RestaurantSortingOption::from($sorting));
+    public function getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting, $page) : ?array {
+        return $this->restaurant_repository->getFilteredRestaurants(array_merge($place_type, $meal_type, $food_type, $cuisine_type), $page, RestaurantSortingOption::from($sorting));
     }
 }

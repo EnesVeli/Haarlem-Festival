@@ -386,7 +386,7 @@
 }
 
 .home-restaurant-star-container{
-
+    position: relative;
 }
 
 .home-restaurant-star{
@@ -739,6 +739,166 @@
     font-family: 'Playfair', serif;
 }
 
+.list-topper{ 
+    position:relative;
+    display: block;
+
+    margin-left: 97px;
+    margin-right: 97px;
+
+    margin-top: 7px;
+
+    width: auto;
+}
+
+.list-topper-container{
+    position:relative;
+
+    max-height: 600px; 
+    min-height: 500px;  
+    height: 600px;
+
+    overflow: hidden;  
+
+    margin: 0;
+}
+
+.list-topper-back{
+    position:relative;
+
+    font-family: 'Roboto';
+
+    font-size: 22px;
+    font-weight: bold;
+
+    color: var(--burgundy); 
+
+    margin: 0;
+}
+
+.list-topper-filter{
+    position:absolute;
+
+    top:0; 
+    left:0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 2;
+
+    background-color: rgba(130, 19, 21, 0.85);
+}
+
+.list-topper-img{
+    position:absolute;
+
+    width: 100%;
+    min-height: 600px;
+
+    z-index: 1;
+}
+
+.list-topper-text-container{
+    position: absolute;
+
+    /*top: 20px;
+
+    width: 65%;*/
+
+    top: 46%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-54%);
+
+    z-index: 3;
+
+    font-family: "Playfair Display", serif;
+    color: white;
+
+    text-align: center;
+}
+
+.list-topper-title{
+    font-size: 42px;
+    font-weight: bold;
+
+    font-family: "Playfair", serif;
+    color: white;
+}
+
+.list-topper-text{
+    font-size: 18px;
+    font-weight: normal;
+
+    font-family: "Playfair", serif;
+    color: white;
+}
+
+.list-filter-section{
+    display: block;
+    position: relative;
+
+    width: min-content;
+
+    border-width: 3px;
+    border-color: var(--buttercup);
+    border-style: solid;
+
+    border-radius: 18px;
+
+    margin-left: 97px;
+    margin-right: 97px;
+
+    margin-top: 18px;
+    margin-bottom: 12px;
+
+    justify-self: center;
+}
+
+.list-filter-title{
+    font-size: 32px;
+    font-weight: bold;
+
+    font-family: "Playfair", serif;
+    color: var(--burgundy);
+
+    margin-top: 14px;
+
+    margin-left: 20px;
+}
+
+.list-filter-container{
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    min-width: 1752px;
+
+    column-gap: 20px;
+    row-gap: 8px;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.list-filter-sub{
+    display: inline;
+}
+
+.list-filter-sub-title{
+    display: inline;
+
+    font-size: 20px;
+    font-weight: bolder;
+
+    font-family: "Playfair", serif;
+    color: var(--burgundy);
+}
+
 .list-filter-selected{
     background-color: var(--buttercup);
 
@@ -764,13 +924,206 @@
     padding-right: 16px;
 }
 
+.list-sorting-title{
+    font-size: 32px;
+    font-weight: bold;
+
+    font-family: "Playfair", serif;
+    color: var(--burgundy);
+
+    margin-top: 8px;
+
+    margin-left: 20px;
+}
+
+.list-sort{
+    font-size: 20px;
+    font-weight: normal;
+
+    font-family: "Roboto", serif;
+
+    margin-left: 20px;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    padding-left: 6px;
+    padding-right: 6px;
+
+    border-style: solid;
+    border-color: #E0D6C8;
+    border-width: 2px;
+
+    border-radius: 50px;
+}
+
+.list-filter-all-button{
+    display: block;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+    padding-left: 28px;
+    padding-right: 28px;
+
+    background-color: var(--burgundy);
+    color: white;
+
+    font-size: 24px;
+    font-weight: normal;
+
+    font-family: "Roboto", serif;
+
+    border-style: none;
+    border-radius: 20px;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    margin-left: 20px;
+}
+
+.list-restaurants-section{
+    display: flex;
+    position: relative;
+
+    flex-direction: column;
+
+    width: min-content;
+
+    border-width: 3px;
+    border-color: var(--buttercup);
+    border-style: solid;
+
+    border-radius: 18px;
+
+    justify-self: center;
+}
+
+.list-place-found-label{
+    display: block;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    font-family: "Playfair", serif;
+    color: var(--burgundy);
+
+    margin-left: 20px;
+    margin-top: 6px;
+}
+
+.list-line{
+    display: block;
+
+    height: 3px;
+
+    background-color: var(--buttercup);
+
+    border-radius: 90px;
+
+    width: auto;
+
+    margin-left: 20px;
+    margin-right: 22px;
+}
+
 .list-restaurant-list{
     position: relative;
     display: flex;
 
+    min-width: 1752px;
+
     flex-direction: row;
     flex-wrap: wrap;
 
+    column-gap: 8px;
+    row-gap: 8px;
+
     width: 100%;
     height: auto;
+
+    margin-left: 20px;
+    margin-right: 20px;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.list-restaurant-card{
+    position: relative;
+    display: inline;
+
+    width: 344px;
+    height: 424px;
+
+    border-width: 3px;
+    border-color: var(--buttercup);
+    border-style: solid;
+
+    border-radius: 10px;
+}
+
+.list-pages-container{
+    display: flex;
+
+    column-gap: 4px;
+
+    justify-self: center;
+    align-self: center;
+
+    align-items: center;
+    justify-items: center;
+
+    width: auto;
+
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.list-page-button{
+    font-size: 22px;
+    font-weight: normal;
+
+    font-family: "Roboto", serif;
+
+    border-style: none;
+    border-radius: 100px;
+
+    height: 42px;
+    width: 42px;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 44px;
+}
+
+.list-page-button-sel{
+    background-color: var(--buttercup);
+    color: black;
+}
+
+.list-page-button-unsel{
+    background-color: var(--navy);
+    color: white;
+}
+
+.list-page-next-prev{
+    font-size: 22px;
+    font-weight: normal;
+
+    font-family: "Roboto", serif;
+
+    border-style: none;
+    border-radius: 100px;
+
+    height: 42px;
+    width: 42px;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 44px;
+
+    background-color: var(--navy);
+    color: white;
 }
