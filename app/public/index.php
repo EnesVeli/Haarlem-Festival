@@ -12,6 +12,7 @@ use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
 use PHPMailer\PHPMailer\PHPMailer;
 
+
 $test = new PHPMailer(true);
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
@@ -33,6 +34,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Profile (Manage account)
     $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);
     $r->addRoute('POST', '/profile/update', [\App\Controllers\ProfileController::class, 'update']);
+    // Cart
+    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
+    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
+    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
+    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);

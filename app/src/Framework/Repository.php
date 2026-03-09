@@ -14,4 +14,9 @@ class Repository
         $this->connection = new PDO($connectionString, Config::DB_USERNAME, Config::DB_PASSWORD);
         $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
+
+    public function getConnection(): PDO
+    {
+    return $this->connection;
+    }
 }
