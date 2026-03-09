@@ -14,10 +14,14 @@ $user = $currentUser ?? null;
 $activePage = 'jazz';
 
 // load your jazz css (header already loads main.css + header.css)
-$extraCss = ['/assets/css/jazz.css?v=3'];
+//$extraCss = ['/assets/css/jazz.css?v=3'];
 
 require __DIR__ . '/../partials/header.php';
 ?>
+
+<style>
+    <?php include '/app/public/assets/css/jazz.css'; ?>
+</style>
 
 <div class="container perf-page"></div>
   <main class="container perf-page">

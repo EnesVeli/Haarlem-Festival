@@ -10,11 +10,15 @@ $user = $currentUser ?? null;
 // header.php I gave you uses $activeNav (not $activePage)
 $activeNav = 'jazz';
 
+//$extraCss = ['/assets/css/jazz.css'];
+
 // load page-specific css
-$extraCss = ['/assets/css/jazz.css'];
 
 require __DIR__ . '/../partials/header.php';
 ?>
+<style>
+    <?php include '/app/public/assets/css/jazz.css'; ?>
+</style>
 
 <section class="jazz-hero">
   <div class="container">
