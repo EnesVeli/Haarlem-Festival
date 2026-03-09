@@ -76,7 +76,7 @@
       <p class="text-muted mb-2">
         To change your password, use the password reset page.
       </p>
-      <a class="btn btn-outline-secondary" href="/password-reset">
+      <a class="btn btn-outline-secondary" href="/password-reset-request">
         Reset password
       </a>
     </div>

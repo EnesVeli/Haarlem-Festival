@@ -28,7 +28,7 @@
                     </p>
                     <p class="footer-contact">
                         <i class="bi bi-envelope"></i>
-                        info@thefestival.nl
+                        info@haarlem-festival.nl
                     </p>
                 </div>
                 

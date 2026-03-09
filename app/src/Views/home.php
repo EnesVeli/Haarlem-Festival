@@ -10,7 +10,7 @@ require __DIR__ . '/partials/header.php';
 <link href="/assets/css/home.css" rel="stylesheet">
 
 <!-- ===== HERO ===== -->
-<section class="hero-main" style="background-image: url('/assets/Images/<?= htmlspecialchars($homeContent['hero_image'] ?? 'Heroimage.png') ?>');">
+<section class="hero-main" style="background-image: url('/assets/css/uploads/history/<?= htmlspecialchars($homeContent['hero_image'] ?? 'Heroimage.png') ?>');">
     <div class="hero-overlay"></div>
     <div class="hero-content-wrapper">
         <h1 class="hero-title">THE FESTIVAL</h1>
@@ -69,7 +69,7 @@ require __DIR__ . '/partials/header.php';
                 <div class="event-card-header <?= htmlspecialchars($card['bg_class']) ?>">
                     <span class="event-category-label"><?= htmlspecialchars($card['category']) ?></span>
                     <?php if (!empty($card['image'])): ?>
-                        <img src="/assets/Images/<?= htmlspecialchars($card['image']) ?>"
+                        <img src="/assets/css/uploads/history/<?= htmlspecialchars($card['image']) ?>"
                              alt="<?= htmlspecialchars($card['title']) ?>" class="event-card-img" loading="lazy">
                     <?php else: ?>
                         <i class="bi <?= htmlspecialchars($card['icon']) ?> event-card-icon"></i>

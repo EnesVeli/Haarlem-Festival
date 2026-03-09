@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="/assets/css/<?= $pageCSS ?>">
     <?php endif; ?>
 </head>
+
 <body>
     <?php
 // Resolve logged-in user from session if not already set by a controller
@@ -129,4 +130,4 @@ if (!isset($user) || !$user) {
     })();
     </script>
 
-    <main>
+  <main class="<?= htmlspecialchars($mainClass ?? '') ?>">

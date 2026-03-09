@@ -6,22 +6,22 @@ use PDO;
 
 class PasswordResetTokenRepository extends Repository
 {
-    public function getTokenByUserId(string $user_id): ?array
+    public function getTokenByUserId(string $user_id) : ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `user_id` = :user_id");
         $stmt->execute(['user_id' => $user_id]);
-        $token = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $token ?: null;
+        $out = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $out == false ? null : $out;
     }
 
-    public function getTokenByKey(string $key): ?array
+    public function getTokenByKey(string $key) : ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `key` = :key");
         $stmt->execute(['key' => $key]);
-        $token = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $token ?: null;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function createNewToken(string $user_id, string $key) : bool
