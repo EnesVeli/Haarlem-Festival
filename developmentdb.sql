@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 07, 2026 at 03:19 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Mar 09, 2026 at 09:41 AM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CartItem`
+--
+
+CREATE TABLE `CartItem` (
+  `cart_item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `ticket_type` enum('single','daypass','allaccess') NOT NULL DEFAULT 'single',
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(10,2) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -555,6 +572,13 @@ INSERT INTO `YummyRestaurants` (`restaurant_id`, `mini_img_path`, `name`, `mini_
 --
 
 --
+-- Indexes for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -661,6 +685,12 @@ ALTER TABLE `YummyRestaurants`
 --
 
 --
+-- AUTO_INCREMENT for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -749,6 +779,12 @@ ALTER TABLE `YummyRestaurants`
 --
 
 --
+-- Constraints for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  ADD CONSTRAINT `cartitem_user_fk` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `history_details`
 --
 ALTER TABLE `history_details`
@@ -771,6 +807,10 @@ ALTER TABLE `history_detail_gallery`
 --
 ALTER TABLE `history_detail_sections`
   ADD CONSTRAINT `history_detail_sections_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `history_details` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `PasswordResetToken`
+--
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
 

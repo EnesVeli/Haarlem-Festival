@@ -25,7 +25,7 @@ class HistoryService
 
   public function getContent(): array
     {
-    return $this->repository->getAllContent();  // ✅ just return raw rows
+    return $this->repository->getAllContent();  //  just return raw rows
     }
 
     public function getContentBySection($section)
