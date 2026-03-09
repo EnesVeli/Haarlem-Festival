@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 09, 2026 at 10:06 AM
+-- Generation Time: Mar 09, 2026 at 10:47 AM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -24,7 +24,6 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cms_content`
 -- Table structure for table `CartItem`
 --
 
@@ -42,7 +41,7 @@ CREATE TABLE `CartItem` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `event_recommendations`
+-- Table structure for table `cms_content`
 --
 
 CREATE TABLE `cms_content` (
@@ -334,33 +333,6 @@ INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jazz_experiences`
---
-
-CREATE TABLE `jazz_experiences` (
-  `id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `description` text NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `sort_order` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `jazz_experiences`
---
-
-INSERT INTO `jazz_experiences` (`id`, `title`, `description`, `image`, `url`, `sort_order`, `is_active`) VALUES
-(1, 'Late Night Jam', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', NULL, NULL, 1, 1),
-(2, 'Jazz & Drinks', 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', NULL, NULL, 2, 1),
-(3, 'Vinyl Sessions', 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', NULL, NULL, 3, 1),
-(4, 'Sunset Stage', 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', NULL, NULL, 4, 1),
-(5, 'Rhythm & Coffee', 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', NULL, NULL, 5, 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `jazz_performers`
 --
 
@@ -396,6 +368,19 @@ INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `
 (16, 'The Tom Thompson', NULL, 16, 1, NULL),
 (17, 'Uncle Sue', NULL, 17, 1, NULL),
 (18, 'Wicked Jazz Sounds', NULL, 18, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `PasswordResetToken`
+--
+
+CREATE TABLE `PasswordResetToken` (
+  `token_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `key` varchar(256) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -588,6 +573,13 @@ INSERT INTO `YummyRestaurants` (`restaurant_id`, `mini_img_path`, `name`, `mini_
 --
 
 --
+-- Indexes for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -596,11 +588,6 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
--- Indexes for table `CartItem`
---
-ALTER TABLE `CartItem`
-  ADD PRIMARY KEY (`cart_item_id`),
-  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `history_content`
@@ -663,6 +650,14 @@ ALTER TABLE `home_events`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `PasswordResetToken`
+--
+ALTER TABLE `PasswordResetToken`
+  ADD PRIMARY KEY (`token_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`),
+  ADD UNIQUE KEY `key` (`key`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
@@ -701,16 +696,16 @@ ALTER TABLE `YummyRestaurants`
 --
 
 --
+-- AUTO_INCREMENT for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
-
---
---
---
-ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `history_content`
@@ -833,7 +828,8 @@ ALTER TABLE `history_detail_sections`
 --
 -- Constraints for table `PasswordResetToken`
 --
-
+ALTER TABLE `PasswordResetToken`
+  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
 
 --
 -- Constraints for table `YummyRestaurantFoodTypes`
