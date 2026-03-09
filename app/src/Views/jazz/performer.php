@@ -49,7 +49,7 @@ require __DIR__ . '/../partials/header.php';
 </section>
 
     <p class="perf-lead">
-      <?= htmlspecialchars($performer['bio'] ?? 'We will add a longer description later.') ?>
+      <?= htmlspecialchars($performer['bio'] ?? '') ?>
     </p>
 
     <!-- DARK SECTION -->
