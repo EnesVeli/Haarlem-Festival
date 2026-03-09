@@ -27,6 +27,7 @@ cache/
 storage/
 var/
 app/storage/
+app/public/assets/uploads
 app/cache/
 app/var/
 .phpunit.result.cache
@@ -39,6 +40,7 @@ node_modules/
 docker-compose.override.yml
 
 # Config
+app/src/config.php
 app/src/Config.php
 
 # Images

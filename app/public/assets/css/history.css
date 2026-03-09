@@ -1,0 +1,539 @@
+/* HISTORY PAGE STYLES */
+
+.history-hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url('/assets/images/hero-history.png') center/cover no-repeat;
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    color: #fff;
+}
+
+.history-hero .hero-content {
+    max-width: 700px;
+}
+
+.history-hero h1 {
+    font-size: 64px;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+}
+
+.history-hero p {
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+/* Section padding */
+.section-padding {
+    padding: 5rem 2rem;
+}
+
+/* CRITICAL: Override main.css container width for highlights section */
+#highlights .container {
+    max-width: 1920px !important;
+}
+
+.section-title-burgundy {
+    font-size: 42px;
+    color: var(--burgundy);
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.mb-5 {
+    margin-bottom: 3rem;
+}
+
+/* Golden City Section */
+.golden-city-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.golden-city-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    color: var(--medium-text);
+}
+
+.icon-boxes {
+    display: flex;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.icon-box {
+    text-align: center;
+    flex: 1;
+}
+
+.icon-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--burgundy);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 32px;
+}
+
+.icon-box h4 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.icon-box p {
+    font-size: 14px;
+    color: var(--light-text);
+}
+
+.golden-city-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.city-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Experience Section */
+.experience-section {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--neutral-light);
+}
+
+.experience-text {
+    font-size: 16px;
+    color: var(--medium-text);
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    line-height: 1.8;
+}
+
+/* ========== NEW SIDEBAR LAYOUT ========== */
+
+/* Main wrapper with grid layout */
+.route-section-wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr 400px !important;
+    gap: 3rem !important;
+    align-items: start !important;
+}
+
+.route-main-content {
+    min-width: 0;
+}
+
+.route-sidebar {
+    position: sticky;
+    top: 2rem;
+    width: 400px;
+}
+
+/* Highlights Grid - vertical layout on left */
+.highlights-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    margin-bottom: 3rem !important;
+}
+
+.highlight-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 0;
+}
+
+.highlight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.highlight-image {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    object-fit: cover;
+}
+
+.highlight-body {
+    padding: 2rem;
+}
+
+.highlight-body h3 {
+    font-size: 24px;
+    color: var(--burgundy);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.highlight-body p {
+    font-size: 15px;
+    color: var(--medium-text);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+
+.learn-more-link {
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+/* Better Your Walk Box - in sidebar */
+.better-walk-box {
+    background: #f4d4d4;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.better-walk-box h3 {
+    font-size: 24px;
+    color: var(--burgundy);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.better-walk-box p {
+    font-size: 14px;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.better-walk-box img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.walk-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.feature-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Tickets Box - in sidebar */
+.tickets-box {
+    background: var(--burgundy);
+    padding: 2rem;
+    border-radius: 12px;
+    color: #fff;
+}
+
+.tickets-box h3 {
+    font-size: 24px;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.tickets-box .subtitle {
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+.ticket-selector {
+    margin-bottom: 1.5rem;
+}
+
+.ticket-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.date-select {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 6px;
+    border: none;
+    font-size: 15px;
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 1rem;
+}
+
+.available-slots-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+.tickets-list {
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.ticket-row:last-child {
+    border-bottom: none;
+}
+
+.ticket-time {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.ticket-price {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.ticket-spots {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.btn-book {
+    width: 100%;
+    background: #fff;
+    color: var(--burgundy);
+    padding: 14px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Playfair Display', serif;
+}
+
+.btn-book:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+/* Walking Route Map - below highlights on left */
+.map-section {
+    margin-top: 0;
+}
+
+.map-section h3 {
+    font-size: 32px;
+    color: var(--burgundy);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.map-container {
+    background: #f5f5f5;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #e0e0e0;
+    color: #666;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* CTA Section */
+.cta-box {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+}
+
+.cta-box h2 {
+    font-size: 36px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--burgundy);
+}
+
+.cta-box p {
+    font-size: 16px;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 14px 32px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-orange {
+    background: var(--accent-orange);
+    color: #fff;
+    border: none;
+}
+
+.btn-orange:hover {
+    background: #e65100;
+    transform: translateY(-2px);
+}
+
+.btn-outline-white {
+    background: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.btn-outline-white:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-navy {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+}
+
+.btn-navy:hover {
+    background: #1a237e;
+    transform: translateY(-2px);
+}
+
+/* Journey Grid */
+.journey-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.journey-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.journey-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.journey-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.journey-body {
+    padding: 2rem;
+}
+
+.journey-body h3 {
+    font-size: 22px;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    color: var(--burgundy);
+}
+
+.journey-body p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--medium-text);
+}
+
+.bg-light {
+    background: var(--neutral-light);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .route-section-wrapper {
+        grid-template-columns: 1fr 350px !important;
+    }
+    
+    .route-sidebar {
+        width: 350px;
+    }
+}
+
+@media (max-width: 992px) {
+    .route-section-wrapper {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .route-sidebar {
+        position: static;
+        width: 100%;
+    }
+    
+    .highlights-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .highlight-card {
+        grid-template-columns: 1fr;
+    }
+    
+    .golden-city-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .highlights-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .journey-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .icon-boxes {
+        flex-direction: column;
+    }
+}

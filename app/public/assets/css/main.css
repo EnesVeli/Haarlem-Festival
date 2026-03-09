@@ -565,3 +565,53 @@ img {
         padding: 24px;
     }
 }
+
+/* ===== TWO-COLUMN LAYOUT ===== */
+
+.history-layout {
+    display: flex;
+    gap: 2.5rem;
+    align-items: flex-start;
+}
+
+/* LEFT SIDE */
+
+.history-highlights {
+    flex: 2;
+}
+
+/* Horizontal highlight card */
+
+.highlight-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.highlight-row img {
+    width: 220px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* RIGHT SIDE PANEL */
+
+.history-tickets {
+    flex: 1;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Ticket rows */
+
+.ticket-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: .5rem;
+}

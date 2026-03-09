@@ -30,10 +30,16 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/password-reset-start', [\App\Controllers\PasswordResetController::class, 'startPasswordReset']);
     $r->addRoute('POST', '/password-reset-confirm', [\App\Controllers\PasswordResetController::class, 'createNewPassword']);
     $r->addRoute('POST', '/password-reset', [\App\Controllers\PasswordResetController::class, 'resetPassword']);
+    // Profile (Manage account)
+    $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);
+    $r->addRoute('POST', '/profile/update', [\App\Controllers\ProfileController::class, 'update']);
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
+    // History
+    $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
+    $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);
     // Yummy
     $r->addRoute('GET', '/yummy', [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);

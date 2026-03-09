@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\JazzService;
+use App\Framework\Session;
 
 class JazzController
 {
@@ -9,8 +10,10 @@ class JazzController
     {
         $service = new JazzService();
         $experiences = $service->getExperiences();
-        $performers = $service->getPerformers();   
+        $performers = $service->getPerformers();
         $recommendations = $service->getEventRecommendationsForJazz();
+
+        $currentUser = Session::user();
 
         require __DIR__ . '/../Views/jazz/home.php';
     }
@@ -24,5 +27,4 @@ class JazzController
     {
         require __DIR__ . '/../Views/jazz/tickets.php';
     }
-    
 }
