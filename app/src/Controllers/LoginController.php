@@ -18,25 +18,24 @@ class LoginController
         try {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-
+    
             if ($email === '' || $password === '') {
                 throw new Exception("Email and password are required.");
             }
-
-            $userService = new UserService();
-            $user = $userService->authenticate($email, $password);
-
+    
+            $user = (new UserService())->authenticate($email, $password);
             Session::login($user);
-
-            header("Location: /");
+    
+            header('Location: ' . (Session::isAdmin() ? '/cms/jazz/home' : '/'));
             exit;
-
+    
         } catch (Exception $e) {
             Session::set('login_error', $e->getMessage());
             header("Location: /login");
             exit;
         }
     }
+
     public function logout()
     {
         $_SESSION = [];
