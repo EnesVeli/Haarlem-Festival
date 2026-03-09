@@ -2,32 +2,31 @@
 
 namespace App\Services;
 
+use App\Repositories\CmsContentRepository;
 use App\Repositories\JazzRepository;
-use App\Repositories\EventRepository;
 
 class JazzService
 {
-    private JazzRepository $repo;
-    private EventRepository $eventRepo;
+    private CmsContentRepository $cmsRepo;
+    private JazzRepository $jazzRepo;
 
     public function __construct()
     {
-        $this->repo = new JazzRepository();
-        $this->eventRepo = new EventRepository();
+        $this->cmsRepo = new CmsContentRepository();
+        $this->jazzRepo = new JazzRepository();
     }
 
-    public function getExperiences(): array
+    public function getHomePageData(): array
     {
-        return $this->repo->getActiveExperiences();
+        return [
+            'experiences' => $this->cmsRepo->getBlocks('jazz_home', 'experience'),
+            'performers' => $this->cmsRepo->getBlocks('jazz_home', 'performer'),
+            'recommendations' => $this->cmsRepo->getBlocks('jazz_home', 'recommendation'),
+        ];
     }
 
-    public function getPerformers(): array
+    public function getPerformerById(int $id): ?array
     {
-        return $this->repo->getActivePerformers();
-    }
-
-    public function getEventRecommendationsForJazz(): array
-    {
-        return $this->eventRepo->getActiveRecommendationsByKeys(['yummy', 'history', 'stories']);
+        return $this->jazzRepo->getPerformerById($id);
     }
 }
