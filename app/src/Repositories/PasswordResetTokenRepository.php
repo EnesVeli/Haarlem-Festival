@@ -10,18 +10,16 @@ class PasswordResetTokenRepository extends Repository
     {
         $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `user_id` = :user_id");
         $stmt->execute(['user_id' => $user_id]);
-        $token = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $token ?: null;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getTokenByKey(string $key): ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `key` = :key");
         $stmt->execute(['key' => $key]);
-        $token = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $token ?: null;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function createNewToken(string $user_id, string $key) : bool
