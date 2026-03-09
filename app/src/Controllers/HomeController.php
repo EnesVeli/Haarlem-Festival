@@ -1,16 +1,22 @@
 <?php
 namespace App\Controllers;
 
-use App\Services\EventService;
+use App\Services\HomeService;
 
 class HomeController
 {
-    public function index()
+    private HomeService $homeService;
+
+    public function __construct()
     {
-        
-        
-        $eventService = new EventService();
-        $events = $eventService->getHomepageEvents();
+        $this->homeService = new HomeService();
+    }
+
+    public function index(): void
+    {
+        $homeContent = $this->homeService->getHomeContent();
+        $eventCards  = $this->homeService->getHomeEvents(); 
+        $venueList   = $this->homeService->getVenueList();
 
         require __DIR__ . '/../Views/home.php';
     }

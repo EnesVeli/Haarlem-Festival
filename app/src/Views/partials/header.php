@@ -1,68 +1,133 @@
-<?php
-// app/src/Views/partials/header.php
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= htmlspecialchars($pageTitle ?? 'The Festival Haarlem') ?></title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-  <link href="/assets/css/main.css" rel="stylesheet">
-  <link href="/assets/partials/header.css" rel="stylesheet">
-
-  <?php if (!empty($extraCss) && is_array($extraCss)): ?>
-    <?php foreach ($extraCss as $cssPath): ?>
-      <link rel="stylesheet" href="<?= htmlspecialchars($cssPath) ?>">
-    <?php endforeach; ?>
-  <?php endif; ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($pageTitle ?? 'The Festival Haarlem') ?></title>
+    
+    <!-- Bootstrap CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/partials/header.css">
+    
+    <!-- Page-specific CSS -->
+    <?php if (isset($pageCSS)): ?>
+        <link rel="stylesheet" href="/assets/css/<?= $pageCSS ?>">
+    <?php endif; ?>
 </head>
 
 <body>
-  <nav class="top-nav">
-    <div class="nav-container">
-      <a href="/" class="logo">TheFestival</a>
+<?php
+// Resolve logged-in user from session if not already set by a controller
+if (!isset($user) || !$user) {
+    if (!empty($_SESSION['user_id'])) {
+        $user = [
+            'user_id'             => $_SESSION['user_id'],
+            'name'                => $_SESSION['name']  ?? 'Account',
+            'email'               => $_SESSION['email'] ?? '',
+            'profile_picture_url' => $_SESSION['profile_picture_url'] ?? null,
+        ];
+    } else {
+        $user = null;
+    }
+}
+?>
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <a href="/" class="logo">TheFestival</a>
+            
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/tickets">Tickets</a></li>
+                <li><a href="/history">History</a></li>
+                <li><a href="/stories">Story</a></li>
+                <li><a href="/yummy">Yummy</a></li>
+                <li><a href="/jazz">Jazz</a></li>
+                <li><a href="/dance">Dance</a></li>
+            </ul>
+            
+            <div class="nav-actions">
+                <div class="language-toggle">
+                    <a href="?lang=en" class="active">EN</a>
+                    <span>|</span>
+                    <a href="?lang=nl">NL</a>
+                </div>
 
-      <ul class="nav-links">
-        <li><a href="/" class="<?= ($activeNav ?? '') === 'home' ? 'active' : '' ?>">Home</a></li>
-        <li><a href="/tickets" class="<?= ($activeNav ?? '') === 'tickets' ? 'active' : '' ?>">Tickets</a></li>
-        <li><a href="/history" class="<?= ($activeNav ?? '') === 'history' ? 'active' : '' ?>">History</a></li>
-        <li><a href="/stories" class="<?= ($activeNav ?? '') === 'stories' ? 'active' : '' ?>">Story</a></li>
-        <li><a href="/food" class="<?= ($activeNav ?? '') === 'food' ? 'active' : '' ?>">Yummy</a></li>
-        <li><a href="/jazz" class="<?= ($activeNav ?? '') === 'jazz' ? 'active' : '' ?>">Jazz</a></li>
-        <li><a href="/dance" class="<?= ($activeNav ?? '') === 'dance' ? 'active' : '' ?>">Dance</a></li>
-      </ul>
+                <?php if ($user): ?>
+                    <div class="profile-dropdown">
+                        <button class="profile-trigger" id="profileToggle" aria-expanded="false">
+                            <?php if (!empty($user['profile_picture_url'])): ?>
+                                <img
+                                    src="<?= htmlspecialchars($user['profile_picture_url']) ?>"
+                                    alt="Profile picture"
+                                    class="profile-avatar"
+                                >
+                            <?php else: ?>
+                                <div class="profile-avatar profile-avatar-initials">
+                                    <?= htmlspecialchars(mb_strtoupper(mb_substr($user['name'], 0, 1))) ?>
+                                </div>
+                            <?php endif; ?>
+                            <span class="profile-name"><?= htmlspecialchars($user['name']) ?></span>
+                            <i class="bi bi-chevron-down profile-chevron"></i>
+                        </button>
 
-      <div class="nav-actions">
-        <div class="language-toggle">
-          <a href="?lang=en" class="active">EN</a>
-          <span>|</span>
-          <a href="?lang=nl">NL</a>
+                        <div class="profile-menu" id="profileMenu">
+                            <a href="/profile" class="profile-menu-item">
+                                <i class="bi bi-person"></i> My Profile
+                            </a>
+                            <a href="/program" class="profile-menu-item">
+                                <i class="bi bi-calendar-check"></i> My Program
+                            </a>
+                            <div class="profile-menu-divider"></div>
+                            <a href="/logout" class="profile-menu-item profile-menu-item--danger">
+                                <i class="bi bi-box-arrow-right"></i> Log out
+                            </a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="/login" class="btn-nav btn-nav-outline">Login</a>
+                <?php endif; ?>
+                
+                <a href="/cart" class="cart-icon">
+                    <i class="bi bi-cart3"></i>
+                    <span class="cart-badge">0</span>
+                </a>
+                
+                <div class="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
+    </nav>
 
-        <?php if (!empty($user)): ?>
-          <a href="/program" class="btn-nav btn-nav-outline">My Program</a>
-        <?php else: ?>
-          <a href="/login" class="btn-nav btn-nav-outline">Login</a>
-        <?php endif; ?>
+    <script>
+        (function () {
+            const toggle = document.getElementById('profileToggle');
+            const dropdown = toggle?.closest('.profile-dropdown');
+            if (!toggle || !dropdown) return;
 
-        <a href="/cart" class="cart-icon">
-          <i class="bi bi-cart3"></i>
-          <span class="cart-badge">0</span>
-        </a>
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const isOpen = dropdown.classList.toggle('open');
+                toggle.setAttribute('aria-expanded', isOpen);
+            });
 
-        <div class="mobile-menu-toggle">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-    </div>
-  </nav>
+            document.addEventListener('click', function () {
+                dropdown.classList.remove('open');
+                toggle.setAttribute('aria-expanded', 'false');
+            });
+        })();
+    </script>
 
   <main class="<?= htmlspecialchars($mainClass ?? '') ?>">
