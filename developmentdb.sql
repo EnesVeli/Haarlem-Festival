@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 07, 2026 at 03:19 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Mar 09, 2026 at 10:47 AM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,29 +24,74 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `event_recommendations`
+-- Table structure for table `CartItem`
 --
 
-CREATE TABLE `event_recommendations` (
+CREATE TABLE `CartItem` (
+  `cart_item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `event_type` varchar(50) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `ticket_type` enum('single','daypass','allaccess') NOT NULL DEFAULT 'single',
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `price` decimal(10,2) NOT NULL,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cms_content`
+--
+
+CREATE TABLE `cms_content` (
   `id` int(11) NOT NULL,
-  `event_key` varchar(50) NOT NULL,
-  `title` varchar(120) NOT NULL,
-  `description` text NOT NULL,
-  `url` varchar(255) DEFAULT NULL,
+  `page_key` varchar(50) NOT NULL,
+  `block_type` varchar(50) NOT NULL,
+  `performer_id` int(11) NOT NULL DEFAULT 0,
+  `title` varchar(200) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `body` text DEFAULT NULL,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `image_path` varchar(255) DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `uniq_key` varchar(400) GENERATED ALWAYS AS (concat(`page_key`,'|',`block_type`,'|',ifnull(`performer_id`,0),'|',ifnull(`url`,''),'|',`title`)) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `event_recommendations`
+-- Dumping data for table `cms_content`
 --
 
-INSERT INTO `event_recommendations` (`id`, `event_key`, `title`, `description`, `url`, `sort_order`, `is_active`) VALUES
-(1, 'history', 'A Stroll Through History', 'Guided walking tour through historic Haarlem with local storytellers.', '/history', 1, 1),
-(2, 'stories', 'Stories', 'Immerse yourself in Haarlem’s spoken-word acts, storytelling, and narrative performances.', '/story', 2, 1),
-(3, 'yummy', 'Yummy!', 'Explore Dutch cuisine and food history with tastings and local favorites.', '/yummy', 3, 1),
-(4, 'dance', 'Dance', 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', 4, 1),
-(5, 'jazz', 'Haarlem Jazz', 'Live jazz performances and unforgettable sessions across the city.', '/jazz', 5, 1);
+INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `title`, `subtitle`, `body`, `url`, `image_path`, `sort_order`, `is_active`) VALUES
+(2, 'jazz_home', 'experience', 0, 'Jazz & Drinks', NULL, 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', '', NULL, 2, 1),
+(3, 'jazz_home', 'experience', 0, 'Vinyl Sessions', NULL, 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', '', NULL, 3, 1),
+(4, 'jazz_home', 'experience', 0, 'Sunset Stage', NULL, 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', '', NULL, 4, 1),
+(5, 'jazz_home', 'experience', 0, 'Rhythm & Coffee', NULL, 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', '', NULL, 5, 1),
+(8, 'jazz_home', 'performer', 1, 'Evolve', NULL, NULL, '', NULL, 1, 1),
+(9, 'jazz_home', 'performer', 2, 'Fox & The Mayors', NULL, NULL, '', NULL, 2, 1),
+(10, 'jazz_home', 'performer', 3, 'Gare du Nord', NULL, NULL, '', NULL, 3, 1),
+(11, 'jazz_home', 'performer', 4, 'Gumbo Kings', NULL, NULL, '', NULL, 4, 1),
+(12, 'jazz_home', 'performer', 5, 'Han Bennink', NULL, NULL, '', NULL, 5, 1),
+(13, 'jazz_home', 'performer', 6, 'Jonna Frazer', NULL, NULL, '', NULL, 6, 1),
+(14, 'jazz_home', 'performer', 7, 'Chris Allen', NULL, NULL, '', NULL, 7, 1),
+(15, 'jazz_home', 'performer', 8, 'Lilith Merlot', NULL, NULL, '', NULL, 8, 1),
+(16, 'jazz_home', 'performer', 9, 'Myles Sanko', NULL, NULL, '', NULL, 9, 1),
+(17, 'jazz_home', 'performer', 10, 'Ntjam Rosie', NULL, NULL, '', NULL, 10, 1),
+(18, 'jazz_home', 'performer', 11, 'Rilan & The Bombardiers', NULL, NULL, '', NULL, 11, 1),
+(19, 'jazz_home', 'performer', 12, 'Ruis Soundsystem', NULL, NULL, '', NULL, 12, 1),
+(20, 'jazz_home', 'performer', 13, 'Soul Six', NULL, NULL, '', NULL, 13, 1),
+(21, 'jazz_home', 'performer', 14, 'The Family XL', NULL, NULL, '', NULL, 14, 1),
+(22, 'jazz_home', 'performer', 15, 'The Nordanians', NULL, NULL, '', NULL, 15, 1),
+(23, 'jazz_home', 'performer', 16, 'The Tom Thompson', NULL, NULL, '', NULL, 16, 1),
+(24, 'jazz_home', 'performer', 17, 'Uncle Sue', NULL, NULL, '', NULL, 17, 1),
+(25, 'jazz_home', 'performer', 18, 'Wicked Jazz Sounds', NULL, NULL, '', NULL, 18, 1),
+(39, 'jazz_home', 'recommendation', 0, 'A Stroll Through History', NULL, 'Guided walking tour through historic Haarlem with local storytellers.', '/history', NULL, 1, 1),
+(40, 'jazz_home', 'recommendation', 0, 'Stories', NULL, 'Immerse yourself in Haarlem’s spoken-word acts, storytelling, and narrative performances.', '/story', NULL, 2, 1),
+(41, 'jazz_home', 'recommendation', 0, 'Yummy!', NULL, 'Explore Dutch cuisine and food history with tastings and local favorites.', '/yummy', NULL, 3, 1),
+(42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
+(43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
+(46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -288,33 +333,6 @@ INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long
 -- --------------------------------------------------------
 
 --
--- Table structure for table `jazz_experiences`
---
-
-CREATE TABLE `jazz_experiences` (
-  `id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `description` text NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `sort_order` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `jazz_experiences`
---
-
-INSERT INTO `jazz_experiences` (`id`, `title`, `description`, `image`, `url`, `sort_order`, `is_active`) VALUES
-(1, 'Late Night Jam', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', NULL, NULL, 1, 1),
-(2, 'Jazz & Drinks', 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', NULL, NULL, 2, 1),
-(3, 'Vinyl Sessions', 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', NULL, NULL, 3, 1),
-(4, 'Sunset Stage', 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', NULL, NULL, 4, 1),
-(5, 'Rhythm & Coffee', 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', NULL, NULL, 5, 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `jazz_performers`
 --
 
@@ -386,7 +404,7 @@ CREATE TABLE `User` (
 
 INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`) VALUES
 (1, 'Enes@gmail.com', '$2y$12$ykWvBL0DARXSigoiMGxw3.4ow.YKd/BUidn/IApoOEwgVz7RFQe/W', 'Enes', 'customer', NULL, '2026-02-06 18:36:26'),
-(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'customer', NULL, '2026-02-07 04:07:01'),
+(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', NULL, '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
 (5, 'tim.sadko@gmail.com', '$2y$12$yIxXUap9pB4BZPdlpZE7jOfIpfCoZrNLgru7Rvc8TCgrpLzFtspD6', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
@@ -555,6 +573,23 @@ INSERT INTO `YummyRestaurants` (`restaurant_id`, `mini_img_path`, `name`, `mini_
 --
 
 --
+-- Indexes for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  ADD PRIMARY KEY (`cart_item_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_cms_block` (`page_key`,`block_type`,`performer_id`,`title`,`url`),
+  ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
+  ADD KEY `idx_page_block` (`page_key`,`block_type`),
+  ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
+
+--
 -- Indexes for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -661,6 +696,18 @@ ALTER TABLE `YummyRestaurants`
 --
 
 --
+-- AUTO_INCREMENT for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
 -- AUTO_INCREMENT for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -749,6 +796,12 @@ ALTER TABLE `YummyRestaurants`
 --
 
 --
+-- Constraints for table `CartItem`
+--
+ALTER TABLE `CartItem`
+  ADD CONSTRAINT `cartitem_user_fk` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `history_details`
 --
 ALTER TABLE `history_details`
@@ -771,6 +824,10 @@ ALTER TABLE `history_detail_gallery`
 --
 ALTER TABLE `history_detail_sections`
   ADD CONSTRAINT `history_detail_sections_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `history_details` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `PasswordResetToken`
+--
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
 
