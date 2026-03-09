@@ -12,6 +12,7 @@ use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
 use PHPMailer\PHPMailer\PHPMailer;
 
+
 $test = new PHPMailer(true);
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
@@ -41,6 +42,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // History
     $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
     $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);
+    // Cart
+    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
+    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
+    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
+    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
 });
 
 // Fetch method and URI from Server
