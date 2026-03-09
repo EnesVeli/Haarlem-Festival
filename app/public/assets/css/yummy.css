@@ -743,8 +743,8 @@
     position:relative;
     display: block;
 
-    margin-left: 97px;
-    margin-right: 97px;
+    margin-left: 5%;
+    margin-right: 5%;
 
     margin-top: 7px;
 
@@ -845,9 +845,6 @@
     border-style: solid;
 
     border-radius: 18px;
-
-    margin-left: 97px;
-    margin-right: 97px;
 
     margin-top: 18px;
     margin-bottom: 12px;
@@ -1126,4 +1123,49 @@
 
     background-color: var(--navy);
     color: white;
+}
+
+@media screen and (max-width: 1900px) {
+    .list-restaurant-list {
+        min-width: 1400px;
+    }
+
+    .list-filter-container{
+        min-width: 1400px;
+    }
+}
+
+@media screen and (max-width: 1500px) {
+    .list-restaurant-list {
+        min-width: 1048px;
+    }
+
+    .list-filter-container{
+        min-width: 1048px;
+    }
+}
+
+@media screen and (max-width: 1140px) {
+    .list-restaurant-list {
+        min-width: 696px;
+    }
+
+    .list-filter-container{
+        min-width: 696px;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .list-restaurant-list {
+        min-width: 344px;
+    }
+
+    .list-filter-container{
+        min-width: 344px;
+    }
+
+    .list-topper{ 
+        margin-left: 0;
+        margin-right: 0;
+    }
 }
