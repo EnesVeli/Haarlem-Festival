@@ -24,12 +24,12 @@
 
                         <form method="post" action="/password-reset-confirm" novalidate>
                             <div class="mb-3">
-                                <label for="email" class="form-label">Enter your email</label>
+                                <label for="email" class="form-label">Verify your email</label>
                                 <input id="email" name="email" type="email" class="form-control" placeholder="name@example.com" required autocomplete="email">
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                <button type="submit" class="btn btn-primary">Verify</button>
                                 <a class="btn btn-outline-secondary" href="/login">Cancel</a>
                             </div>
                         </form>

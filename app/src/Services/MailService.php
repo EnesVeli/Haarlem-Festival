@@ -24,7 +24,7 @@ class MailService
 
         // Sender and recipient settings
         $mail->setFrom(Config::MAIL_EMAIL, 'Haarlem festival');
-        $mail->addAddress('tim.sadko@gmail.com', 'tim sadko');
+        $mail->addAddress('@', 'test mail');
 
         // Message settings 
         $mail->isHTML(true); // Set email format to plain text
