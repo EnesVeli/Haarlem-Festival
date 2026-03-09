@@ -109,14 +109,14 @@
             const result = await response.json();
 
             if (result.success) {
-                // Success Message (Bootstrap Alert)
+                // Success Message
                 messageContainer.innerHTML = `
             <div class="alert alert-success" role="alert">
               ${sanitizeHTML(result.message)}
             </div>`;
-                e.target.reset(); // Clear the form
+                e.target.reset();
             } else {
-                // Error Message (Bootstrap Alert)
+                // Error Message
                 messageContainer.innerHTML = `
             <div class="alert alert-danger" role="alert">
               ${sanitizeHTML(result.message)}
@@ -134,7 +134,7 @@
         }
     });
 
-    // Helper to prevent XSS
+    // to prevent XSS
     function sanitizeHTML(str) {
         const temp = document.createElement('div');
         temp.textContent = str;

@@ -1,3 +1,4 @@
+</body>
 <?php
 // app/src/Views/partials/footer.php
 ?>

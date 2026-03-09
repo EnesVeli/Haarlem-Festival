@@ -1,0 +1,502 @@
+.stories-page {
+    background: #f6f4f1;
+    color: #2d2622;
+}
+
+.stories-page * {
+    box-sizing: border-box;
+}
+
+.stories-page p,
+.stories-page a,
+.stories-page button,
+.stories-page select,
+.stories-page span,
+.stories-page label {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.stories-page h1,
+.stories-page h2,
+.stories-page h3,
+.stories-page h4 {
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+}
+
+.stories-container {
+    width: min(1200px, 92%);
+    margin: 0 auto;
+}
+
+.stories-section-title {
+    font-size: 2.2rem;
+    color: #8b1e1e;
+    text-align: center;
+    margin: 0 0 2rem 0;
+}
+
+.stories-section-title--left {
+    text-align: left;
+    font-size: 1.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* hero */
+.stories-hero-section {
+    background: #970f10;
+    padding: 1.2rem 0 0 0;
+}
+
+.stories-hero-card {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr;
+    background: #f6f4f1;
+    border-radius: 14px;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.stories-hero-text {
+    padding: 2.4rem 3.2rem 1.3rem 3.2rem;
+    background: #f6f4f1;
+}
+
+.stories-hero-text h1 {
+    font-size: 3.2rem;
+    color: #2d2622;
+    margin: 0 0 1.25rem 0;
+}
+
+.stories-hero-description {
+    max-width: 520px;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #2f2f2f;
+    margin: 0 0 1.6rem 0;
+}
+
+.stories-hero-subtitle {
+    font-size: 0.95rem;
+    color: #4f4f4f;
+    margin: 1rem 0 0 0;
+}
+
+.stories-hero-image {
+    min-height: 300px;
+    background: url('/assets/images/stories/stories-hero.jpg') center center / cover no-repeat;
+    background-color: #5b3b2d;
+}
+
+.stories-primary-button {
+    display: inline-block;
+    padding: 0.75rem 1.3rem;
+    background: #17355a;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-primary-button:hover {
+    background: #244874;
+    color: #ffffff;
+}
+
+/* quote */
+.stories-quote-section {
+    padding: 1.3rem 0 0.8rem 0;
+}
+
+.stories-quote-text {
+    text-align: center;
+    color: #8b1e1e;
+    font-size: 2rem;
+    font-style: italic;
+    margin: 0;
+}
+
+/* tickets */
+.stories-ticket-section {
+    padding: 0.5rem 0 2rem 0;
+}
+
+.stories-ticket-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stories-ticket-card {
+    background: #f7f5f3;
+    border: 1px solid #8f8a84;
+    border-radius: 14px;
+    padding: 1.3rem 1.4rem;
+    min-height: 140px;
+}
+
+.stories-ticket-card h3 {
+    font-size: 1.9rem;
+    color: #7b1c1c;
+    margin: 0 0 0.9rem 0;
+}
+
+.stories-ticket-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 0.75rem 0;
+    color: #2f2f2f;
+}
+
+/* filter */
+.stories-filter-section {
+    padding: 0.3rem 0 2rem 0;
+}
+
+.stories-filter-box {
+    background: #f9f8f5;
+    border: 1px solid #dccf95;
+    border-radius: 16px;
+    padding: 1.3rem 1.4rem 1.5rem 1.4rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.stories-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: center;
+}
+
+.stories-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.stories-filter-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #7b1c1c;
+    letter-spacing: 0.04em;
+}
+
+.stories-day-buttons {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.stories-day-button {
+    border: none;
+    background: #2f4665;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.42rem 0.9rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.stories-day-button.is-active {
+    background: #1f3450;
+}
+
+.stories-filter-select {
+    min-width: 170px;
+    border: 1px solid #e3e0db;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.86rem;
+    color: #333333;
+}
+
+/* program */
+.stories-program-section {
+    padding: 0.2rem 0 2rem 0;
+}
+
+.stories-day-section {
+    margin-bottom: 1.8rem;
+}
+
+.stories-day-title {
+    font-size: 1.9rem;
+    color: #2d2622;
+    margin: 0 0 0.8rem 0;
+}
+
+.stories-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.2rem;
+}
+
+.stories-event-card {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    min-height: 145px;
+}
+
+.stories-event-card__content {
+    padding: 0.8rem 0.8rem 0.75rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.stories-event-card__content h4 {
+    font-size: 1rem;
+    color: #1e1e1e;
+    margin: 0;
+}
+
+.stories-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.stories-badge {
+    display: inline-block;
+    background: #f0b321;
+    color: #1e1e1e;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.18rem 0.55rem;
+}
+
+.stories-badge--type {
+    max-width: 100%;
+}
+
+.stories-event-meta {
+    font-size: 0.83rem;
+    color: #303030;
+    margin: 0.2rem 0 0.35rem 0;
+}
+
+.stories-event-meta span {
+    margin: 0 0.3rem;
+}
+
+.stories-card-button {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: auto;
+    background: #17355a;
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.42rem 0.62rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-card-button:hover {
+    background: #244874;
+    color: #ffffff;
+}
+
+.stories-event-card__image {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 145px;
+    border-left: 1px solid #d5b247;
+    background-color: #d8d0c2;
+}
+
+/* map */
+.stories-map-section {
+    padding: 0.8rem 0 2rem 0;
+}
+
+.stories-map-box {
+    overflow: hidden;
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+/* cta */
+.stories-cta-section {
+    padding: 0.3rem 0 2rem 0;
+}
+
+.stories-cta-box {
+    background: #304965;
+    border-radius: 18px;
+    color: #ffffff;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.stories-cta-text h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin: 0 0 0.4rem 0;
+}
+
+.stories-cta-text p {
+    font-size: 0.92rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 560px;
+}
+
+.stories-cta-buttons {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.stories-cta-button {
+    display: inline-block;
+    padding: 0.85rem 1.4rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-cta-button--dark {
+    background: #17355a;
+    color: #ffffff;
+}
+
+.stories-cta-button--red {
+    background: #9e1718;
+    color: #ffffff;
+}
+
+.stories-cta-button--dark:hover,
+.stories-cta-button--red:hover {
+    opacity: 0.92;
+    color: #ffffff;
+}
+
+/* journey */
+.stories-journey-section {
+    padding: 0.3rem 0 2.2rem 0;
+}
+
+.stories-journey-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stories-journey-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid #d7d2ca;
+    border-radius: 8px;
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+}
+
+.stories-journey-card__image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.stories-journey-card__image--history {
+    background-image: url('/assets/images/stories/journey-history.jpg');
+    background-color: #c7b39c;
+}
+
+.stories-journey-card__image--jazz {
+    background-image: url('/assets/images/stories/journey-jazz.jpg');
+    background-color: #243246;
+}
+
+.stories-journey-card__image--yummy {
+    background-image: url('/assets/images/stories/journey-yummy.jpg');
+    background-color: #7d2d63;
+}
+
+.stories-journey-card__content {
+    padding: 0.8rem 0.9rem 1rem 0.9rem;
+}
+
+.stories-journey-card__content h3 {
+    font-size: 1.85rem;
+    color: #7b1c1c;
+    margin: 0 0 0.4rem 0;
+}
+
+.stories-journey-card__content p {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: #333333;
+}
+
+/* responsive */
+@media (max-width: 980px) {
+    .stories-hero-card,
+    .stories-ticket-grid,
+    .stories-card-grid,
+    .stories-journey-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-cta-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    .stories-hero-text {
+        padding: 1.6rem;
+    }
+
+    .stories-hero-text h1 {
+        font-size: 2.3rem;
+    }
+
+    .stories-quote-text {
+        font-size: 1.45rem;
+    }
+
+    .stories-filter-row {
+        gap: 1rem;
+    }
+
+    .stories-event-card {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-event-card__image {
+        min-height: 130px;
+        border-left: none;
+        border-top: 1px solid #d5b247;
+    }
+
+    .stories-section-title {
+        font-size: 1.8rem;
+    }
+
+    .stories-section-title--left,
+    .stories-cta-text h2,
+    .stories-ticket-card h3,
+    .stories-day-title,
+    .stories-journey-card__content h3 {
+        font-size: 1.5rem;
+    }
+}
