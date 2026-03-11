@@ -1,12 +1,3 @@
-<?php 
-$restaurants = $restaurants ?? [];
-
-$pl_types = $pl_types ?? [];
-$ml_types = $ml_types ?? [];
-$fd_types = $fd_types ?? [];
-$cs_types = $cs_types ?? [];
-?>
-
 <?php require '/app/src/Views/partials/header.php';?>
 
 <style>
@@ -32,36 +23,36 @@ $cs_types = $cs_types ?? [];
         <div class="list-filter-container">
             <div class="list-filter-sub">
                 <div class="list-filter-sub-title">Place Type:</div>
-                <? if(count($pl_types) > 0): ?>
-                    <? foreach($pl_types as $t): ?>
-                        <button id="<? echo htmlspecialchars($t['name']); ?>" category="<? echo htmlspecialchars($t['category']); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t['name']) ?></button>
+                <? if(count($view_model->all_place_types) > 0): ?>
+                    <? foreach($view_model->all_place_types as $t): ?>
+                        <button id="<? echo htmlspecialchars($t->name); ?>" category="<? echo htmlspecialchars($t->category); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t->name); ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>
 
             <div class="list-filter-sub">
                 <div class="list-filter-sub-title">Meal Type:</div>
-                <? if(count($ml_types) > 0): ?>
-                    <? foreach($ml_types as $t): ?>
-                        <button id="<? echo htmlspecialchars($t['name']); ?>" category="<? echo htmlspecialchars($t['category']); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t['name']) ?></button>
+                <? if(count($view_model->all_meal_types) > 0): ?>
+                    <? foreach($view_model->all_meal_types as $t): ?>
+                        <button id="<? echo htmlspecialchars($t->name); ?>" category="<? echo htmlspecialchars($t->category); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t->name); ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>
             
             <div class="list-filter-sub">
                 <div class="list-filter-sub-title">Food Type:</div>
-                <? if(count($fd_types) > 0): ?>
-                    <? foreach($fd_types as $t): ?>
-                        <button id="<? echo htmlspecialchars($t['name']); ?>" category="<? echo htmlspecialchars($t['category']); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t['name']) ?></button>
+                <? if(count($view_model->all_food_types) > 0): ?>
+                    <? foreach($view_model->all_food_types as $t): ?>
+                        <button id="<? echo htmlspecialchars($t->name); ?>" category="<? echo htmlspecialchars($t->category); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t->name); ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>        
 
             <div class="list-filter-sub">
                 <div class="list-filter-sub-title">Cuisine:</div>
-                <? if(count($cs_types) > 0): ?>
-                    <? foreach($cs_types as $t): ?>
-                        <button id="<? echo htmlspecialchars($t['name']); ?>" category="<? echo htmlspecialchars($t['category']); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t['name']) ?></button>
+                <? if(count($view_model->all_cuisine_types) > 0): ?>
+                    <? foreach($view_model->all_cuisine_types as $t): ?>
+                        <button id="<? echo htmlspecialchars($t->name); ?>" category="<? echo htmlspecialchars($t->category); ?>" onclick="filterOptionClick(this)" class="list-filter list-filter-not-selected"><? echo htmlspecialchars($t->name); ?></button>
                     <? endforeach; ?>
                 <? endif; ?>
             </div>        
@@ -81,89 +72,48 @@ $cs_types = $cs_types ?? [];
     </section>
 
     <section class="list-restaurants-section">
-        <div class="list-place-found-label"><? echo $count_resturants; ?> palces found</div>
+        <div class="list-place-found-label"><? echo $view_model->total_found_restaurants_number; ?> palces found</div>
         <div class="list-line"></div>
         <div class="list-restaurant-list">
-            <? if(count($restaurants) > 0): ?>
-                <?php foreach($restaurants as $res):?>
+            <? if(count($view_model->restaurants) > 0): ?>
+                <?php foreach($view_model->restaurants as $res):?>
                     <div class="list-restaurant-card">
-                        <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res['mini_img_path']; ?>">
-                        <h3 class="home-restaurant-title"><? echo htmlspecialchars($res['name']);?></h3>
+                        <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->mini_img_path; ?>">
+                        <h3 class="home-restaurant-title"><? echo htmlspecialchars($res->name); ?></h3>
                         <div class="home-restaurant-card-sub">
-                            <div class="home-restaurant-rating"><? echo number_format((float)round($res['rating'], 1, PHP_ROUND_HALF_UP), 1, '.', '') ?></div>
-                            <?php
-                                // Calculate number of stars 
-                                $r = round($res['rating'] * 2, 0, PHP_ROUND_HALF_DOWN);
-
-                                $star0 = $r >= 2 ? 2 : $r;
-                                $star1 = $r - 2 >= 2 ? 2 : ($r - 2 <= 0 ? 0 : 1);
-                                $star2 = $r - 4 >= 2 ? 2 : ($r - 4 <= 0 ? 0 : 1);
-                                $star3 = $r - 6 >= 2 ? 2 : ($r - 6 <= 0 ? 0 : 1);
-                                $star4 = $r - 8 >= 2 ? 2 : ($r - 8 <= 0 ? 0 : 1);
-                                
-                                // Calculate cost rating
-                                if($res['cost_rating'] == 3) $euro = '€€€';
-                                else if($res['cost_rating'] == 2) $euro = '€€';
-                                else $euro = '€';
-                            ?>
+                            <div class="home-restaurant-rating"><? echo $res->getRatingFormated(); ?></div>
+                            <? $stars = $res->getStars(); ?>
                             <div class="home-restaurant-star-container">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star0 . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star1 . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star2 . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star3 . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star4 . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
                             </div>
                             <div class="home-restaurant-euro-dot">.</div>
-                            <div class="home-restaurant-euro"><? echo $euro; ?></div>
-                            <a class="home-restaurant-view_button" href="<? echo '/yummy/restaurant?id=' . $res['restaurant_id']; ?>">View...</a>
+                            <div class="home-restaurant-euro"><? echo $res->getCostRatingString(); ?></div>
+                            <a class="home-restaurant-view_button" href="<? echo '/yummy/restaurant?id=' . $res->restaurant_id; ?>">View...</a>
                         </div>
-                        <div class="home-restaurant-text"><? echo htmlspecialchars($res['mini_text']); ?></div>     
+                        <div class="home-restaurant-text"><? echo htmlspecialchars($res->mini_text); ?></div>     
                     </div>
                 <?php endforeach; ?>
             <? endif; ?>
         </div>
-        <? if($count_resturants > $count_res_per_page):?>
+        <? if($view_model->total_pages_number > 1):?>
             <div class="list-line"></div>
             <div class="list-pages-container">
-                <? if($page != 0):?>
+                <? if($view_model->current_page != 0):?>
                     <button class="list-page-next-prev" onclick="reloadFilterSortPage(0)">&lt;&lt;</button>
                     <button class="list-page-next-prev" onclick="previousPageClick()">&lt;</button>
                 <? endif; ?>
 
-                <? 
-                    $page_count = round($count_resturants / $count_res_per_page, 0, RoundingMode::AwayFromZero); // Number of pages staring from one
-
-                    $offset = 0; // Left offset of pages button
-                    $limit = 0; // Right offset of pages button
-
-                    if($page < abs($page - $page_count + 1)){ // If current page is closer to first page than last, start from offset
-                        for (; $offset < 3; $offset++) { 
-                            if($page - $offset <= 0) break;
-                        }
-
-                        for (; $limit < 7 - $offset; $limit++) { 
-                            if($page + $limit >= $page_count) break;
-                        }
-
-                    }  
-                    else{ // Otherwise from limit
-                        for (; $limit < 4; $limit++) { 
-                            if($page + $limit >= $page_count) break;
-                        }
-
-                        for (; $offset < 7 - $limit; $offset++) { 
-                            if($page - $offset <= 0) break;
-                        }                       
-                    }                  
-                ?>
-
-                <? for($i = $page - $offset; $i < $page + $limit; $i++):?>
+                <? for($i = $view_model->current_page - $view_model->page_offset; $i < $view_model->current_page + $view_model->page_limit; $i++):?>
                     <button id="page-<? echo $i?>" class="list-page-button list-page-button-unsel" onclick="reloadFilterSortPage(<? echo $i;?>)"><? echo $i + 1; ?></button>
                 <? endfor; ?>
                 
-                <? if($page != $page_count - 1):?>
+                <? if($view_model->current_page != $view_model->total_pages_number - 1):?>
                     <button class="list-page-next-prev" onclick="nextPageClick()">&gt;</button>
-                    <button class="list-page-next-prev" onclick="reloadFilterSortPage(<? echo $page_count - 1;?>)">&gt;&gt;</button>
+                    <button class="list-page-next-prev" onclick="reloadFilterSortPage(<? echo $view_model->total_pages_number - 1;?>)">&gt;&gt;</button>
                 <? endif; ?>
             </div>
         <? endif; ?>
@@ -172,14 +122,14 @@ $cs_types = $cs_types ?? [];
 
 <script type="text/javascript">
     // Get current page
-    let current_page = <?php echo $page?>;
-    let last_page = <?php echo round($count_resturants / $count_res_per_page, 0, RoundingMode::AwayFromZero); ?>
+    let current_page = <?php echo $view_model->current_page?>;
+    let last_page = <?php echo $view_model->total_pages_number; ?>
 
     // Get all of the selected filter types by category
-    let place_type = <?php echo json_encode($place_type); ?>;
-    let meal_type = <?php echo json_encode($meal_type); ?>;
-    let food_type = <?php echo json_encode($food_type); ?>;
-    let cuisine_type = <?php echo json_encode($cuisine_type); ?>;
+    let place_type = <?php echo json_encode($view_model->current_place_types); ?>;
+    let meal_type = <?php echo json_encode($view_model->current_meal_types); ?>;
+    let food_type = <?php echo json_encode($view_model->current_food_types); ?>;
+    let cuisine_type = <?php echo json_encode($view_model->current_cuisine_types); ?>;
 
     // Select all of the filters from uri
     for(let i = 0; i < place_type.length; i++){
@@ -202,7 +152,7 @@ $cs_types = $cs_types ?? [];
     if(last_page > 1) document.getElementById("page-" + current_page).className = "list-page-button list-page-button-sel";
 
     // Select sorting from uri
-    document.getElementById("sort").selectedIndex = <? echo $sorting; ?>;
+    document.getElementById("sort").selectedIndex = <? echo $view_model->sorting; ?>;
 
     // Filter option button click action
     function filterOptionClick(sender){

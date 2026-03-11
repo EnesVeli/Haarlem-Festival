@@ -1,9 +1,8 @@
-<?php 
-$guides = $guides ?? [];
-$restaurants = $restaurants ?? [];
-?>
+<?php
 
-<?php require '/app/src/Views/partials/header.php';?>
+use App\Models\Restaurant;
+
+ require '/app/src/Views/partials/header.php';?>
 
 
 <style>
@@ -29,40 +28,28 @@ $restaurants = $restaurants ?? [];
             <a class="home-restaurants-view-all-top" href="/yummy/list">view all</a>
         </div>      
    
-        <?php if(count($restaurants) > 0):?>
+        <?php if(count($view_model->restaurants) > 0):?>
             <div class="home-restaurant-list">
                 <div class="home-restaurant-list-wrap">
-                    <?php foreach($restaurants as $res):?>
+                    <?php foreach($view_model->restaurants as $res):?>
                         <div class="home-restaurant-card">
-                            <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res['mini_img_path']; ?>">
-                            <h3 class="home-restaurant-title"><? echo $res['name'];?></h3>
+                            <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->mini_img_path; ?>">
+                            <h3 class="home-restaurant-title"><? echo htmlspecialchars($res->name); ?></h3>
                             <div class="home-restaurant-card-sub">
-                                <div class="home-restaurant-rating"><? echo number_format((float)round($res['rating'], 1, PHP_ROUND_HALF_UP), 1, '.', '') ?></div>
-                                <?php
-                                    $r = round($res['rating'] * 2, 0, PHP_ROUND_HALF_DOWN);
-
-                                    $star0 = $r >= 2 ? 2 : $r;
-                                    $star1 = $r - 2 >= 2 ? 2 : ($r - 2 <= 0 ? 0 : 1);
-                                    $star2 = $r - 4 >= 2 ? 2 : ($r - 4 <= 0 ? 0 : 1);
-                                    $star3 = $r - 6 >= 2 ? 2 : ($r - 6 <= 0 ? 0 : 1);
-                                    $star4 = $r - 8 >= 2 ? 2 : ($r - 8 <= 0 ? 0 : 1);
-
-                                    if($res['cost_rating'] == 3) $euro = '€€€';
-                                    else if($res['cost_rating'] == 2) $euro = '€€';
-                                    else $euro = '€';
-                                ?>
+                                <div class="home-restaurant-rating"><? echo $res->getRatingFormated(); ?></div>
+                                <? $stars = $res->getStars(); ?>
                                 <div class="home-restaurant-star-container">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star0 . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star1 . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star2 . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star3 . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $star4 . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
                                 </div>
                                 <div class="home-restaurant-euro-dot">.</div>
-                                <div class="home-restaurant-euro"><? echo $euro; ?></div>
-                                <a class="home-restaurant-view_button" href="<? echo '/yummy/restaurant?id=' . $res['restaurant_id']; ?>">View...</a>
+                                <div class="home-restaurant-euro"><? echo $res->getCostRatingString(); ?></div>
+                                <a class="home-restaurant-view_button" href="<? echo '/yummy/restaurant?id=' . $res->restaurant_id; ?>">View...</a>
                             </div>
-                            <div class="home-restaurant-text"><? echo $res['mini_text']; ?></div>     
+                            <div class="home-restaurant-text"><? echo htmlspecialchars($res->mini_text); ?></div>     
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -78,15 +65,15 @@ $restaurants = $restaurants ?? [];
 
     <section class="home-guide-section">
         <h1 class="home-guides-title">Our restaurant guides:</h1>            
-        <?php if(count($guides) > 0):?>
+        <?php if(count($view_model->guides) > 0):?>
             <div class="home-guide-list">
                 <div class="home-guide-list-wrap">
-                    <?php foreach($guides as $g):?>
+                    <?php foreach($view_model->guides as $g):?>
                         <div class="home-guide-card">
-                            <img class="home-guide-img" src="<? echo '/assets/css/uploads/yummy/guides/' . $g['mini_img_path']; ?>">
-                            <h3 class="home-guide-title"><? echo $g['mini_title']; ?></h3>
-                            <div class="home-guide-text"><? echo $g['mini_text'];?></div>
-                            <a class="home-guide-view-button" href="<? echo '/yummy/guide?id=' . $g['guide_id']; ?>">Learn more...</a>
+                            <img class="home-guide-img" src="<? echo '/assets/css/uploads/yummy/guides/' . $g->mini_img_path; ?>">
+                            <h3 class="home-guide-title"><? echo htmlspecialchars($g->mini_title); ?></h3>
+                            <div class="home-guide-text"><? echo htmlspecialchars($g->mini_text); ?></div>
+                            <a class="home-guide-view-button" href="<? echo '/yummy/guide?id=' . $g->guide_id; ?>">Learn more...</a>
                         </div>
                     <?php endforeach; ?>
                 </div>

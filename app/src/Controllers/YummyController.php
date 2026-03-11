@@ -6,62 +6,26 @@ use App\Services\YummyService;
 
 class YummyController
 {
+    private YummyService $service;
+
+    public function __construct()
+    {
+        $this->service = new YummyService();
+    }
+
     public function index()
     {
-        $pageTitle = 'Yuumy - Haarlem Festival';
+        $pageTitle = 'Yummy - Haarlem Festival';
 
-        $service = new YummyService();
-
-        $guides = $service->getActiveGuides();
-        $restaurants = $service->getActiveRestaurants();
+        $view_model = $this->service->getHomeViewModel();
 
         require __DIR__ . '/../Views/yummy/home.php';
     }
 
     public function list(){
-        $service = new YummyService();
+        $pageTitle = 'Yummy - Restaurant List';
 
-        // Get Filtering and Sorting
-        $place_type = isset($_GET['place_type']) ? explode(',', $_GET['place_type']) : [];
-        $meal_type = isset($_GET['meal_type']) ? explode(',', $_GET['meal_type']) : [];
-        $food_type = isset($_GET['food_type']) ? explode(',', $_GET['food_type']) : [];
-        $cuisine_type = isset($_GET['cuisine_type']) ? explode(',', $_GET['cuisine_type']) : [];
-
-        $sorting = $_GET['sorting'] ?? 0;
-
-        $page = $_GET['page'] ?? 0;
-
-        $out = $service->getRestaurantFiltered($place_type, $meal_type, $food_type, $cuisine_type, $sorting, $page);
-
-        $restaurants = $out[0];
-        $count_resturants = $out[1];
-
-        $count_res_per_page = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE;
-
-        // Load types form db
-        $all_types = $service->getTypes();
-
-        $pl_types = [];
-        $ml_types = [];
-        $fd_types = [];
-        $cs_types = []; 
-
-        for($i = 0; $i < count($all_types); $i++){ 
-            switch($all_types[$i]['category']){
-                case 0:
-                    $pl_types[] = $all_types[$i];
-                    break;
-                case 1:
-                    $ml_types[] = $all_types[$i];
-                    break;
-                case 2:
-                    $fd_types[] = $all_types[$i];
-                    break;
-                case 3:
-                    $cs_types[] = $all_types[$i];
-                    break;
-            }
-        }      
+        $view_model = $this->service->getListViewModel($_GET['place_type'] ?? null, $_GET['meal_type'] ?? null, $_GET['food_type'] ?? null, $_GET['cuisine_type'] ?? null, $_GET['sorting'] ?? null, $_GET['page'] ?? null);
 
         require __DIR__ . '/../Views/yummy/list.php';
     }
