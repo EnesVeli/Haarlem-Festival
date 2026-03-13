@@ -27,9 +27,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     // Password Reset
     $r->addRoute('GET', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'index']);
-    $r->addRoute('POST', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'requestPaawordReset']);
-    $r->addRoute('GET', '/password-reset-start', [\App\Controllers\PasswordResetController::class, 'startPasswordReset']);
-    $r->addRoute('POST', '/password-reset-confirm', [\App\Controllers\PasswordResetController::class, 'createNewPassword']);
+    $r->addRoute('POST', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'requestPasswordReset']);
+    $r->addRoute('GET', '/password-reset-start', [\App\Controllers\PasswordResetController::class, 'passwordResetVerifyEmail']);
+    $r->addRoute('POST', '/password-reset-confirm', [\App\Controllers\PasswordResetController::class, 'startPasswordReset']);
     $r->addRoute('POST', '/password-reset', [\App\Controllers\PasswordResetController::class, 'resetPassword']);
     // Profile (Manage account)
     $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);

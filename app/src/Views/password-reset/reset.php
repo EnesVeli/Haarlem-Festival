@@ -16,21 +16,24 @@
             <div class="row justify-content-center">
                 <div class="card shadow-sm border-0 mt-5 col-12 col-sm-10 col-md-7 col-lg-5">
                     <div class="card-body p-4">
-                        <?php if(!empty($error)): ?>
+                        <?php if(!empty($error_message)): ?>
                             <div class="alert alert-danger" role="alert">
-                                <?= htmlspecialchars($error) ?>
+                                <?= htmlspecialchars($error_message) ?>
                             </div>
                         <?php endif; ?>
 
                         <form method="post" action="/password-reset" novalidate>
+                            <input type="hidden" id="key" name="key" value="<? echo $key?>">
+                            <input type="hidden" id="email" name="email" value="<? echo $email?>">
+
                             <div class="mb-3">
                                 <label for="password" class="form-label">Enter new password</label>
                                 <input id="password" name="password" type="password" class="form-control" required autocomplete="new-password">
                             </div>
 
                             <div class="mb-3">
-                                <label for="password" class="form-label">Confirm new password</label>
-                                <input id="password-confirm" name="password-confirm" type="password" class="form-control" required autocomplete="new-password">
+                                <label for="password_confirm" class="form-label">Confirm new password</label>
+                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" required autocomplete="new-password">
                             </div>
 
                             <div class="d-grid gap-2">

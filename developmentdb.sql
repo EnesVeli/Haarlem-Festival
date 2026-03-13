@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 09, 2026 at 12:19 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Mar 13, 2026 at 08:12 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -379,8 +379,16 @@ CREATE TABLE `PasswordResetToken` (
   `token_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `key` varchar(256) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `activated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `PasswordResetToken`
+--
+
+INSERT INTO `PasswordResetToken` (`token_id`, `user_id`, `key`, `created_at`, `activated_at`) VALUES
+(2, 6, '$2y$12$kLZMRm/v5N83Emyi8ZM7z.tmlllfSONqbWppn3ltxS7QBztKfXhuG', '2026-03-13 12:32:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -765,7 +773,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `User`

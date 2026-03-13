@@ -16,13 +16,15 @@
             <div class="row justify-content-center">
                 <div class="card shadow-sm border-0 mt-5 col-12 col-sm-10 col-md-7 col-lg-5">
                     <div class="card-body p-4">
-                        <?php if(!empty($error)): ?>
+                        <?php if(!empty($error_message)): ?>
                             <div class="alert alert-danger" role="alert">
-                                <?= htmlspecialchars($error) ?>
+                                <?= htmlspecialchars($error_message) ?>
                             </div>
                         <?php endif; ?>
 
                         <form method="post" action="/password-reset-confirm" novalidate>
+                            <input type="hidden" id="key" name="key" value="<? echo htmlspecialchars($key); ?>">
+
                             <div class="mb-3">
                                 <label for="email" class="form-label">Verify your email</label>
                                 <input id="email" name="email" type="email" class="form-control" placeholder="name@example.com" required autocomplete="email">

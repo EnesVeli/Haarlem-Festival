@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Framework\Repository;
+use App\Models\FoodType;
 use PDO;
 
 class YummyFoodTypeRepository extends Repository
@@ -18,10 +19,13 @@ class YummyFoodTypeRepository extends Repository
 
     public function getAllTypes(): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM `YummyFoodTypes`");
-
+        $stmt = $this->connection->prepare("SELECT `type_id`, `name`, `category` FROM `YummyFoodTypes`");
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_BOTH);  
+        $stmt->setFetchMode(PDO::FETCH_CLASS, FoodType::class);
+
+        $res = $stmt->fetchAll();
+
+        return $res == false ? null : $res;
     }
 }
