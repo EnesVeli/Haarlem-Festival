@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Repositories\YummyRestaurantsRepository;
 use App\Services\YummyService;
+use Exception;
 
 class YummyController
 {
@@ -17,7 +18,12 @@ class YummyController
     {
         $pageTitle = 'Yummy - Haarlem Festival';
 
-        $view_model = $this->service->getHomeViewModel();
+        try{
+            $view_model = $this->service->getHomeViewModel();
+        } 
+        catch(Exception $ex){
+            $error_message = 'Something went wrong, try again later';
+        }   
 
         require __DIR__ . '/../Views/yummy/home.php';
     }
@@ -25,7 +31,12 @@ class YummyController
     public function list(){
         $pageTitle = 'Yummy - Restaurant List';
 
-        $view_model = $this->service->getListViewModel($_GET['place_type'] ?? null, $_GET['meal_type'] ?? null, $_GET['food_type'] ?? null, $_GET['cuisine_type'] ?? null, $_GET['sorting'] ?? null, $_GET['page'] ?? null);
+        try{
+            $view_model = $this->service->getListViewModel($_GET['place_type'] ?? null, $_GET['meal_type'] ?? null, $_GET['food_type'] ?? null, $_GET['cuisine_type'] ?? null, $_GET['sorting'] ?? null, $_GET['page'] ?? null);
+        } 
+        catch(Exception $ex){
+            $error_message = 'Something went wrong, try again later';
+        }          
 
         require __DIR__ . '/../Views/yummy/list.php';
     }

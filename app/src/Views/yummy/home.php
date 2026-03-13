@@ -27,6 +27,12 @@ use App\Models\Restaurant;
             <h1 class="home-restaurants-title">Places in Haarlem:</h1>
             <a class="home-restaurants-view-all-top" href="/yummy/list">view all</a>
         </div>      
+
+        <?php if(!empty($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($error_message) ?>
+            </div>
+        <?php endif; ?>
    
         <?php if(count($view_model->restaurants) > 0):?>
             <div class="home-restaurant-list">

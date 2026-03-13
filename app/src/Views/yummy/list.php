@@ -18,6 +18,12 @@
         </div>     
     </section> 
 
+    <?php if(!empty($error_message)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error_message) ?>
+        </div>
+    <?php endif; ?>
+
     <section class="list-filter-section">
         <h1 class="list-filter-title">Filter:</h1>
         <div class="list-filter-container">
