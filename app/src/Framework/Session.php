@@ -58,4 +58,13 @@ class Session
             'role'    => $_SESSION['role'] ?? null,
         ];
     }
+    public static function role(): ?string
+{
+    return $_SESSION['role'] ?? null;
+}
+
+public static function isAdmin(): bool
+{
+    return self::isLoggedIn() && self::role() === 'admin';
+}
 }
