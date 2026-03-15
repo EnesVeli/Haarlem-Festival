@@ -44,15 +44,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
     $r->addRoute('GET', '/jazz/performer', [\App\Controllers\JazzController::class, 'performer']);
-    // CMS - Jazz homepage blocks (admin)
+    // CMS - Jazz
     $r->addRoute('GET',  '/cms/jazz/home',        [\App\Controllers\CmsJazzController::class, 'index']);
-
     $r->addRoute('GET',  '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'new']);
     $r->addRoute('POST', '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'create']);
-
     $r->addRoute('GET',  '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'edit']);
     $r->addRoute('POST', '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'update']);
-
     $r->addRoute('POST', '/cms/jazz/block/delete',[\App\Controllers\CmsJazzController::class, 'delete']);
     // History
     $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
@@ -60,6 +57,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Yummy
     $r->addRoute('GET', '/yummy', [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
+    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
 });
 
 // Fetch method and URI from Server

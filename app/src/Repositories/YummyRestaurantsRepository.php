@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Framework\Repository;
 use App\Models\Restaurant;
+use App\Models\RestaurantImage;
 use PDO;
 
 enum RestaurantSortingOption : int{
@@ -24,7 +25,7 @@ class YummyRestaurantsRepository extends Repository
      */
     public function getRestaurantById(string $restaurant_id): ?Restaurant
     {
-        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `mini_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id");
+        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id AND `active` = 1");
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
@@ -37,7 +38,7 @@ class YummyRestaurantsRepository extends Repository
      * @return ?array returns 8 or less active restaurant sorted by popularity as list of objects, or null if something went wrong.
      */
     public function getTopActiveRestaurants() : ?array {
-        $stmt = $this->connection->prepare("SELECT * FROM `YummyRestaurants` WHERE `active` = 1 LIMIT 8");
+        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active` FROM `YummyRestaurants` WHERE `active` = 1 LIMIT 8");
         $stmt->execute();
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
@@ -80,12 +81,12 @@ class YummyRestaurantsRepository extends Repository
         $offset = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE * $page;
 
         if($filter == null){
-            $query = "SELECT `R`.`restaurant_id`, `R`.`mini_img_path`, `R`.`name`, `R`.`mini_text`, `R`.`rating`, `R`.`cost_rating`, `R`.`active` FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1 $sort_string LIMIT $limit OFFSET $offset";
+            $query = "SELECT `R`.`restaurant_id`, `R`.`main_img_path`, `R`.`name`, `R`.`mini_text`, `R`.`rating`, `R`.`cost_rating`, `R`.`active` FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1 $sort_string LIMIT $limit OFFSET $offset";
 
             $count_query = "SELECT COUNT(*) FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1";
         }
         else{
-            $query =   "SELECT `R`.`restaurant_id`, `R`.`mini_img_path`, `R`.`name`, `R`.`mini_text`, `R`.`rating`, `R`.`cost_rating`, `R`.`active`
+            $query =   "SELECT `R`.`restaurant_id`, `R`.`main_img_path`, `R`.`name`, `R`.`mini_text`, `R`.`rating`, `R`.`cost_rating`, `R`.`active`
                         FROM `YummyRestaurants` AS `R`                 
                         INNER JOIN
                             (SELECT `RFT`.`restaurant_id`, `RFT`.`type_id`, COUNT(*)
@@ -167,5 +168,19 @@ class YummyRestaurantsRepository extends Repository
             default:
                 return "";
         }
+    }
+
+    /**
+     * @param int $restaurant_id id of searched restaurant.
+     * @return ?array returns array of restaurant images, returns null, if nothing were found.
+     */
+    public function getRestaurantImages(int $restaurant_id) : ?array {
+        $stmt = $this->connection->prepare("SELECT `image_id`, `restaurant_id`, `path` FROM `YummyRestaurantImages` WHERE `restaurant_id` = :restaurant_id");
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantImage::class);
+        $res = $stmt->fetchAll(); 
+
+        return $res == false ? null : $res;
     }
 }
