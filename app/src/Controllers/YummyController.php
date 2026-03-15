@@ -40,4 +40,19 @@ class YummyController
 
         require __DIR__ . '/../Views/yummy/list.php';
     }
+
+    public function restaurant(){
+        try{
+            $id = $_GET['id'] ?? null;
+
+            $view_model = $this->service->getRestaurantViewModel($id);
+
+            $pageTitle = 'Yummy - Restaurant List';
+        } 
+        catch(Exception $ex){
+            $error_message = 'Something went wrong, try again later';
+        }          
+
+        require __DIR__ . '/../Views/yummy/restaurant.php';
+    }
 }

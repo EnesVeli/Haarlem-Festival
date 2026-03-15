@@ -4,12 +4,17 @@ namespace App\Models;
 
 class Restaurant {
     public int $restaurant_id;
-    public string $mini_img_path;
+    public string $main_img_path;
     public string $name;
     public string $mini_text;
     public float $rating;
     public int $cost_rating;
     public bool $active;
+    public string $text;
+    public string $opening_hours;
+    public string $address_text;
+    public string $address_uri;
+    public ?string $website_link;
 
     /**
     * @return ?array if restaurant rating is null, returns null. Otherwise returns list of 5 elements each is 0 (empty star), 1 (half star) or 2 (whole star).

@@ -39,7 +39,7 @@ use App\Models\Restaurant;
                 <div class="home-restaurant-list-wrap">
                     <?php foreach($view_model->restaurants as $res):?>
                         <div class="home-restaurant-card">
-                            <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->mini_img_path; ?>">
+                            <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->main_img_path; ?>">
                             <h3 class="home-restaurant-title"><? echo htmlspecialchars($res->name); ?></h3>
                             <div class="home-restaurant-card-sub">
                                 <div class="home-restaurant-rating"><? echo $res->getRatingFormated(); ?></div>

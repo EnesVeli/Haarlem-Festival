@@ -8,6 +8,7 @@ use App\Repositories\YummyGuidesRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use App\ViewModels\YummyHomeViewModel;
 use App\ViewModels\YummyListViewModel;
+use App\ViewModels\YummyRestaurantViewModel;
 use Exception;
 use RoundingMode;
 
@@ -100,7 +101,18 @@ class YummyService
                     $view_model->all_cuisine_types[] = $all_types[$i];
                     break;
             }
-        } 
+        }
+
+        return $view_model;
+    }
+
+    public function getRestaurantViewModel(string $id) : YummyRestaurantViewModel {
+        $view_model = new YummyRestaurantViewModel();
+
+        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id);
+        $view_model->tags = $this->type_repository->getRestaurantTypes((int)$id);
+
+        $view_model->images = $this->restaurant_repository->getRestaurantImages((int)$id) ?? [];
 
         return $view_model;
     }
