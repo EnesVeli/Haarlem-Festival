@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Controllers;
 
-use App\Services\JazzService;
+use App\Services\Jazz\JazzService;
 use App\Framework\Session;
+use App\ViewModels\Jazz\JazzHomeViewModel;
+use App\ViewModels\Jazz\JazzPerformerViewModel;
 
 class JazzController
 {
@@ -11,11 +14,15 @@ class JazzController
         $service = new JazzService();
         $data = $service->getHomePageData();
 
-        $experiences = $data['experiences'];
-        $performers = $data['performers'];
-        $recommendations = $data['recommendations'];
-
-        $currentUser = Session::user();
+        $vm = new JazzHomeViewModel(
+            $data['hero'],
+            $data['intro'],
+            $data['experiences'],
+            $data['performers'],
+            $data['recommendations'],
+            $data['locations'],
+            Session::user()
+        );
 
         require __DIR__ . '/../Views/jazz/home.php';
     }
@@ -41,15 +48,35 @@ class JazzController
         }
 
         $service = new JazzService();
-        $performer = $service->getPerformerById($id);
+        $data = $service->getPerformerDetail($id);
 
-        if (!$performer) {
+        if (!$data) {
             http_response_code(404);
             echo '404 - Performer not found';
             return;
         }
-        
-        $currentUser = Session::user();
+
+        $vm = new JazzPerformerViewModel(
+            $data['performer'],
+            $data['appearances'],
+            $data['highlights'],
+            $data['tracks'],
+            $data['locations'],
+            $data['recommendations'],
+            Session::user()
+        );
+
         require __DIR__ . '/../Views/jazz/performer.php';
     }
+    public function experiences(): void
+{
+    $repo = new \App\Repositories\JazzRepository();
+    $experiences = $repo->getExperiences();
+
+    $pageTitle = 'Jazz CMS - Experiences';
+    $pageCSS = 'jazz.css';
+    $user = \App\Framework\Session::user();
+
+    require __DIR__ . '/../../../Views/cms/jazz/experiences.php';
+}
 }
