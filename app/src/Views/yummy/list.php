@@ -14,7 +14,7 @@
             </div>
 
             <div class="list-topper-filter"></div>
-            <img class="list-topper-img" src="/assets/css/uploads/yummy/list_topper.jpg">
+            <img class="list-topper-img" src="/assets/uploads/yummy/list_topper.jpg">
         </div>     
     </section> 
 
@@ -84,17 +84,17 @@
             <? if(count($view_model->restaurants) > 0): ?>
                 <?php foreach($view_model->restaurants as $res):?>
                     <div class="list-restaurant-card">
-                        <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->main_img_path; ?>">
+                        <img class="home-restaurant-img" src="<? echo '/assets/uploads/yummy/restaurants/' . $res->main_img_path; ?>">
                         <h3 class="home-restaurant-title"><? echo htmlspecialchars($res->name); ?></h3>
                         <div class="home-restaurant-card-sub">
                             <div class="home-restaurant-rating"><? echo $res->getRatingFormated(); ?></div>
                             <? $stars = $res->getStars(); ?>
                             <div class="home-restaurant-star-container">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
-                                <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
+                                <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
                             </div>
                             <div class="home-restaurant-euro-dot">.</div>
                             <div class="home-restaurant-euro"><? echo $res->getCostRatingString(); ?></div>

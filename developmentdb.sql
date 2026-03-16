@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 15, 2026 at 08:01 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Mar 16, 2026 at 01:12 PM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -326,7 +326,7 @@ CREATE TABLE `home_events` (
 INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long_description`, `venues`, `image`, `bg_class`, `icon`, `url`, `button_label`, `sort_order`, `is_active`) VALUES
 (1, 'Haarlem Jazz', 'Music', 'Experience world-class jazz performances across multiple venues. From smooth classics to contemporary fusion.', 'From soft saxophone melodies to energetic jam nights, Haarlem Jazz mixes tradition, modern sound, and warm summer nights...', 'Patronaat Haarlem, Grand Cafe Brinkman, New Vegas', 'Jazz.png', 'jazz-bg', 'bi-music-note-beamed', '/jazz', 'Jazz', 1, 1),
 (2, 'Dance!', 'Music', 'Top DJs bring the energy with electrifying performances. Get ready to move to the best electronic beats.', 'Dance is the electronic music experience of The Festival: three nights filled with house, techno and trance across Haarlem and Bloemendaal.', 'Various venues across Haarlem', 'Dance.png', 'dance-bg', 'bi-disc', '/dance', 'Dance', 2, 1),
-(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/food', 'Yummy', 3, 1),
+(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/yummy', 'Yummy', 3, 1),
 (4, 'A Stroll through History!', 'Culture', 'Walk through centuries of Dutch heritage. Discover Haarlem\'s historic landmarks with expert guides.', 'Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.', 'Grote Markt, Corrie ten Boom house', 'bavo-church.jpg', 'history-bg', 'bi-clock-history', '/history', 'History', 4, 1),
 (5, 'Stories in Haarlem', 'Culture', 'Immerse yourself in captivating narratives. From local legends to international storytellers.', 'During the last weekend of July, Stories in Haarlem brings live stories, podcasts and family shows to different locations across the city.', 'Verhalenhuis Haarlem, Elswout Theater, De Schuur, Café de Roemer', 'Story.jpg', 'stories-bg', 'bi-book', '/stories', 'Stories', 5, 1);
 
@@ -418,6 +418,31 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (5, 'tim.sadko@gmail.com', '$2y$12$gwDEB6ZIvcwqXe2i50b5we1styaheGqIc4qRlvrARK5rBreZRbK4G', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (6, 'elena.sadko@gmail.com', '$2y$12$Zg7P22jNmZtkM1EdZczHUe8EwCbiOGnO.XAPybPnES2ah1nBSlrtW', 'Elena Shkvarnytska', 'customer', NULL, '2026-02-27 12:41:38'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyDishes`
+--
+
+CREATE TABLE `YummyDishes` (
+  `dish_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `text` varchar(256) NOT NULL,
+  `image_path` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyDishes`
+--
+
+INSERT INTO `YummyDishes` (`dish_id`, `restaurant_id`, `name`, `text`, `image_path`) VALUES
+(1, 1, 'Ratatouille', 'Rich, creamy Parmesan ratatouille with baba ganoush and gnocchi hearty and flavorful comfort refined.', '55t.png'),
+(2, 1, 'Kingfish', 'Delicately seasoned kingfish with yuzu, dashi, and caviar bright, silky, and elegantly balanced. ', '22t.png'),
+(3, 1, 'Tarbot', 'Perfectly cooked turbot with vin jaune, creamy parsnip, and caviar accents sophisticated seafood delight.', '11t.png'),
+(4, 1, 'Kingfish', 'Delicately seasoned kingfish with yuzu, dashi, and caviar bright, silky, and elegantly balanced. ', '22t.png'),
+(5, 1, 'Tarbot', 'Perfectly cooked turbot with vin jaune, creamy parsnip, and caviar accents sophisticated seafood delight.', '11t.png');
 
 -- --------------------------------------------------------
 
@@ -564,7 +589,8 @@ CREATE TABLE `YummyRestaurantImages` (
 
 INSERT INTO `YummyRestaurantImages` (`image_id`, `restaurant_id`, `path`) VALUES
 (10, 1, '123.png'),
-(11, 1, '223.png');
+(11, 1, '223.png'),
+(12, 1, '123.png');
 
 -- --------------------------------------------------------
 
@@ -698,6 +724,13 @@ ALTER TABLE `User`
   ADD UNIQUE KEY `email` (`email`);
 
 --
+-- Indexes for table `YummyDishes`
+--
+ALTER TABLE `YummyDishes`
+  ADD PRIMARY KEY (`dish_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
 -- Indexes for table `YummyFoodTypes`
 --
 ALTER TABLE `YummyFoodTypes`
@@ -814,6 +847,12 @@ ALTER TABLE `User`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `YummyDishes`
+--
+ALTER TABLE `YummyDishes`
+  MODIFY `dish_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `YummyFoodTypes`
 --
 ALTER TABLE `YummyFoodTypes`
@@ -835,7 +874,7 @@ ALTER TABLE `YummyRestaurantFoodTypes`
 -- AUTO_INCREMENT for table `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurantImages`
-  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
@@ -882,6 +921,12 @@ ALTER TABLE `history_detail_sections`
 --
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+
+--
+-- Constraints for table `YummyDishes`
+--
+ALTER TABLE `YummyDishes`
+  ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
 
 --
 -- Constraints for table `YummyRestaurantFoodTypes`

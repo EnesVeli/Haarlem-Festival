@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Framework\Repository;
+use App\Models\Dish;
 use App\Models\Restaurant;
 use App\Models\RestaurantImage;
 use PDO;
@@ -175,10 +176,24 @@ class YummyRestaurantsRepository extends Repository
      * @return ?array returns array of restaurant images, returns null, if nothing were found.
      */
     public function getRestaurantImages(int $restaurant_id) : ?array {
-        $stmt = $this->connection->prepare("SELECT `image_id`, `restaurant_id`, `path` FROM `YummyRestaurantImages` WHERE `restaurant_id` = :restaurant_id");
+        $stmt = $this->connection->prepare("SELECT `image_id`, `restaurant_id`, `path` FROM `YummyRestaurantImages` WHERE `restaurant_id` = :restaurant_id LIMIT 11");
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantImage::class);
+        $res = $stmt->fetchAll(); 
+
+        return $res == false ? null : $res;
+    }
+
+    /**
+     * @param int $restaurant_id id of searched restaurant.
+     * @return ?array returns array of restaurant dishes, returns null, if nothing were found.
+     */
+    public function getRestaurantDishes(int $restaurant_id) : ?array {
+        $stmt = $this->connection->prepare("SELECT `dish_id`, `restaurant_id`, `name`, `text`, `image_path` FROM `YummyDishes` WHERE `restaurant_id` = :restaurant_id LIMIT 8");
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Dish::class);
         $res = $stmt->fetchAll(); 
 
         return $res == false ? null : $res;
