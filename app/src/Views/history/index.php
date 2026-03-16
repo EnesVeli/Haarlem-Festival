@@ -153,7 +153,7 @@ require __DIR__ . '/../partials/header.php';
 
 <!-- CTA SECTION -->
 <section class="section-padding" <?php if ($viewModel->hasCtaImage()): ?> 
-    style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/images/<?= htmlspecialchars($viewModel->ctaImage()) ?>'); background-size: cover; background-position: center; color: white;"
+    style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/assets/uploads/History/<?= htmlspecialchars($viewModel->ctaImage()) ?>'); background-size: cover; background-position: center; color: white;"
 <?php endif; ?>>
     <div class="container">
         <div class="cta-box" <?= $viewModel->hasCtaImage() ? 'style="background: transparent;"' : '' ?>>
