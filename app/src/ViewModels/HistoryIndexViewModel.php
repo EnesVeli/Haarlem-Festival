@@ -53,7 +53,7 @@ class HistoryIndexViewModel
     {
         return $this->content['walk']['title'] ?? 'Better Your Walk';
     }
-
+ 
     public function walkSubtitle(): string
     {
         return $this->content['walk']['subtitle'] ?? 'You can walk the route freely, but for the full story, our expert guides bring the stones to life.';

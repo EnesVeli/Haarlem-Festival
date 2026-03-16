@@ -6,7 +6,7 @@ require __DIR__ . '/../partials/header.php';
 ?>
 
 <!-- HERO SECTION -->
-<section class="history-hero" style="background-image: url('/assets/css/uploads/history/<?= htmlspecialchars($viewModel->heroImage()) ?>'); background-size: cover; background-position: center;">
+<section class="history-hero" style="background-image: url('/assets/uploads/History/<?= htmlspecialchars($viewModel->heroImage()) ?>'); background-size: cover; background-position: center;">
     <div class="container">
         <div class="hero-content">
             <h1><?= htmlspecialchars($viewModel->heroTitle()) ?></h1>
@@ -44,8 +44,8 @@ require __DIR__ . '/../partials/header.php';
             </div>
             
             <div class="golden-city-images">
-                <img src="/assets/css/uploads/history/grote-markt.jpg" alt="Grote Markt" class="city-image">
-                <img src="/assets/css/uploads/history/historic-buildings.jpg" alt="Historic Buildings" class="city-image">
+                <img src="/assets/uploads/History/grote-markt.jpg" alt="Grote Markt" class="city-image">
+                <img src="/assets/uploads/History/historic-buildings.jpg" alt="Historic Buildings" class="city-image">
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@ require __DIR__ . '/../partials/header.php';
                 <div class="highlights-grid">
                     <?php foreach ($viewModel->highlights as $highlight): ?>
                         <div class="highlight-card">
-                            <img src="/assets/css/uploads/history/<?= htmlspecialchars($highlight['image']) ?>" 
+                            <img src="/assets/uploads/History/<?= htmlspecialchars($highlight['image']) ?>" 
                                  alt="<?= htmlspecialchars($highlight['title']) ?>" 
                                  class="highlight-image">
                             <div class="highlight-body">
@@ -107,7 +107,7 @@ require __DIR__ . '/../partials/header.php';
                     <p><?= htmlspecialchars($viewModel->walkSubtitle()) ?></p>
                     
                     <?php if ($viewModel->hasWalkImage()): ?>
-                        <img src="/assets/css/uploads/history/<?= htmlspecialchars($viewModel->walkImage()) ?>" alt="Walk guide">
+                        <img src="/assets/uploads/History/<?= htmlspecialchars($viewModel->walkImage()) ?>" alt="Walk guide">
                     <?php endif; ?>
                     
                     <div class="walk-features">
@@ -173,21 +173,21 @@ require __DIR__ . '/../partials/header.php';
         <h2 class="section-title-burgundy mb-5">Complete Your Journey</h2>
         <div class="journey-grid">
             <div class="journey-card">
-                <img src="/assets/css/uploads/history/stories-haarlem.jpg" alt="Stories in Haarlem">
+                <img src="/assets/uploads/History/stories-haarlem.jpg" alt="Stories in Haarlem">
                 <div class="journey-body">
                     <h3>Stories in Haarlem</h3>
                     <p>Guided walking tour through Haarlem with local storytellers sharing tales of the city's rich past.</p>
                 </div>
             </div>
             <div class="journey-card">
-                <img src="/assets/css/uploads/history/jazz-event.jpg" alt="Jazz">
+                <img src="/assets/uploads/History/jazz-event.jpg" alt="Jazz">
                 <div class="journey-body">
                     <h3>Jazz</h3>
                     <p>Interactive magic and illusion show at the famous Teylers Museum, perfect for families and wonder-seekers.</p>
                 </div>
             </div>
             <div class="journey-card">
-                <img src="/assets/css/uploads/history/yummy-event.jpg" alt="Yummy">
+                <img src="/assets/uploads/History/yummy-event.jpg" alt="Yummy">
                 <div class="journey-body">
                     <h3>Yummy!</h3>
                     <p>Culinary storytelling experience with local chefs and food historians exploring Dutch cuisine traditions.</p>
