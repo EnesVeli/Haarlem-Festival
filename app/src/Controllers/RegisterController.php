@@ -1,11 +1,23 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Exceptions\EmailAlreadyRegesteredException;
+use App\Models\Exceptions\EmptyFieldException;
 use App\Services\UserService;
+use App\Models\Exceptions\EmptyPasswordException;
+use App\Models\Exceptions\InappropriatePasswordLengthException;
+use App\Models\Exceptions\PasswordMismatchException;
+use App\Models\Exceptions\IncorrectEmailException;
 use Exception;
 
 class RegisterController
 {
+    private UserService $user_service;
+
+    public function __construct(){
+        $this->user_service = new UserService();
+    }
+
     public function index()
     {
         require __DIR__ . '/../Views/register.php';
@@ -13,31 +25,51 @@ class RegisterController
 
     public function register()
     {
-        header('Content-Type: application/json');
-
         try {
-            $input = json_decode(file_get_contents('php://input'), true);
-            
-            $name = $input['name'] ?? '';
-            $email = $input['email'] ?? '';
-            $password = $input['password'] ?? '';
+            $name = $_POST['name'] ?? '';
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+            $password_confirm = $_POST['password-confirm'] ?? '';
 
-            if (empty($name) || empty($email) || empty($password)) {
-                throw new Exception("Name, email, and password are required.");
-            }
+            $this->user_service->registerUser($name, $email, $password, $password_confirm);
 
-            if(filter_var($email, FILTER_VALIDATE_EMAIL) === false) { // Verify if email is real
-                throw new Exception("You must provide valid email address." . $email);
-            }
-
-            $userService = new UserService();
-            $userService->registerUser($name, $email, $password);
-
-            echo json_encode(['success' => true, 'message' => 'Registration successful!']);
-
-        } catch (Exception $e) {
-            http_response_code(400);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            require __DIR__ . '/../Views/register-success.php';
+            exit; 
+        } 
+        catch(EmptyFieldException $ex){
+            $error_message = "Name, email and password should not be empty";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(EmailAlreadyRegesteredException $ex){
+            $error_message = "This email is already registered.";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(EmptyPasswordException $ex){
+            $error_message = "The password must not be empty";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(InappropriatePasswordLengthException $ex){
+            $error_message = "Your password must be at least 8 and maximum 255 characters.";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(PasswordMismatchException $ex){
+            $error_message = "The passwords do not match.";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(IncorrectEmailException $ex){
+            $error_message = "Enter a valid email address.";
+            require __DIR__ . '/../Views/register.php';
+            exit;
+        }
+        catch(Exception $ex){
+            $error_message = "Something went wrong, try again later.";
+            require __DIR__ . '/../Views/register.php';
+            exit;
         }
     }
 }

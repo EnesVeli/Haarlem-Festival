@@ -429,6 +429,90 @@ CREATE TABLE `Invoice` (
   `client_name` varchar(255) DEFAULT NULL,
   `client_address` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Table structure for table `jazz_experiences`
+--
+
+CREATE TABLE `jazz_experiences` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_experiences`
+--
+
+INSERT INTO `jazz_experiences` (`id`, `title`, `description`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'Jazz & Drinks', 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', '/assets/uploads/jazz/experiences/1773540446_JazzExperience2.png', 2, 1),
+(2, 'Vinyl Sessions', 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', '/assets/uploads/jazz/experiences/1773540485_JazzExperience1.png', 3, 1),
+(3, 'Sunset Stage', 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', '/assets/uploads/jazz/experiences/1773540473_JazzExperience5.png', 4, 1),
+(5, 'Late Night Chill Jam', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '/assets/uploads/jazz/experiences/1773652237_gareDuNordHero.png', 1, 1),
+(8, 'Rythm And Coffe', 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', '/assets/uploads/jazz/experiences/1773540454_JazzExperience3.png', 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_hero`
+--
+
+CREATE TABLE `jazz_hero` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_hero`
+--
+
+INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1773540403_HeroImageMAIN.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_intro_content`
+--
+
+CREATE TABLE `jazz_intro_content` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_intro_content`
+--
+
+INSERT INTO `jazz_intro_content` (`id`, `title`, `description`) VALUES
+(1, 'Welcome to Haarlem Jazz', 'Haarlem Jazz celebrates soulful melodies, late-night sessions, and vibrant creativity of local and international artists.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_locations`
+--
+
+CREATE TABLE `jazz_locations` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `google_maps_embed_url` text NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_locations`
+--
+
+INSERT INTO `jazz_locations` (`id`, `name`, `address`, `google_maps_embed_url`, `is_active`) VALUES
+(1, 'Patronaat', 'Zijlsingel 2, Haarlem', 'https://www.google.com/maps?q=Patronaat,+Haarlem&output=embed', 1),
+(2, 'Grote Markt', 'Grote Markt, 2011 RD Haarlem', 'https://www.google.com/maps?q=Grote+Markt,+2011+RD+Haarlem&output=embed', 1);
 
 -- --------------------------------------------------------
 
@@ -442,32 +526,155 @@ CREATE TABLE `jazz_performers` (
   `bio` text DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `image_path` varchar(255) DEFAULT NULL
+  `image_path` varchar(255) DEFAULT NULL,
+  `performance_style` varchar(150) DEFAULT NULL,
+  `event_date_text` varchar(100) DEFAULT NULL,
+  `event_time_text` varchar(100) DEFAULT NULL,
+  `venue_name` varchar(150) DEFAULT NULL,
+  `venue_address` varchar(255) DEFAULT NULL,
+  `price_text` varchar(50) DEFAULT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `audio_url` varchar(255) DEFAULT NULL,
+  `hero_image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `jazz_performers`
 --
 
-INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`) VALUES
-(1, 'Evolve', NULL, 1, 1, NULL),
-(2, 'Fox & The Mayors', NULL, 2, 1, NULL),
-(3, 'Gare du Nord', NULL, 3, 1, NULL),
-(4, 'Gumbo Kings', NULL, 4, 1, NULL),
-(5, 'Han Bennink', NULL, 5, 1, NULL),
-(6, 'Jonna Frazer', NULL, 6, 1, NULL),
-(7, 'Chris Allen', NULL, 7, 1, NULL),
-(8, 'Lilith Merlot', NULL, 8, 1, NULL),
-(9, 'Myles Sanko', NULL, 9, 1, NULL),
-(10, 'Ntjam Rosie', NULL, 10, 1, NULL),
-(11, 'Rilan & The Bombardiers', NULL, 11, 1, NULL),
-(12, 'Ruis Soundsystem', NULL, 12, 1, NULL),
-(13, 'Soul Six', NULL, 13, 1, NULL),
-(14, 'The Family XL', NULL, 14, 1, NULL),
-(15, 'The Nordanians', NULL, 15, 1, NULL),
-(16, 'The Tom Thompson', NULL, 16, 1, NULL),
-(17, 'Uncle Sue', NULL, 17, 1, NULL),
-(18, 'Wicked Jazz Sounds', NULL, 18, 1, NULL);
+INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
+(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', NULL),
+(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', '', '', '', '', '', '', '', '', NULL),
+(3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
+(4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
+(6, 'Jonna Frazer', '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', '', NULL),
+(7, 'Chris Allen', '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', '', NULL),
+(8, 'Lilith Merlot', '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', '', NULL),
+(9, 'Myles Sanko', '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', '', NULL),
+(13, 'Soul Six', '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', '', NULL),
+(14, 'The Family XL', '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', '', NULL),
+(15, 'The Nordanians', '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', '', NULL),
+(17, 'Uncle Sue', '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_appearances`
+--
+
+CREATE TABLE `jazz_performer_appearances` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `day_text` varchar(50) NOT NULL,
+  `time_text` varchar(50) NOT NULL,
+  `location_text` varchar(255) NOT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_appearances`
+--
+
+INSERT INTO `jazz_performer_appearances` (`id`, `performer_id`, `day_text`, `time_text`, `location_text`, `note_text`, `sort_order`) VALUES
+(3, 3, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', '', 1),
+(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_highlights`
+--
+
+CREATE TABLE `jazz_performer_highlights` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_highlights`
+--
+
+INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `description`, `sort_order`) VALUES
+(5, 3, 'Formation and Early Success', 'Since their formation, Gare du Nord built a strong reputation through atmospheric live performances and a distinctive blend of smooth jazz, soul, and lounge influences. Their stylish sound quickly attracted attention from audiences looking for intimate and elegant festival experiences.', 1),
+(6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
+(7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
+(8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_locations`
+--
+
+CREATE TABLE `jazz_performer_locations` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_locations`
+--
+
+INSERT INTO `jazz_performer_locations` (`id`, `performer_id`, `location_id`, `sort_order`) VALUES
+(3, 3, 1, 1),
+(4, 3, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_tracks`
+--
+
+CREATE TABLE `jazz_performer_tracks` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `release_date_text` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `listen_url` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_tracks`
+--
+
+INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
+(1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
+(2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_recommendations`
+--
+
+CREATE TABLE `jazz_recommendations` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `url` varchar(255) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_recommendations`
+--
+
+INSERT INTO `jazz_recommendations` (`id`, `title`, `description`, `url`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'A Stroll Through History', 'Walked along your through historic Haarlem with local storytellers sharing tales of the city\'s rich past.', '/history', '/assets/uploads/jazz/recommendations/1773540983_stroll.png', 1, 1),
+(5, 'Stories', 'Immerse yourself in Haarlem\'s spoken-word acts and storytelling.', '/stories', '/assets/uploads/jazz/recommendations/1773541019_StoriesRecommendation.png', 2, 1),
+(6, 'Yummy!', 'Explore local food and culinary experiences in Haarlem.', '/yummy', '/assets/uploads/jazz/recommendations/1773541051_Yummy!.png', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -507,8 +714,16 @@ CREATE TABLE `PasswordResetToken` (
   `token_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `key` varchar(256) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `activated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `PasswordResetToken`
+--
+
+INSERT INTO `PasswordResetToken` (`token_id`, `user_id`, `key`, `created_at`, `activated_at`) VALUES
+(2, 6, '$2y$12$kLZMRm/v5N83Emyi8ZM7z.tmlllfSONqbWppn3ltxS7QBztKfXhuG', '2026-03-13 12:32:09', NULL);
 
 -- --------------------------------------------------------
 
@@ -596,7 +811,7 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$fQMweWJ1ZoufZAG95SQpROeUZGSClIxD6Tu.0MTJ8mizUEgq0YTb6', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
+(5, 'tim.sadko@gmail.com', '$2y$12$gwDEB6ZIvcwqXe2i50b5we1styaheGqIc4qRlvrARK5rBreZRbK4G', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (6, 'elena.sadko@gmail.com', '$2y$12$Zg7P22jNmZtkM1EdZczHUe8EwCbiOGnO.XAPybPnES2ah1nBSlrtW', 'Elena Shkvarnytska', 'customer', NULL, '2026-02-27 12:41:38'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'ENESVELIYIGIT@GMAIL.COM', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit ', 'admin', NULL, '2026-03-09 14:38:15');
@@ -754,32 +969,57 @@ INSERT INTO `YummyRestaurantFoodTypes` (`id`, `restaurant_id`, `type_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `YummyRestaurantImages`
+--
+
+CREATE TABLE `YummyRestaurantImages` (
+  `image_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `path` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyRestaurantImages`
+--
+
+INSERT INTO `YummyRestaurantImages` (`image_id`, `restaurant_id`, `path`) VALUES
+(10, 1, '123.png'),
+(11, 1, '223.png');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `YummyRestaurants`
 --
 
 CREATE TABLE `YummyRestaurants` (
   `restaurant_id` int(16) NOT NULL,
-  `mini_img_path` varchar(64) NOT NULL,
+  `main_img_path` varchar(64) NOT NULL,
   `name` varchar(64) NOT NULL,
   `mini_text` varchar(256) NOT NULL,
   `rating` float NOT NULL,
   `cost_rating` bit(4) NOT NULL,
-  `active` bit(1) NOT NULL DEFAULT b'0'
+  `active` bit(1) NOT NULL DEFAULT b'0',
+  `text` varchar(2048) NOT NULL DEFAULT '',
+  `opening_hours` varchar(128) NOT NULL DEFAULT '',
+  `address_text` varchar(128) NOT NULL DEFAULT '',
+  `address_uri` varchar(256) NOT NULL DEFAULT '',
+  `website_link` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `YummyRestaurants`
 --
 
-INSERT INTO `YummyRestaurants` (`restaurant_id`, `mini_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`) VALUES
-(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1'),
-(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1'),
-(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1'),
-(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1'),
-(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1'),
-(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1'),
-(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1'),
-(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1');
+INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link`) VALUES
+(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Closed\r\nClosed\r\n18:00–21:30\r\n18:00–21:00\r\n18:30–21:30\r\n18:30–21:30\r\n18:30–21:30', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
+(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', '', NULL),
+(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', '', NULL),
+(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', '', NULL),
+(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', '', NULL),
+(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', '', NULL),
+(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', '', NULL),
+(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -905,6 +1145,69 @@ ALTER TABLE `OrderItem`
   ADD PRIMARY KEY (`item_id`),
   ADD KEY `idx_order_id` (`order_id`),
   ADD KEY `idx_type_id` (`type_id`);
+-- Indexes for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_highlights_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`),
+  ADD KEY `location_id` (`location_id`);
+
+--
+-- Indexes for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_tracks_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `PasswordResetToken`
@@ -965,6 +1268,13 @@ ALTER TABLE `YummyRestaurantFoodTypes`
   ADD PRIMARY KEY (`id`),
   ADD KEY `restaurant_id` (`restaurant_id`),
   ADD KEY `type_id` (`type_id`);
+
+--
+-- Indexes for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
 
 --
 -- Indexes for table `YummyRestaurants`
@@ -1071,12 +1381,70 @@ ALTER TABLE `Order`
 --
 ALTER TABLE `OrderItem`
   MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+-- AUTO_INCREMENT for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `Ticket`
@@ -1119,6 +1487,12 @@ ALTER TABLE `YummyGuides`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+
+--
+-- AUTO_INCREMENT for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
@@ -1184,6 +1558,29 @@ ALTER TABLE `Order`
 ALTER TABLE `OrderItem`
   ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
+-- Constraints for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD CONSTRAINT `jazz_performer_appearances_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD CONSTRAINT `fk_jazz_performer_highlights_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `jazz_locations` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `PasswordResetToken`
@@ -1210,11 +1607,12 @@ ALTER TABLE `Ticket_Type`
 ALTER TABLE `YummyRestaurantFoodTypes`
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`),
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`);
+
 --
--- Database: `haarlem_festival`
+-- Constraints for table `YummyRestaurantImages`
 --
-CREATE DATABASE IF NOT EXISTS `haarlem_festival` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `haarlem_festival`;
+ALTER TABLE `YummyRestaurantImages`
+  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

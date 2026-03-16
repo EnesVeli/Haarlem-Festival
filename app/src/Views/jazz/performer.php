@@ -1,257 +1,302 @@
-<?php use App\Framework\Session; ?>
-<!doctype html>
-<html lang="en">
 <?php
-// app/src/Views/jazz/performer.php
 
-$mainClass  = 'jazz-main'; // makes page full width like jazz home
-$pageTitle  = htmlspecialchars(($performer['name'] ?? 'Performer') . ' - Haarlem Jazz');
+$performer = $vm->performer ?? [];
+$appearances = $vm->appearances ?? [];
+$highlights = $vm->highlights ?? [];
+$tracks = $vm->tracks ?? [];
+$locations = $vm->locations ?? [];
+$recommendations = $vm->recommendations ?? [];
+$user = $vm->currentUser ?? null;
 
-// header needs $user
-$user = $currentUser ?? null;
-
-// optional: highlights Jazz (only works if header supports it)
+$mainClass = 'jazz-main';
+$pageTitle = htmlspecialchars(($performer['name'] ?? 'Performer') . ' - Haarlem Jazz');
 $activePage = 'jazz';
 
-// load your jazz css (header already loads main.css + header.css)
-//$extraCss = ['/assets/css/jazz.css?v=3'];
+$name = $performer['name'] ?? '';
+$bio = $performer['bio'] ?? '';
+$imagePath = $performer['image_path'] ?? '';
+$style = $performer['performance_style'] ?? '';
+$eventDate = $performer['event_date_text'] ?? '';
+$eventTime = $performer['event_time_text'] ?? '';
+$venueName = $performer['venue_name'] ?? '';
+$venueAddress = $performer['venue_address'] ?? '';
+$priceText = $performer['price_text'] ?? '';
+$noteText = $performer['note_text'] ?? '';
+$audioUrl = $performer['audio_url'] ?? '';
+
+$firstAppearance = $appearances[0] ?? null;
 
 require __DIR__ . '/../partials/header.php';
 ?>
 
 <style>
-    <?php include '/app/public/assets/css/jazz.css'; ?>
+<?php include '/app/public/assets/css/jazz.css'; ?>
 </style>
 
-<div class="container perf-page"></div>
-  <main class="container perf-page">
+<main class="container perf-page">
 
-    <a class="perf-back" href="/jazz">← Back to Jazz Main Page</a>
+    <a class="perf-back-link" href="/jazz">← Back to Jazz Main Page</a>
 
-    <!-- HERO -->
-    <section class="perf-hero perf-hero--split">
-  <div class="perf-hero-left">
-    <h1><?= htmlspecialchars($performer['name'] ?? '') ?></h1>
-    <p class="perf-tagline">
-      <?= htmlspecialchars($performer['tagline'] ?? 'Smooth, soulful lounge jazz — perfect for late-evening festival energy.') ?>
-    </p>
-  </div>
+    <?php
+$heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ?? '');
+?>
 
-  <div class="perf-hero-right" aria-hidden="true">
-    <div class="perf-hero-strips">
-      <div class="perf-strip"></div>
-      <div class="perf-strip"></div>
-      <div class="perf-strip"></div>
-      <div class="perf-strip"></div>
-      <div class="perf-strip"></div>
+<section class="perf-hero-banner">
+    <?php if (!empty($heroBannerImage)): ?>
+        <div
+            class="perf-hero-banner-bg"
+            style="background-image: url('<?= htmlspecialchars($heroBannerImage) ?>');">
+        </div>
+    <?php else: ?>
+        <div class="perf-hero-banner-bg"></div>
+    <?php endif; ?>
+
+    <div class="perf-hero-banner-shade"></div>
+
+    <div class="perf-hero-banner-text">
+        <h1><?= htmlspecialchars($name) ?></h1>
+        <p><?= htmlspecialchars($style ?: 'Live jazz performance during Haarlem Jazz.') ?></p>
     </div>
-  </div>
 </section>
 
-    <p class="perf-lead">
-      <?= htmlspecialchars($performer['bio'] ?? '') ?>
-    </p>
+    <section class="perf-intro-copy">
+        <p><?= htmlspecialchars($bio) ?></p>
+    </section>
 
-    <!-- DARK SECTION -->
-    <section class="perf-dark">
-      <div class="perf-dark-grid">
+    <section class="perf-black-panel">
+        <div class="perf-black-grid">
 
-        <div class="perf-left">
-          <div class="perf-gallery" aria-label="Performer images">
-            <div class="perf-gimg"></div>
-            <div class="perf-gimg"></div>
-            <div class="perf-gimg"></div>
-          </div>
+            <div class="perf-black-left">
+                <div class="perf-image-stack">
+                    <div class="perf-stack-image">
+                        <?php if (!empty($imagePath)): ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($name) ?>">
+                        <?php endif; ?>
+                    </div>
 
-          <div class="perf-who">
-            <h2>Who Are <?= htmlspecialchars($performer['name'] ?? '') ?>?</h2>
+                    <div class="perf-stack-image">
+                        <?php if (!empty($imagePath)): ?>
+                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($name) ?>">
+                        <?php endif; ?>
+                    </div>
+                </div>
 
-            <p class="perf-who-text">
-              <?= htmlspecialchars($performer['long_description'] ?? 'We will add a longer description later.') ?>
-            </p>
+                <div class="perf-black-text">
+                    <h2>Who Are <?= htmlspecialchars($name) ?>?</h2>
 
-            <h3 class="perf-subtitle">Genre / Performance Style</h3>
+                    <div class="perf-description-text">
+                        <?= nl2br(htmlspecialchars($bio)) ?>
+                    </div>
 
-            <div class="perf-chips">
-              <div class="perf-chip">
-                <div class="perf-chip-title">Genre</div>
-                <div class="perf-chip-value"><?= htmlspecialchars($performer['genre'] ?? 'Lounge jazz / soul-jazz') ?></div>
-              </div>
+                    <h3>Genre / Performance Style</h3>
 
-              <div class="perf-chip">
-                <div class="perf-chip-title">Performance Style</div>
-                <div class="perf-chip-value"><?= htmlspecialchars($performer['style'] ?? 'Smooth, expressive, intimate') ?></div>
-              </div>
+                    <div class="perf-style-cards">
+                        <div class="perf-style-card">
+                            <div class="perf-style-card-title">Genre</div>
+                            <div class="perf-style-card-value">
+                                <?= htmlspecialchars($style ?: 'Jazz') ?>
+                            </div>
+                        </div>
+
+                        <div class="perf-style-card">
+                            <div class="perf-style-card-title">Performance Style</div>
+                            <div class="perf-style-card-value">
+                                <?= htmlspecialchars($style ?: 'Live performance') ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <aside class="perf-details-card">
+                <h2>Event Details</h2>
+                <p class="perf-details-subtitle">Secure your spot for this performance.</p>
+
+                <?php if ($firstAppearance): ?>
+                    <div class="perf-detail-row">
+                        <strong><?= htmlspecialchars($firstAppearance['day_text'] ?? '') ?></strong>
+                        <div><?= htmlspecialchars($firstAppearance['time_text'] ?? '') ?></div>
+                    </div>
+
+                    <div class="perf-detail-row">
+                        <strong><?= htmlspecialchars($firstAppearance['location_text'] ?? $venueName) ?></strong>
+                        <div><?= htmlspecialchars($firstAppearance['note_text'] ?? $venueAddress) ?></div>
+                        <a href="#maps">View on map</a>
+                    </div>
+                <?php else: ?>
+                    <div class="perf-detail-row">
+                        <strong><?= htmlspecialchars($eventDate) ?></strong>
+                        <div><?= htmlspecialchars($eventTime) ?></div>
+                    </div>
+
+                    <div class="perf-detail-row">
+                        <strong><?= htmlspecialchars($venueName) ?></strong>
+                        <div><?= htmlspecialchars($venueAddress) ?></div>
+                        <a href="#maps">View on map</a>
+                    </div>
+                <?php endif; ?>
+
+                <hr>
+
+                <div class="perf-ticket-price">
+                    <span>TICKET PRICE</span>
+                    <strong><?= htmlspecialchars($priceText ?: '€15') ?></strong>
+                </div>
+
+                <div class="perf-ticket-note">
+                    <?= htmlspecialchars($noteText ?: 'Also available for FREE on Sunday at Grote Markt.') ?>
+                </div>
+
+                <button type="button" class="perf-reserve-button">Reserve</button>
+            </aside>
+
+        </div>
+    </section>
+
+    <section class="perf-bottom-grid">
+        <div class="perf-highlights-column">
+            <h2>Career Highlights</h2>
+
+            <?php if (!empty($highlights)): ?>
+                <?php foreach ($highlights as $highlight): ?>
+                    <div class="perf-highlight-block">
+                        <h3><?= htmlspecialchars($highlight['title'] ?? '') ?></h3>
+                        <p><?= htmlspecialchars($highlight['description'] ?? '') ?></p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-muted">No highlights found.</p>
+            <?php endif; ?>
         </div>
 
-        <aside class="perf-card">
-          <h2>Event Details</h2>
-          <p class="perf-card-sub">Secure your spot for this performance.</p>
+        <aside class="perf-tracks-card">
+            <h2>Famous Tracks / Albums</h2>
 
-          <div class="perf-detail">
-            <div class="perf-detail-label"><?= htmlspecialchars($performer['date_text'] ?? 'Saturday, July 29th') ?></div>
-            <div class="perf-detail-value"><?= htmlspecialchars($performer['time_text'] ?? '18:00 — 19:00') ?></div>
-          </div>
+            <?php if (!empty($tracks)): ?>
+                <?php foreach ($tracks as $track): ?>
+                    <div class="perf-track-row">
+                        <div class="perf-track-cover">
+                            <?php if (!empty($track['image_path'])): ?>
+                                <img src="<?= htmlspecialchars($track['image_path']) ?>" alt="<?= htmlspecialchars($track['title'] ?? '') ?>">
+                            <?php endif; ?>
+                        </div>
 
-          <div class="perf-detail mt-3">
-            <div class="perf-detail-label"><?= htmlspecialchars($performer['venue_text'] ?? 'Patronaat - Main Hall') ?></div>
-            <div class="perf-detail-value"><?= htmlspecialchars($performer['address_text'] ?? 'Zijlsingel 2, 2013 DN Haarlem') ?></div>
-            <a class="perf-maplink" href="#maps">View on map</a>
-          </div>
+                        <div class="perf-track-text">
+                            <div class="perf-track-name"><?= htmlspecialchars($track['title'] ?? '') ?></div>
+                            <div class="perf-track-date"><?= htmlspecialchars($track['release_date_text'] ?? '') ?></div>
+                            <div class="perf-track-description"><?= htmlspecialchars($track['description'] ?? '') ?></div>
 
-          <hr class="perf-hr">
-
-          <div class="perf-price">
-            <div class="perf-price-label">Ticket Price</div>
-            <div class="perf-price-value"><?= htmlspecialchars($performer['price_text'] ?? '€15') ?></div>
-          </div>
-
-          <div class="perf-note">
-            <?= htmlspecialchars($performer['note_text'] ?? 'Also available for FREE on Sunday at Grote Markt.') ?>
-          </div>
-
-          <button class="perf-btn" type="button">Reserve</button>
+                            <?php if (!empty($track['listen_url'])): ?>
+                                <a class="perf-track-listen" href="<?= htmlspecialchars($track['listen_url']) ?>" target="_blank">Listen now</a>
+                            <?php else: ?>
+                                <button type="button" class="perf-track-listen">Listen now</button>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-muted">No tracks found.</p>
+            <?php endif; ?>
         </aside>
-
-      </div>
     </section>
 
-    <section class="perf-career-albums">
-      <div class="perf-ca-grid">
-
-        <div class="perf-career">
-          <h2 class="perf-h2-burgundy">Career Highlights</h2>
-
-          <div class="perf-highlight">
-            <h3 class="perf-h3-orange">Formation and Early Success</h3>
-            <p>Since their inception, the band has toured extensively, performing at various venues ranging from intimate bars to major festivals. Their relentless touring schedule has helped them build a loyal fan base and gain critical acclaim.</p>
-          </div>
-
-          <div class="perf-highlight">
-            <h3 class="perf-h3-orange">Debut EP</h3>
-            <p>Their self-titled debut EP, released in 2018, was well-received in the Netherlands, establishing them as a promising act in the music scene.</p>
-          </div>
-
-          <div class="perf-highlight">
-            <h3 class="perf-h3-orange">Popronde 2019</h3>
-            <p>In 2019, they were one of the most booked bands during Popronde, a significant traveling music festival in the Netherlands, highlighting their growing popularity.</p>
-          </div>
-
-          <div class="perf-highlight">
-            <h3 class="perf-h3-orange">International Performances</h3>
-            <p>The band has showcased their talent internationally, performing in countries such as the USA, Italy, and even on the Azores Islands, expanding their reach beyond the Netherlands.</p>
-          </div>
-        </div>
-
-        <aside class="perf-albums-card">
-          <h2 class="perf-albums-title">Famous Tracks / Albums</h2>
-
-          <div class="perf-album">
-            <div class="perf-album-cover"></div>
-            <div class="perf-album-info">
-              <div class="perf-album-name">Sex ‘n’ jazz</div>
-              <div class="perf-album-date">4 May 2007</div>
-              <div class="perf-album-desc">Seductive groove-jazz classic</div>
-              <button class="perf-listen-btn" type="button">Listen now</button>
+    <?php if (!empty($audioUrl)): ?>
+        <section class="perf-audio-section">
+            <div class="perf-audio-label">
+                🎵 Listen to <?= htmlspecialchars($name ?: 'the artist') ?>
             </div>
-          </div>
 
-          <div class="perf-album perf-album--reverse">
-            <div class="perf-album-cover"></div>
-            <div class="perf-album-info">
-              <div class="perf-album-name">Lilywhite Soul</div>
-              <div class="perf-album-date">16 September 2011</div>
-              <div class="perf-album-desc">Velvet lounge-soul shimmer</div>
-              <button class="perf-listen-btn" type="button">Listen now</button>
+            <audio class="perf-audio-player" controls preload="none">
+                <source src="<?= htmlspecialchars($audioUrl) ?>" type="audio/mpeg">
+            </audio>
+        </section>
+    <?php endif; ?>
+
+    <section class="perf-appearances-section">
+        <h2>Appearances During The Haarlem Jazz Event</h2>
+
+        <?php if (!empty($appearances)): ?>
+            <?php foreach ($appearances as $appearance): ?>
+                <div class="perf-appearance-item">
+                    <span class="perf-appearance-day"><?= htmlspecialchars($appearance['day_text'] ?? '') ?>:</span>
+                    <?= htmlspecialchars($appearance['time_text'] ?? '') ?>
+                    <?php if (!empty($appearance['location_text'])): ?>
+                        @ <?= htmlspecialchars($appearance['location_text']) ?>
+                    <?php endif; ?>
+                    <?php if (!empty($appearance['note_text'])): ?>
+                        (<?= htmlspecialchars($appearance['note_text']) ?>)
+                    <?php endif; ?>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="perf-appearance-item">
+                <span class="perf-appearance-day"><?= htmlspecialchars($eventDate) ?>:</span>
+                <?= htmlspecialchars($eventTime) ?>
+                <?php if (!empty($venueName)): ?>
+                    @ <?= htmlspecialchars($venueName) ?>
+                <?php endif; ?>
             </div>
-          </div>
-        </aside>
+        <?php endif; ?>
 
-      </div>
+        <a class="btn btn-burgundy mt-3" href="/jazz/schedule">Explore Jazz Schedule</a>
     </section>
 
-    <section class="perf-audio">
-      <div class="perf-audio-inner">
-        <div class="perf-audio-label">
-          <span class="perf-audio-icon">🎵</span>
-          <span>Listen to <?= htmlspecialchars($performer['name'] ?? 'the artist') ?></span>
+    <section id="maps" class="perf-maps-section">
+        <div class="maps-wrap">
+            <?php if (!empty($locations)): ?>
+                <?php foreach ($locations as $location): ?>
+                    <div class="card-soft map-card">
+                        <div class="map-title"><?= htmlspecialchars($location['name'] ?? '') ?></div>
+                        <div class="map-frame">
+                            <iframe
+                                src="<?= htmlspecialchars($location['google_maps_embed_url'] ?? '') ?>"
+                                loading="lazy"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="text-muted">No locations found.</div>
+            <?php endif; ?>
         </div>
-
-        <audio class="perf-audio-player" controls preload="none">
-          <source src="" type="audio/mpeg">
-        </audio>
-      </div>
-
-    </section>
-    <section class="perf-members">
-      <h2 class="perf-members-title">Group Members</h2>
-
-      <div class="perf-members-row">
-        <div class="perf-member-card">
-          <div class="perf-member-name">Liam Vermeer — Saxophone</div>
-          <div class="perf-member-text">Soulful sax lines shaping the band’s signature late-night lounge sound.</div>
-        </div>
-
-        <div class="perf-member-card">
-          <div class="perf-member-name">Mara Klein — Vocals</div>
-          <div class="perf-member-text">Smooth, intimate vocals that add emotion and depth to every performance.</div>
-        </div>
-
-        <div class="perf-member-card">
-          <div class="perf-member-name">Jonas De Wilde — Bass</div>
-          <div class="perf-member-text">Creates the relaxed, steady grooves the band is known for.</div>
-        </div>
-
-        <div class="perf-member-card">
-          <div class="perf-member-name">Eva Rens — Keys</div>
-          <div class="perf-member-text">Adds atmospheric textures and modern jazz elements.</div>
-        </div>
-      </div>
     </section>
 
-    <section class="perf-appearances">
-  <h2>Appearances During The Haarlem Jazz Event</h2>
+    <h3 class="perf-more-like-title">You might also like...</h3>
 
-  <div class="appear-line">
-    <span class="appear-day">Thursday:</span> 18:00 – 19:00 @ Patronaat - Main Hall
-  </div>
+    <div class="row g-3 mt-1 mb-4">
+        <?php if (!empty($recommendations)): ?>
+            <?php foreach ($recommendations as $recommendation): ?>
+                <div class="col-12 col-md-4">
+                    <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($recommendation['url'] ?? '#') ?>">
 
-  <div class="appear-line">
-    <span class="appear-day">Sunday:</span> 20:00 – 21:00 @ Grote Markt (Free Show)
-  </div>
+                        <?php if (!empty($recommendation['image_path'])): ?>
+                            <img
+                                src="<?= htmlspecialchars($recommendation['image_path']) ?>"
+                                alt="<?= htmlspecialchars($recommendation['title'] ?? 'Recommendation') ?>"
+                                class="img-placeholder rec"
+                            >
+                        <?php else: ?>
+                            <div class="img-placeholder rec"></div>
+                        <?php endif; ?>
 
-  <a class="btn btn-burgundy" href="/jazz/schedule">Explore Jazz Schedule</a>
-</section>
-    <section id="maps" class="mt-4">
-      <div class="maps-wrap mt-3">
-        <div class="card-soft map-card">
-          <div class="map-title">Patronaat</div>
-          <div class="map-frame">
-            <iframe
-              src="https://www.google.com/maps?q=Patronaat,+Haarlem&output=embed"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen>
-            </iframe>
-          </div>
-        </div>
+                        <div class="p-3">
+                            <h4 class="perf-more-like-card-title">
+                                <?= htmlspecialchars($recommendation['title'] ?? '') ?>
+                            </h4>
 
-        <div class="card-soft map-card">
-          <div class="map-title">Grote Markt</div>
-          <div class="map-frame">
-            <iframe
-              src="https://www.google.com/maps?q=Grote+Markt,+Haarlem&output=embed"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      </div>
-    </section>
-
+                            <p class="text-muted mb-0" style="font-size:12px;">
+                                <?= htmlspecialchars($recommendation['description'] ?? '') ?>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="text-muted">No recommendations found.</div>
+        <?php endif; ?>
     </div>
+
+</main>
 
 <?php require __DIR__ . '/../partials/footer.php'; ?>

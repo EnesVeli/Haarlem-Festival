@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Exceptions\IncorrectEmailException;
 use App\Services\UserService;
 
 class ProfileController
@@ -54,7 +55,11 @@ class ProfileController
             }
 
             $_SESSION['profile_success'] = "Profile updated.";
-        } catch (\Exception $e) {
+        } 
+        catch (IncorrectEmailException $e) {
+            $_SESSION['profile_error'] = "Enter a valid email";
+        }
+        catch (\Exception $e) {
             $_SESSION['profile_error'] = $e->getMessage();
         }
 
