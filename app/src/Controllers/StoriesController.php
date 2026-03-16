@@ -7,38 +7,60 @@ class StoriesController extends BaseController
 {
     private StoriesService $service;
 
-    public function __construct()
+    public function __construct(StoriesService $service)
     {
-        $this->service = new StoriesService();
+        $this->service = $service;
     }
-
-    // GET /stories — shows the homepage with the full programme
     public function index(): void
     {
-        $events = $this->service->getAllEvents();
+        $cms = $this->service->getHomepageContent();
 
         $this->render('Stories/home', [
             'pageCSS'         => 'stories.css',
-            'pageTitle'       => 'Stories in Haarlem',
+            'pageTitle'       => $cms['title'] ?? 'Stories in Haarlem',
+            'pageDescription' => strip_tags($cms['body_html'] ?? 'During the last weekend of July, the streets of Haarlem transform into a living library...'),
             'pageSubtitle'    => 'Last Weekend of July | Multiple Locations across Haarlem',
-            'pageDescription' => 'During the last weekend of July, the streets of Haarlem transform into a living library...',
-            'events'          => $events,
+            'heroImage'       => $cms['image_path'] ?? '/assets/images/stories/stories-hero.jpg',
+            'events'          => $this->service->getAllEvents(),
         ]);
     }
 
-    // GET /stories/{slug} — shows one event detail page
     public function show(array $vars): void
     {
-        $event = $this->service->getEventBySlug($vars['slug']);
+        $slug = htmlspecialchars(trim($vars['slug']));
+        $event = $this->service->getEventBySlug($slug);
 
-        // If the slug doesn't exist in DB, show 404
         if ($event === null) {
             $this->notFound();
+            return;
         }
 
-        $this->render('Stories/detail', [
+        // Dynamically choose the view template based on the database flag
+        $viewTemplate = $event->is_pay_as_you_like ? 'Stories/detail_pay_as_you_like' : 'Stories/detail_fixed';
+
+        $this->render($viewTemplate, [
             'pageCSS' => 'stories.css',
             'event'   => $event,
+        ]);
+    }
+
+    public function book(array $vars): void
+    {
+        $slug  = htmlspecialchars(trim($vars['slug']));
+        $event = $this->service->getEventBySlug($slug);
+
+        if ($event === null) {
+            $this->notFound();
+            return;
+        }
+
+        $ticketTypes = $this->service->getTicketTypesForEvent($event->event_id);
+        $viewTemplate = $event->is_pay_as_you_like ? 'Stories/book_pay_as_you_like' : 'Stories/book_fixed';
+
+        $this->render($viewTemplate, [
+            'pageCSS'     => 'stories.css',
+            'event'       => $event,
+            'ticketTypes' => $ticketTypes,
         ]);
     }
 }

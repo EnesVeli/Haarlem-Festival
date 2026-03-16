@@ -6,12 +6,17 @@ use PDO;
 
 class CartRepository extends Repository
 {
-    // ── Read ────────────────────────────────────────────────────────────────
-
     public function getItemsByUser(int $userId): array
     {
         $stmt = $this->connection->prepare(
-            "SELECT * FROM `CartItem` WHERE user_id = :uid ORDER BY added_at DESC"
+            "SELECT ci.*, e.name AS event_name, e.image_path AS event_image,
+                    e.start_time AS event_start, e.end_time AS event_end,
+                    v.name AS venue_name
+             FROM `CartItem` ci
+             LEFT JOIN `Event` e ON e.event_id = ci.event_id
+             LEFT JOIN `Venue` v ON v.venue_id = e.venue_id
+             WHERE ci.user_id = :uid
+             ORDER BY ci.added_at DESC"
         );
         $stmt->execute(['uid' => $userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -27,7 +32,6 @@ class CartRepository extends Repository
         return $row ?: null;
     }
 
-    // Find existing item for same user + event so we can increment instead of duplicate
     public function findExisting(int $userId, string $eventType, int $eventId, string $ticketType): ?array
     {
         $stmt = $this->connection->prepare(
@@ -44,8 +48,6 @@ class CartRepository extends Repository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
-
-    // ── Write ───────────────────────────────────────────────────────────────
 
     public function addItem(int $userId, string $eventType, int $eventId, string $ticketType, int $quantity, float $price): int
     {
