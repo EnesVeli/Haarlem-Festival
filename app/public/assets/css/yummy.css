@@ -1169,3 +1169,61 @@
         margin-right: 0;
     }
 }
+
+/* ========== Restaurant ========== */
+.restaurant-main{
+    position: relative;
+    display: flex;
+
+    font-family: 'Playfair', serif;
+
+    width: 100%;
+    height: auto;
+
+    justify-self: center;
+    justify-items: center;
+}
+
+.restaurant-main-left{
+    width: 720px;
+
+    height: auto;
+}
+
+.restaurant-main-right{
+    width: 364px;
+
+    height: auto;
+}
+
+.restaurant-main-container{
+    position: relative;
+    display: flex;
+
+    width: auto;
+    height: auto;
+
+    margin: auto;
+
+    gap: 16px;
+
+    justify-self: center;
+    justify-items: center;
+}
+
+.restaurant-go-back-link{
+    position: relative;
+    display: inline;
+    
+    font-family: 'Roboto';
+    font-size: 20px;
+    font-weight: 700;
+
+    color: var(--burgundy);
+
+    margin-top: 28px;
+}
+
+.restaurant-opening-hours-weekdays{
+    white-space: pre-line
+}

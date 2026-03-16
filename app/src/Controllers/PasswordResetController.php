@@ -2,6 +2,13 @@
 namespace App\Controllers;
 
 use App\Config;
+use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\EmptyPasswordException;
+use App\Models\Exceptions\ExpiredKeyException;
+use App\Models\Exceptions\InappropriatePasswordLengthException;
+use App\Models\Exceptions\IncorrectEmailException;
+use App\Models\Exceptions\InvalidKeyException;
+use App\Models\Exceptions\PasswordMismatchException;
 use App\Services\MailService;
 use App\Services\PasswordResetService;
 use DateException;
@@ -21,40 +28,33 @@ class PasswordResetController
         require __DIR__ . '/../Views/password-reset/request.php';
     }
 
-    public function requestPaawordReset(){
-        $email = $_POST['email'] ?? '';
+    public function requestPasswordReset(){
+        try{
+            $this->service->requestPasswordReset($_POST['email']);
 
-        if(empty(trim($email))){
-            $error = 'You must enter a valid email for password reset.';
+            require __DIR__ . '/../Views/password-reset/request-success.php';
+            exit;
+        }
+        catch(IncorrectEmailException $ex){
+            $error_message = 'You must enter a valid email of an existing account for password reset.';
             require __DIR__ . '/../Views/password-reset/request.php';
             exit;
         }
-
-        try{
-            $request = $this->service->requestPasswordReset($email);
-
-            if($request == null || $request['key'] == null){
-                $error = 'Account with this email does not exists. Check if you have entered a correct email.';
-                require __DIR__ . '/../Views/password-reset/request.php';
-            }
-            else{
-                $this->service->sendResetEmail($email, $request['name'], $request['key']); 
-
-                require __DIR__ . '/../Views/password-reset/request-success.php';
-            }          
+        catch(DBAccessException $ex){
+            $error_message = 'Something went wrong try again later. ';
+            require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
         }
-        catch(Throwable $ex){        
-            require __DIR__ . '/../Views/password-reset/request-fail.php';
-
-            echo $ex->getMessage(); // Debug only!
+        catch(Throwable $ex){       
+            $error_message = 'Something went wrong try again later. '; 
+            require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
         }
     }
 
-    public function startPasswordReset(){
-        unset($_SESSION['key']);
-
+    public function passwordResetVerifyEmail(){
         if($_GET['key'] !== null){
-            $_SESSION['key'] = $_GET['key'];
+            $key = $_GET['key'];
 
             require __DIR__ . '/../Views/password-reset/reset-confirm.php';
         }
@@ -64,66 +64,72 @@ class PasswordResetController
         }     
     }
 
-    public function createNewPassword(){
-        if($_SESSION['key'] == null){
-            header("Location: /login");
-            exit;
-        }
-
-        $email = $_POST['email'];
-
-        if($email == null || empty(trim($email)) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
-            $error = 'Please enter your email';
-            require __DIR__ . '/../Views/password-reset/reset-confirm.php';
-            exit;
-        }
-
+    public function startPasswordReset(){
         try{
-            $_SESSION['token'] = $this->service->getEmailResetToken($_SESSION['key'], $email);
+            $key = $_POST['key'];
+            $email = $_POST['email'];
+
+            $this->service->startPasswordReset($key, $email);
+
             require __DIR__ . '/../Views/password-reset/reset.php';
+            exit;
         }
-        catch(DateException $ex){
-            $error = $ex->getMessage();
+        catch(IncorrectEmailException $ex){
+            $error_message = 'You must enter a valid email of an existing account for password reset.';
             require __DIR__ . '/../Views/password-reset/reset-confirm.php';
+            exit;
+        }
+        catch(InvalidKeyException $ex){
+            $error_message = 'The key is invalid, request a new one.'; 
+            require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
+        }
+        catch(ExpiredKeyException $ex){
+            $error_message = 'Your key has expired. Request a new one.'; 
+            require __DIR__ . '/../Views/password-reset/request.php';
             exit;
         }
         catch(Exception $ex){
-            $error = $ex->getMessage();
+            $error_message = 'Something went wrong, request a new reset later.'; 
             require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
         } 
     }
 
     public function resetPassword(){
-        $password = $_POST['password'];
-        $password_confirm = $_POST['password-confirm'];
-
-        if($password == null || empty(trim($password))){
-            $error = 'Password must not be empty.';
-            require __DIR__ . '/../Views/password-reset/reset.php';
-            exit;
-        }
-
-        if(strlen($password) < 8){
-            $error = 'Password must be at least 8 characters long.';
-            require __DIR__ . '/../Views/password-reset/reset.php';
-            exit;
-        }
-
-        if($password !== $password_confirm){
-            $error = 'Password and password confirmation does not match.';
-            require __DIR__ . '/../Views/password-reset/reset.php';
-            exit;
-        }
-
         try{
-            $this->service->resetPassword($password, $password_confirm, $_SESSION['token']);
+            $key = $_POST['key'] ?? null;
+            $email = $_POST['email'] ?? null;
+
+            $this->service->resetPassword($_POST['password'] ?? null, $_POST['password_confirm'] ?? null, $email, $key);
             
             require __DIR__ . '/../Views/password-reset/reset-success.php';
+            exit;
+        }
+        catch(EmptyPasswordException $ex){
+            $error_message = "The password must not be empty";
+            require __DIR__ . '/../Views/password-reset/reset.php';
+            exit;
+        }
+        catch(InappropriatePasswordLengthException $ex){
+            $error_message = "Your password must be at least 8 and maximum 255 characters.";
+            require __DIR__ . '/../Views/password-reset/reset.php';
+            exit;
+        }
+        catch(PasswordMismatchException $ex){
+            $error_message = "The passwords do not match.";
+            require __DIR__ . '/../Views/password-reset/reset.php';
+            exit;
+        }
+        catch(ExpiredKeyException $ex){
+            $error_message = "Your key is expired, request a new one.";
+            require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
         }
         catch(Exception $ex){
-            $error = $ex->getMessage();
-
-            require __DIR__ . '/../Views/password-reset/reset.php';
+            $error_message = "Something went wrong, request a new reset later.";
+            require __DIR__ . '/../Views/password-reset/request.php';
+            exit;
         }
     }
 }

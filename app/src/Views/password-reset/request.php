@@ -16,9 +16,9 @@
         <div class="row justify-content-center">
           <div class="MainBoxTop card shadow-sm border-0 col-12 col-sm-10 col-md-7 col-lg-5">
               <div class="card-body p-4">
-                <?php if(!empty($error)): ?>
+                <?php if(!empty($error_message)): ?>
                   <div class="alert alert-danger" role="alert">
-                      <?= htmlspecialchars($error) ?>
+                      <?= htmlspecialchars($error_message) ?>
                   </div>
                 <?php endif; ?>
 
