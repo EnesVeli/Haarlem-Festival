@@ -114,6 +114,8 @@ class YummyService
 
         $view_model->images = $this->restaurant_repository->getRestaurantImages((int)$id) ?? [];
 
+        $view_model->dishes = $this->restaurant_repository->getRestaurantDishes((int)$id) ?? [];
+
         return $view_model;
     }
 }
