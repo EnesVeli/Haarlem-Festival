@@ -2,24 +2,31 @@
 namespace App\Repositories;
 
 use App\Framework\Repository;
+use App\Models\PasswordResetToken;
 use PDO;
 
 class PasswordResetTokenRepository extends Repository
 {
-    public function getTokenByUserId(string $user_id): ?array
+    public function getTokenByUserId(string $user_id): ?PasswordResetToken
     {
-        $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `user_id` = :user_id");
+        $stmt = $this->connection->prepare("SELECT `token_id`, `user_id`, `key`, `created_at`, `activated_at` FROM `PasswordResetToken` WHERE `user_id` = :user_id");
         $stmt->execute(['user_id' => $user_id]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, PasswordResetToken::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
     }
 
-    public function getTokenByKey(string $key): ?array
+    public function getTokenByKey(string $key): ?PasswordResetToken
     {
-        $stmt = $this->connection->prepare("SELECT * FROM `PasswordResetToken` WHERE `key` = :key");
+        $stmt = $this->connection->prepare("SELECT `token_id`, `user_id`, `key`, `created_at`, `activated_at` FROM `PasswordResetToken` WHERE `key` = :key");
         $stmt->execute(['key' => $key]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, PasswordResetToken::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
     }
 
     public function createNewToken(string $user_id, string $key) : bool
@@ -34,15 +41,24 @@ class PasswordResetTokenRepository extends Repository
         ]);
     }
 
-    public function updateToken(int $token_id, string $key){
+    public function updateToken(int $token_id, string $key) : bool
+    {
         $stmt = $this->connection->prepare(
-            "UPDATE `PasswordResetToken` SET `key` = :key, `created_at` = NOW() WHERE `token_id` = :token_id"
+            "UPDATE `PasswordResetToken` SET `key` = :key, `created_at` = NOW(), `activated_at` = NULL WHERE `token_id` = :token_id"
         );
 
         return $stmt->execute([
             'token_id' => $token_id,
             'key'     => $key
         ]);
+    }
+
+    public function setActivationTimeAsNow(int $token_id){
+        $stmt = $this->connection->prepare(
+            "UPDATE `PasswordResetToken` SET `activated_at` = NOW() WHERE `token_id` = :token_id"
+        );
+
+        return $stmt->execute(['token_id' => $token_id]);
     }
 
     public function deleteToken(int $token_id) : bool

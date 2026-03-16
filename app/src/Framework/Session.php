@@ -28,10 +28,10 @@ class Session
 
     public static function login(array $user): void
     {
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['email']   = $user['email'];
-        $_SESSION['name']    = $user['name'];
-        $_SESSION['role']    = $user['role'];
+        $_SESSION['user_id'] = $user['user_id'] ?? $user['id'] ?? null;
+        $_SESSION['email']   = $user['email'] ?? null;
+        $_SESSION['name']    = $user['name'] ?? null;
+        $_SESSION['role']    = $user['role'] ?? null;
     }
 
     public static function logout(): void
@@ -65,6 +65,14 @@ class Session
 
 public static function isAdmin(): bool
 {
-    return self::isLoggedIn() && self::role() === 'admin';
+    $user = self::user();
+    if (!$user) {
+        return false;
+    }
+
+    $role = $user['role'] ?? null;
+
+    // supports both formats: 'admin' OR 1
+    return $role === 'admin' || (int)$role === 1;
 }
 }

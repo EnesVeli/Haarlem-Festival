@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 09, 2026 at 10:47 AM
+-- Generation Time: Mar 16, 2026 at 09:27 AM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
+CREATE DATABASE IF NOT EXISTS `developmentdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
+USE `developmentdb`;
 
 -- --------------------------------------------------------
 
@@ -37,6 +39,37 @@ CREATE TABLE `CartItem` (
   `price` decimal(10,2) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `CartItem`
+--
+
+INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ticket_type`, `quantity`, `price`, `added_at`) VALUES
+(1, 4, 'story', 8, 'single', 1, 0.00, '2026-03-14 16:29:24'),
+(3, 8, 'story', 9, 'single', 5, 0.00, '2026-03-15 15:11:31'),
+(4, 8, 'story', 3, 'single', 4, 15.00, '2026-03-16 08:31:32'),
+(5, 8, 'story', 1, 'single', 1, 6.00, '2026-03-16 09:00:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p><strong>Last Weekend of July | Multiple Locations across Haarlem</strong></p>\r\n<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/hero.png');
 
 -- --------------------------------------------------------
 
@@ -92,6 +125,56 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Event`
+--
+
+CREATE TABLE `Event` (
+  `event_id` int(11) NOT NULL,
+  `venue_id` int(11) NOT NULL,
+  `type` int(11) NOT NULL COMMENT '1=Jazz 2=Dance 3=History 4=Yummy 5=Stories',
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL COMMENT 'URL: /stories/mister-anansi',
+  `description` text DEFAULT NULL,
+  `performer_name` varchar(255) DEFAULT NULL COMMENT 'Storyteller / presenter name',
+  `performer_bio` text DEFAULT NULL COMMENT 'Bio shown on detail page',
+  `language` varchar(10) NOT NULL DEFAULT 'NL' COMMENT 'NL or ENG',
+  `age_group` varchar(20) NOT NULL DEFAULT 'All ages',
+  `story_type` varchar(100) DEFAULT NULL COMMENT 'stories for the whole family, recording podcast with audience, stories with impact, best of',
+  `is_pay_as_you_like` tinyint(1) DEFAULT 0,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
+  `max_tickets` int(11) NOT NULL DEFAULT 30,
+  `image_path` varchar(500) DEFAULT NULL,
+  `gallery_image_1` varchar(500) DEFAULT NULL,
+  `gallery_image_2` varchar(500) DEFAULT NULL,
+  `audio_preview_path` varchar(500) DEFAULT NULL,
+  `audio_title` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `Event`
+--
+
+INSERT INTO `Event` (`event_id`, `venue_id`, `type`, `name`, `slug`, `description`, `performer_name`, `performer_bio`, `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`, `gallery_image_2`, `audio_preview_path`, `audio_title`) VALUES
+(1, 1, 5, 'Winnie de Poeh', 'winnie-de-poeh', 'Join us for a magical storytelling session based on the beloved tales of Winnie the Pooh. Brought to life by an experienced family storyteller, this performance uses puppets, songs, and audience participation to enchant young listeners. Perfect for the youngest members of the family.', NULL, NULL, 'NL', '4+', 'stories for the whole family', 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00', 30, NULL, NULL, NULL, NULL, NULL),
+(2, 2, 5, 'Omdenken Podcast', 'omdenken-podcast', 'Experience a live podcast recording with a studio audience. Omdenken — the Dutch art of \"flipping\" problems into opportunities — comes to the stage in an interactive session full of surprising perspectives and real audience participation. A unique chance to be part of a live recording.', NULL, NULL, 'NL', '16+', 'recording podcast with audience', 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00', 40, NULL, NULL, NULL, NULL, NULL),
+(3, 3, 5, 'The Story of Buurderij Haarlem', 'story-of-buurderij-haarlem', 'How does your food travel from the soil to your plate? In this inspiring session, we dive into the world of short food supply chains. The \"Buurderij\" is not just a market; it\'s a movement connecting neighbors directly with local farmers. Learn how this circular approach is reshaping Haarlem\'s economy and reducing our carbon footprint.', 'Marieke van der Werf', 'Presented by Marieke van der Werf, founder of the Haarlem Green Collective. Marieke was awarded the \"Sustainable Entrepreneur of the Year 2024\" for her work in reducing food waste in North Holland. She has successfully launched three community farming initiatives and consults for the municipality on circular city planning.', 'EN', '16+', 'stories with impact', 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00', 25, '/assets/images/stories/1773588818_buurderij.jpeg', NULL, NULL, NULL, NULL),
+(4, 4, 5, 'Corrie voor kinderen', 'corrie-voor-kinderen', 'An age-appropriate retelling of the remarkable true story of Corrie ten Boom and her family, who hid Jewish people in their Haarlem home during World War II. Presented at the actual Ten Boom house, this experience brings history to life for children in a meaningful and accessible way.', NULL, NULL, 'NL', '10+', 'stories for the whole family', 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00', 35, NULL, NULL, NULL, NULL, NULL),
+(5, 1, 5, 'Winnaars van verhalenvertel wedstrijd', 'winnaars-verhalenvertel-wedstrijd', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'NL', '12+', 'best of', 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00', 30, NULL, NULL, NULL, NULL, NULL),
+(6, 3, 5, 'Het verhaal van de Oeserzwammerij', 'verhaal-oeserzwammerij', 'Discover the fascinating story of urban mushroom farming in Haarlem. This talk explores how a small circular business is transforming food waste into gourmet oyster mushrooms, contributing to a more sustainable local food system. Inspiring, quirky, and eye-opening.', NULL, NULL, 'NL', '16+', 'stories with impact', 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00', 25, NULL, NULL, NULL, NULL, NULL),
+(7, 2, 5, 'Flip Thinking Podcast', 'flip-thinking-podcast', 'A live English-language podcast recording exploring \"flip thinking\" — the concept of turning obstacles into opportunities. Join host and author Berthold Gunster as he challenges guests and audience members to reframe their biggest problems. Recorded live for international distribution.', NULL, NULL, 'ENG', '16+', 'recording podcast with audience', 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00', 40, NULL, NULL, NULL, NULL, NULL),
+(8, 5, 5, 'Meneer Anansi', 'meneer-anansi-sat-morning', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00', 50, NULL, NULL, NULL, NULL, NULL),
+(9, 5, 5, 'Mister Anansi', 'mister-anansi-sat-afternoon', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'ENG', '2-102', 'stories for the whole family', 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00', 50, NULL, NULL, NULL, NULL, NULL),
+(10, 2, 5, 'Podcastlast Haarlem Special', 'podcastlast-haarlem-special', 'Podcastlast records a special Haarlem-themed episode live in front of an audience at De Schuur. Featuring local guests, audience questions, and a unique behind-the-scenes look at what makes this city tick. A must for podcast enthusiasts and Haarlem locals alike.', NULL, NULL, 'NL', '12+', 'recording podcast with audience', 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00', 40, NULL, NULL, NULL, NULL, NULL),
+(11, 4, 5, 'De geschiedenis van familie ten Boom', 'geschiedenis-familie-ten-boom', 'A deeply moving account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented in Dutch for a mature audience. A reservation is required to guarantee entry.', NULL, NULL, 'NL', '12+', 'stories with impact', 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00', 35, NULL, NULL, NULL, NULL, NULL),
+(12, 5, 5, 'Mister Anansi', 'mister-anansi-sun-morning', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'ENG', '2-102', 'stories for the whole family', 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00', 50, NULL, NULL, NULL, NULL, NULL),
+(13, 5, 5, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, NULL, NULL, NULL, NULL, NULL),
+(14, 4, 5, 'The History of the Ten Boom Family', 'history-ten-boom-family', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'ENG', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, NULL, NULL, NULL, NULL, NULL),
+(15, 1, 5, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'ENG', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -333,6 +416,107 @@ INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `Invoice`
+--
+
+CREATE TABLE `Invoice` (
+  `invoice_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `invoice_number` varchar(50) NOT NULL,
+  `invoice_date` datetime DEFAULT current_timestamp(),
+  `total_amount` decimal(10,2) NOT NULL,
+  `vat_percentage` decimal(5,2) NOT NULL DEFAULT 9.00 COMMENT 'Culture events = 9% VAT',
+  `client_name` varchar(255) DEFAULT NULL,
+  `client_address` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- Table structure for table `jazz_experiences`
+--
+
+CREATE TABLE `jazz_experiences` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_experiences`
+--
+
+INSERT INTO `jazz_experiences` (`id`, `title`, `description`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'Jazz & Drinks', 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', '/assets/uploads/jazz/experiences/1773540446_JazzExperience2.png', 2, 1),
+(2, 'Vinyl Sessions', 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', '/assets/uploads/jazz/experiences/1773540485_JazzExperience1.png', 3, 1),
+(3, 'Sunset Stage', 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', '/assets/uploads/jazz/experiences/1773540473_JazzExperience5.png', 4, 1),
+(5, 'Late Night Chill Jam', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '/assets/uploads/jazz/experiences/1773652237_gareDuNordHero.png', 1, 1),
+(8, 'Rythm And Coffe', 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', '/assets/uploads/jazz/experiences/1773540454_JazzExperience3.png', 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_hero`
+--
+
+CREATE TABLE `jazz_hero` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_hero`
+--
+
+INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1773540403_HeroImageMAIN.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_intro_content`
+--
+
+CREATE TABLE `jazz_intro_content` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_intro_content`
+--
+
+INSERT INTO `jazz_intro_content` (`id`, `title`, `description`) VALUES
+(1, 'Welcome to Haarlem Jazz', 'Haarlem Jazz celebrates soulful melodies, late-night sessions, and vibrant creativity of local and international artists.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_locations`
+--
+
+CREATE TABLE `jazz_locations` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `google_maps_embed_url` text NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_locations`
+--
+
+INSERT INTO `jazz_locations` (`id`, `name`, `address`, `google_maps_embed_url`, `is_active`) VALUES
+(1, 'Patronaat', 'Zijlsingel 2, Haarlem', 'https://www.google.com/maps?q=Patronaat,+Haarlem&output=embed', 1),
+(2, 'Grote Markt', 'Grote Markt, 2011 RD Haarlem', 'https://www.google.com/maps?q=Grote+Markt,+2011+RD+Haarlem&output=embed', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jazz_performers`
 --
 
@@ -342,32 +526,183 @@ CREATE TABLE `jazz_performers` (
   `bio` text DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `image_path` varchar(255) DEFAULT NULL
+  `image_path` varchar(255) DEFAULT NULL,
+  `performance_style` varchar(150) DEFAULT NULL,
+  `event_date_text` varchar(100) DEFAULT NULL,
+  `event_time_text` varchar(100) DEFAULT NULL,
+  `venue_name` varchar(150) DEFAULT NULL,
+  `venue_address` varchar(255) DEFAULT NULL,
+  `price_text` varchar(50) DEFAULT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `audio_url` varchar(255) DEFAULT NULL,
+  `hero_image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `jazz_performers`
 --
 
-INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`) VALUES
-(1, 'Evolve', NULL, 1, 1, NULL),
-(2, 'Fox & The Mayors', NULL, 2, 1, NULL),
-(3, 'Gare du Nord', NULL, 3, 1, NULL),
-(4, 'Gumbo Kings', NULL, 4, 1, NULL),
-(5, 'Han Bennink', NULL, 5, 1, NULL),
-(6, 'Jonna Frazer', NULL, 6, 1, NULL),
-(7, 'Chris Allen', NULL, 7, 1, NULL),
-(8, 'Lilith Merlot', NULL, 8, 1, NULL),
-(9, 'Myles Sanko', NULL, 9, 1, NULL),
-(10, 'Ntjam Rosie', NULL, 10, 1, NULL),
-(11, 'Rilan & The Bombardiers', NULL, 11, 1, NULL),
-(12, 'Ruis Soundsystem', NULL, 12, 1, NULL),
-(13, 'Soul Six', NULL, 13, 1, NULL),
-(14, 'The Family XL', NULL, 14, 1, NULL),
-(15, 'The Nordanians', NULL, 15, 1, NULL),
-(16, 'The Tom Thompson', NULL, 16, 1, NULL),
-(17, 'Uncle Sue', NULL, 17, 1, NULL),
-(18, 'Wicked Jazz Sounds', NULL, 18, 1, NULL);
+INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
+(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', NULL),
+(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', '', '', '', '', '', '', '', '', NULL),
+(3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
+(4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
+(6, 'Jonna Frazer', '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', '', NULL),
+(7, 'Chris Allen', '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', '', NULL),
+(8, 'Lilith Merlot', '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', '', NULL),
+(9, 'Myles Sanko', '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', '', NULL),
+(13, 'Soul Six', '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', '', NULL),
+(14, 'The Family XL', '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', '', NULL),
+(15, 'The Nordanians', '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', '', NULL),
+(17, 'Uncle Sue', '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_appearances`
+--
+
+CREATE TABLE `jazz_performer_appearances` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `day_text` varchar(50) NOT NULL,
+  `time_text` varchar(50) NOT NULL,
+  `location_text` varchar(255) NOT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_appearances`
+--
+
+INSERT INTO `jazz_performer_appearances` (`id`, `performer_id`, `day_text`, `time_text`, `location_text`, `note_text`, `sort_order`) VALUES
+(3, 3, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', '', 1),
+(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_highlights`
+--
+
+CREATE TABLE `jazz_performer_highlights` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_highlights`
+--
+
+INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `description`, `sort_order`) VALUES
+(5, 3, 'Formation and Early Success', 'Since their formation, Gare du Nord built a strong reputation through atmospheric live performances and a distinctive blend of smooth jazz, soul, and lounge influences. Their stylish sound quickly attracted attention from audiences looking for intimate and elegant festival experiences.', 1),
+(6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
+(7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
+(8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_locations`
+--
+
+CREATE TABLE `jazz_performer_locations` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_locations`
+--
+
+INSERT INTO `jazz_performer_locations` (`id`, `performer_id`, `location_id`, `sort_order`) VALUES
+(3, 3, 1, 1),
+(4, 3, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_tracks`
+--
+
+CREATE TABLE `jazz_performer_tracks` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `release_date_text` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `listen_url` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_tracks`
+--
+
+INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
+(1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
+(2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_recommendations`
+--
+
+CREATE TABLE `jazz_recommendations` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `url` varchar(255) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_recommendations`
+--
+
+INSERT INTO `jazz_recommendations` (`id`, `title`, `description`, `url`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'A Stroll Through History', 'Walked along your through historic Haarlem with local storytellers sharing tales of the city\'s rich past.', '/history', '/assets/uploads/jazz/recommendations/1773540983_stroll.png', 1, 1),
+(5, 'Stories', 'Immerse yourself in Haarlem\'s spoken-word acts and storytelling.', '/stories', '/assets/uploads/jazz/recommendations/1773541019_StoriesRecommendation.png', 2, 1),
+(6, 'Yummy!', 'Explore local food and culinary experiences in Haarlem.', '/yummy', '/assets/uploads/jazz/recommendations/1773541051_Yummy!.png', 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Order`
+--
+
+CREATE TABLE `Order` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `order_date` datetime DEFAULT current_timestamp(),
+  `status` enum('pending','paid','cancelled') DEFAULT 'pending',
+  `payment_method` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `OrderItem`
+--
+
+CREATE TABLE `OrderItem` (
+  `item_id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `unit_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -379,8 +714,77 @@ CREATE TABLE `PasswordResetToken` (
   `token_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `key` varchar(256) NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp()
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `activated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `PasswordResetToken`
+--
+
+INSERT INTO `PasswordResetToken` (`token_id`, `user_id`, `key`, `created_at`, `activated_at`) VALUES
+(2, 6, '$2y$12$kLZMRm/v5N83Emyi8ZM7z.tmlllfSONqbWppn3ltxS7QBztKfXhuG', '2026-03-13 12:32:09', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Ticket`
+--
+
+CREATE TABLE `Ticket` (
+  `ticket_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `type_id` int(11) NOT NULL,
+  `barcode` varchar(255) NOT NULL COMMENT 'Secured hash - not a plain ID',
+  `is_scanned` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Ticket_Type`
+--
+
+CREATE TABLE `Ticket_Type` (
+  `type_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL COMMENT 'e.g. Regular Ticket, HaarlemPas',
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT '0.00 = pay as you like',
+  `is_pay_as_you_like` tinyint(1) DEFAULT 0,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `Ticket_Type`
+--
+
+INSERT INTO `Ticket_Type` (`type_id`, `event_id`, `name`, `price`, `is_pay_as_you_like`, `start_time`, `end_time`) VALUES
+(1, 1, 'Regular Ticket', 6.00, 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00'),
+(2, 1, 'HaarlemPas (25% off)', 4.50, 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00'),
+(3, 2, 'Regular Ticket', 12.50, 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00'),
+(4, 2, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00'),
+(5, 3, 'Pay as you like', 0.00, 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00'),
+(6, 4, 'Pay as you like', 0.00, 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00'),
+(7, 5, 'Regular Ticket', 12.50, 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00'),
+(8, 5, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00'),
+(9, 6, 'Pay as you like', 0.00, 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00'),
+(10, 7, 'Regular Ticket', 12.50, 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00'),
+(11, 7, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00'),
+(12, 8, 'Regular Ticket', 10.00, 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00'),
+(13, 8, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00'),
+(14, 9, 'Regular Ticket', 10.00, 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00'),
+(15, 9, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00'),
+(16, 10, 'Regular Ticket', 12.50, 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00'),
+(17, 10, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00'),
+(18, 11, 'Pay as you like', 0.00, 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00'),
+(19, 12, 'Regular Ticket', 10.00, 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00'),
+(20, 12, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00'),
+(21, 13, 'Regular Ticket', 10.00, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
+(22, 13, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
+(23, 14, 'Pay as you like', 0.00, 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00'),
+(24, 15, 'Regular Ticket', 12.50, 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00'),
+(25, 15, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00');
 
 -- --------------------------------------------------------
 
@@ -404,12 +808,36 @@ CREATE TABLE `User` (
 
 INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`) VALUES
 (1, 'Enes@gmail.com', '$2y$12$ykWvBL0DARXSigoiMGxw3.4ow.YKd/BUidn/IApoOEwgVz7RFQe/W', 'Enes', 'customer', NULL, '2026-02-06 18:36:26'),
-(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', NULL, '2026-02-07 04:07:01'),
+(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$yIxXUap9pB4BZPdlpZE7jOfIpfCoZrNLgru7Rvc8TCgrpLzFtspD6', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
+(5, 'tim.sadko@gmail.com', '$2y$12$gwDEB6ZIvcwqXe2i50b5we1styaheGqIc4qRlvrARK5rBreZRbK4G', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (6, 'elena.sadko@gmail.com', '$2y$12$Zg7P22jNmZtkM1EdZczHUe8EwCbiOGnO.XAPybPnES2ah1nBSlrtW', 'Elena Shkvarnytska', 'customer', NULL, '2026-02-27 12:41:38'),
-(7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31');
+(7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
+(8, 'ENESVELIYIGIT@GMAIL.COM', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit ', 'admin', NULL, '2026-03-09 14:38:15');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Venue`
+--
+
+CREATE TABLE `Venue` (
+  `venue_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `address` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `Venue`
+--
+
+INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
+(1, 'Verhalenhuis Haarlem', 'Van Egmondstraat 7, Haarlem-Noord'),
+(2, 'De Schuur', 'Lange Begijnestraat 9, 2011 HH Haarlem'),
+(3, 'Kweekcafé', 'Kleverlaan 9, 2023 JC Haarlem'),
+(4, 'Corrie ten Boom huis', 'Barteljorisstraat 19, Haarlem'),
+(5, 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen');
 
 -- --------------------------------------------------------
 
@@ -541,32 +969,57 @@ INSERT INTO `YummyRestaurantFoodTypes` (`id`, `restaurant_id`, `type_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `YummyRestaurantImages`
+--
+
+CREATE TABLE `YummyRestaurantImages` (
+  `image_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `path` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyRestaurantImages`
+--
+
+INSERT INTO `YummyRestaurantImages` (`image_id`, `restaurant_id`, `path`) VALUES
+(10, 1, '123.png'),
+(11, 1, '223.png');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `YummyRestaurants`
 --
 
 CREATE TABLE `YummyRestaurants` (
   `restaurant_id` int(16) NOT NULL,
-  `mini_img_path` varchar(64) NOT NULL,
+  `main_img_path` varchar(64) NOT NULL,
   `name` varchar(64) NOT NULL,
   `mini_text` varchar(256) NOT NULL,
   `rating` float NOT NULL,
   `cost_rating` bit(4) NOT NULL,
-  `active` bit(1) NOT NULL DEFAULT b'0'
+  `active` bit(1) NOT NULL DEFAULT b'0',
+  `text` varchar(2048) NOT NULL DEFAULT '',
+  `opening_hours` varchar(128) NOT NULL DEFAULT '',
+  `address_text` varchar(128) NOT NULL DEFAULT '',
+  `address_uri` varchar(256) NOT NULL DEFAULT '',
+  `website_link` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `YummyRestaurants`
 --
 
-INSERT INTO `YummyRestaurants` (`restaurant_id`, `mini_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`) VALUES
-(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1'),
-(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1'),
-(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1'),
-(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1'),
-(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1'),
-(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1'),
-(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1'),
-(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1');
+INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link`) VALUES
+(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Closed\r\nClosed\r\n18:00–21:30\r\n18:00–21:00\r\n18:30–21:30\r\n18:30–21:30\r\n18:30–21:30', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
+(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', '', NULL),
+(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', '', NULL),
+(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', '', NULL),
+(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', '', NULL),
+(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', '', NULL),
+(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', '', NULL),
+(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -580,6 +1033,14 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
+
+--
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -588,6 +1049,17 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
+
+--
+-- Indexes for table `Event`
+--
+ALTER TABLE `Event`
+  ADD PRIMARY KEY (`event_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `venue_id` (`venue_id`),
+  ADD KEY `idx_type` (`type`),
+  ADD KEY `idx_start_time` (`start_time`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `history_content`
@@ -650,6 +1122,94 @@ ALTER TABLE `home_events`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `Invoice`
+--
+ALTER TABLE `Invoice`
+  ADD PRIMARY KEY (`invoice_id`),
+  ADD UNIQUE KEY `invoice_number` (`invoice_number`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `idx_invoice_number` (`invoice_number`);
+
+--
+-- Indexes for table `Order`
+--
+ALTER TABLE `Order`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indexes for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `idx_order_id` (`order_id`),
+  ADD KEY `idx_type_id` (`type_id`);
+-- Indexes for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_highlights_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`),
+  ADD KEY `location_id` (`location_id`);
+
+--
+-- Indexes for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_tracks_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
@@ -658,11 +1218,35 @@ ALTER TABLE `PasswordResetToken`
   ADD UNIQUE KEY `key` (`key`);
 
 --
+-- Indexes for table `Ticket`
+--
+ALTER TABLE `Ticket`
+  ADD PRIMARY KEY (`ticket_id`),
+  ADD UNIQUE KEY `barcode` (`barcode`),
+  ADD KEY `type_id` (`type_id`),
+  ADD KEY `idx_barcode` (`barcode`),
+  ADD KEY `idx_order_id` (`order_id`);
+
+--
+-- Indexes for table `Ticket_Type`
+--
+ALTER TABLE `Ticket_Type`
+  ADD PRIMARY KEY (`type_id`),
+  ADD KEY `idx_event_id` (`event_id`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
   ADD PRIMARY KEY (`user_id`),
   ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `Venue`
+--
+ALTER TABLE `Venue`
+  ADD PRIMARY KEY (`venue_id`),
+  ADD KEY `idx_name` (`name`);
 
 --
 -- Indexes for table `YummyFoodTypes`
@@ -686,6 +1270,13 @@ ALTER TABLE `YummyRestaurantFoodTypes`
   ADD KEY `type_id` (`type_id`);
 
 --
+-- Indexes for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  ADD PRIMARY KEY (`image_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
 -- Indexes for table `YummyRestaurants`
 --
 ALTER TABLE `YummyRestaurants`
@@ -699,13 +1290,25 @@ ALTER TABLE `YummyRestaurants`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
+-- AUTO_INCREMENT for table `Event`
+--
+ALTER TABLE `Event`
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `history_content`
@@ -762,10 +1365,110 @@ ALTER TABLE `home_events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `Invoice`
+--
+ALTER TABLE `Invoice`
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `Order`
+--
+ALTER TABLE `Order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+-- AUTO_INCREMENT for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `PasswordResetToken`
+--
+ALTER TABLE `PasswordResetToken`
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `Ticket`
+--
+ALTER TABLE `Ticket`
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `Ticket_Type`
+--
+ALTER TABLE `Ticket_Type`
+  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `Venue`
+--
+ALTER TABLE `Venue`
+  MODIFY `venue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -786,6 +1489,12 @@ ALTER TABLE `YummyRestaurantFoodTypes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
+-- AUTO_INCREMENT for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
 -- AUTO_INCREMENT for table `YummyRestaurants`
 --
 ALTER TABLE `YummyRestaurants`
@@ -800,6 +1509,12 @@ ALTER TABLE `YummyRestaurants`
 --
 ALTER TABLE `CartItem`
   ADD CONSTRAINT `cartitem_user_fk` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Event`
+--
+ALTER TABLE `Event`
+  ADD CONSTRAINT `Event_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `Venue` (`venue_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `history_details`
@@ -826,10 +1541,65 @@ ALTER TABLE `history_detail_sections`
   ADD CONSTRAINT `history_detail_sections_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `history_details` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `Invoice`
+--
+ALTER TABLE `Invoice`
+  ADD CONSTRAINT `Invoice_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Order`
+--
+ALTER TABLE `Order`
+  ADD CONSTRAINT `Order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
+-- Constraints for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD CONSTRAINT `jazz_performer_appearances_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD CONSTRAINT `fk_jazz_performer_highlights_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `jazz_locations` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+
+--
+-- Constraints for table `Ticket`
+--
+ALTER TABLE `Ticket`
+  ADD CONSTRAINT `Ticket_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `Ticket_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Ticket_Type`
+--
+ALTER TABLE `Ticket_Type`
+  ADD CONSTRAINT `Ticket_Type_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `Event` (`event_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `YummyRestaurantFoodTypes`
@@ -837,8 +1607,15 @@ ALTER TABLE `PasswordResetToken`
 ALTER TABLE `YummyRestaurantFoodTypes`
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`),
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`);
+
+--
+-- Constraints for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
