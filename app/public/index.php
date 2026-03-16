@@ -81,13 +81,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/locations/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeLocation']);
     $r->addRoute('POST', '/cms/jazz/locations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateLocation']);
     $r->addRoute('GET',  '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
-    // CMS - Jazz
-    $r->addRoute('GET',  '/cms/jazz/home',        [\App\Controllers\CmsJazzController::class, 'index']);
-    $r->addRoute('GET',  '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'new']);
-    $r->addRoute('POST', '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'create']);
-    $r->addRoute('GET',  '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'edit']);
-    $r->addRoute('POST', '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'update']);
-    $r->addRoute('POST', '/cms/jazz/block/delete',[\App\Controllers\CmsJazzController::class, 'delete']);
     // History
     $r->addRoute('GET', '/history', [\App\Controllers\HistoryController::class, 'index']);
     $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);

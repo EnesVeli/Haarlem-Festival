@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 15, 2026 at 08:01 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Mar 16, 2026 at 09:24 AM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -37,61 +37,6 @@ CREATE TABLE `CartItem` (
   `price` decimal(10,2) NOT NULL,
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cms_content`
---
-
-CREATE TABLE `cms_content` (
-  `id` int(11) NOT NULL,
-  `page_key` varchar(50) NOT NULL,
-  `block_type` varchar(50) NOT NULL,
-  `performer_id` int(11) NOT NULL DEFAULT 0,
-  `title` varchar(200) NOT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `body` text DEFAULT NULL,
-  `url` varchar(255) NOT NULL DEFAULT '',
-  `image_path` varchar(255) DEFAULT NULL,
-  `sort_order` int(11) NOT NULL DEFAULT 0,
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `uniq_key` varchar(400) GENERATED ALWAYS AS (concat(`page_key`,'|',`block_type`,'|',ifnull(`performer_id`,0),'|',ifnull(`url`,''),'|',`title`)) STORED
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `cms_content`
---
-
-INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `title`, `subtitle`, `body`, `url`, `image_path`, `sort_order`, `is_active`) VALUES
-(2, 'jazz_home', 'experience', 0, 'Jazz & Drinks', NULL, 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', '', NULL, 2, 1),
-(3, 'jazz_home', 'experience', 0, 'Vinyl Sessions', NULL, 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', '', NULL, 3, 1),
-(4, 'jazz_home', 'experience', 0, 'Sunset Stage', NULL, 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', '', NULL, 4, 1),
-(5, 'jazz_home', 'experience', 0, 'Rhythm & Coffee', NULL, 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', '', NULL, 5, 1),
-(8, 'jazz_home', 'performer', 1, 'Evolve', NULL, NULL, '', NULL, 1, 1),
-(9, 'jazz_home', 'performer', 2, 'Fox & The Mayors', NULL, NULL, '', NULL, 2, 1),
-(10, 'jazz_home', 'performer', 3, 'Gare du Nord', NULL, NULL, '', NULL, 3, 1),
-(11, 'jazz_home', 'performer', 4, 'Gumbo Kings', NULL, NULL, '', NULL, 4, 1),
-(12, 'jazz_home', 'performer', 5, 'Han Bennink', NULL, NULL, '', NULL, 5, 1),
-(13, 'jazz_home', 'performer', 6, 'Jonna Frazer', NULL, NULL, '', NULL, 6, 1),
-(14, 'jazz_home', 'performer', 7, 'Chris Allen', NULL, NULL, '', NULL, 7, 1),
-(15, 'jazz_home', 'performer', 8, 'Lilith Merlot', NULL, NULL, '', NULL, 8, 1),
-(16, 'jazz_home', 'performer', 9, 'Myles Sanko', NULL, NULL, '', NULL, 9, 1),
-(17, 'jazz_home', 'performer', 10, 'Ntjam Rosie', NULL, NULL, '', NULL, 10, 1),
-(18, 'jazz_home', 'performer', 11, 'Rilan & The Bombardiers', NULL, NULL, '', NULL, 11, 1),
-(19, 'jazz_home', 'performer', 12, 'Ruis Soundsystem', NULL, NULL, '', NULL, 12, 1),
-(20, 'jazz_home', 'performer', 13, 'Soul Six', NULL, NULL, '', NULL, 13, 1),
-(21, 'jazz_home', 'performer', 14, 'The Family XL', NULL, NULL, '', NULL, 14, 1),
-(22, 'jazz_home', 'performer', 15, 'The Nordanians', NULL, NULL, '', NULL, 15, 1),
-(23, 'jazz_home', 'performer', 16, 'The Tom Thompson', NULL, NULL, '', NULL, 16, 1),
-(24, 'jazz_home', 'performer', 17, 'Uncle Sue', NULL, NULL, '', NULL, 17, 1),
-(25, 'jazz_home', 'performer', 18, 'Wicked Jazz Sounds', NULL, NULL, '', NULL, 18, 1),
-(39, 'jazz_home', 'recommendation', 0, 'A Stroll Through History', NULL, 'Guided walking tour through historic Haarlem with local storytellers.', '/history', NULL, 1, 1),
-(40, 'jazz_home', 'recommendation', 0, 'Stories', NULL, 'Immerse yourself in Haarlem’s spoken-word acts, storytelling, and narrative performances.', '/story', NULL, 2, 1),
-(41, 'jazz_home', 'recommendation', 0, 'Yummy!', NULL, 'Explore Dutch cuisine and food history with tastings and local favorites.', '/yummy', NULL, 3, 1),
-(42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
-(43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
-(46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -333,6 +278,94 @@ INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `jazz_experiences`
+--
+
+CREATE TABLE `jazz_experiences` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_experiences`
+--
+
+INSERT INTO `jazz_experiences` (`id`, `title`, `description`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'Jazz & Drinks', 'Soft instrumental sets paired with cocktails and lounge seating. Feels like a classy evening in a downtown bar.', '/assets/uploads/jazz/experiences/1773540446_JazzExperience2.png', 2, 1),
+(2, 'Vinyl Sessions', 'Rediscover rare jazz records curated by local vinyl experts. Feels like stepping into a vintage record store.', '/assets/uploads/jazz/experiences/1773540485_JazzExperience1.png', 3, 1),
+(3, 'Sunset Stage', 'Outdoor performances with golden-hour vibes. Feels like a perfect summer evening soundtrack.', '/assets/uploads/jazz/experiences/1773540473_JazzExperience5.png', 4, 1),
+(5, 'Late Night Chill Jam', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '/assets/uploads/jazz/experiences/1773652237_gareDuNordHero.png', 1, 1),
+(8, 'Rythm And Coffe', 'Start your morning with mellow live jazz performed in cozy café corners across Haarlem. Feels like: smooth jazz floats through the air.', '/assets/uploads/jazz/experiences/1773540454_JazzExperience3.png', 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_hero`
+--
+
+CREATE TABLE `jazz_hero` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_hero`
+--
+
+INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1773540403_HeroImageMAIN.jpg', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_intro_content`
+--
+
+CREATE TABLE `jazz_intro_content` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_intro_content`
+--
+
+INSERT INTO `jazz_intro_content` (`id`, `title`, `description`) VALUES
+(1, 'Welcome to Haarlem Jazz', 'Haarlem Jazz celebrates soulful melodies, late-night sessions, and vibrant creativity of local and international artists.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_locations`
+--
+
+CREATE TABLE `jazz_locations` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `google_maps_embed_url` text NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_locations`
+--
+
+INSERT INTO `jazz_locations` (`id`, `name`, `address`, `google_maps_embed_url`, `is_active`) VALUES
+(1, 'Patronaat', 'Zijlsingel 2, Haarlem', 'https://www.google.com/maps?q=Patronaat,+Haarlem&output=embed', 1),
+(2, 'Grote Markt', 'Grote Markt, 2011 RD Haarlem', 'https://www.google.com/maps?q=Grote+Markt,+2011+RD+Haarlem&output=embed', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jazz_performers`
 --
 
@@ -342,32 +375,155 @@ CREATE TABLE `jazz_performers` (
   `bio` text DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
-  `image_path` varchar(255) DEFAULT NULL
+  `image_path` varchar(255) DEFAULT NULL,
+  `performance_style` varchar(150) DEFAULT NULL,
+  `event_date_text` varchar(100) DEFAULT NULL,
+  `event_time_text` varchar(100) DEFAULT NULL,
+  `venue_name` varchar(150) DEFAULT NULL,
+  `venue_address` varchar(255) DEFAULT NULL,
+  `price_text` varchar(50) DEFAULT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `audio_url` varchar(255) DEFAULT NULL,
+  `hero_image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `jazz_performers`
 --
 
-INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`) VALUES
-(1, 'Evolve', NULL, 1, 1, NULL),
-(2, 'Fox & The Mayors', NULL, 2, 1, NULL),
-(3, 'Gare du Nord', NULL, 3, 1, NULL),
-(4, 'Gumbo Kings', NULL, 4, 1, NULL),
-(5, 'Han Bennink', NULL, 5, 1, NULL),
-(6, 'Jonna Frazer', NULL, 6, 1, NULL),
-(7, 'Chris Allen', NULL, 7, 1, NULL),
-(8, 'Lilith Merlot', NULL, 8, 1, NULL),
-(9, 'Myles Sanko', NULL, 9, 1, NULL),
-(10, 'Ntjam Rosie', NULL, 10, 1, NULL),
-(11, 'Rilan & The Bombardiers', NULL, 11, 1, NULL),
-(12, 'Ruis Soundsystem', NULL, 12, 1, NULL),
-(13, 'Soul Six', NULL, 13, 1, NULL),
-(14, 'The Family XL', NULL, 14, 1, NULL),
-(15, 'The Nordanians', NULL, 15, 1, NULL),
-(16, 'The Tom Thompson', NULL, 16, 1, NULL),
-(17, 'Uncle Sue', NULL, 17, 1, NULL),
-(18, 'Wicked Jazz Sounds', NULL, 18, 1, NULL);
+INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
+(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', NULL),
+(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', '', '', '', '', '', '', '', '', NULL),
+(3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
+(4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
+(6, 'Jonna Frazer', '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', '', NULL),
+(7, 'Chris Allen', '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', '', NULL),
+(8, 'Lilith Merlot', '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', '', NULL),
+(9, 'Myles Sanko', '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', '', NULL),
+(13, 'Soul Six', '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', '', NULL),
+(14, 'The Family XL', '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', '', NULL),
+(15, 'The Nordanians', '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', '', NULL),
+(17, 'Uncle Sue', '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_appearances`
+--
+
+CREATE TABLE `jazz_performer_appearances` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `day_text` varchar(50) NOT NULL,
+  `time_text` varchar(50) NOT NULL,
+  `location_text` varchar(255) NOT NULL,
+  `note_text` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_appearances`
+--
+
+INSERT INTO `jazz_performer_appearances` (`id`, `performer_id`, `day_text`, `time_text`, `location_text`, `note_text`, `sort_order`) VALUES
+(3, 3, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', '', 1),
+(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_highlights`
+--
+
+CREATE TABLE `jazz_performer_highlights` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text NOT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_highlights`
+--
+
+INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `description`, `sort_order`) VALUES
+(5, 3, 'Formation and Early Success', 'Since their formation, Gare du Nord built a strong reputation through atmospheric live performances and a distinctive blend of smooth jazz, soul, and lounge influences. Their stylish sound quickly attracted attention from audiences looking for intimate and elegant festival experiences.', 1),
+(6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
+(7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
+(8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_locations`
+--
+
+CREATE TABLE `jazz_performer_locations` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `location_id` int(11) NOT NULL,
+  `sort_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_locations`
+--
+
+INSERT INTO `jazz_performer_locations` (`id`, `performer_id`, `location_id`, `sort_order`) VALUES
+(3, 3, 1, 1),
+(4, 3, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_performer_tracks`
+--
+
+CREATE TABLE `jazz_performer_tracks` (
+  `id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `release_date_text` varchar(100) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `listen_url` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_performer_tracks`
+--
+
+INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
+(1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
+(2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `jazz_recommendations`
+--
+
+CREATE TABLE `jazz_recommendations` (
+  `id` int(11) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `description` text DEFAULT NULL,
+  `url` varchar(255) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `jazz_recommendations`
+--
+
+INSERT INTO `jazz_recommendations` (`id`, `title`, `description`, `url`, `image_path`, `sort_order`, `is_active`) VALUES
+(1, 'A Stroll Through History', 'Walked along your through historic Haarlem with local storytellers sharing tales of the city\'s rich past.', '/history', '/assets/uploads/jazz/recommendations/1773540983_stroll.png', 1, 1),
+(5, 'Stories', 'Immerse yourself in Haarlem\'s spoken-word acts and storytelling.', '/stories', '/assets/uploads/jazz/recommendations/1773541019_StoriesRecommendation.png', 2, 1),
+(6, 'Yummy!', 'Explore local food and culinary experiences in Haarlem.', '/yummy', '/assets/uploads/jazz/recommendations/1773541051_Yummy!.png', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -613,16 +769,6 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `cms_content`
---
-ALTER TABLE `cms_content`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_cms_block` (`page_key`,`block_type`,`performer_id`,`title`,`url`),
-  ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
-  ADD KEY `idx_page_block` (`page_key`,`block_type`),
-  ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
-
---
 -- Indexes for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -680,6 +826,71 @@ ALTER TABLE `home_content`
 -- Indexes for table `home_events`
 --
 ALTER TABLE `home_events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_highlights_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `performer_id` (`performer_id`),
+  ADD KEY `location_id` (`location_id`);
+
+--
+-- Indexes for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_jazz_performer_tracks_performer` (`performer_id`);
+
+--
+-- Indexes for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -742,12 +953,6 @@ ALTER TABLE `CartItem`
   MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `cms_content`
---
-ALTER TABLE `cms_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
-
---
 -- AUTO_INCREMENT for table `history_content`
 --
 ALTER TABLE `history_content`
@@ -800,6 +1005,66 @@ ALTER TABLE `home_content`
 --
 ALTER TABLE `home_events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `jazz_experiences`
+--
+ALTER TABLE `jazz_experiences`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_hero`
+--
+ALTER TABLE `jazz_hero`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_intro_content`
+--
+ALTER TABLE `jazz_intro_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `jazz_locations`
+--
+ALTER TABLE `jazz_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `jazz_performers`
+--
+ALTER TABLE `jazz_performers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `jazz_recommendations`
+--
+ALTER TABLE `jazz_recommendations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -876,6 +1141,31 @@ ALTER TABLE `history_detail_gallery`
 --
 ALTER TABLE `history_detail_sections`
   ADD CONSTRAINT `history_detail_sections_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `history_details` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_appearances`
+--
+ALTER TABLE `jazz_performer_appearances`
+  ADD CONSTRAINT `jazz_performer_appearances_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_highlights`
+--
+ALTER TABLE `jazz_performer_highlights`
+  ADD CONSTRAINT `fk_jazz_performer_highlights_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_locations`
+--
+ALTER TABLE `jazz_performer_locations`
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `jazz_performer_locations_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `jazz_locations` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `jazz_performer_tracks`
+--
+ALTER TABLE `jazz_performer_tracks`
+  ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `PasswordResetToken`
