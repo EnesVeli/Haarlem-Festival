@@ -93,6 +93,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Yummy
     $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
+    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+    $r->addRoute('GET', '/yummy/book', [\App\Controllers\YummyController::class, 'bookingPage']);
     
     // Stories in Haarlem — public pages
     $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);
@@ -104,7 +106,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/stories/edit',   [\App\Controllers\CmsStoriesController::class, 'edit']);
     $r->addRoute('POST', '/cms/stories/save',   [\App\Controllers\CmsStoriesController::class, 'save']);
     $r->addRoute('POST', '/cms/stories/delete', [\App\Controllers\CmsStoriesController::class, 'delete']);
-    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
 });
 
 // Fetch method and URI from Server

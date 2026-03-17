@@ -6,6 +6,7 @@ use App\Repositories\RestaurantSortingOption;
 use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyGuidesRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use App\ViewModels\YummyBookViewModel;
 use App\ViewModels\YummyHomeViewModel;
 use App\ViewModels\YummyListViewModel;
 use App\ViewModels\YummyRestaurantViewModel;
@@ -115,6 +116,14 @@ class YummyService
         $view_model->images = $this->restaurant_repository->getRestaurantImages((int)$id) ?? [];
 
         $view_model->dishes = $this->restaurant_repository->getRestaurantDishes((int)$id) ?? [];
+
+        return $view_model;
+    }
+
+    public function GetBookingViewModel(string $id) : YummyBookViewModel {
+        $view_model = new YummyBookViewModel();
+        
+        
 
         return $view_model;
     }
