@@ -67,5 +67,7 @@ class YummyController
         catch(Exception $ex){
             $error_message = 'Something went wrong, try again later';
         }  
+
+        require __DIR__ . '/../Views/yummy/book.php';
     }
 }

@@ -8,6 +8,11 @@
     <div class="restaurant-main-container">     
         <div class="restaurant-main-left">
             <a class="restaurant-go-back-link" href="/yummy/list">← Back to Restaurants List</a>
+            <?php if(!empty($error_message)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= htmlspecialchars($error_message) ?>
+                </div>
+            <?php endif; ?>
             <h1 class="restaurant-name-title"><? echo htmlspecialchars($view_model->restaurant->name); ?></h1>
             <div class="restaurant-main-image-container">
                 <img class="restaurant-main-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->restaurant->main_img_path; ?>">

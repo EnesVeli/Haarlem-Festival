@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 16, 2026 at 01:12 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Mar 17, 2026 at 09:33 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
-CREATE DATABASE IF NOT EXISTS `developmentdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci;
-USE `developmentdb`;
 
 -- --------------------------------------------------------
 
@@ -49,27 +47,6 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 (3, 8, 'story', 9, 'single', 5, 0.00, '2026-03-15 15:11:31'),
 (4, 8, 'story', 3, 'single', 4, 15.00, '2026-03-16 08:31:32'),
 (5, 8, 'story', 1, 'single', 1, 6.00, '2026-03-16 09:00:35');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p><strong>Last Weekend of July | Multiple Locations across Haarlem</strong></p>\r\n<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/hero.png');
 
 -- --------------------------------------------------------
 
@@ -125,6 +102,27 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p><strong>Last Weekend of July | Multiple Locations across Haarlem</strong></p>\r\n<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/hero.png');
 
 -- --------------------------------------------------------
 
@@ -429,6 +427,10 @@ CREATE TABLE `Invoice` (
   `client_name` varchar(255) DEFAULT NULL,
   `client_address` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `jazz_experiences`
 --
 
@@ -842,6 +844,21 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `YummyBookings`
+--
+
+CREATE TABLE `YummyBookings` (
+  `booking_id` int(16) NOT NULL,
+  `reservation_id` int(16) NOT NULL,
+  `date` datetime NOT NULL,
+  `adult_number` tinyint(3) UNSIGNED NOT NULL,
+  `child_number` tinyint(3) UNSIGNED NOT NULL,
+  `message` varchar(512) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `YummyDishes`
 --
 
@@ -921,6 +938,28 @@ INSERT INTO `YummyGuides` (`guide_id`, `mini_img_path`, `mini_title`, `mini_text
 (3, 'ec39dac2209ad74ecc7ddb524164516fb3acfdb3.jpg', 'Haarlem’s Coziest Cafés and Coffee Spots', 'Discover Haarlem’s charming cafés offering great coffee, home made cakes, relaxed brunches, and welcoming atmospheres ideal for a break while exploring the city or meeting friends.', b'1'),
 (4, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1'),
 (5, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg\r\n', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyReservationSlots`
+--
+
+CREATE TABLE `YummyReservationSlots` (
+  `reservation_id` int(16) NOT NULL,
+  `slot_id` int(16) NOT NULL,
+  `date` date NOT NULL,
+  `booked` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyReservationSlots`
+--
+
+INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booked`) VALUES
+(1, 1, '2026-03-17', 0),
+(2, 2, '2026-03-17', 0),
+(3, 3, '2026-03-17', 0);
 
 -- --------------------------------------------------------
 
@@ -1047,6 +1086,28 @@ INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_
 (8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', '', NULL),
 (9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', '', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyRestaurantTimeSlots`
+--
+
+CREATE TABLE `YummyRestaurantTimeSlots` (
+  `slot_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `time` time NOT NULL,
+  `capacity` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyRestaurantTimeSlots`
+--
+
+INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`) VALUES
+(1, 1, '17:00:00', 30),
+(2, 1, '19:00:00', 30),
+(3, 1, '21:00:00', 30);
+
 --
 -- Indexes for dumped tables
 --
@@ -1059,14 +1120,6 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
-
---
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1075,6 +1128,14 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
+
+--
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `Event`
@@ -1157,20 +1218,6 @@ ALTER TABLE `Invoice`
   ADD KEY `idx_invoice_number` (`invoice_number`);
 
 --
--- Indexes for table `Order`
---
-ALTER TABLE `Order`
-  ADD PRIMARY KEY (`order_id`),
-  ADD KEY `idx_user_id` (`user_id`),
-  ADD KEY `idx_status` (`status`);
-
---
--- Indexes for table `OrderItem`
---
-ALTER TABLE `OrderItem`
-  ADD PRIMARY KEY (`item_id`),
-  ADD KEY `idx_order_id` (`order_id`),
-  ADD KEY `idx_type_id` (`type_id`);
 -- Indexes for table `jazz_experiences`
 --
 ALTER TABLE `jazz_experiences`
@@ -1236,6 +1283,22 @@ ALTER TABLE `jazz_recommendations`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `Order`
+--
+ALTER TABLE `Order`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indexes for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `idx_order_id` (`order_id`),
+  ADD KEY `idx_type_id` (`type_id`);
+
+--
 -- Indexes for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
@@ -1273,6 +1336,14 @@ ALTER TABLE `User`
 ALTER TABLE `Venue`
   ADD PRIMARY KEY (`venue_id`),
   ADD KEY `idx_name` (`name`);
+
+--
+-- Indexes for table `YummyBookings`
+--
+ALTER TABLE `YummyBookings`
+  ADD PRIMARY KEY (`booking_id`);
+
+--
 -- Indexes for table `YummyDishes`
 --
 ALTER TABLE `YummyDishes`
@@ -1291,6 +1362,13 @@ ALTER TABLE `YummyFoodTypes`
 --
 ALTER TABLE `YummyGuides`
   ADD PRIMARY KEY (`guide_id`);
+
+--
+-- Indexes for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  ADD PRIMARY KEY (`reservation_id`),
+  ADD KEY `slot_id` (`slot_id`);
 
 --
 -- Indexes for table `YummyRestaurantFoodTypes`
@@ -1314,6 +1392,13 @@ ALTER TABLE `YummyRestaurants`
   ADD PRIMARY KEY (`restaurant_id`);
 
 --
+-- Indexes for table `YummyRestaurantTimeSlots`
+--
+ALTER TABLE `YummyRestaurantTimeSlots`
+  ADD PRIMARY KEY (`slot_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -1324,16 +1409,16 @@ ALTER TABLE `CartItem`
   MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
+-- AUTO_INCREMENT for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Event`
@@ -1402,16 +1487,6 @@ ALTER TABLE `Invoice`
   MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `Order`
---
-ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `OrderItem`
---
-ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
 -- AUTO_INCREMENT for table `jazz_experiences`
 --
 ALTER TABLE `jazz_experiences`
@@ -1472,6 +1547,18 @@ ALTER TABLE `jazz_recommendations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `Order`
+--
+ALTER TABLE `Order`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
@@ -1520,6 +1607,12 @@ ALTER TABLE `YummyGuides`
   MODIFY `guide_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
@@ -1536,6 +1629,12 @@ ALTER TABLE `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurants`
   MODIFY `restaurant_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `YummyRestaurantTimeSlots`
+--
+ALTER TABLE `YummyRestaurantTimeSlots`
+  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -1584,17 +1683,6 @@ ALTER TABLE `Invoice`
   ADD CONSTRAINT `Invoice_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `Order`
---
-ALTER TABLE `Order`
-  ADD CONSTRAINT `Order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `OrderItem`
---
-ALTER TABLE `OrderItem`
-  ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
 -- Constraints for table `jazz_performer_appearances`
 --
 ALTER TABLE `jazz_performer_appearances`
@@ -1620,6 +1708,19 @@ ALTER TABLE `jazz_performer_tracks`
   ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `Order`
+--
+ALTER TABLE `Order`
+  ADD CONSTRAINT `Order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
@@ -1637,10 +1738,18 @@ ALTER TABLE `Ticket`
 --
 ALTER TABLE `Ticket_Type`
   ADD CONSTRAINT `Ticket_Type_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `Event` (`event_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `YummyDishes`
 --
 ALTER TABLE `YummyDishes`
   ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
+
+--
+-- Constraints for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  ADD CONSTRAINT `1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
 
 --
 -- Constraints for table `YummyRestaurantFoodTypes`
@@ -1654,9 +1763,14 @@ ALTER TABLE `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantImages`
   ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
+
+--
+-- Constraints for table `YummyRestaurantTimeSlots`
+--
+ALTER TABLE `YummyRestaurantTimeSlots`
+  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-

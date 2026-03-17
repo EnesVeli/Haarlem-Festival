@@ -5,6 +5,7 @@ use App\Framework\Repository;
 use App\Models\Dish;
 use App\Models\Restaurant;
 use App\Models\RestaurantImage;
+use App\Models\RestaurantTimeSlot;
 use PDO;
 
 enum RestaurantSortingOption : int{
@@ -194,6 +195,28 @@ class YummyRestaurantsRepository extends Repository
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Dish::class);
+        $res = $stmt->fetchAll(); 
+
+        return $res == false ? null : $res;
+    }
+
+    /**
+     * @param int $restaurant_id id of searched restaurant.
+     * @return ?array returns array of restaurant time slots (joined YummyRestaurantTimeSlots and YummyReservationSlots), returns null, if nothing were found.
+     */
+    public function getRestaurantTimeSlots(int $restaurant_id) : ?array {
+        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`
+                FROM `YummyRestaurantTimeSlots` AS `T` 
+                INNER JOIN
+                    (SELECT * 
+                     FROM `YummyReservationSlots`) AS `R`
+                ON `T`.`slot_id` = `R`.`slot_id`
+                WHERE `T`.`restaurant_id` = :restaurant_id";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantTimeSlot::class);
         $res = $stmt->fetchAll(); 
 
         return $res == false ? null : $res;

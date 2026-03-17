@@ -123,7 +123,8 @@ class YummyService
     public function GetBookingViewModel(string $id) : YummyBookViewModel {
         $view_model = new YummyBookViewModel();
         
-        
+        $view_model->restaurant = $this->restaurant_repository->getRestaurantById($id);
+        $view_model->time_slots = $this->restaurant_repository->getRestaurantTimeSlots($id);
 
         return $view_model;
     }
