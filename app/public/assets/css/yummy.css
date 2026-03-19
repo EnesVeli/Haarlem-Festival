@@ -1574,5 +1574,323 @@
 
 /* ========== Restaurant ========== */
 .book-main{
+    position: relative;
+    display: flex;
+
+    width: 705px;
+
+    margin-top: 26px; 
+
+    font-family: 'Playfair', serif;
+    font-size: 22px;
+    color: var(--burgundy);
+
+    justify-self: center;
+    flex-direction: column;
+}
+
+.book-back-link{
+    position: relative;
+    display: inline;
+
+    font-family: 'Playfair', serif;
+    font-size: 22px;
+    color: var(--burgundy);
+
+    font-weight: 700;
+
+    margin-bottom: 4px;
+}
+
+.book-card{
+    position: relative;
+    display: inline;
+
+    width: 100%;
+
+    border-width: 3px;
+    border-color: var(--buttercup);
+    border-style: solid;
+
+    border-radius: 18px;
+
+    padding-left: 24px;
+    padding-right: 24px;
+
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+
+.book-restaurant-title{
+    font-family: 'Playfair', serif;
+    font-size: 32px;
+    color: var(--burgundy);
+
+    font-weight: 700;
+}
+
+.book-select-title{
+    font-family: 'Playfair', serif;
+    font-size: 24px;
+    color: var(--burgundy);
+
+    font-weight: 700;
     
+    margin-top: -12px;    
+}
+
+.book-counter-section-container{
+    display: flex;
+
+    flex-direction: row;
+
+    width: 100%;
+    min-width: 100%;
+
+    gap: 24px;
+
+    justify-items: flex-start;
+}
+
+.book-counter-section{
+    display: flex;
+
+    flex-direction: column;
+}
+
+.book-counter-label{
+    display: inline;
+
+    font-family: 'Playfair', serif;
+    font-size: 21px;
+    color: var(--burgundy);
+
+    font-weight: 700;
+
+    margin-top: -3px;
+
+    margin-left: 1px;
+}
+
+.book-counter-container{
+    display: flex;
+}
+
+.book-cost-lebel{
+    justify-self: flex-end;
+
+    font-family: 'Roboto';
+    font-size: 34px;
+    color: var(--burgundy);
+
+    font-weight: 700;
+
+    margin-left: auto;
+
+    align-self: flex-end;
+
+    margin-bottom: -2px;
+}
+
+.book-counter-button{
+    width: 44px;
+    height: 44px;
+
+    border-style: solid;
+    border-color: #D4D4D4;
+    border-width: 3px;
+    border-radius: 90px;
+
+    background-color: white;
+
+    color: var(--burgundy);
+
+    font-family: 'Roboto';
+    font-size: 32px;
+
+    font-weight: 1000;
+}
+
+.book-counter-button-minus{
+    position: relative;
+    display: flex;
+
+    line-height: 24px;
+
+    margin-top: -5px;
+
+    font-weight: 500;
+
+    align-self: center;
+    justify-self: center;
+}
+
+.book-counter-button-plus{
+    position: relative;
+    display: flex;
+
+    line-height: 24px;
+
+    align-self: center;
+    justify-self: center;
+}
+
+.book-counter-value{
+    font-family: 'Roboto';
+    font-size: 28px;
+    color: black;
+
+    font-weight: 700;
+
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.book-label{
+    font-family: 'Playfair', serif;
+    font-size: 21px;
+    color: var(--burgundy);
+
+    font-weight: 700;
+}
+
+.book-select-date{
+    font-family: 'Roboto';
+    font-size: 21px;
+    font-weight: 700;
+    color: black;
+
+    background-color: white;
+
+    border-style: solid;
+    border-color: #D4D4D4;
+    border-width: 3px;
+    border-radius: 90px;
+
+    padding-left: 14px;
+    padding-right: 14px;
+
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.book-time-slot-container{
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+    gap: 5px;
+
+    margin-top: -5px;
+}
+
+.book-time-slot{
+    border-style: none;
+    border-radius: 18px;
+
+    color: white;
+
+    font-family: 'Roboto';
+
+    width: 126px;
+
+    padding-top: 18px;
+    padding-bottom: 18px;
+
+    margin-top: 5px;
+
+    box-sizing: border-box;
+}
+
+.book-time-slot-time{
+    line-height: 18px;
+
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.book-time-slot-capacity{
+    line-height: 18px;
+
+    margin-top: 3px;
+
+    font-size: 20px;
+}
+
+.book-time-slot-selected{
+    background-color: var(--buttercup);
+    color: black;
+}
+
+.book-time-slot-not-selected{
+    background-color: #2C3E50;
+}
+
+.book-time-slot-not-active{
+    background-color: #4E4E4E;
+}
+
+.book-comment{
+    border-style: solid;
+    border-radius: 12px;
+    border-color: #E0D6C8;
+    border-width: 2px;
+
+    color:  #4D4D4D;
+
+    width: 100%;
+
+    height: 140px;
+    min-height: 140px;
+}
+
+.book-comment:focus{
+    outline: none !important;
+    border-color: #4D4D4D;
+}
+
+.book-buttons-container{
+    display: flex;
+
+    margin-bottom: 12px;
+}
+
+.book-button{
+    width: 100px;
+
+    font-family: 'Roboto';
+    font-size: 21px;
+    font-weight: 700;
+
+    border-style: none;
+    border-radius: 12px;
+
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    text-align: center;
+}
+
+.book-button-cancel{
+    background-color: var(--burgundy);
+
+    color: white;
+}
+
+.book-button-submit-active{
+    background-color: var(--navy);
+
+    color: white;
+
+    margin-left: auto;
+}
+
+.book-button-submit-not-active{
+    background-color:  #4E4E4E;
+
+    color: white;
+
+    margin-left: auto;
 }

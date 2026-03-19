@@ -10,6 +10,8 @@ use App\ViewModels\YummyBookViewModel;
 use App\ViewModels\YummyHomeViewModel;
 use App\ViewModels\YummyListViewModel;
 use App\ViewModels\YummyRestaurantViewModel;
+use DateInterval;
+use DateTime;
 use Exception;
 use RoundingMode;
 
@@ -124,7 +126,21 @@ class YummyService
         $view_model = new YummyBookViewModel();
         
         $view_model->restaurant = $this->restaurant_repository->getRestaurantById($id);
-        $view_model->time_slots = $this->restaurant_repository->getRestaurantTimeSlots($id);
+
+        $view_model->time_slots = [];
+
+        for($i = 0; $i < 14; $i++){
+            array_push($view_model->time_slots, $this->restaurant_repository->getRestaurantTimeSlots($id, $i) ?? []);
+        }
+
+        $view_model->dates = [];
+        $d = new DateTime();
+
+        for ($i=0; $i < 14; $i++) { 
+            array_push($view_model->dates, $d->format('d.m.Y l'));
+
+            $d->add(new DateInterval('P1D')); // Adding one day to the date
+        }
 
         return $view_model;
     }

@@ -70,4 +70,9 @@ class YummyController
 
         require __DIR__ . '/../Views/yummy/book.php';
     }
+    public function book(){
+        //{'date_offset' , 'adult_count', 'child_count','slot_id', 'comment' };
+
+        echo 'offset: ' . $_POST['date_offset'] . ' adult: ' .  $_POST['adult_count'] . ' child: ' . $_POST['child_count'] . ' slot_id: '  . $_POST['slot_id'] . ' comment: '  . $_POST['comment'];
+    }
 }

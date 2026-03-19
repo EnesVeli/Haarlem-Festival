@@ -202,19 +202,21 @@ class YummyRestaurantsRepository extends Repository
 
     /**
      * @param int $restaurant_id id of searched restaurant.
-     * @return ?array returns array of restaurant time slots (joined YummyRestaurantTimeSlots and YummyReservationSlots), returns null, if nothing were found.
+     * @param int $date_offset offset in day from today.
+     * @return ?array returns array of restaurant time slots (joined YummyRestaurantTimeSlots and YummyReservationSlots) in range from today to two weeks from now, returns null, if nothing were found.
      */
-    public function getRestaurantTimeSlots(int $restaurant_id) : ?array {
+    public function getRestaurantTimeSlots(int $restaurant_id, int $date_offset) : ?array {
         $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`
                 FROM `YummyRestaurantTimeSlots` AS `T` 
                 INNER JOIN
                     (SELECT * 
                      FROM `YummyReservationSlots`) AS `R`
                 ON `T`.`slot_id` = `R`.`slot_id`
-                WHERE `T`.`restaurant_id` = :restaurant_id";
+                WHERE `T`.`restaurant_id` = :restaurant_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY;";
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(['restaurant_id' => $restaurant_id]);
+        $stmt->execute(['restaurant_id' => $restaurant_id,
+                        'date_offset' => $date_offset]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantTimeSlot::class);
         $res = $stmt->fetchAll(); 
