@@ -2,6 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\FormDataException;
+use App\Models\Exceptions\OverBookingException;
+use App\Models\Exceptions\UserNotLoggedInException;
+use App\Models\RestaurantBooking;
 use App\Repositories\RestaurantSortingOption;
 use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyGuidesRepository;
@@ -143,5 +148,54 @@ class YummyService
         }
 
         return $view_model;
+    }
+
+    public function createBooking(?string $date_offset, ?int $adult_count, ?int $child_count, ?int $slot_id, ?string $comment){
+        // Verify pathed data
+        if($_SESSION['user_id'] == null) throw new UserNotLoggedInException();
+        $user_id = $_SESSION['user_id'];
+
+        if($date_offset == null || $date_offset > 12 || $date_offset < 0){
+            throw new FormDataException("Invalid date offset.");
+        }
+
+        if($adult_count == null || $adult_count > 24 || $adult_count < 1){
+            throw new FormDataException("Invalid adult count.");
+        }
+
+        if($child_count == null || $child_count > 24 || $child_count < 0){
+            throw new FormDataException("Invalid child count.");
+        }
+
+        if($slot_id == null){
+            throw new FormDataException("Invalid slot id.");
+        }
+
+        $slot = $this->restaurant_repository->getRestaurantTimeSlotById($slot_id, $date_offset);
+
+        if($slot == null) throw new FormDataException("Could not find time slot with the slot_id and date_offset.");
+
+        if($slot->booked + $adult_count + $child_count > $slot->capacity) throw new OverBookingException();   
+        
+        // Creating new booking and reserving seats at reservation
+        $booking = new RestaurantBooking();
+
+        $booking->reservation_id = $slot->reservation_id;
+        $booking->user_id = $user_id;
+        $booking->adult_number = $adult_count;
+        $booking->child_number = $child_count;
+        $booking->comment = $comment;
+
+        if(!$this->restaurant_repository->bookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count)) throw new DBAccessException("Could not add bookings number to reservation slot.");
+
+        // If creation failed revert increasing booking number.
+        try{
+            if(!$this->restaurant_repository->createBookingWithOffest($booking, $date_offset)) throw new DBAccessException("Could not create a new restaurant booking.");
+        }
+        catch(Exception $ex){
+            $this->restaurant_repository->unbookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count);
+
+            throw $ex;
+        }    
     }
 }

@@ -1,6 +1,10 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\FormDataException;
+use App\Models\Exceptions\OverBookingException;
+use App\Models\Exceptions\UserNotLoggedInException;
 use App\Repositories\YummyRestaurantsRepository;
 use App\Services\YummyService;
 use Exception;
@@ -57,12 +61,20 @@ class YummyController
     }
 
     public function bookingPage(){
+        if(!$this->isLoggedIn()){
+            //$error = "In order to book a table you need to login first.";
+            header("Location: /login");
+            exit;
+        }
+
         try{
             $id = $_GET['id'] ?? null;
 
             $view_model = $this->service->GetBookingViewModel($id);
 
             $pageTitle = 'Yummy - Restaurant List';
+
+            $error_message = $_GET['err'] ?? null;
         }
         catch(Exception $ex){
             $error_message = 'Something went wrong, try again later';
@@ -71,8 +83,50 @@ class YummyController
         require __DIR__ . '/../Views/yummy/book.php';
     }
     public function book(){
-        //{'date_offset' , 'adult_count', 'child_count','slot_id', 'comment' };
+        if(!$this->isLoggedIn()){
+            //$error = "In order to book a table you need to login first.";
+            header("Location: /login");
+            exit;
+        }
 
-        echo 'offset: ' . $_POST['date_offset'] . ' adult: ' .  $_POST['adult_count'] . ' child: ' . $_POST['child_count'] . ' slot_id: '  . $_POST['slot_id'] . ' comment: '  . $_POST['comment'];
+        try{
+            $this->service->createBooking($_POST['date_offset'], $_POST['adult_count'], $_POST['child_count'], $_POST['slot_id'], $_POST['comment']);
+        }
+        catch(UserNotLoggedInException $ex){
+            header("Location: /login");
+            exit;
+        }
+        catch(FormDataException $ex){
+            $this->redirectToBook("Something went wrong try again later.");
+            exit;
+        } 
+        catch(OverBookingException $ex){
+            $this->redirectToBook("You are trying to book more seats than are avaliable.");
+            exit;
+        } 
+        catch(DBAccessException $ex){
+            $this->redirectToBook("Something went wrong try again later.");
+            exit;
+        } 
+        catch(Exception $ex){
+            $this->redirectToBook("Something went wrong try again later.");
+            exit;
+        } 
+
+        require __DIR__ . '/../Views/yummy/booking-success.php';
+    }
+
+    private function redirectToBook(string $error){
+        if($_POST['restaurant_id'] == null){
+            header("location: /yummy/book?err=" . urlencode($error));
+        }
+        else{
+            header("location: /yummy/book?id=" . $_POST['restaurant_id'] . '&err=' . urlencode($error));
+        }  
+    }
+
+    private function isLoggedIn() : bool
+    {
+        return isset($_SESSION['user_id']);
     }
 }

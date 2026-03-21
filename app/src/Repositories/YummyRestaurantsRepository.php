@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Framework\Repository;
 use App\Models\Dish;
 use App\Models\Restaurant;
+use App\Models\RestaurantBooking;
 use App\Models\RestaurantImage;
 use App\Models\RestaurantTimeSlot;
 use PDO;
@@ -222,5 +223,100 @@ class YummyRestaurantsRepository extends Repository
         $res = $stmt->fetchAll(); 
 
         return $res == false ? null : $res;
+    }
+
+    /**
+     * @param int $slot_id id of searched time slot.
+     * @param int $date_offset offset in day from today.
+     * @return ?RestaurantTimeSlot returns a time slot (joined YummyRestaurantTimeSlots and YummyReservationSlots) by slot id and at selected date, returns null, if nothing were found.
+     */
+    public function getRestaurantTimeSlotById(int $slot_id, int $date_offset) : ?RestaurantTimeSlot {
+        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`
+                FROM `YummyRestaurantTimeSlots` AS `T` 
+                INNER JOIN
+                    (SELECT * 
+                     FROM `YummyReservationSlots`) AS `R`
+                ON `T`.`slot_id` = `R`.`slot_id`
+                WHERE `T`.`slot_id` = :slot_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['slot_id' => $slot_id,
+                        'date_offset' => $date_offset]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantTimeSlot::class);
+        $res = $stmt->fetch(); 
+
+        return $res == false ? null : $res;
+    }
+
+    /**
+     * Method adds seat_number to number of bookings of a time slot with selected slot_id and date.
+     * @param int $slot_id id of searched time slot.
+     * @param int $date_offset offset in day from today.
+     * @param int $seat_number number of seats booked.
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function bookRestaurantTimeSlot(int $slot_id, int $date_offset, int $seat_number) : bool {
+        $sql = "UPDATE `YummyReservationSlots` SET `booked` = `booked` + :seat_number
+                WHERE `slot_id` = :slot_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute(['slot_id' => $slot_id, 'date_offset' => $date_offset, 'seat_number' => $seat_number]);
+    }
+
+    /**
+     * Method subtracts seat_number from number of bookings of a time slot with selected slot_id and date.
+     * @param int $slot_id id of searched time slot.
+     * @param int $date_offset offset in day from today.
+     * @param int $seat_number number of seats booked.
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function unbookRestaurantTimeSlot(int $slot_id, int $date_offset, int $seat_number) : bool {
+        $sql = "UPDATE `YummyReservationSlots` SET `booked` = `booked` - :seat_number
+                WHERE `slot_id` = :slot_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute(['slot_id' => $slot_id, 'date_offset' => $date_offset, 'seat_number' => $seat_number]);
+    }
+
+    /**
+     * Creates a restaurant booking in the db.
+     * @param RestaurantBooking $booking booking you want to create
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function createBooking(RestaurantBooking $booking) : bool {
+        $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) 
+                VALUES (:reservation_id, :user_id, :date, :adult_number , :child_number, :comment);";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute(['reservation_id' => $booking->reservation_id,
+                               'user_id' => $booking->user_id,
+                               'date' => $booking->date,
+                               'adult_number' => $booking->adult_number,
+                               'child_number' => $booking->child_number,
+                               'comment' => $booking->comment]);
+    }
+
+    /**
+     * Creates a restaurant booking in the db.
+     * @param RestaurantBooking $booking booking you want to create
+     * @param int $date_offset offset in days from today (i. e. today + offset(number of days) will be put in date, insteaqd of $booking date value).
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function createBookingWithOffest(RestaurantBooking $booking, int $date_offset) : bool {
+        $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) 
+                VALUES (:reservation_id, :user_id, DATE(NOW()) + INTERVAL +:date_offset DAY, :adult_number , :child_number, :comment);";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute(['reservation_id' => $booking->reservation_id,
+                               'user_id' => $booking->user_id,
+                               'date_offset' => $date_offset,
+                               'adult_number' => $booking->adult_number,
+                               'child_number' => $booking->child_number,
+                               'comment' => $booking->comment]);
     }
 }

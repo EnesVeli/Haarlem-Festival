@@ -84,6 +84,8 @@
 </main>
 
 <script type="text/javascript">
+    let restaurant_id = <? echo $view_model->restaurant->restaurant_id; ?>;
+
     let adult_count = 1;
     let child_count = 0;
 
@@ -191,7 +193,7 @@
         if(selected_button == null) return;
         
         post('/yummy/book', {'date_offset' : date_offset, 'adult_count' : adult_count, 'child_count' : child_count,
-         'slot_id' : selected_button.getAttribute("value"), 'comment' : document.getElementById("comment").value});
+         'slot_id' : selected_button.getAttribute("value"), 'comment' : document.getElementById("comment").value, 'restaurant_id' : restaurant_id});
     }
 
     function post(path, params, method='post') {
