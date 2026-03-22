@@ -52,4 +52,13 @@ class HistoryController
 
         require __DIR__ . '/../Views/history/detail.php';
     }
+
+    public function booking(): void
+     {
+    $ticketId = (int)($_GET['ticket_id'] ?? 0);
+    $tickets  = $this->service->getTickets();
+    $ticket   = array_values(array_filter($tickets, fn($t) => $t['id'] === $ticketId))[0] ?? ($tickets[0] ?? []);
+
+    require __DIR__ . '/../Views/history/booking.php';
+     }
 }

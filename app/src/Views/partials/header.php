@@ -43,6 +43,7 @@ if (!isset($user) || !$user) {
 
             <?php if ($user && strtolower($user['role'] ?? '') === 'admin'): ?>
                 <li><a href="/cms/jazz/home">Dashboard</a></li>
+                <li><a href="/cms/history">History CMS</a></li>
             <?php endif; ?>
         </ul>
 
