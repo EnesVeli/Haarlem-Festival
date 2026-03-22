@@ -26,7 +26,7 @@ class LoginController
             $user = (new UserService())->authenticate($email, $password);
             Session::login($user);
     
-            header('Location: ' . (Session::isAdmin() ? '/cms/jazz/home' : '/'));
+            header('Location: ' . (Session::isAdmin() ? '/cms' : '/'));
             exit;
     
         } catch (Exception $e) {
