@@ -5,8 +5,7 @@ use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
 use App\Models\Exceptions\UserNotLoggedInException;
-use App\Repositories\YummyRestaurantsRepository;
-use App\Services\YummyService;
+use App\Services\Yummy\YummyService;
 use Exception;
 
 class YummyController

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Yummy;
 
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
@@ -8,13 +8,14 @@ use App\Models\Exceptions\OverBookingException;
 use App\Models\Exceptions\UserNotLoggedInException;
 use App\Models\RestaurantBooking;
 use App\Repositories\RestaurantSortingOption;
+use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyGuidesRepository;
 use App\Repositories\YummyRestaurantsRepository;
-use App\ViewModels\YummyBookViewModel;
-use App\ViewModels\YummyHomeViewModel;
-use App\ViewModels\YummyListViewModel;
-use App\ViewModels\YummyRestaurantViewModel;
+use App\ViewModels\Yummy\YummyBookViewModel;
+use App\ViewModels\Yummy\YummyHomeViewModel;
+use App\ViewModels\Yummy\YummyListViewModel;
+use App\ViewModels\Yummy\YummyRestaurantViewModel;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -25,12 +26,14 @@ class YummyService
     private YummyGuidesRepository $guide_repository;
     private YummyRestaurantsRepository $restaurant_repository;
     private YummyFoodTypeRepository $type_repository;
+    private YummyCmsRepository $cms_repository;
 
     public function __construct()
     {
         $this->guide_repository = new YummyGuidesRepository();
         $this->restaurant_repository = new YummyRestaurantsRepository();
         $this->type_repository = new YummyFoodTypeRepository();
+        $this->cms_repository = new YummyCmsRepository();
     }
 
     public function getHomeViewModel() : YummyHomeViewModel {
@@ -38,6 +41,13 @@ class YummyService
 
         $view_model->restaurants = $this->restaurant_repository->getTopActiveRestaurants();
         $view_model->guides = $this->guide_repository->getTopActiveGuides();
+
+        $home_data = $this->cms_repository->getHomeData();
+
+        if($home_data == null) throw new DBAccessException();
+
+        $view_model->title = $home_data['home_title'];
+        $view_model->subtitle = $home_data['home_subtitle'];
 
         return $view_model;
     }

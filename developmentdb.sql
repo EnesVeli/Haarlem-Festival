@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 21, 2026 at 07:37 PM
+-- Generation Time: Mar 22, 2026 at 11:36 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -868,6 +868,25 @@ INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `user_id`, `date`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `YummyCMS`
+--
+
+CREATE TABLE `YummyCMS` (
+  `cms_id` int(16) NOT NULL,
+  `home_title` varchar(128) NOT NULL,
+  `home_subtitle` varchar(1024) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyCMS`
+--
+
+INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`) VALUES
+(1, 'Food And Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `YummyDishes`
 --
 
@@ -1376,6 +1395,12 @@ ALTER TABLE `YummyBookings`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `YummyCMS`
+--
+ALTER TABLE `YummyCMS`
+  ADD PRIMARY KEY (`cms_id`);
+
+--
 -- Indexes for table `YummyDishes`
 --
 ALTER TABLE `YummyDishes`
@@ -1627,6 +1652,12 @@ ALTER TABLE `YummyBookings`
   MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `YummyCMS`
+--
+ALTER TABLE `YummyCMS`
+  MODIFY `cms_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `YummyDishes`
 --
 ALTER TABLE `YummyDishes`
@@ -1762,7 +1793,7 @@ ALTER TABLE `OrderItem`
 -- Constraints for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `Ticket`

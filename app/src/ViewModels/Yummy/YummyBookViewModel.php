@@ -1,6 +1,6 @@
 <?php
 
-namespace App\ViewModels;
+namespace App\ViewModels\Yummy;
 
 use App\Models\Restaurant;
 

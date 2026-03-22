@@ -46,3 +46,6 @@ app/src/Config.php
 # Images
 app/public/assets/css/uploads/
 app/public/assets/css/Images/
+app/public/assets/uploads/
+app/public/assets/Images/
+app/public/assets/images/
