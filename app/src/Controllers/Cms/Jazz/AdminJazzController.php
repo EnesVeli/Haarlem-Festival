@@ -28,12 +28,7 @@ class AdminJazzController extends BaseCmsController
         return __DIR__ . '/../../../../public';
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard
-    |--------------------------------------------------------------------------
-    */
-
+  //dashboard
     public function index(): void
     {
         $data = $this->service->getDashboardData();
@@ -42,12 +37,7 @@ class AdminJazzController extends BaseCmsController
         require __DIR__ . '/../../../Views/cms/jazz/dashboard.php';
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Hero
-    |--------------------------------------------------------------------------
-    */
-
+    //intro
     public function hero(): void
     {
         $data = $this->service->getHeroPageData();
@@ -87,11 +77,7 @@ class AdminJazzController extends BaseCmsController
         exit;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Intro
-    |--------------------------------------------------------------------------
-    */
+  //intro
 
     public function intro(): void
     {
@@ -115,11 +101,7 @@ class AdminJazzController extends BaseCmsController
         exit;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Experiences
-    |--------------------------------------------------------------------------
-    */
+   //experiences
 
     public function experiences(): void
     {
@@ -132,22 +114,18 @@ class AdminJazzController extends BaseCmsController
     public function createExperience(): void
     {
         $data = $this->service->getDashboardData();
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-
+        $vm = new JazzExperiencesCmsViewModel([], $data['user']);
+    
         require __DIR__ . '/../../../Views/cms/jazz/experiences/create.php';
     }
-
+    
     public function editExperience(): void
     {
         $id = (int)($_GET['id'] ?? 0);
         $data = $this->service->getExperienceByIdData($id);
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-        $vm->experience = $data['experience'] ?? [];
-
+    
+        $vm = new JazzExperiencesCmsViewModel([], $data['user'], $data['experience'] ?? []);
+    
         require __DIR__ . '/../../../Views/cms/jazz/experiences/edit.php';
     }
 
@@ -226,11 +204,7 @@ class AdminJazzController extends BaseCmsController
         exit;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Performers
-    |--------------------------------------------------------------------------
-    */
+   //performers
 
     public function performers(): void
     {
@@ -243,22 +217,18 @@ class AdminJazzController extends BaseCmsController
     public function createPerformer(): void
     {
         $data = $this->service->getDashboardData();
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-
+        $vm = new JazzPerformersCmsViewModel([], $data['user']);
+    
         require __DIR__ . '/../../../Views/cms/jazz/performers/create.php';
     }
-
+    
     public function editPerformer(): void
     {
         $id = (int)($_GET['id'] ?? 0);
         $data = $this->service->getPerformerByIdData($id);
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-        $vm->performer = $data['performer'] ?? [];
-
+    
+        $vm = new JazzPerformersCmsViewModel([], $data['user'], $data['performer'] ?? []);
+    
         require __DIR__ . '/../../../Views/cms/jazz/performers/edit.php';
     }
 
@@ -380,11 +350,7 @@ public function updatePerformer(): void
         exit;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Recommendations
-    |--------------------------------------------------------------------------
-    */
+  //recommendations
 
     public function recommendations(): void
     {
@@ -397,22 +363,18 @@ public function updatePerformer(): void
     public function createRecommendation(): void
     {
         $data = $this->service->getDashboardData();
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-
+        $vm = new JazzRecommendationsCmsViewModel([], $data['user']);
+    
         require __DIR__ . '/../../../Views/cms/jazz/recommendations/create.php';
     }
-
+    
     public function editRecommendation(): void
     {
         $id = (int)($_GET['id'] ?? 0);
         $data = $this->service->getRecommendationByIdData($id);
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-        $vm->recommendation = $data['recommendation'] ?? [];
-
+    
+        $vm = new JazzRecommendationsCmsViewModel([], $data['user'], $data['recommendation'] ?? []);
+    
         require __DIR__ . '/../../../Views/cms/jazz/recommendations/edit.php';
     }
 
@@ -493,11 +455,7 @@ public function updatePerformer(): void
         exit;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Locations
-    |--------------------------------------------------------------------------
-    */
+    //locations
 
     public function locations(): void
     {
@@ -510,22 +468,18 @@ public function updatePerformer(): void
     public function createLocation(): void
     {
         $data = $this->service->getDashboardData();
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-
+        $vm = new JazzLocationsCmsViewModel([], $data['user']);
+    
         require __DIR__ . '/../../../Views/cms/jazz/locations/create.php';
     }
-
+    
     public function editLocation(): void
     {
         $id = (int)($_GET['id'] ?? 0);
         $data = $this->service->getLocationByIdData($id);
-
-        $vm = new \stdClass();
-        $vm->currentUser = $data['user'];
-        $vm->location = $data['location'] ?? [];
-
+    
+        $vm = new JazzLocationsCmsViewModel([], $data['user'], $data['location'] ?? []);
+    
         require __DIR__ . '/../../../Views/cms/jazz/locations/edit.php';
     }
 
