@@ -8,4 +8,5 @@ class YummyHomeViewModel
     public array $guides;
     public string $title;
     public string $subtitle;
+    public string $topper_path;
 }

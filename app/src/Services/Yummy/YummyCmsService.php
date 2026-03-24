@@ -30,7 +30,15 @@ class YummyCmsService{
 
         $view_model->home_title = $home_data['home_title'];
         $view_model->home_subtitle = $home_data['home_subtitle'];
+        $view_model->topper_path = $home_data['home_image'];
 
         return $view_model;
+    }
+
+    public function editHome(string $title, string $subtitle, string $temp_file_name, string $temp_file_tmp){
+        $file_name = bin2hex(openssl_random_pseudo_bytes(32)) . '.' . pathinfo($temp_file_name, PATHINFO_EXTENSION);
+        $path = __DIR__ . '/../../../../public/assets/uploads/yummy/topper/' . $file_name;
+
+        move_uploaded_file($temp_file_tmp, $path);
     }
 }

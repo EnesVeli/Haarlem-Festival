@@ -19,7 +19,7 @@ use App\Models\Restaurant;
         </div>
 
         <div class="home-topper-filter"></div>
-        <img class="home-topper-img" src="/assets/uploads/yummy/home_topper.jpg">
+        <img class="home-topper-img" src="<? echo '/assets/uploads/yummy/topper/' . $view_model->topper_path; ?>">
     </section>
 
     <section class="home-restaurant-section">

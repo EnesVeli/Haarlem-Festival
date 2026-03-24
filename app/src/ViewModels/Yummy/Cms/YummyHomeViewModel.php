@@ -6,4 +6,5 @@ class YummyHomeViewModel{
     public YummyTopper $topper;
     public string $home_title;
     public string $home_subtitle;
+    public string $topper_path;
 }

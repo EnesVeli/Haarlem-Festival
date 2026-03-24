@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 22, 2026 at 11:36 PM
+-- Generation Time: Mar 24, 2026 at 10:15 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -473,7 +473,7 @@ CREATE TABLE `jazz_hero` (
 --
 
 INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
-(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1773540403_HeroImageMAIN.jpg', 1);
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1774369165_wallpaperflare.com_wallpaper.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -874,15 +874,16 @@ INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `user_id`, `date`, 
 CREATE TABLE `YummyCMS` (
   `cms_id` int(16) NOT NULL,
   `home_title` varchar(128) NOT NULL,
-  `home_subtitle` varchar(1024) NOT NULL
+  `home_subtitle` varchar(1024) NOT NULL,
+  `home_image` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `YummyCMS`
 --
 
-INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`) VALUES
-(1, 'Food And Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.');
+INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`, `home_image`) VALUES
+(1, 'Food And Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.', 'home_topper.jpg');
 
 -- --------------------------------------------------------
 

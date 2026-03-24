@@ -2029,7 +2029,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
 }
 
 .cms-main-section{
@@ -2063,6 +2063,15 @@
 .cms-form-label{
     font-weight: 700;
     color: #1b2430;
+
+    font-size: 24px;
+}
+
+.cms-form-sublabel{
+    font-weight: 700;
+    color: #212b38;
+
+    font-size: 18px;
 }
 
 .cms-text-input{
@@ -2119,4 +2128,41 @@
     justify-self: flex-end;
 
     margin-left: auto;
+}
+
+.cms-show-image{
+    width: 50%;
+    height: auto;
+
+    border-radius: 18px;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-file-input {
+    display: none;
+  }
+
+.cms-upload-box {
+    border: 2px dashed #c7ced9;
+    border-radius: 16px;
+    padding: 28px;
+    background: #fafbfd;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cms-upload-box:hover,
+.cms-upload-box.is-dragover {
+    border-color: #f4c542;
+    background: #fffaf0;
+}
+
+.cms-upload-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;
+    text-align: center;
+    color: #314158;
 }

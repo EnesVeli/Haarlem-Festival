@@ -48,6 +48,7 @@ class YummyService
 
         $view_model->title = $home_data['home_title'];
         $view_model->subtitle = $home_data['home_subtitle'];
+        $view_model->topper_path = $home_data['home_image'];
 
         return $view_model;
     }
