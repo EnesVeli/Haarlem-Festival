@@ -49,15 +49,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
     $r->addRoute('GET', '/jazz/performer', [\App\Controllers\JazzController::class, 'performer']);
-    
-    // CMS - Jazz homepage blocks (admin)
-    $r->addRoute('GET',  '/cms/jazz/home',        [\App\Controllers\CmsJazzController::class, 'index']);
-    $r->addRoute('GET',  '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'new']);
-    $r->addRoute('POST', '/cms/jazz/block/new',   [\App\Controllers\CmsJazzController::class, 'create']);
-    $r->addRoute('GET',  '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'edit']);
-    $r->addRoute('POST', '/cms/jazz/block/edit',  [\App\Controllers\CmsJazzController::class, 'update']);
-    $r->addRoute('POST', '/cms/jazz/block/delete',[\App\Controllers\CmsJazzController::class, 'delete']);
-    
+
+    // CMS - MAIN Dashboard
+    $r->addRoute('GET', '/cms', [\App\Controllers\Cms\CmsDashboardController::class, 'index']);
     // Jazz CMS
     $r->addRoute('GET',  '/cms/jazz/home', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'index']);
     // jazz CMS - Hero
