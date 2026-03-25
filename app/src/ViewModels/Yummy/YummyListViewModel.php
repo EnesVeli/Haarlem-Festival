@@ -4,6 +4,10 @@ namespace App\ViewModels\Yummy;
 
 class YummyListViewModel
 {
+    public string $title;
+    public string $subtitle;
+    public string $topper_path;
+    
     public array $all_place_types = [];
     public array $all_meal_types = [];
     public array $all_food_types = [];

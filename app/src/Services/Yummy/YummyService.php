@@ -56,6 +56,15 @@ class YummyService
     public function getListViewModel(?string $place_type, ?string $meal_type, ?string $food_type, ?string $cuisine_type, ?int $sorting, ?int $page) : YummyListViewModel {
         $view_model = new YummyListViewModel();
 
+        // Get data from yummy cms
+        $list_data = $this->cms_repository->getListData();
+
+        if($list_data == null) throw new DBAccessException();
+
+        $view_model->title = $list_data['list_title'];
+        $view_model->subtitle = $list_data['list_subtitle'];
+        $view_model->topper_path = $list_data['list_image'];
+
         // Get Filtering and Sorting
         $view_model->current_place_types = isset($place_type) ? explode(',', $place_type) : [];
         $view_model->current_meal_types = isset($meal_type) ? explode(',', $meal_type) : [];

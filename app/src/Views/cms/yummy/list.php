@@ -17,20 +17,20 @@
                 </div>
             <?php endif; ?>
             
-            <form class="cms-main-subsection-container" enctype="multipart/form-data" method="post" action="/cms/yummy/home">
+            <form class="cms-main-subsection-container" enctype="multipart/form-data" method="post" action="/cms/yummy/list">
                 <div class="cms-form-subsection">
                     <label class="cms-form-label">Title:</label>
-                    <input type="text" name="title" class="cms-text-input" value="<? echo htmlspecialchars($view_model->home_title) ?>">
+                    <input type="text" name="title" class="cms-text-input" value="<? echo htmlspecialchars($view_model->list_title) ?>">
                 </div>
 
                 <div class="cms-form-subsection">
                     <label class="cms-form-label">Subitle:</label>
-                    <textarea name="subtitle" class="cms-text-text-area"><? echo htmlspecialchars($view_model->home_subtitle) ?></textarea>
+                    <textarea name="subtitle" class="cms-text-text-area"><? echo htmlspecialchars($view_model->list_subtitle) ?></textarea>
                 </div>
 
                 <div class="cms-form-subsection">
                     <label class="cms-form-label">Topper Image:</label>
-                    <img class="cms-show-image" src="<? echo '/assets/uploads/yummy/topper/' . $view_model->topper_path; ?>">
+                    <img class="cms-show-image" src="<? echo '/assets/uploads/yummy/topper/' . $view_model->list_image; ?>">
                     <label class="cms-form-sublabel">Change Image:</label>
                     <div class="cms-upload-box" id="upload_box">
                         <input type="file" name="topper_image" id="image" class="cms-file-input" accept="image/*">

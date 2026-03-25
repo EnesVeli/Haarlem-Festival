@@ -21,6 +21,7 @@ enum RestaurantSortingOption : int{
 class YummyRestaurantsRepository extends Repository
 {
     public const NUMBER_OF_RESTAURANTS_PER_PAGE = 20;
+    public const NUMBER_OF_RESTAURANTS_PER_PAGE_CMS = 24;
 
     /**
      * @param int $restaurant_id id of searched restaurant.
@@ -318,5 +319,59 @@ class YummyRestaurantsRepository extends Repository
                                'adult_number' => $booking->adult_number,
                                'child_number' => $booking->child_number,
                                'comment' => $booking->comment]);
+    }
+
+    /**
+     * Used to get list of resturants for cms some fields are null.
+     * @param int $sort number representing one of the restaurant fields (e.g. 0 - name, 1 - mini_text, etc.).
+     * @param int $order if 0 than ASC otherwise DESC.
+     * @param int $page list page number (e.g. if page is 0 will return resturants 0-24, if page is 1 will return 25-48 retaurants, etc.)
+     * @return ?array returns an array of restaurants. If there are any error returns null.
+     */
+    public function getRestaurantListCms(int $sort, int $order, int $page) : ?array {
+        $limit = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS;
+        $offset = $limit * $page;
+
+        $sorting = $this->getSortFieldCMS($sort, $order == 0 ? 'ASC' : 'DESC');
+
+        $sql = "SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`
+        FROM `YummyRestaurants`
+        ORDER BY $sorting
+        LIMIT $limit OFFSET $offset;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
+        $list = $stmt->fetchAll();
+
+        return $list == false ? null : $list;
+    }  
+
+    private function getSortFieldCMS(int $sort, string $order){
+        switch($sort){
+            case 0:
+                return '`name` ' . $order;
+            case 1:
+                return '`mini_text` ' . $order;
+            case 2:
+                return '`rating` ' . $order;
+            case 3:
+                return '`cost_rating` ' . $order;
+            case 4:
+                return '`active` ' . $order . ', `name` ' . $order;
+        }
+
+        return '';
+    }
+
+    public function countAllRestaurants() : ?int {
+        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `YummyRestaurants`;");
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_DEFAULT);
+
+        return $res == false ? null : $res[0];
     }
 }
