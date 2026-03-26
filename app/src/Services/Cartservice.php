@@ -126,25 +126,84 @@ class CartService
         }
     }
 
+    /**
+     * Returns the number of available spots for a given event.
+     *
+     * For 'stories' events the method:
+     *   1. Reads max_tickets from the Event table.
+     *   2. Subtracts tickets currently in CartItem for this event.
+     *   3. Subtracts tickets in paid OrderItem rows (joined through Ticket_Type).
+     *
+     * The 90 % capacity rule is applied by checkAvailability(), not here.
+     *
+     * @param  string   $eventType  The event category (e.g. 'history', 'stories')
+     * @param  int      $eventId    The primary key of the event
+     * @return int|null             Available spots, or null if type is unknown
+     */
     private function getAvailableSpots(string $eventType, int $eventId): ?int
-{
-    $map = [
-        'history' => ['table' => 'history_tickets', 'id_col' => 'id'],
-        // 'jazz'  => ['table' => 'jazz_tickets',   'id_col' => 'id'],
-    ];
+    {
+        $pdo = $this->cartRepository->getConnection();
 
-    if (!isset($map[$eventType])) {
-        return null;
+        // ── Stories: capacity lives in the Event table ──────────────
+        if ($eventType === 'stories') {
+
+            // 1. Get the maximum capacity from the Event table
+            $stmt = $pdo->prepare(
+                "SELECT max_tickets FROM `Event` WHERE event_id = :id LIMIT 1"
+            );
+            $stmt->execute(['id' => $eventId]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$row) {
+                return null;
+            }
+
+            $maxTickets = (int) $row['max_tickets'];
+
+            // 2. Count tickets sitting in carts (not yet paid)
+            $stmt = $pdo->prepare(
+                "SELECT COALESCE(SUM(quantity), 0)
+                   FROM `CartItem`
+                  WHERE event_type = 'stories'
+                    AND event_id   = :id"
+            );
+            $stmt->execute(['id' => $eventId]);
+            $inCarts = (int) $stmt->fetchColumn();
+
+            // 3. Count tickets already paid (OrderItem joined through Ticket_Type)
+            $stmt = $pdo->prepare(
+                "SELECT COALESCE(SUM(oi.quantity), 0)
+                   FROM `OrderItem` oi
+                   JOIN `Ticket_Type` tt ON tt.type_id = oi.type_id
+                   JOIN `Order`      o  ON o.order_id = oi.order_id
+                  WHERE tt.event_id = :id
+                    AND o.status    = 'paid'"
+            );
+            $stmt->execute(['id' => $eventId]);
+            $paid = (int) $stmt->fetchColumn();
+
+            return max(0, $maxTickets - $inCarts - $paid);
+        }
+
+        // ── Other event types: static mapping to legacy tables ─────
+        $map = [
+            'history' => ['table' => 'history_tickets', 'id_col' => 'id'],
+            // 'jazz'  => ['table' => 'jazz_tickets',   'id_col' => 'id'],
+        ];
+
+        if (!isset($map[$eventType])) {
+            return null;
+        }
+
+        $table = $map[$eventType]['table'];
+        $idCol = $map[$eventType]['id_col'];
+
+        $stmt = $pdo->prepare(
+            "SELECT available_spots FROM `{$table}` WHERE `{$idCol}` = :id LIMIT 1"
+        );
+        $stmt->execute(['id' => $eventId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ? (int) $row['available_spots'] : null;
     }
-
-    $table = $map[$eventType]['table'];
-    $idCol = $map[$eventType]['id_col'];
-
-    $pdo  = $this->cartRepository->getConnection();
-    $stmt = $pdo->prepare("SELECT available_spots FROM `{$table}` WHERE `{$idCol}` = :id LIMIT 1");
-    $stmt->execute(['id' => $eventId]);
-    $row  = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $row ? (int)$row['available_spots'] : null;
-}
 }

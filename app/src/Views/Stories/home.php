@@ -27,7 +27,7 @@ foreach ($events as $event) {
             <div class="stories-hero-card">
                 <div class="stories-hero-text">
                     <h1><?= htmlspecialchars($pageTitle) ?></h1>
-                    <p class="stories-hero-description"><?= htmlspecialchars($pageDescription) ?></p>
+                    <div class="stories-hero-description"><?= $bodyHtml ?></div>
                     <a href="#program" class="stories-primary-button">View program</a>
                     <p class="stories-hero-subtitle"><?= htmlspecialchars($pageSubtitle) ?></p>
                 </div>
@@ -37,7 +37,7 @@ foreach ($events as $event) {
     </section>
     <section class="stories-quote-section">
         <div class="stories-container">
-            <p class="stories-quote-text">Every street has a sound. Every building has a memory</p>
+            <p class="stories-quote-text"><?= htmlspecialchars($quoteText) ?></p>
         </div>
     </section>
     <section class="stories-ticket-section">
@@ -168,7 +168,7 @@ foreach ($events as $event) {
         <div class="stories-container">
             <div class="stories-cta-box">
                 <div class="stories-cta-text">
-                    <h2>Ready to plan your festival weekend?</h2>
+                    <h2><?= htmlspecialchars($ctaText) ?></h2>
                     <p>Combine Stories in Haarlem with other festival events across the city and build your perfect
                         weekend program.</p>
                 </div>

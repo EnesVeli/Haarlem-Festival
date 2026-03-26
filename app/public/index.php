@@ -49,6 +49,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
     $r->addRoute('GET', '/jazz/performer', [\App\Controllers\JazzController::class, 'performer']);
+    
 
     // CMS - MAIN Dashboard
     $r->addRoute('GET', '/cms', [\App\Controllers\Cms\CmsDashboardController::class, 'index']);
@@ -96,16 +97,25 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
     
+    // Tickets — main landing & per-event-type sub-pages
+    $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);
+    $r->addRoute('GET', '/tickets/stories', [\App\Controllers\TicketsController::class, 'stories']);
+
     // Stories in Haarlem — public pages
     $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);
     $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}',      [\App\Controllers\StoriesController::class, 'show']);
     $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}/book', [\App\Controllers\StoriesController::class, 'book']);
     
-    // CMS — Stories
+    // CMS — Stories events
     $r->addRoute('GET',  '/cms/stories',        [\App\Controllers\CmsStoriesController::class, 'index']);
     $r->addRoute('GET',  '/cms/stories/edit',   [\App\Controllers\CmsStoriesController::class, 'edit']);
     $r->addRoute('POST', '/cms/stories/save',   [\App\Controllers\CmsStoriesController::class, 'save']);
     $r->addRoute('POST', '/cms/stories/delete', [\App\Controllers\CmsStoriesController::class, 'delete']);
+
+    // CMS — Stories Homepage content
+    $r->addRoute('GET',  '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'edit']);
+    $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
+
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
 });
 
@@ -137,19 +147,26 @@ switch ($routeInfo[0]) {
 
         [$class, $method] = $handler;
 
-        // IoC — wire Stories dependencies via constructor injection
-        // This satisfies the Excellent-grade dependency injection requirement.
-        if ($class === \App\Controllers\StoriesController::class || $class === \App\Controllers\CmsStoriesController::class) {
-            
-            // Both controllers share the same Repository and Service
-            $repo       = new \App\Repositories\StoriesRepository();
-            $service    = new \App\Services\StoriesService($repo);
-            
-            // Inject the service into whichever controller is being called
-            $controller = new $class($service);
+        // IoC — wire dependencies via constructor injection
+        if ($class === \App\Controllers\StoriesController::class) {
+            $storiesRepo     = new \App\Repositories\StoriesRepository();
+            $storiesService  = new \App\Services\StoriesService($storiesRepo);
+            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
+            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
+            $controller = new $class($storiesService, $homepageService);
+
+        } elseif ($class === \App\Controllers\CmsStoriesController::class
+               || $class === \App\Controllers\TicketsController::class) {
+            $storiesRepo    = new \App\Repositories\StoriesRepository();
+            $storiesService = new \App\Services\StoriesService($storiesRepo);
+            $controller = new $class($storiesService);
+
+        } elseif ($class === \App\Controllers\CmsStoriesHomepageController::class) {
+            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
+            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
+            $controller = new $class($homepageService);
 
         } else {
-            // Fallback for all other controllers
             $controller = new $class();
         }
 

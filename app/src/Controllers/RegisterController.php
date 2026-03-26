@@ -8,6 +8,7 @@ use App\Models\Exceptions\EmptyPasswordException;
 use App\Models\Exceptions\InappropriatePasswordLengthException;
 use App\Models\Exceptions\PasswordMismatchException;
 use App\Models\Exceptions\IncorrectEmailException;
+use App\Config;
 use Exception;
 
 class RegisterController
@@ -26,6 +27,26 @@ class RegisterController
     public function register()
     {
         try {
+            $recaptchaResponse = $_POST['g-recaptcha-response'] ?? '';
+
+            if (empty($recaptchaResponse)) {
+                $error_message = "Please check the 'I am not a robot' box.";
+                require __DIR__ . '/../Views/register.php';
+                exit;
+            }
+
+            // Call Google API to verify the token
+            $secretKey = Config::RECAPTCHA_SECRET_KEY;
+            $verifyUrl = "https://www.google.com/recaptcha/api/siteverify?secret={$secretKey}&response={$recaptchaResponse}";
+            $verifyResponse = file_get_contents($verifyUrl);
+            $responseData = json_decode($verifyResponse);
+
+            if (!$responseData->success) {
+                $error_message = "CAPTCHA verification failed. Please try again.";
+                require __DIR__ . '/../Views/register.php';
+                exit;
+            }
+
             $name = $_POST['name'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
