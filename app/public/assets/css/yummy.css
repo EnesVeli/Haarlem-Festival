@@ -2188,3 +2188,92 @@
 
     color: #314158;
 }
+
+/* ========== Restaurant List ========== */
+.cms-res-list-table-container{
+    font-family: Inter;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #d8dbe2;
+
+    border-radius: 18px;
+}
+
+.cms-res-list-table{
+    width: 100%;
+
+    border-collapse: collapse;   
+}
+
+.cms-res-list-table thead th{
+  background: transparent;
+
+  color: black;
+
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  padding: 14px 16px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cms-res-list-table tbody th{
+  background: transparent;
+
+  color: black;
+
+  text-align: left;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  padding-top: 2px;
+  padding-bottom: 2px;
+
+  padding-left: 10px;
+  padding-right: 10px;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.cms-res-list-sort-field{
+    cursor: pointer;
+}
+
+.cms-res-list-sort-container{
+    display: flex;
+}
+
+.cms-res-list-selected-sort-field{
+    color: #2e2e2e !important;
+    font-weight: 900;
+
+    text-decoration: underline;
+}
+
+.cms-res-list-image-container{
+    display: flex;
+
+    justify-items: center;
+    align-items: center;
+
+    width: 146px;
+    height: 96px;
+
+    border-radius: 12px;
+
+    margin: 2px;
+
+    overflow: hidden;
+}
+
+.cms-res-list-image{
+    display: flex;
+
+    justify-self: center;
+    align-self: center;    
+}

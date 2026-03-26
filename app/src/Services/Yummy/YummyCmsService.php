@@ -73,7 +73,7 @@ class YummyCmsService {
 
     public function getRestaurantViewModel(int $sort, int $order, int $page) : YummyRestaurantsViewModel {
         // Check parameters
-        if($sort < 0 || $sort > 5 || $page < 0) throw new InvalidUriException("Invalid uri parameters.");
+        if($sort < 0 || $sort > 4 || $page < 0) throw new InvalidUriException("Invalid uri parameters.");
 
         $view_model = new YummyRestaurantsViewModel();
 

@@ -357,7 +357,7 @@ class YummyRestaurantsRepository extends Repository
             case 2:
                 return '`rating` ' . $order;
             case 3:
-                return '`cost_rating` ' . $order;
+                return '`cost_rating` ' . $order . ', `name` ' . $order;
             case 4:
                 return '`active` ' . $order . ', `name` ' . $order;
         }

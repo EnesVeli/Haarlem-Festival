@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<script>
+<script type="text/javascript">
     const upload_box = document.getElementById('upload_box');
     const image_input = document.getElementById('image');
 

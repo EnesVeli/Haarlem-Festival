@@ -208,7 +208,7 @@
         let foods = getListArguments(food_type, 'food_type');
         let cuisines = getListArguments(cuisine_type, 'cuisine_type');
         
-        let uri = '/yummy/list?' // Set base for uri
+        let uri = '/yummy/list?'; // Set base for uri
 
         // Add filters to uri as needed
         if(places != null){
