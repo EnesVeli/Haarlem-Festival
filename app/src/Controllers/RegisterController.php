@@ -34,6 +34,7 @@ class RegisterController
                 require __DIR__ . '/../Views/register.php';
                 exit;
             }
+            
 
             // Call Google API to verify the token
             $secretKey = Config::RECAPTCHA_SECRET_KEY;
@@ -47,8 +48,9 @@ class RegisterController
                 exit;
             }
 
-            $name = $_POST['name'] ?? '';
-            $email = $_POST['email'] ?? '';
+            // Restore XSS Sanitization
+            $name = htmlspecialchars($_POST['name'] ?? '');
+            $email = filter_var($_POST['email'] ?? '', FILTER_SANITIZE_EMAIL);
             $password = $_POST['password'] ?? '';
             $password_confirm = $_POST['password-confirm'] ?? '';
 

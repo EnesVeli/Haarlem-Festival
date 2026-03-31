@@ -42,17 +42,18 @@ $ticketPrice = $regularTicket ? (float) $regularTicket['price'] : 0.00;
             <div class="stories-booking-selected-time">
                 <span class="stories-booking-selected-time__label">SELECTED TIME</span>
                 <span class="stories-booking-selected-time__value"><?= $startTime ?> - <?= $endTime ?></span>
-                <span class="stories-booking-selected-time__lang"><?= htmlspecialchars($event->language === 'ENG' ? 'English' : 'Dutch') ?></span>
+                <span
+                    class="stories-booking-selected-time__lang"><?= htmlspecialchars($event->language === 'ENG' ? 'English' : 'Dutch') ?></span>
             </div>
         </div>
 
         <!-- Ticket Selection -->
         <h3 class="stories-booking-section-title">Choose Your Ticket</h3>
 
-        <form action="/cart/add" method="POST" id="bookingForm">
+        <form action="/cart/add" method="POST" id="bookingForm" aria-label="Ticket booking form">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-            <input type="hidden" name="event_id"   value="<?= $event->event_id ?>">
-            <input type="hidden" name="event_type"  value="story">
+            <input type="hidden" name="event_id" value="<?= $event->event_id ?>">
+            <input type="hidden" name="event_type" value="story">
             <input type="hidden" name="ticket_type" value="single">
             <input type="hidden" name="redirect_back" value="/cart">
 
@@ -64,9 +65,12 @@ $ticketPrice = $regularTicket ? (float) $regularTicket['price'] : 0.00;
                 </div>
                 <div class="stories-booking-ticket-controls">
                     <span class="stories-booking-price">&euro;<?= number_format($ticketPrice, 2) ?></span>
-                    <button type="button" class="stories-qty-btn" id="qtyMinus">−</button>
-                    <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="20" readonly>
-                    <button type="button" class="stories-qty-btn" id="qtyPlus">+</button>
+                    <button type="button" class="stories-qty-btn" id="qtyMinus"
+                        aria-label="Decrease ticket quantity">−</button>
+                    <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="20" readonly
+                        aria-label="Number of tickets">
+                    <button type="button" class="stories-qty-btn" id="qtyPlus"
+                        aria-label="Increase ticket quantity">+</button>
                 </div>
             </div>
 
@@ -81,23 +85,28 @@ $ticketPrice = $regularTicket ? (float) $regularTicket['price'] : 0.00;
                 </label>
                 <div class="stories-booking-haarlempas-code" id="haarlemPasCode" style="display:none;">
                     <label for="haarlemPasInput">Enter your 10 digit code</label>
-                    <input type="text" id="haarlemPasInput" name="haarlempas_code" placeholder="1234 5678 90" maxlength="13">
+                    <input type="text" id="haarlemPasInput" name="haarlempas_code" placeholder="1234 5678 90"
+                        maxlength="13">
                 </div>
             </div>
 
             <!-- Summary -->
             <div class="stories-booking-summary">
-                <span id="summaryText">1 Ticket &times; &euro;<?= number_format($ticketPrice, 2) ?> (<?= htmlspecialchars($event->name) ?>)</span>
+                <span id="summaryText">1 Ticket &times; &euro;<?= number_format($ticketPrice, 2) ?>
+                    (<?= htmlspecialchars($event->name) ?>)</span>
                 <span class="stories-booking-total">
                     <strong>TOTAL</strong>
-                    <span class="stories-booking-total__amount" id="totalAmount">&euro;<?= number_format($ticketPrice, 2) ?></span>
+                    <span class="stories-booking-total__amount"
+                        id="totalAmount">&euro;<?= number_format($ticketPrice, 2) ?></span>
                 </span>
             </div>
 
             <!-- Buttons -->
             <div class="stories-booking-actions">
                 <a href="/stories/<?= htmlspecialchars($event->slug) ?>" class="stories-booking-cancel">Cancel</a>
-                <button type="submit" class="stories-booking-submit">Add to Program</button>
+                <button type="submit" class="stories-booking-submit"
+                    aria-label="Add <?= htmlspecialchars($event->name) ?> tickets to your program">Add to
+                    Program</button>
             </div>
         </form>
     </div>
@@ -105,15 +114,15 @@ $ticketPrice = $regularTicket ? (float) $regularTicket['price'] : 0.00;
 
 <script>
 (function() {
-    var qtyInput      = document.getElementById('qtyInput');
-    var priceField    = document.getElementById('priceField');
-    var summaryText   = document.getElementById('summaryText');
-    var totalAmount   = document.getElementById('totalAmount');
-    var haarlemCheck  = document.getElementById('haarlemPasCheck');
-    var haarlemCode   = document.getElementById('haarlemPasCode');
+    var qtyInput = document.getElementById('qtyInput');
+    var priceField = document.getElementById('priceField');
+    var summaryText = document.getElementById('summaryText');
+    var totalAmount = document.getElementById('totalAmount');
+    var haarlemCheck = document.getElementById('haarlemPasCheck');
+    var haarlemCode = document.getElementById('haarlemPasCode');
 
-    var basePrice     = <?= $ticketPrice ?>;
-    var eventName     = <?= json_encode($event->name) ?>;
+    var basePrice = <?= $ticketPrice ?>;
+    var eventName = <?= json_encode($event->name) ?>;
 
     function updateTotal() {
         var qty = parseInt(qtyInput.value) || 1;
@@ -132,12 +141,18 @@ $ticketPrice = $regularTicket ? (float) $regularTicket['price'] : 0.00;
 
     document.getElementById('qtyMinus').addEventListener('click', function() {
         var current = parseInt(qtyInput.value) || 1;
-        if (current > 1) { qtyInput.value = current - 1; updateTotal(); }
+        if (current > 1) {
+            qtyInput.value = current - 1;
+            updateTotal();
+        }
     });
 
     document.getElementById('qtyPlus').addEventListener('click', function() {
         var current = parseInt(qtyInput.value) || 1;
-        if (current < 20) { qtyInput.value = current + 1; updateTotal(); }
+        if (current < 20) {
+            qtyInput.value = current + 1;
+            updateTotal();
+        }
     });
 
     haarlemCheck.addEventListener('change', function() {

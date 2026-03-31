@@ -37,7 +37,7 @@ $endTime       = date('H:i', strtotime($event->end_time));
         </div>
 
         <!-- Donation Configuration -->
-        <form action="/cart/add" method="POST" id="bookingForm">
+        <form action="/cart/add" method="POST" id="bookingForm" aria-label="Pay-as-you-like ticket booking form">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
             <input type="hidden" name="event_id"   value="<?= $event->event_id ?>">
             <input type="hidden" name="event_type"  value="story">
@@ -54,9 +54,9 @@ $endTime       = date('H:i', strtotime($event->end_time));
                         <strong>Number of Seats</strong>
                         <small>Reserve a spot for your group</small>
                         <div class="stories-booking-donation-qty">
-                            <button type="button" class="stories-qty-btn stories-qty-btn--round" id="seatMinus">−</button>
-                            <input type="number" name="quantity" id="seatInput" value="1" min="1" max="20" readonly>
-                            <button type="button" class="stories-qty-btn stories-qty-btn--round" id="seatPlus">+</button>
+                            <button type="button" class="stories-qty-btn stories-qty-btn--round" id="seatMinus" aria-label="Decrease number of seats">−</button>
+                            <input type="number" name="quantity" id="seatInput" value="1" min="1" max="20" readonly aria-label="Number of seats">
+                            <button type="button" class="stories-qty-btn stories-qty-btn--round" id="seatPlus" aria-label="Increase number of seats">+</button>
                         </div>
                     </div>
 
@@ -70,7 +70,7 @@ $endTime       = date('H:i', strtotime($event->end_time));
                             <button type="button" class="stories-donation-btn" data-amount="15">&euro;15</button>
                             <div class="stories-donation-other">
                                 <span>&euro;</span>
-                                <input type="number" id="customDonation" placeholder="Other" min="0" step="0.01">
+                                <input type="number" id="customDonation" placeholder="Other" min="0" step="0.01" aria-label="Enter your custom donation amount in Euros">
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@ $endTime       = date('H:i', strtotime($event->end_time));
             <!-- Buttons -->
             <div class="stories-booking-actions">
                 <a href="/stories/<?= htmlspecialchars($event->slug) ?>" class="stories-booking-cancel">Cancel</a>
-                <button type="submit" class="stories-booking-submit">Add to Program</button>
+                <button type="submit" class="stories-booking-submit" aria-label="Add <?= htmlspecialchars($event->name) ?> tickets to your program">Add to Program</button>
             </div>
         </form>
     </div>

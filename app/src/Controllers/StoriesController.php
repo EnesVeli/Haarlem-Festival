@@ -57,9 +57,9 @@ class StoriesController extends BaseController
      * @param array $vars Route parameters containing 'slug'
      * @return void
      */
-    public function show(array $vars): void
+     public function show(array $vars): void
     {
-        $slug = htmlspecialchars(trim($vars['slug']));
+        $slug  = htmlspecialchars(trim($vars['slug']));
         $event = $this->service->getEventBySlug($slug);
 
         if ($event === null) {
@@ -67,11 +67,17 @@ class StoriesController extends BaseController
             return;
         }
 
-        $viewTemplate = $event->is_pay_as_you_like ? 'Stories/detail_pay_as_you_like' : 'Stories/detail_fixed';
+        // Fetch all sessions sharing this event's name for the schedule sidebar
+        $schedule = $this->service->getScheduleForEvent($event->name);
+
+        $viewTemplate = $event->is_pay_as_you_like
+            ? 'Stories/detail_pay_as_you_like'
+            : 'Stories/detail_fixed';
 
         $this->render($viewTemplate, [
-            'pageCSS' => 'stories.css',
-            'event'   => $event,
+            'pageCSS'  => 'stories.css',
+            'event'    => $event,
+            'schedule' => $schedule,
         ]);
     }
 

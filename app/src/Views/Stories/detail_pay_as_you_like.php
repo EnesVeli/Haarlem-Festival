@@ -32,7 +32,8 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
             <div class="stories-detail-hero__overlay">
                 <h1><?= htmlspecialchars($event->name) ?></h1>
                 <?php if ($event->performer_bio): ?>
-                    <p class="stories-detail-hero__subtitle"><?= htmlspecialchars($event->story_type ? ucfirst($event->story_type) : '') ?></p>
+                <p class="stories-detail-hero__subtitle">
+                    <?= htmlspecialchars($event->story_type ? ucfirst($event->story_type) : '') ?></p>
                 <?php endif; ?>
             </div>
         </section>
@@ -45,7 +46,8 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
             <h2 class="stories-detail-subtitle"><?= htmlspecialchars(ucfirst($event->story_type ?? '')) ?></h2>
             <div class="stories-badges">
                 <?php if ($event->story_type): ?>
-                    <span class="stories-badge stories-badge--type"><?= htmlspecialchars(ucfirst($event->story_type)) ?></span>
+                <span
+                    class="stories-badge stories-badge--type"><?= htmlspecialchars(ucfirst($event->story_type)) ?></span>
                 <?php endif; ?>
                 <span class="stories-badge"><?= htmlspecialchars($event->age_group) ?></span>
                 <span class="stories-badge"><?= htmlspecialchars($event->language) ?></span>
@@ -59,16 +61,14 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                 <!-- Photo Gallery -->
                 <div class="stories-gallery">
                     <div class="stories-gallery__main">
-                        <img src="<?= htmlspecialchars($gallery[0]) ?>"
-                             alt="<?= htmlspecialchars($event->name) ?>"
-                             class="stories-detail-img" loading="lazy">
+                        <img src="<?= htmlspecialchars($gallery[0]) ?>" alt="<?= htmlspecialchars($event->name) ?>"
+                            class="stories-detail-img" loading="lazy">
                     </div>
                     <?php if (count($gallery) > 1): ?>
                     <div class="stories-gallery__thumbs">
                         <?php foreach (array_slice($gallery, 1) as $thumb): ?>
-                        <img src="<?= htmlspecialchars($thumb) ?>"
-                             alt="<?= htmlspecialchars($event->name) ?> gallery"
-                             class="stories-gallery__thumb" loading="lazy">
+                        <img src="<?= htmlspecialchars($thumb) ?>" alt="<?= htmlspecialchars($event->name) ?> gallery"
+                            class="stories-gallery__thumb" loading="lazy">
                         <?php endforeach; ?>
                     </div>
                     <?php endif; ?>
@@ -78,25 +78,12 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                 <p><?= nl2br(htmlspecialchars($event->description)) ?></p>
 
                 <?php if ($event->performer_name): ?>
-                    <h2>Career Highlights</h2>
-                    <p><?= nl2br(htmlspecialchars($event->performer_bio)) ?></p>
+                <h2>Career Highlights</h2>
+                <p><?= nl2br(htmlspecialchars($event->performer_bio)) ?></p>
                 <?php endif; ?>
 
                 <!-- Audio Preview -->
-                <?php if (!empty($event->audio_preview_path)): ?>
-                <div class="stories-audio-section">
-                    <p class="stories-audio-label">AUDIO PREVIEW</p>
-                    <div class="stories-audio-player">
-                        <audio controls preload="metadata">
-                            <source src="<?= htmlspecialchars($event->audio_preview_path) ?>" type="audio/mpeg">
-                            Your browser does not support audio playback.
-                        </audio>
-                        <?php if (!empty($event->audio_title)): ?>
-                            <p class="stories-audio-title"><?= htmlspecialchars($event->audio_title) ?></p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
+                <?php include __DIR__ . '/../partials/audio_player.php'; ?>
             </section>
 
             <!-- RIGHT: Sidebar -->
@@ -105,9 +92,9 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                 <div class="stories-sidebar-card stories-sidebar-card--pay">
                     <h3>Pay As you like</h3>
                     <p>Some activities are priced <strong>Pay as you like</strong>.
-                       We aim to keep these events as accessible as possible so that everyone has the
-                       opportunity to participate. We encourage visitors to donate based on how they valued
-                       the experience.</p>
+                        We aim to keep these events as accessible as possible so that everyone has the
+                        opportunity to participate. We encourage visitors to donate based on how they valued
+                        the experience.</p>
                     <p><em>A reservation is required to guarantee entry.</em></p>
                 </div>
 
@@ -127,9 +114,10 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                     <p class="stories-sidebar-venue">
                         <strong><?= htmlspecialchars($event->venue_name) ?></strong><br>
                         <?php if ($event->venue_address): ?>
-                            <small><?= htmlspecialchars($event->venue_address) ?></small><br>
+                        <small><?= htmlspecialchars($event->venue_address) ?></small><br>
                         <?php endif; ?>
-                        <a href="https://www.google.com/maps/search/<?= urlencode($event->venue_name . ' Haarlem') ?>" target="_blank" rel="noopener">
+                        <a href="https://www.google.com/maps/search/<?= urlencode($event->venue_name . ' Haarlem') ?>"
+                            target="_blank" rel="noopener">
                             View on map
                         </a>
                     </p>
@@ -139,45 +127,43 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                         <span class="stories-sidebar-price__value">Pay as you like</span>
                     </div>
 
-                    <a href="/stories/<?= htmlspecialchars($event->slug) ?>/book" class="stories-reserve-button">Reserve</a>
+                    <a href="/stories/<?= htmlspecialchars($event->slug) ?>/book"
+                        class="stories-reserve-button">Reserve</a>
                 </div>
 
                 <!-- Schedule -->
                 <div class="stories-sidebar-card">
                     <h3>Schedule</h3>
                     <p class="stories-sidebar-meta">General schedule of this event</p>
-                    <div class="stories-schedule-row">
-                        <span><?= $formattedDate ?></span>
-                        <span><?= $startTime ?> - <?= $endTime ?></span>
-                        <span class="stories-badge"><?= htmlspecialchars($event->language) ?></span>
+
+                    <?php if (!empty($schedule)): ?>
+                    <div class="stories-schedule-list">
+                        <?php foreach ($schedule as $session): ?>
+                        <?php 
+                                $sDate = date('l, F jS', strtotime($session['start_time']));
+                                $sStart = date('H:i', strtotime($session['start_time']));
+                                $sEnd = date('H:i', strtotime($session['end_time'])); 
+                                ?>
+                        <div class="stories-schedule-row stories-schedule-row--dynamic">
+                            <span class="stories-schedule-date"><?= $sDate ?></span>
+                            <span class="stories-schedule-time"><?= $sStart ?> - <?= $sEnd ?></span>
+                            <span
+                                class="stories-badge stories-badge--small"><?= htmlspecialchars($session['language'] ?? 'EN') ?></span>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
+                    <?php else: ?>
+                    <div class="stories-schedule-row stories-schedule-row--dynamic">
+                        <span class="stories-schedule-date"><?= $formattedDate ?></span>
+                        <span class="stories-schedule-time"><?= $startTime ?> - <?= $endTime ?></span>
+                        <span
+                            class="stories-badge stories-badge--small"><?= htmlspecialchars($event->language) ?></span>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </aside>
         </article>
 
-        <!-- You might also like -->
-        <section class="stories-also-like">
-            <h2>You might also like...</h2>
-            <div class="stories-also-like__grid">
-                <a href="/history" class="stories-also-like__card">
-                    <div class="stories-also-like__image stories-also-like__image--history">
-                        <span class="stories-badge stories-badge--overlay">All Ages</span>
-                    </div>
-                    <h3>Stroll Through History</h3>
-                </a>
-                <a href="/jazz" class="stories-also-like__card">
-                    <div class="stories-also-like__image stories-also-like__image--jazz">
-                        <span class="stories-badge stories-badge--overlay">18+</span>
-                    </div>
-                    <h3>Jazz</h3>
-                </a>
-                <a href="/yummy" class="stories-also-like__card">
-                    <div class="stories-also-like__image stories-also-like__image--yummy">
-                        <span class="stories-badge stories-badge--overlay">Family</span>
-                    </div>
-                    <h3>Yummy! Kids Menu</h3>
-                </a>
-            </div>
-        </section>
+        <?php require __DIR__ . '/../partials/you_might_also_like.php'; ?>
     </div>
 </div>
