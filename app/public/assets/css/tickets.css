@@ -1,12 +1,12 @@
 /* Page wrapper  */
 .tickets-page {
     padding: 2rem 0 4rem;
-    background: #fafafa;
+    background: #f5f3ef;
     min-height: 70vh;
 }
 
 .tickets-container {
-    max-width: 900px;
+    max-width: 1020px;
     margin: 0 auto;
     padding: 0 1.5rem;
 }
@@ -21,14 +21,14 @@
     font-family: 'Playfair Display', serif;
     font-size: 2rem;
     font-weight: 700;
-    color: #1a1a1a;
+    color: #2d2622;
     margin-bottom: 0.4rem;
 }
 
 .tickets-subtitle {
     font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
-    color: #666;
+    color: #5f5952;
 }
 
 /*Tabs*/
@@ -48,15 +48,15 @@
     font-size: 0.875rem;
     font-weight: 500;
     text-decoration: none;
-    color: #333;
+    color: #2f2b27;
     background: #fff;
-    border: 1.5px solid #d0d0d0;
+    border: 1.5px solid #d8d1c7;
     transition: all 0.2s ease;
 }
 
 .tickets-tab:hover {
-    background: #f0f0f0;
-    border-color: #aaa;
+    background: #f8f6f2;
+    border-color: #c9c1b5;
 }
 
 .tickets-tab--active,
@@ -80,7 +80,7 @@
     font-family: 'Playfair Display', serif;
     font-size: 1.55rem;
     font-weight: 700;
-    color: #8b1a1a;
+    color: #8b1e1e;
     margin-bottom: 2rem;
 }
 
@@ -89,6 +89,26 @@
     color: #888;
     padding: 2rem 0;
     font-family: 'Inter', sans-serif;
+}
+
+.tickets-flash {
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+.tickets-flash--success {
+    background: #edf7ed;
+    border: 1px solid #9fd39f;
+    color: #1d5e1d;
+}
+
+.tickets-flash--error {
+    background: #fdeeee;
+    border: 1px solid #e9b3b3;
+    color: #7b1d1d;
 }
 
 /* Day section  */
@@ -101,10 +121,10 @@
     font-size: 1.15rem;
     font-weight: 700;
     text-transform: uppercase;
-    color: #1a1a1a;
+    color: #2d2622;
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
-    border-left: 4px solid #8b1a1a;
+    border-left: 4px solid #8b1e1e;
     padding-left: 0.85rem;
 }
 
@@ -120,8 +140,8 @@
     grid-template-columns: 130px 1fr auto;
     align-items: center;
     gap: 1.25rem;
-    padding: 1rem 0;
-    border-bottom: 1px solid #e8e8e8;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid #e3ddd3;
 }
 
 .tickets-event:last-child {
@@ -162,8 +182,8 @@
 
 .tickets-event__meta {
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
-    color: #777;
+    font-size: 0.84rem;
+    color: #69635d;
     margin: 0;
 }
 
@@ -208,6 +228,19 @@
     background: #721515;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(139,26,26,0.25);
+}
+
+.tickets-btn--soldout,
+.tickets-btn--soldout:hover {
+    background: #999;
+    color: #fff;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.tickets-event__form {
+    margin: 0;
 }
 
 /* Responsive*/

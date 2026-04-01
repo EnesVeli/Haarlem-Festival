@@ -8,6 +8,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
+$_SESSION['csrf_token'] ??= bin2hex(random_bytes(32));
 
 use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
@@ -99,6 +100,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     
     // Tickets — main landing & per-event-type sub-pages
     $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);
+    $r->addRoute('GET', '/tickets/jazz',    [\App\Controllers\TicketsController::class, 'jazz']);
+    $r->addRoute('GET', '/tickets/dance',   [\App\Controllers\TicketsController::class, 'dance']);
+    $r->addRoute('GET', '/tickets/history', [\App\Controllers\TicketsController::class, 'history']);
+    $r->addRoute('GET', '/tickets/yummy',   [\App\Controllers\TicketsController::class, 'yummy']);
     $r->addRoute('GET', '/tickets/stories', [\App\Controllers\TicketsController::class, 'stories']);
 
     // Stories in Haarlem — public pages
@@ -155,11 +160,18 @@ switch ($routeInfo[0]) {
             $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
             $controller = new $class($storiesService, $homepageService);
 
-        } elseif ($class === \App\Controllers\CmsStoriesController::class
-               || $class === \App\Controllers\TicketsController::class) {
+        } elseif ($class === \App\Controllers\CmsStoriesController::class) {
             $storiesRepo    = new \App\Repositories\StoriesRepository();
             $storiesService = new \App\Services\StoriesService($storiesRepo);
             $controller = new $class($storiesService);
+
+        } elseif ($class === \App\Controllers\TicketsController::class) {
+            $storiesRepo = new \App\Repositories\StoriesRepository();
+            $storiesService = new \App\Services\StoriesService($storiesRepo);
+            $nonStoriesRepo = new \App\Repositories\NonStoriesTicketsRepository();
+            $cartService = new \App\Services\CartService();
+            $nonStoriesService = new \App\Services\NonStoriesTicketsService($nonStoriesRepo, $cartService);
+            $controller = new $class($storiesService, $nonStoriesService);
 
         } elseif ($class === \App\Controllers\CmsStoriesHomepageController::class) {
             $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();

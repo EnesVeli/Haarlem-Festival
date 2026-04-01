@@ -22,10 +22,10 @@
 
         <!-- ── Event-type tabs ──────────────────────────────────────── -->
         <nav class="tickets-tabs" aria-label="Event categories">
-            <a href="/tickets" class="tickets-tab" aria-label="Haarlem Jazz tickets">Haarlem Jazz</a>
-            <a href="/tickets" class="tickets-tab" aria-label="Dance tickets">Dance!</a>
-            <a href="/tickets" class="tickets-tab" aria-label="Yummy tickets">Yummy</a>
-            <a href="/tickets" class="tickets-tab" aria-label="History tickets">History</a>
+            <a href="/tickets/jazz" class="tickets-tab" aria-label="Haarlem Jazz tickets">Haarlem Jazz</a>
+            <a href="/tickets/dance" class="tickets-tab" aria-label="Dance tickets">Dance!</a>
+            <a href="/tickets/yummy" class="tickets-tab" aria-label="Yummy tickets">Yummy</a>
+            <a href="/tickets/history" class="tickets-tab" aria-label="History tickets">History</a>
             <a href="/tickets/stories" class="tickets-tab tickets-tab--active" aria-label="Stories tickets">Stories</a>
         </nav>
 

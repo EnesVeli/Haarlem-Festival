@@ -1,5 +1,5 @@
 <?php
-$pageTitle = 'My Personal Program – The Festival Haarlem';
+$pageTitle = 'My Personal Program - The Festival Haarlem';
 require __DIR__ . '/../partials/header.php';
 
 $serviceFee = 2.50;
@@ -34,26 +34,23 @@ $total      = $subtotal + $serviceFee + $vat;
         <div style="text-align:center; padding:3rem 0;">
             <i class="bi bi-calendar-event" style="font-size:3rem; color:#ccc;"></i>
             <p style="margin:1rem 0 0.5rem; color:#888;">Your program is empty.</p>
-            <a href="/stories" class="stories-primary-button">Browse Stories</a>
+            <a href="/tickets" class="stories-primary-button">Browse Events</a>
         </div>
         <?php else: ?>
 
         <div class="program-layout">
-            <!--Event Cards -->
             <div class="program-items">
                 <?php foreach ($cart['items'] as $item):
                 $eventName  = $item['event_name'] ?? ('Event #' . $item['event_id']);
                 $eventImage = $item['event_image'] ?? '/assets/images/stories/venue-placeholder.jpg';
-                $venueName  = $item['venue_name']  ?? '';
+                $venueName  = $item['venue_name'] ?? '';
                 $eventStart = $item['event_start'] ?? null;
-                $eventEnd   = $item['event_end']   ?? null;
+                $eventEnd   = $item['event_end'] ?? null;
                 $dateLabel  = $eventStart ? date('D, M j', strtotime($eventStart)) : '';
                 $timeLabel  = $eventStart ? (date('H:i', strtotime($eventStart)) . ' - ' . date('H:i', strtotime($eventEnd))) : '';
-            ?>
+                ?>
                 <div class="program-card">
-                    <!-- Image with date overlay -->
-                    <div class="program-card__image"
-                        style="background-image: url('<?= htmlspecialchars($eventImage) ?>');">
+                    <div class="program-card__image" style="background-image: url('<?= htmlspecialchars($eventImage) ?>');">
                         <?php if ($dateLabel): ?>
                         <div class="program-card__date-overlay">
                             <span class="program-card__date"><?= $dateLabel ?></span>
@@ -62,24 +59,20 @@ $total      = $subtotal + $serviceFee + $vat;
                         <?php endif; ?>
                     </div>
 
-                    <!-- Info -->
                     <div class="program-card__info">
                         <h3 class="program-card__name"><?= htmlspecialchars($eventName) ?></h3>
                         <?php if ($venueName): ?>
-                        <p class="program-card__venue"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($venueName) ?>
-                        </p>
+                        <p class="program-card__venue"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($venueName) ?></p>
                         <?php endif; ?>
                         <p class="program-card__ticket">
-                            <?= (int) $item['quantity'] ?> × €<?= number_format((float) $item['price'], 2) ?>
-                            <span
-                                class="program-card__type"><?= htmlspecialchars(ucfirst($item['ticket_type'])) ?></span>
+                            <?= (int)$item['quantity'] ?> &times; &euro;<?= number_format((float)$item['price'], 2) ?>
                         </p>
-                        <p class="program-card__subtotal">€<?= number_format($item['subtotal'], 2) ?></p>
+                        <p class="program-card__subtotal">&euro;<?= number_format((float)$item['subtotal'], 2) ?></p>
                     </div>
 
-                    <!-- Remove -->
                     <form method="post" action="/cart/remove" class="program-card__remove">
-                        <input type="hidden" name="cart_item_id" value="<?= (int) $item['cart_item_id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                        <input type="hidden" name="cart_item_id" value="<?= (int)$item['cart_item_id'] ?>">
                         <button type="submit" class="program-card__remove-btn" title="Remove">
                             <i class="bi bi-trash"></i> Remove
                         </button>
@@ -88,29 +81,28 @@ $total      = $subtotal + $serviceFee + $vat;
                 <?php endforeach; ?>
             </div>
 
-            <!-- Summary Sidebar -->
             <div class="program-summary">
                 <div class="program-summary__card">
                     <h3 class="program-summary__title">Summary</h3>
 
                     <div class="program-summary__row">
                         <span>Subtotal</span>
-                        <span>€<?= number_format($subtotal, 2) ?></span>
+                        <span>&euro;<?= number_format($subtotal, 2) ?></span>
                     </div>
                     <div class="program-summary__row">
                         <span>Service Fees</span>
-                        <span>€<?= number_format($serviceFee, 2) ?></span>
+                        <span>&euro;<?= number_format($serviceFee, 2) ?></span>
                     </div>
                     <div class="program-summary__row">
                         <span>VAT (9%)</span>
-                        <span>€<?= number_format($vat, 2) ?></span>
+                        <span>&euro;<?= number_format($vat, 2) ?></span>
                     </div>
 
                     <div class="program-summary__divider"></div>
 
                     <div class="program-summary__row program-summary__row--total">
                         <strong>Total</strong>
-                        <strong style="color:#8b1e1e; font-size:1.3rem;">€<?= number_format($total, 2) ?></strong>
+                        <strong style="color:#8b1e1e; font-size:1.3rem;">&euro;<?= number_format($total, 2) ?></strong>
                     </div>
 
                     <a href="/checkout" class="stories-booking-submit"
@@ -119,7 +111,7 @@ $total      = $subtotal + $serviceFee + $vat;
                     </a>
                 </div>
 
-                <a href="/stories"
+                <a href="/tickets"
                     style="display:block; text-align:center; margin-top:1rem; color:#8b1e1e; font-size:0.9rem;">
                     &larr; Continue browsing events
                 </a>

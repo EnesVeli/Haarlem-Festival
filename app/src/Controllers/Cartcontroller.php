@@ -22,6 +22,18 @@ class CartController
         }
     }
 
+    private function validateCsrfToken(): void
+    {
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+        $postedToken = $_POST['csrf_token'] ?? '';
+
+        if (!is_string($sessionToken) || !is_string($postedToken) || $sessionToken === '' || !hash_equals($sessionToken, $postedToken)) {
+            http_response_code(403);
+            echo '403 - Invalid CSRF token';
+            exit;
+        }
+    }
+
     // ── GET /cart ────────────────────────────────────────────────────────────
 
     public function index(): void
@@ -34,7 +46,7 @@ class CartController
         $error   = $_SESSION['cart_error']   ?? null;
         unset($_SESSION['cart_success'], $_SESSION['cart_error']);
 
-        require __DIR__ . '/../Views/cart/index.php';
+        require __DIR__ . '/../Views/Cart/index.php';
     }
 
     // ── POST /cart/add ───────────────────────────────────────────────────────
@@ -42,15 +54,32 @@ class CartController
     public function add(): void
     {
         $this->mustBeLoggedIn();
+        $this->validateCsrfToken();
 
         try {
-            $this->cartService->addItem(
-                (int)$_SESSION['user_id'],
-                trim($_POST['event_type']   ?? ''),
-                (int)($_POST['event_id']    ?? 0),
-                trim($_POST['ticket_type']  ?? 'single'),
-                (int)($_POST['quantity']    ?? 1),
-                (float)($_POST['price']     ?? 0)
+            $userId = (int)$_SESSION['user_id'];
+            $eventId = (int)($_POST['event_id'] ?? 0);
+            $quantity = (int)($_POST['quantity'] ?? 1);
+            $ticketTypeId = (int)($_POST['ticket_type_id'] ?? 0);
+            if ($eventId <= 0 || $ticketTypeId <= 0) {
+                throw new \InvalidArgumentException('Invalid ticket selection.');
+            }
+
+            $customPriceInput = $_POST['custom_price'] ?? null;
+            $customPrice = null;
+            if ($customPriceInput !== null && $customPriceInput !== '') {
+                if (!is_numeric($customPriceInput)) {
+                    throw new \InvalidArgumentException('Invalid custom price.');
+                }
+                $customPrice = (float)$customPriceInput;
+            }
+
+            $this->cartService->addItemByTicketType(
+                $userId,
+                $eventId,
+                $ticketTypeId,
+                $quantity,
+                $customPrice
             );
             $_SESSION['cart_success'] = "Ticket added to your cart!";
         } catch (\Exception $e) {
@@ -58,7 +87,10 @@ class CartController
         }
 
         // Redirect back to where they came from, or to cart
-        $redirect = $_POST['redirect_back'] ?? '/cart';
+        $redirect = (string)($_POST['redirect_back'] ?? '/cart');
+        if ($redirect === '' || $redirect[0] !== '/' || str_starts_with($redirect, '//')) {
+            $redirect = '/cart';
+        }
         header('Location: ' . $redirect);
         exit;
     }
@@ -68,6 +100,7 @@ class CartController
     public function update(): void
     {
         $this->mustBeLoggedIn();
+        $this->validateCsrfToken();
 
         try {
             $this->cartService->updateItem(
@@ -89,6 +122,7 @@ class CartController
     public function remove(): void
     {
         $this->mustBeLoggedIn();
+        $this->validateCsrfToken();
 
         try {
             $this->cartService->removeItem(

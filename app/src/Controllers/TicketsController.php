@@ -1,7 +1,9 @@
 <?php
 namespace App\Controllers;
 
+use App\Services\NonStoriesTicketsService;
 use App\Services\StoriesService;
+use App\ViewModels\TicketsCategoryViewModel;
 use App\ViewModels\TicketsStoriesViewModel;
 
 /**
@@ -15,15 +17,17 @@ class TicketsController extends BaseController
 {
     /** @var StoriesService Service for fetching story events. */
     private StoriesService $storiesService;
+    private NonStoriesTicketsService $nonStoriesTicketsService;
 
     /**
      * Constructor — receives the StoriesService via dependency injection.
      *
      * @param StoriesService $storiesService Service for story events
      */
-    public function __construct(StoriesService $storiesService)
+    public function __construct(StoriesService $storiesService, NonStoriesTicketsService $nonStoriesTicketsService)
     {
         $this->storiesService = $storiesService;
+        $this->nonStoriesTicketsService = $nonStoriesTicketsService;
     }
 
     /**
@@ -71,6 +75,48 @@ class TicketsController extends BaseController
             'viewModel' => $viewModel,
             'pageTitle'  => $viewModel->pageTitle,
             'pageCSS'    => $viewModel->pageCSS,
+        ]);
+    }
+
+    public function jazz(array $vars = []): void
+    {
+        $this->renderCategory('jazz');
+    }
+
+    public function dance(array $vars = []): void
+    {
+        $this->renderCategory('dance');
+    }
+
+    public function history(array $vars = []): void
+    {
+        $this->renderCategory('history');
+    }
+
+    public function yummy(array $vars = []): void
+    {
+        $this->renderCategory('yummy');
+    }
+
+    private function renderCategory(string $categoryKey): void
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        $eventsByDay = $this->nonStoriesTicketsService->getCategoryTickets($categoryKey);
+        $viewModel = new TicketsCategoryViewModel($categoryKey, $eventsByDay, $_SESSION['csrf_token']);
+
+        $success = $_SESSION['cart_success'] ?? null;
+        $error = $_SESSION['cart_error'] ?? null;
+        unset($_SESSION['cart_success'], $_SESSION['cart_error']);
+
+        $this->render('tickets/category', [
+            'viewModel' => $viewModel,
+            'success' => $success,
+            'error' => $error,
+            'pageTitle' => $viewModel->pageTitle,
+            'pageCSS' => $viewModel->pageCSS,
         ]);
     }
 }
