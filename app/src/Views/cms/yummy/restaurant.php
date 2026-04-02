@@ -16,113 +16,76 @@
                     <?= htmlspecialchars($error_message) ?>
                 </div>
             <?php endif; ?>
-            
-            <div class="cms-res-list-table-container">
-                <table class="cms-res-list-table">
-                    <thead>
-                        <tr>
-                            <th>Image</th>            
-                            <th id="field_0" class="cms-res-list-sort-field" sort="0" onclick="sortingOptionClick(this)">
-                                <div class="cms-res-list-sort-container">
-                                    Name<div id="field_0_asc">&nbsp;↑</div><div id="field_0_desc">&nbsp;↓</div>
-                                </div>
-                            </th>
-                            <th id="field_1" class="cms-res-list-sort-field" sort="1" onclick="sortingOptionClick(this)">
-                                <div class="cms-res-list-sort-container">
-                                    Mini Text<div id="field_1_asc">&nbsp;↑</div><div id="field_1_desc">&nbsp;↓</div>
-                                </div>
-                            </th>
-                            <th id="field_2" class="cms-res-list-sort-field" sort="2" onclick="sortingOptionClick(this)">
-                                <div class="cms-res-list-sort-container">
-                                    Rating<div id="field_2_asc">&nbsp;↑</div><div id="field_2_desc">&nbsp;↓</div>
-                                </div>
-                            </th>
-                            <th id="field_3" class="cms-res-list-sort-field" sort="3" onclick="sortingOptionClick(this)">
-                                <div class="cms-res-list-sort-container">
-                                    Cost<div id="field_3_asc">&nbsp;↑</div><div id="field_3_desc">&nbsp;↓</div>
-                                </div>
-                            </th>
-                            <th id="field_4" class="cms-res-list-sort-field" sort="4" onclick="sortingOptionClick(this)">
-                                <div class="cms-res-list-sort-container">
-                                    Active<div id="field_4_asc">&nbsp;↑</div><div id="field_4_desc">&nbsp;↓</div>
-                                </div>
-                            </th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <? if (count($view_model->restaurants) == 0): ?>
-                            <tr>
-                                <td colspan="7">No restaurants found.</td>
-                            </tr>
-                        <? else: ?>
-                            <? foreach($view_model->restaurants as $res): ?>
-                                <tr>
-                                    <th>
-                                        <div class="cms-res-list-image-container">
-                                            <img class="cms-res-list-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $res->main_img_path ?>">
-                                        </div>
-                                    </th>
-                                    <th><? echo $res->name; ?></th>
-                                    <th><? echo $res->mini_text; ?></th>
-                                    <th><? echo $res->getRatingFormated(); ?></th>
-                                    <th><? echo $res->getCostRatingString(); ?></th>
-                                    <th><? echo $res->active == true ? 'Yes' : 'No'; ?></th>
-                                    <th><a>View</a></th>
-                                </tr>
-                            <? endforeach; ?>
-                        <? endif; ?>
-                    </tbody>
-                </table>
-            </div>
 
-            <? if(count($view_model->restaurants) > 0): ?>
-                <div>
-                    <div>
-                        
+            <? if(isset($view_model)): ?>        
+                <form class="cms-main-subsection-container" enctype="multipart/form-data" method="post" action="/cms/yummy/restaurant">
+                    <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
+
+                    <div class="cms-form-subsection">
+                        <label class="cms-form-label">Name:</label>
+                        <input type="text" name="name" class="cms-text-input" value="<? echo htmlspecialchars($view_model->res->name) ?>">
                     </div>
-                </div>
+
+                     <div class="cms-form-subsection">
+                        <label class="cms-form-label">Active:</label>
+                        <label class="cms-input-checkbox-container">
+                            <input type="checkbox" <? echo ($view_model->res->active ? 'checked' : '');?>>
+                            <span class="cms-input-checkbox-checkmark"></span>
+                        </label>
+                    </div>
+
+                    <div class="cms-form-subsection">
+                        <label class="cms-form-label">Rating:</label>
+                        <input name="rating" type="number" class="cms-number-input" value="<? echo htmlspecialchars($view_model->res->rating) ?>" step="0.1" min="0" max="5">
+                    </div>
+
+                    <div class="cms-form-subsection">
+                        <label class="cms-form-label">Cost Rating:</label>
+                        <input type="text" list="cost_rating" />
+                        <datalist id="cost_rating">
+                            <option value="1">€</option>
+                            <option value="2">€€</option>
+                            <option value="3">€€€</option>
+                        </datalist>
+                    </div>
+
+                    <div class="cms-form-subsection">
+                        <label class="cms-form-label">Mini Text:</label>
+                        <textarea name="mini_text" class="cms-text-text-area text-mid"><? echo htmlspecialchars($view_model->res->mini_text) ?></textarea>
+                    </div>
+
+                    <div class="cms-form-subsection">
+                        <label class="cms-form-label">Text:</label>
+                        <textarea name="text" class="cms-text-text-area text-long"><? echo htmlspecialchars($view_model->res->text) ?></textarea>
+                    </div>
+
+                    <div class="cms-form-subsection-row">
+                        <div class="cms-image-subsection-container">
+                            <label class="cms-form-label">Main Image:</label>
+                            <img class="cms-show-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->res->main_img_path; ?>">
+                        </div>
+                        <div class="cms-image-subsection-container">
+                            <div class="cms-upload-box" id="upload_box">
+                                <input type="file" name="main_img_path" id="image" class="cms-file-input" accept="image/*">
+
+                                <div class="cms-upload-inner">
+                                    <strong>Change Image</strong>
+                                    <strong>Drop image here</strong>
+                                    <span>or choose a file</span>
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+
+                    <button type="submit" class="cms-submit-button">Save Changes</button>
+                </form>
             <? endif; ?>
         </div>
-
     </div>
 </div>
 
 <script type="text/javascript">
-    // Get dat from view model
-    let sort_field = <? echo $view_model->sort_field; ?>;
-    let sort_order = <? echo $view_model->sort_order; ?>;
 
-    let cur_page = <? echo $view_model->cur_page; ?>;
-    let page_number = <? echo $view_model->page_number; ?>;
-
-    //Set up sorting 
-    for (let i = 0; i < 5; i++) {
-        document.getElementById('field_' + i + '_asc').style.display = 'none';
-        document.getElementById('field_' + i + '_desc').style.display = 'none';
-    }
-
-    document.getElementById('field_' + sort_field).className = 'cms-res-list-selected-sort-field cms-res-list-sort-field';
-    document.getElementById('field_' + sort_field + '_' + (sort_order == 0 ? 'asc' : 'desc')).style.display = 'flex';
-
-    function sortingOptionClick(sender){
-        let uri = '/cms/yummy/restaurant?'; // Set base for uri
-
-        let sorting = sender.getAttribute("sort");
-
-        uri += 'sort=' + sorting;
-        
-        if(sort_field == sorting){
-            uri += '&order=' + (sort_order == 0 ? 1 : 0); 
-        }
-        else{
-            uri += '&order=0'; 
-        }
-
-        uri += '&page=0'; 
-
-        window.location.href = uri; 
-    }
 </script>
 
 <?php require __DIR__ . '/../../partials/footer.php'; ?>

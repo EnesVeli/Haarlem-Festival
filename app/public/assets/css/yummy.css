@@ -1,9 +1,13 @@
 :root{
   --burgundy:#821315;
+  --burgundy-light:#981517;
   --navy:#10223a;
   --warm:#E9DED8;
   --ink:#1b1f24;
   --buttercup: #F59E0B;
+  --cms-main: #133d14;
+  --cms-alt-main: #0d2a0f;
+  --cms-sel: #309531;
 }
 
 /* ========== Home ========== */
@@ -1922,7 +1926,7 @@
 
 /* ========== Topper ========== */
 .cms-topper{
-  background: linear-gradient(135deg, #0d2a0f 0%, #133d14 100%);
+  background: linear-gradient(135deg, var(--cms-alt-main) 0%, var(--cms-main) 100%);
   color: #fff;
   border-radius: 18px;
   padding: 24px 32px;
@@ -2015,13 +2019,13 @@
 .cms-tab:hover{
   background: #fff8dc;
   color: #0D1B2A;
-  border-bottom-color: #f4c542;
+  border-bottom-color: var(--cms-sel);
 }
 
 .cms-tab-active{
   background: #fff;
   color: #0D1B2A;
-  border-bottom-color: #f4c542;
+  border-bottom-color: var(--cms-main);
 }
 
 /* ========== Main ========== */
@@ -2046,7 +2050,7 @@
     background: linear-gradient(180deg, #fffdfa 0%, #fff 100%);
 
     border: 1px solid #ece7e2;
-    border-left: 5px solid #f4c542;
+    border-left: 5px solid var(--cms-main);
     border-radius: 16px;
 
     padding: 24px;
@@ -2056,6 +2060,14 @@
     display: flex;
 
     flex-direction: column;
+
+    gap: 8px;
+}
+
+.cms-form-subsection-row{
+    display: flex;
+
+    flex-direction: row;
 
     gap: 8px;
 }
@@ -2088,8 +2100,6 @@
 
 .cms-text-text-area{
     width: 100%;
-    height: 180px;
-    min-height: 100px;
 
     border: 1px solid #d8dbe2;
     border-radius: 12px;
@@ -2097,7 +2107,119 @@
     padding: 14px 16px;
 
     font-size: 16px;
-    background: #fff;
+    background: white;
+}
+
+.text-short{
+    height: 140px;
+    min-height: 100px;
+}  
+
+.text-mid{
+    height: 180px;
+    min-height: 100px;
+}
+
+.text-long{
+    height: 380px;
+    min-height: 200px;
+}
+
+.cms-number-input{
+    width: 100px;
+
+    border: 1px solid #d8dbe2;
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    font-size: 18px;
+    font-family: Arial;
+
+    background: white;
+}
+
+/* Customize the label (the container) */
+.cms-input-checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.cms-input-checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.cms-input-checkbox-checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 36px;
+    width: 36px;
+    background-color: var(--burgundy-light);
+
+    border-radius: 10px;
+}
+
+/* On mouse-over, add a grey background color */
+.cms-input-checkbox-container:hover input ~ .cms-input-checkbox-checkmark {
+    background-color: var(--burgundy);
+}
+
+/* When the checkbox is checked, add a blue background */
+.cms-input-checkbox-container input:checked ~ .cms-input-checkbox-checkmark {
+    background-color: var(--cms-sel);
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.cms-input-checkbox-checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.cms-input-checkbox-container input:checked ~ .cms-input-checkbox-checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.cms-input-checkbox-container input:checked .cms-input-checkbox-checkmark:after {
+    left: 13px;
+    top: 6px;
+    width: 10px;
+    height: 20px;
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Style the checkmark/indicator */
+.cms-input-checkbox-container .cms-input-checkbox-checkmark:after {
+    left: 13px;
+    top: 6px;
+    width: 10px;
+    height: 20px;
+    border: solid white;
+    border-width: 0 4px 4px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 .cms-submit-button{
@@ -2122,7 +2244,7 @@
 
     font-family: Inter;
 
-    background: #133d14;
+    background: var(--cms-main);
     color: white;
 
     justify-self: flex-end;
@@ -2130,8 +2252,17 @@
     margin-left: auto;
 }
 
-.cms-show-image{
+.cms-image-subsection-container{
+    display: block;
+
     width: 50%;
+    height: inherit;
+
+    margin-bottom: 0;
+}
+
+.cms-show-image{
+    width: 100%;
     height: auto;
 
     border-radius: 18px;
@@ -2141,19 +2272,28 @@
 
 .cms-file-input {
     display: none;
-  }
+}
 
 .cms-upload-box {
     display: flex;
 
-    width: 50%;
-    height: 180px;
+    width: 100%;
+    max-width: 100%;
+    height: calc(100% - 38px);
+    max-height: calc(100% - 38px);
+
+    margin-top: 38px;
+    margin-bottom: 0;
+
+    padding: 28px;
 
     border: 2px dashed #c7ced9;
     border-radius: 16px;
-    padding: 28px;
+
     background: #fafbfd;
+
     cursor: pointer;
+
     transition: all 0.2s ease;
 
     align-items: center;
@@ -2162,7 +2302,7 @@
 
 .cms-upload-box:hover,
 .cms-upload-box.is-dragover {
-    border-color: #f4c542;
+    border-color: var(--cms-sel);
     background: #fffaf0;
 }
 
@@ -2171,7 +2311,9 @@
     flex-direction: column;
 
     height: auto;
+    max-height: 100%;
     width: auto;
+    max-width: 100%;
 
     align-items: center;
     align-self: center;
@@ -2179,7 +2321,11 @@
     justify-self: center;
     justify-items: center;
 
-    margin: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    margin-left: auto;
+    margin-right: auto;
 
     gap: 4px;
 
@@ -2187,6 +2333,41 @@
     text-align: center;
 
     color: #314158;
+
+    overflow: hidden;
+}
+
+.cms-upload-container{
+    display: flex;
+
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+
+    justify-items: center;
+
+    overflow: hidden;
+}
+
+.cms-upload-preview-container{
+    width: 30vh;
+
+    height: 15vw;
+
+    overflow: hidden;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.cms-upload-preview{
+    object-fit: contain;
+
+    width: 100%;
+    height: 100%;
 }
 
 /* ========== Restaurant List ========== */
@@ -2276,4 +2457,87 @@
 
     justify-self: center;
     align-self: center;    
+}
+
+.cms-res-list-active-no{
+    color: #c70d0d !important;
+}
+
+.cms-res-list-view-button{
+    display: inline-block;
+
+    padding: 11px 20px;
+
+    border-radius: 18px;
+    border-style: none;
+
+    font-family: Inter;
+    font-weight: 700;
+
+    cursor: pointer;   
+
+    background-color: var(--cms-main);
+
+    color: white;
+}
+
+.cms-res-list-line{
+    display: block;
+
+    height: 1px;
+
+    background-color: #e5e7eb;
+
+    border-radius: 90px;
+
+    width: auto;
+
+    margin-top: 14px;
+    margin-bottom: 12px;
+}
+
+.cms-res-list-pages-container{
+    display: flex;
+
+    flex-direction: row;
+    
+    margin-left: 0;
+    margin-right: 0;
+
+    column-gap: 4px;
+
+    justify-self: center;
+    align-self: center;
+
+    align-items: center;
+    justify-items: center;
+
+    width: auto;
+}
+
+.cms-res-list-page-button{
+    font-size: 22px;
+    font-weight: normal;
+
+    font-family: Inter;
+
+    border-style: none;
+    border-radius: 100px;
+
+    height: 42px;
+    width: 42px;
+
+    text-align: center;
+    vertical-align: middle;
+    line-height: 44px;
+}
+
+.cms-res-list-page-button-sel{
+    background: var(--cms-sel);
+    color: black;
+}
+
+.cms-res-list-page-button-unsel{
+    background: var(--cms-main);
+    color: white;
 }

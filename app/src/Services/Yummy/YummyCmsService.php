@@ -7,7 +7,8 @@ use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use App\ViewModels\Yummy\Cms\YummyHomeViewModel;
 use App\ViewModels\Yummy\Cms\YummyListViewModel;
-use App\ViewModels\Yummy\Cms\YummyRestaurantsViewModel;
+use App\ViewModels\Yummy\Cms\YummyRestaurantListViewModel;
+use App\ViewModels\Yummy\Cms\YummyRestaurantViewModel;
 use App\ViewModels\Yummy\Cms\YummyTopper;
 use RoundingMode;
 use Uri\InvalidUriException;
@@ -71,11 +72,11 @@ class YummyCmsService {
         $this->cms_rep->updateListData($title, $subtitle, $image);
     }
 
-    public function getRestaurantViewModel(int $sort, int $order, int $page) : YummyRestaurantsViewModel {
+    public function getRestaurantListViewModel(int $sort, int $order, int $page) : YummyRestaurantListViewModel {
         // Check parameters
         if($sort < 0 || $sort > 4 || $page < 0) throw new InvalidUriException("Invalid uri parameters.");
 
-        $view_model = new YummyRestaurantsViewModel();
+        $view_model = new YummyRestaurantListViewModel();
 
         // Load restaurants
         $list = $this->restaurant_rep->getRestaurantListCms($sort, $order, $page);
@@ -88,10 +89,38 @@ class YummyCmsService {
 
         $count = $this->restaurant_rep->countAllRestaurants();
         if($count == null) throw new DBAccessException("Could not get total restaurant count from db.");
-        $view_model->page_number = round($count / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS, 0, RoundingMode::AwayFromZero);
+
+        $page_count = round($count / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS, 0, RoundingMode::AwayFromZero);
+
+        $view_model->page_number = $page_count;
 
         $view_model->sort_field = $sort;
         $view_model->sort_order = $order;
+
+        $offset = 0; // Left offset of pages button
+        $limit = 0; // Right offset of pages button
+
+        if($page < abs($page - $page_count + 1)){ // If current page is closer to first page than last, start from offset
+            for (; $offset < 3; $offset++) { 
+                if($page - $offset <= 0) break;
+            }
+
+            for (; $limit < 7 - $offset; $limit++) { 
+                if($page + $limit >= $page_count) break;
+            }
+        }  
+        else{ // Otherwise from limit
+            for (; $limit < 4; $limit++) { 
+                if($page + $limit >= $page_count) break;
+            }
+
+            for (; $offset < 7 - $limit; $offset++) { 
+                if($page - $offset <= 0) break;
+            }                       
+        } 
+
+        $view_model->page_offset = $offset;
+        $view_model->page_limit = $limit;
 
         // Setup topper
         $view_model->topper = new YummyTopper();
@@ -100,6 +129,26 @@ class YummyCmsService {
         $view_model->topper->button_text = "View restaurants";
         $view_model->topper->button_link = '/yummy/list';
         $view_model->topper->active_tab = 2;
+
+        return $view_model;
+    }
+
+    public function getRestaurantViewModel(int $res_id) : YummyRestaurantViewModel {
+        $view_model = new YummyRestaurantViewModel();
+
+        $res = $this->restaurant_rep->getRestaurantById($res_id);
+
+        if($res == null) throw new DBAccessException();
+
+        $view_model->res = $res;
+
+        // Setup topper
+        $view_model->topper = new YummyTopper();
+        $view_model->topper->title = "Yummy CMS - Restaurant - " . $res->name;
+        $view_model->topper->subtitle = "Manage yummy restaurant.";
+        $view_model->topper->button_text = "View restaurants";
+        $view_model->topper->button_link = '/yummy/list';
+        $view_model->topper->active_tab = -1;
 
         return $view_model;
     }

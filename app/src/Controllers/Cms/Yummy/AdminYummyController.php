@@ -6,6 +6,7 @@ use App\Controllers\Cms\BaseCmsController;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Services\Yummy\YummyCmsService;
 use Exception;
+use Uri\InvalidUriException;
 
 class AdminYummyController extends BaseCmsController {
     private YummyCmsService $service;
@@ -100,14 +101,32 @@ class AdminYummyController extends BaseCmsController {
         header('location: /cms/yummy/list');
     }
 
+    public function restaurantList(){
+        $this->requireAdmin();
+
+        try{
+            $view_model = $this->service->getRestaurantListViewModel($_GET['sort'] ?? 0, $_GET['order'] ?? 0, $_GET['page'] ?? 0);
+        }
+        catch(InvalidUriException $ex){
+            $error_message = "Invalid uri arguments.";
+        }
+        catch(Exception $ex){
+            $error_message = "Something went wrong try again later.";
+        }
+
+        require __DIR__ . '/../../../Views/cms/yummy/restaurant-list.php';
+    }
+
     public function restaurant(){
         $this->requireAdmin();
 
         try{
-            $view_model = $this->service->getRestaurantViewModel($_GET['sort'] ?? 0, $_GET['order'] ?? 0, $_GET['page'] ?? 0);
+            if(!isset($_GET['id'])) throw new InvalidUriException();
+
+            $view_model = $this->service->getRestaurantViewModel($_GET['id']);
         }
         catch(Exception $ex){
-
+            $error_message = "Something went wrong try again later.";
         }
 
         require __DIR__ . '/../../../Views/cms/yummy/restaurant.php';
