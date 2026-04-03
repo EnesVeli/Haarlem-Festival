@@ -12,6 +12,7 @@ class CartController
         $this->cartService = new CartService();
     }
 
+    // Guard 
 
     private function mustBeLoggedIn(): void
     {
