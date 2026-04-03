@@ -69,7 +69,7 @@
                 <div>Opening Hours*:</div>
                 <div class="restaurant-opening-hours-container">
                     <div class="restaurant-opening-hours-weekdays">Monday&#10;Tuesday&#10;Wednesday&#10;Thursday&#10;Friday&#10;Saturday&#10;Sunday</div>
-                    <div class="restaurant-opening-hours-time"><? echo htmlspecialchars($view_model->restaurant->opening_hours); ?></div>
+                    <div class="restaurant-opening-hours-time"><? echo htmlspecialchars($view_model->hours->monday); ?>&#10;<? echo htmlspecialchars($view_model->hours->tuesday); ?>&#10;<? echo htmlspecialchars($view_model->hours->wednesday); ?>&#10;<? echo htmlspecialchars($view_model->hours->thursday); ?>&#10;<? echo htmlspecialchars($view_model->hours->friday); ?>&#10;<? echo htmlspecialchars($view_model->hours->saturday); ?>&#10;<? echo htmlspecialchars($view_model->hours->sunday); ?></div>
                 </div>
                 <div class="restaurant-opening-hours-comment">*(Opening hours may change on holidays)</div>
             </div>

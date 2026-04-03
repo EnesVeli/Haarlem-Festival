@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Framework\Repository;
 use App\Models\Dish;
+use App\Models\OpeningHours;
 use App\Models\Restaurant;
 use App\Models\RestaurantBooking;
 use App\Models\RestaurantImage;
@@ -29,7 +30,7 @@ class YummyRestaurantsRepository extends Repository
      */
     public function getRestaurantById(string $restaurant_id): ?Restaurant
     {
-        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id AND `active` = 1");
+        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id AND `active` = 1");
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
@@ -204,6 +205,20 @@ class YummyRestaurantsRepository extends Repository
 
     /**
      * @param int $restaurant_id id of searched restaurant.
+     * @return ?OpeningHours returns opening hours of restaurant, returns null, if nothing were found.
+     */
+    public function getRestaurantOpeningHours(int $restaurant_id) : ?OpeningHours {
+        $stmt = $this->connection->prepare("SELECT `id`, `restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday` FROM `YummyOpeningHours` WHERE `restaurant_id` = :restaurant_id LIMIT 1");
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, OpeningHours::class);
+        $res = $stmt->fetch(); 
+
+        return $res == false ? null : $res;
+    }
+
+    /**
+     * @param int $restaurant_id id of searched restaurant.
      * @param int $date_offset offset in day from today.
      * @return ?array returns array of restaurant time slots (joined YummyRestaurantTimeSlots and YummyReservationSlots) in range from today to two weeks from now, returns null, if nothing were found.
      */
@@ -367,6 +382,39 @@ class YummyRestaurantsRepository extends Repository
 
     public function countAllRestaurants() : ?int {
         $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `YummyRestaurants`;");
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_DEFAULT);
+
+        return $res == false ? null : $res[0];
+    }
+
+    /**
+     * Creates a restaurant image in the db.
+     * @param int $restaurant_id id of image restaurant.
+     * @param string $path path to the image.
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function createRestaurantImage(int $restaurant_id, string $path) : bool {
+        $sql = "INSERT INTO `YummyRestaurantImages`(`restaurant_id`, `path`) VALUES (:restaurant_id, :path);";
+
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute(['restaurant_id' => $restaurant_id,
+                               'path' => $path]);
+    }
+
+    /**
+     * Returns number of additional images that restaurant has.
+     * @param int $restaurant_id id of searched restaurant.
+     * @return int returns count if operation was successfull, otherwise null.
+     */
+    public function countRestaurantImages(int $restaurant_id) : ?int {
+        $stmt = $this->connection->prepare("SELECT COUNT(*)
+                                            FROM `YummyRestaurantImages`
+                                            WHERE `restaurant_id` = 1
+                                            GROUP BY `restaurant_id`;");
 
         $stmt->execute();
 

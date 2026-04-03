@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Mar 25, 2026 at 09:50 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Apr 03, 2026 at 07:27 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,6 +47,27 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 (3, 8, 'story', 9, 'single', 5, 0.00, '2026-03-15 15:11:31'),
 (4, 8, 'story', 3, 'single', 4, 15.00, '2026-03-16 08:31:32'),
 (5, 8, 'story', 1, 'single', 1, 6.00, '2026-03-16 09:00:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p><strong>Last Weekend of July | Multiple Locations across Haarlem</strong></p>\r\n<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/hero.png');
 
 -- --------------------------------------------------------
 
@@ -102,27 +123,6 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p><strong>Last Weekend of July | Multiple Locations across Haarlem</strong></p>\r\n<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/hero.png');
 
 -- --------------------------------------------------------
 
@@ -720,13 +720,6 @@ CREATE TABLE `PasswordResetToken` (
   `activated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
---
--- Dumping data for table `PasswordResetToken`
---
-
-INSERT INTO `PasswordResetToken` (`token_id`, `user_id`, `key`, `created_at`, `activated_at`) VALUES
-(2, 6, '$2y$12$kLZMRm/v5N83Emyi8ZM7z.tmlllfSONqbWppn3ltxS7QBztKfXhuG', '2026-03-13 12:32:09', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -814,7 +807,6 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
 (5, 'tim.sadko@gmail.com', '$2y$12$sOh6J5iK/ZUShL/9ssKWIeRWZ/j0M3QpC.cL2EcCT6ZkxzMGmXPIO', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
-(6, 'elena.sadko@gmail.com', '$2y$12$Zg7P22jNmZtkM1EdZczHUe8EwCbiOGnO.XAPybPnES2ah1nBSlrtW', 'Elena Shkvarnytska', 'customer', NULL, '2026-02-27 12:41:38'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'ENESVELIYIGIT@GMAIL.COM', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit ', 'admin', NULL, '2026-03-09 14:38:15');
 
@@ -886,7 +878,7 @@ CREATE TABLE `YummyCMS` (
 --
 
 INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`, `home_image`, `list_title`, `list_subtitle`, `list_image`) VALUES
-(1, 'Food and Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.\r\n', 'ef7aeeed895b2911ec278e33ad499cfc.jpg', 'Restaurants, Cafes and Bars ', 'Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard. ', '620bf8222afd27cb5121483d9dc5c40a.jpg');
+(1, 'Food and Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.\r\n', '156cdbb437e57b4e62637cf22e5ff872.jpg', 'Restaurants, Cafes and Bars', 'Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard. ', 'a6eb86a2a8572f591c571248b60c5af2.jpg');
 
 -- --------------------------------------------------------
 
@@ -970,6 +962,31 @@ INSERT INTO `YummyGuides` (`guide_id`, `mini_img_path`, `mini_title`, `mini_text
 (3, 'ec39dac2209ad74ecc7ddb524164516fb3acfdb3.jpg', 'Haarlem’s Coziest Cafés and Coffee Spots', 'Discover Haarlem’s charming cafés offering great coffee, home made cakes, relaxed brunches, and welcoming atmospheres ideal for a break while exploring the city or meeting friends.', b'1'),
 (4, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1'),
 (5, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg\r\n', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyOpeningHours`
+--
+
+CREATE TABLE `YummyOpeningHours` (
+  `id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `monday` varchar(64) NOT NULL,
+  `tuesday` varchar(64) NOT NULL,
+  `wednesday` varchar(64) NOT NULL,
+  `thursday` varchar(64) NOT NULL,
+  `friday` varchar(64) NOT NULL,
+  `saturday` varchar(64) NOT NULL,
+  `sunday` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyOpeningHours`
+--
+
+INSERT INTO `YummyOpeningHours` (`id`, `restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
+(1, 1, 'Closed', 'Closed', '18:00-21:30', '18:00-21:30', '18:30-21:30', '18:30-21:30', '18:30-21:30');
 
 -- --------------------------------------------------------
 
@@ -1119,7 +1136,6 @@ CREATE TABLE `YummyRestaurants` (
   `cost_rating` bit(4) NOT NULL,
   `active` bit(1) NOT NULL DEFAULT b'0',
   `text` varchar(2048) NOT NULL DEFAULT '',
-  `opening_hours` varchar(128) NOT NULL DEFAULT '',
   `address_text` varchar(128) NOT NULL DEFAULT '',
   `address_uri` varchar(256) NOT NULL DEFAULT '',
   `website_link` varchar(256) DEFAULT NULL
@@ -1129,15 +1145,15 @@ CREATE TABLE `YummyRestaurants` (
 -- Dumping data for table `YummyRestaurants`
 --
 
-INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link`) VALUES
-(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Closed\r\nClosed\r\n18:00–21:30\r\n18:00–21:00\r\n18:30–21:30\r\n18:30–21:30\r\n18:30–21:30', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
-(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', '', NULL),
-(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', '', NULL),
-(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', '', NULL),
-(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', '', NULL),
-(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', '', NULL),
-(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', '', NULL),
-(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', '', NULL);
+INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link`) VALUES
+(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
+(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', NULL),
+(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', NULL),
+(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', NULL),
+(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', NULL),
+(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', NULL),
+(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', NULL),
+(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1173,6 +1189,14 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
+
+--
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1181,14 +1205,6 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
-
---
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `Event`
@@ -1425,6 +1441,13 @@ ALTER TABLE `YummyGuides`
   ADD PRIMARY KEY (`guide_id`);
 
 --
+-- Indexes for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
 -- Indexes for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
@@ -1470,16 +1493,16 @@ ALTER TABLE `CartItem`
   MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `cms_content`
---
-ALTER TABLE `cms_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
-
---
 -- AUTO_INCREMENT for table `CMS_Content`
 --
 ALTER TABLE `CMS_Content`
   MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `Event`
@@ -1680,6 +1703,12 @@ ALTER TABLE `YummyGuides`
   MODIFY `guide_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
@@ -1826,16 +1855,16 @@ ALTER TABLE `YummyDishes`
   ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
   ADD CONSTRAINT `YummyReservationSlots_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
-
---
--- Constraints for table `YummyRestaurantImages`
---
-ALTER TABLE `YummyRestaurantImages`
-  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `YummyRestaurantFoodTypes`
@@ -1843,6 +1872,12 @@ ALTER TABLE `YummyRestaurantImages`
 ALTER TABLE `YummyRestaurantFoodTypes`
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `YummyRestaurantImages`
+--
+ALTER TABLE `YummyRestaurantImages`
+  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

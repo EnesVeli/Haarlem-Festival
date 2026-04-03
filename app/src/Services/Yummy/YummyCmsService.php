@@ -3,6 +3,7 @@
 namespace App\Services\Yummy;
 
 use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\MaxCountExceededException;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use App\ViewModels\Yummy\Cms\YummyHomeViewModel;
@@ -137,19 +138,38 @@ class YummyCmsService {
         $view_model = new YummyRestaurantViewModel();
 
         $res = $this->restaurant_rep->getRestaurantById($res_id);
-
         if($res == null) throw new DBAccessException();
-
         $view_model->res = $res;
+
+        $hours = $this->restaurant_rep->getRestaurantOpeningHours($res_id);
+        if($hours == null) throw new DBAccessException();
+        $view_model->hours = $hours;
+
+        $images = $this->restaurant_rep->getRestaurantImages($res_id);
+        if($images == null) throw new DBAccessException();
+        $view_model->images = $images;
 
         // Setup topper
         $view_model->topper = new YummyTopper();
         $view_model->topper->title = "Yummy CMS - Restaurant - " . $res->name;
         $view_model->topper->subtitle = "Manage yummy restaurant.";
-        $view_model->topper->button_text = "View restaurants";
-        $view_model->topper->button_link = '/yummy/list';
+        $view_model->topper->button_text = "View restaurant";
+        $view_model->topper->button_link = '/yummy/restaurant?id=' . $res->restaurant_id;
         $view_model->topper->active_tab = -1;
 
         return $view_model;
+    }
+
+    public function addRestaurantImage(int $restaurant_id, string $image_path) : bool {
+        $count = $this->restaurant_rep->countRestaurantImages($restaurant_id);
+
+        if($count == null) throw new DBAccessException();
+        if($count >= 11) throw new MaxCountExceededException();
+
+        $res = $this->restaurant_rep->createRestaurantImage($restaurant_id, $image_path);
+
+        if($res == null) throw new DBAccessException();
+
+        return $res;
     }
 }

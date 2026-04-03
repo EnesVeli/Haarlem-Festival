@@ -26,6 +26,13 @@ class Session
         return $value;
     }
 
+    public static function pop(string $key, $default = null)
+    {
+        $value = $_SESSION[$key] ?? $default;
+        unset($_SESSION[$key]);
+        return $value;
+    }
+
     public static function login(array $user): void
     {
         $_SESSION['user_id'] = $user['user_id'] ?? $user['id'] ?? null;

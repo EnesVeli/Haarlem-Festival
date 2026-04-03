@@ -3,7 +3,9 @@
 namespace App\Controllers\Cms\Yummy;
 
 use App\Controllers\Cms\BaseCmsController;
+use App\Framework\Session;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\MaxCountExceededException;
 use App\Services\Yummy\YummyCmsService;
 use Exception;
 use Uri\InvalidUriException;
@@ -18,14 +20,15 @@ class AdminYummyController extends BaseCmsController {
     public function index(){
         $this->requireAdmin();
 
-        $error_message = $_SESSION['temp_error'] ?? null;
-        $_SESSION['temp_error'] = null;
+        $error_message = Session::pop("temp_error");
 
         try{
             $view_model = $this->service->getHomeViewModel();
         }
         catch(Exception $ex){
-            if(!isset($error_message)) $error_message = "Something went wrong try again later.";
+            if(!isset($error_message)) $error_message = '';
+
+            $error_message = $error_message . "\nSomething went wrong try again later.";
         }
 
         require __DIR__ . '/../../../Views/cms/yummy/index.php';
@@ -52,7 +55,7 @@ class AdminYummyController extends BaseCmsController {
             }
         }
         catch(Exception $ex){    
-            $_SESSION['temp_error'] = "Something went wrong try again later.";
+            Session::set('temp_error', "Something went wrong try again later.");
         }
 
         header('location: /cms/yummy/');
@@ -61,14 +64,15 @@ class AdminYummyController extends BaseCmsController {
     public function list(){
         $this->requireAdmin();
 
-        $error_message = $_SESSION['temp_error'] ?? null;
-        $_SESSION['temp_error'] = null;
+        $error_message = Session::pop("temp_error");
 
         try{
             $view_model = $this->service->getListViewModel();
         }
         catch(Exception $ex){
-            if(!isset($error_message)) $error_message = "Something went wrong try again later.";
+            if(!isset($error_message)) $error_message = '';
+
+            $error_message = $error_message . "\nSomething went wrong try again later.";
         }
 
         require __DIR__ . '/../../../Views/cms/yummy/list.php';
@@ -95,7 +99,7 @@ class AdminYummyController extends BaseCmsController {
             }    
         }
         catch(Exception $ex){    
-            $_SESSION['temp_error'] = "Something went wrong try again later.";
+            Session::set('temp_error', "Something went wrong try again later.");
         }
 
         header('location: /cms/yummy/list');
@@ -120,15 +124,61 @@ class AdminYummyController extends BaseCmsController {
     public function restaurant(){
         $this->requireAdmin();
 
+        $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
+
         try{
             if(!isset($_GET['id'])) throw new InvalidUriException();
 
             $view_model = $this->service->getRestaurantViewModel($_GET['id']);
         }
         catch(Exception $ex){
-            $error_message = "Something went wrong try again later.";
+            if(!isset($error_message)) $error_message = '';
+
+            $error_message = $error_message . "\nSomething went wrong try again later.";
         }
 
         require __DIR__ . '/../../../Views/cms/yummy/restaurant.php';
+    }
+
+    public function editRestaurant(){
+        
+    }
+
+    public function addImage(){
+        $this->requireAdmin();
+
+        print_r($_POST);
+
+        echo 'Files:';
+
+        print_r($_FILES);
+        
+        exit;
+
+        try{
+            if(!isset($_POST['restaurant_id']) || !isset($_FILES['image_add']['tmp_name'])) throw new EmptyFieldException(); 
+                     
+            // Creating image file
+            $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($_FILES['image_add']['name'], PATHINFO_EXTENSION);
+            $path = __DIR__ . '/../../../../public/assets/uploads/yummy/restaurants/' . $file_name;
+            move_uploaded_file($_FILES['image_add']['tmp_name'], $path);    
+
+            // Creating image
+            if($this->service->addRestaurantImage($_POST['restaurant_id'], $file_name)){
+                Session::set('success_message', "Successfully added new image to restaurant.");
+            } 
+        }
+        catch(MaxCountExceededException $ex){
+            Session::set('temp_error', "The maximum count of additional images for restaurant is 11. Delete some images to add a new one's.");
+        }
+        catch(EmptyFieldException $ex){
+            Session::set('temp_error', "You must upload an image in order to add additional images to restaurant.");
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Something went wrong try again later.");
+        }
+
+        header('location: /cms/yummy/restaurant');
     }
 }

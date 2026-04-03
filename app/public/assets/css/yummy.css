@@ -6,6 +6,7 @@
   --ink:#1b1f24;
   --buttercup: #F59E0B;
   --cms-main: #133d14;
+  --cms-main-light: #174d18;
   --cms-alt-main: #0d2a0f;
   --cms-sel: #309531;
 }
@@ -2072,6 +2073,49 @@
     gap: 8px;
 }
 
+.cms-form-subsection-big-label{
+    font-weight: 700;
+    color: #1b2430;
+
+    font-size: 28px;
+}
+
+.cms-opening-hours-container{
+    display: flex;
+
+    flex-direction: column;
+}
+
+.cms-opening-hours-container div{
+    display: flex;
+
+    flex-direction: row;
+
+    justify-items: flex-start;
+    align-items: center;
+
+    margin-bottom: 4px;
+}
+
+.cms-opening-hours-container label{ 
+    width: 90px;
+
+    font-weight: 700;
+    color: #1b2430;
+}
+
+.cms-opening-hours-container input{
+    width: 50%;
+
+    border: 1px solid #d8dbe2;
+    border-radius: 12px;
+
+    padding: 10px 14px;
+
+    font-size: 16px;
+    background: #fff;
+}
+
 .cms-form-label{
     font-weight: 700;
     color: #1b2430;
@@ -2087,7 +2131,7 @@
 }
 
 .cms-text-input{
-    width: 100%;
+    width: 70%;
 
     border: 1px solid #d8dbe2;
     border-radius: 12px;
@@ -2131,7 +2175,7 @@
     border: 1px solid #d8dbe2;
     border-radius: 12px;
 
-    padding: 14px 16px;
+    padding: 8px 16px;
 
     font-size: 18px;
     font-family: Arial;
@@ -2139,87 +2183,188 @@
     background: white;
 }
 
-/* Customize the label (the container) */
-.cms-input-checkbox-container {
-    display: block;
-    position: relative;
-    padding-left: 35px;
-    margin-bottom: 12px;
+.cms-dropdown-input{
+    width: 100px;
+
+    border: 1px solid #d8dbe2;
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    font-size: 16px;
+    background: #fff;
+}
+
+.cms-uri-input-container{
+    display: flex;
+
+    width: 70%;
+
+    justify-content: space-between;
+}
+
+.cms-uri-input-container input{
+    width: calc(80% - 10px);
+
+    margin-right: 10px;
+
+    border: 1px solid #d8dbe2;
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    font-size: 16px;
+    background: #fff;
+}
+
+.cms-uri-input-container button{
+    width: 20%;
+
+    border-style: none;
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 16px;
+
+    color: white;
+
+    background: var(--navy);
+}
+
+.cms-restaurant-images-table{
+    width: min-content;
+}
+
+.cms-restaurant-images-table th:not(:first-child){
+    padding-left: 4px;
+}
+
+.cms-retaurant-image-container{
+    display: flex;
+
+    width: 170px;
+    height: 100px;
+
+    overflow: hidden;
+
+    justify-items: center;
+    align-items: center;
+
+    border-radius: 12px;
+    
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.cms-retaurant-image-container img{
+    width: 100%;
+    height: auto;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-file-image-input{
+    display: flex;
+
+    flex-direction: column;
+
+    width: 170px;
+    max-width: 170px;
+    height: 100px;
+
+    margin-top: 2px;
+    margin-bottom: 2px;
+
+    margin-right: 0;
+    padding-right: 0;
+
+    border: 2px dashed #c7ced9;
+    border-radius: 16px;
+
+    background: #fafbfd;
+
     cursor: pointer;
-    font-size: 22px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+
+    transition: all 0.2s ease;
+
+    align-items: center;
+    justify-items: center;
 }
 
-/* Hide the browser's default checkbox */
-.cms-input-checkbox-container input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-/* Create a custom checkbox */
-.cms-input-checkbox-checkmark {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 36px;
-    width: 36px;
-    background-color: var(--burgundy-light);
-
-    border-radius: 10px;
-}
-
-/* On mouse-over, add a grey background color */
-.cms-input-checkbox-container:hover input ~ .cms-input-checkbox-checkmark {
-    background-color: var(--burgundy);
-}
-
-/* When the checkbox is checked, add a blue background */
-.cms-input-checkbox-container input:checked ~ .cms-input-checkbox-checkmark {
-    background-color: var(--cms-sel);
-}
-
-/* Create the checkmark/indicator (hidden when not checked) */
-.cms-input-checkbox-checkmark:after {
-    content: "";
-    position: absolute;
+.cms-file-image-input input{
     display: none;
 }
 
-/* Show the checkmark when checked */
-.cms-input-checkbox-container input:checked ~ .cms-input-checkbox-checkmark:after {
-    display: block;
+.cms-file-image-input strong{
+    display: flex;
+
+    align-self: center;
+
+    margin: 0;
+    padding: 0;
 }
 
-/* Style the checkmark/indicator */
-.cms-input-checkbox-container input:checked .cms-input-checkbox-checkmark:after {
-    left: 13px;
-    top: 6px;
-    width: 10px;
-    height: 20px;
-    border: solid white;
-    border-width: 0 4px 4px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
+.cms-file-image-input:hover,
+.cms-file-image-input.is-dragover {
+    border-color: var(--cms-sel);
+    background: #fffaf0;
 }
 
-/* Style the checkmark/indicator */
-.cms-input-checkbox-container .cms-input-checkbox-checkmark:after {
-    left: 13px;
-    top: 6px;
-    width: 10px;
-    height: 20px;
-    border: solid white;
-    border-width: 0 4px 4px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
+.cms-file-image-input-preview{
+    display: flex;
+
+    width: calc(100% - 12px);
+    height: calc(100% - 12px);
+
+    justify-self: center;
+
+    justify-items: center;
+    align-items: center;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    padding: 0;
+
+    margin: auto;
+}
+
+.cms-file-image-input-preview img{
+    width: 100%;
+
+    height: auto;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-file-image-input-text{
+    display: flex;
+
+    flex-direction: column;
+
+    align-self: center;
+
+    margin: auto;
+}
+
+.cms-add-new-image{
+    display: flex;
+
+    width: 170px;
+    height: 100px;
+
+    align-items: center;
+    justify-items: center;
+}
+
+.cms-add-new-image span{
+    text-align: center;
+
+    margin: auto;
 }
 
 .cms-submit-button{
@@ -2355,7 +2500,7 @@
 .cms-upload-preview-container{
     width: 30vh;
 
-    height: 15vw;
+    height: 10vw;
 
     overflow: hidden;
 
@@ -2368,6 +2513,65 @@
 
     width: 100%;
     height: 100%;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-restaurant-images-actions-container{
+    display: flex;
+    flex-direction: column;
+
+    justify-items: center;
+    align-items: flex-start;
+
+    width: min-content;
+    height: 100px;
+}
+
+.cms-restaurant-images-delete-button{
+    display: flex;
+
+    padding: 6px 12px;
+
+    background-color: var(--burgundy);
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 17px;
+
+    color: white;
+
+    border-style: none;
+    border-radius: 12px;
+}
+
+.cms-restaurant-images-delete-button:hover{
+    background-color: var(--burgundy-light);
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-restaurant-images-add-button{
+    display: flex;
+
+    padding: 6px 12px;
+
+    background-color: var(--cms-main);
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 17px;
+
+    color: white;
+
+    border-style: none;
+    border-radius: 12px;
+}
+
+.cms-restaurant-images-add-button:hover{
+    background-color: var(--cms-main-light);
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
 }
 
 /* ========== Restaurant List ========== */

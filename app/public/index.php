@@ -13,7 +13,6 @@ use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
 use PHPMailer\PHPMailer\PHPMailer;
 
-$test = new PHPMailer(true);
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
@@ -103,6 +102,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/yummy/list',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editList']);
     $r->addRoute('GET', '/cms/yummy/restaurant-list',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurantList']);
     $r->addRoute('GET', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
+    $r->addRoute('POST', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/image',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
     
     // Stories in Haarlem — public pages
     $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);

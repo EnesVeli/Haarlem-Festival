@@ -88,6 +88,7 @@
 
             if (e.dataTransfer.files.length > 0) {
                 image_input.files = e.dataTransfer.files;
+                previewFile();
             }
         });
     }
