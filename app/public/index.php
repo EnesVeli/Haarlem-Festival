@@ -27,6 +27,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
     
+    //home CMS
+    $r->addRoute('GET',  '/cms/home',              [\App\Controllers\Cms\Home\HomeCmsController::class, 'index']);
+    $r->addRoute('POST', '/cms/home/save-content', [\App\Controllers\Cms\Home\HomeCmsController::class, 'saveContent']);
+    $r->addRoute('POST', '/cms/home/save-event',   [\App\Controllers\Cms\Home\HomeCmsController::class, 'saveEvent']);
+    $r->addRoute('POST', '/cms/home/delete-event', [\App\Controllers\Cms\Home\HomeCmsController::class, 'deleteEvent']);
+
     // Password Reset
     $r->addRoute('GET', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'index']);
     $r->addRoute('POST', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'requestPasswordReset']);
