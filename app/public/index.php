@@ -91,9 +91,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/locations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateLocation']);
     $r->addRoute('GET',  '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
     // History
-    $r->addRoute('GET', '/history',        [\App\Controllers\HistoryController::class, 'index']);
-    $r->addRoute('GET', '/history/{slug}', [\App\Controllers\HistoryController::class, 'detail']);
-    
+    $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
+    $r->addRoute('GET', '/history/booking',  [\App\Controllers\HistoryController::class, 'booking']);
+    $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
+
+    // History CMS
+    $r->addRoute('GET',  '/cms/history',             [\App\Controllers\Cms\History\HistoryCmsController::class, 'index']);
+    $r->addRoute('GET',  '/cms/history/detail/{id}', [\App\Controllers\Cms\History\HistoryCmsController::class, 'detail']);
+    $r->addRoute('POST', '/cms/history/action',      [\App\Controllers\Cms\History\HistoryCmsController::class, 'action']);
     // Yummy
     $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
@@ -122,6 +127,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
 
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+    
+    // Payment
+    $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);
+    $r->addRoute('POST', '/checkout/process',      [\App\Controllers\PaymentController::class, 'process']);
+    $r->addRoute('GET',  '/checkout/confirmation', [\App\Controllers\PaymentController::class, 'confirmation']);
 });
 
 // Fetch method and URI from Server

@@ -1,0 +1,269 @@
+/* ============================================================
+   CHECKOUT PAGE
+   ============================================================ */
+
+.checkout-page {
+    background: #f0ede8;
+    min-height: 100vh;
+    padding: 40px 0 60px;
+}
+
+
+/* ============================================================
+   PROGRESS STEPS
+   ============================================================ */
+
+.progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.step-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+.step-circle.done    { background: #6b7280; color: #fff; }
+.step-circle.active  { background: #8b1a1a; color: #fff; }
+.step-circle.pending { background: #d1d5db; color: #6b7280; }
+
+.step-label        { font-size: .78rem; color: #6b7280; }
+.step-label.active { color: #8b1a1a; font-weight: 700; }
+
+.step-line      { width: 80px; height: 2px; background: #d1d5db; margin-bottom: 20px; }
+.step-line.done { background: #6b7280; }
+
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.checkout-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+}
+
+
+/* ============================================================
+   PAYMENT METHOD TABS
+   ============================================================ */
+
+.pay-methods {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.pay-tab {
+    border: 1.5px solid #ddd;
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: .9rem;
+    font-weight: 500;
+    color: #444;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+.pay-tab:hover  { border-color: #8b1a1a; }
+.pay-tab.active { border-color: #8b1a1a; color: #8b1a1a; font-weight: 700; }
+
+.pay-panel        { display: none; }
+.pay-panel.active { display: block; }
+
+
+/* ============================================================
+   FORM FIELDS
+   ============================================================ */
+
+.field-label {
+    display: block;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.field-input {
+    width: 100%;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: .9rem;
+    color: #333;
+    outline: none;
+    transition: border-color .15s;
+}
+
+.field-input:focus { border-color: #8b1a1a; }
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+
+/* ============================================================
+   CARD LOGOS (VISA / MC / AMEX)
+   ============================================================ */
+
+.card-logos {
+    display: flex;
+    gap: 6px;
+    margin: 8px 0 16px;
+}
+
+.card-logo {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .5px;
+}
+
+.visa { background: #1a1f71; color: #fff; }
+.mc   { background: #eb001b; color: #fff; }
+.amex { background: #007bc1; color: #fff; }
+
+
+/* ============================================================
+   iDEAL
+   ============================================================ */
+
+.ideal-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: .82rem;
+    color: #1e40af;
+    margin-top: 12px;
+}
+
+
+/* ============================================================
+   PAYPAL
+   ============================================================ */
+
+.paypal-logo {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.paypal-logo span {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #003087;
+}
+
+.paypal-logo span em {
+    color: #009cde;
+    font-style: normal;
+}
+
+.paypal-desc {
+    text-align: center;
+    font-size: .82rem;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+
+/* ============================================================
+   ORDER SUMMARY
+   ============================================================ */
+
+.summary-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #8b1a1a;
+    margin-bottom: 16px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0ede8;
+    font-size: .9rem;
+}
+
+.summary-row:last-of-type { border-bottom: none; }
+
+.summary-qty {
+    color: #888;
+    font-size: .82rem;
+    margin-left: 6px;
+}
+
+.summary-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 12px 0 16px;
+    border-top: 2px solid #e8e0d5;
+    margin-top: 4px;
+}
+
+.summary-total-amount {
+    color: #8b1a1a;
+    font-size: 1.1rem;
+}
+
+
+/* ============================================================
+   PAY BUTTON
+   ============================================================ */
+
+.btn-pay {
+    width: 100%;
+    background: #8b1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.btn-pay:hover { background: #6e1414; }
+
+
+/* ============================================================
+   BACK LINK
+   ============================================================ */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: .88rem;
+    color: #666;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.back-link:hover { color: #8b1a1a; }
