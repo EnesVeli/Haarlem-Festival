@@ -12,7 +12,6 @@ class CartController
         $this->cartService = new CartService();
     }
 
-    // ── Guard ────────────────────────────────────────────────────────────────
 
     private function mustBeLoggedIn(): void
     {
@@ -34,8 +33,7 @@ class CartController
         }
     }
 
-    // ── GET /cart ────────────────────────────────────────────────────────────
-
+    // GET /cart
     public function index(): void
     {
         $this->mustBeLoggedIn();
@@ -49,7 +47,7 @@ class CartController
         require __DIR__ . '/../Views/Cart/index.php';
     }
 
-    // ── POST /cart/add ───────────────────────────────────────────────────────
+    // POST /cart/add
 
     public function add(): void
     {
@@ -95,7 +93,7 @@ class CartController
         exit;
     }
 
-    // ── POST /cart/update ────────────────────────────────────────────────────
+    // POST /cart/update 
 
     public function update(): void
     {
@@ -117,8 +115,7 @@ class CartController
         exit;
     }
 
-    // ── POST /cart/remove ────────────────────────────────────────────────────
-
+    //POST /cart/remove
     public function remove(): void
     {
         $this->mustBeLoggedIn();
