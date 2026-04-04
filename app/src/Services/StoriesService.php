@@ -64,4 +64,9 @@ class StoriesService
     {
         return $this->repository->getHomepageContent();
     }
+     /** Returns all schedule sessions that share the same event name */
+    public function getScheduleForEvent(string $name): array
+    {
+        return $this->repository->getScheduleByName($name);
+    }
 }

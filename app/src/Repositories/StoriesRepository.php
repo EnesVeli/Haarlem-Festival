@@ -105,4 +105,18 @@ class StoriesRepository extends Repository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
+    
+    /* Fetches all sessions that share the same event name.*/
+    public function getScheduleByName(string $name): array
+    {
+        $sql = "SELECT event_id, start_time, end_time, language, slug
+                FROM Event
+                WHERE name = :name AND type = :type
+                ORDER BY start_time ASC";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([':name' => $name, ':type' => self::EVENT_TYPE]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }
