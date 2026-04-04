@@ -7,147 +7,110 @@ use App\Framework\Repository;
 
 class HistoryRepository extends Repository
 {
-    public function getAllHighlights()
+    // Returns all highlights (without slugs) — used by the CMS
+    public function getAllHighlights(): array
     {
-        $sql = "SELECT * FROM history_highlights ORDER BY id ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
+        return $this->connection
+            ->query("SELECT * FROM history_highlights ORDER BY id ASC")
+            ->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    // Returns all highlights joined with their detail page slug — used by the front end
+    public function getAllHighlightsWithSlugs(): array
+    {
+        $stmt = $this->connection->prepare("
+            SELECT hh.*, hd.slug
+            FROM history_highlights hh
+            LEFT JOIN history_details hd ON hh.id = hd.highlight_id
+            ORDER BY hh.id ASC
+        ");
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Returns all available tickets grouped by ticket_type.
-     * Shape: ['individual' => [...rows], 'family' => [...rows]]
-     */
+    // Returns available tickets grouped by type: ['individual' => [...], 'family' => [...]]
     public function getAvailableTickets(): array
     {
-        $sql = "SELECT * FROM history_tickets
-                WHERE available_spots > 0
-                ORDER BY ticket_type ASC, time_slot ASC";
-        $stmt = $this->connection->prepare($sql);
+        $stmt = $this->connection->prepare("
+            SELECT * FROM history_tickets
+            WHERE available_spots > 0
+            ORDER BY ticket_type ASC, time_slot ASC
+        ");
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $grouped = ['individual' => [], 'family' => []];
-        foreach ($rows as $row) {
-            $type = $row['ticket_type'] ?? 'individual';
-            $grouped[$type][] = $row;
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $grouped[$row['ticket_type'] ?? 'individual'][] = $row;
         }
+
         return $grouped;
     }
 
-    public function getContentBySection($section)
+    // Returns a single content row for a given section key (e.g. 'hero', 'intro')
+    public function getContentBySection(string $section): array|false
     {
-        $sql = "SELECT * FROM history_content WHERE section = :section LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':section', $section, PDO::PARAM_STR);
-        $stmt->execute();
-
+        $stmt = $this->connection->prepare("
+            SELECT * FROM history_content WHERE section = :section LIMIT 1
+        ");
+        $stmt->execute([':section' => $section]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getAllContent()
+    // Returns all content rows (used by the ViewModel to organise by section key)
+    public function getAllContent(): array
     {
-        $sql = "SELECT * FROM history_content ORDER BY id ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->connection
+            ->query("SELECT * FROM history_content ORDER BY id ASC")
+            ->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get detail page by slug
-     */
-    public function getDetailBySlug($slug)
+    // Returns a detail page row joined with its parent highlight, looked up by URL slug
+    public function getDetailBySlug(string $slug): array|false
     {
-        $sql = "SELECT hd.*, hh.title as highlight_title, hh.description as highlight_description
-                FROM history_details hd
-                LEFT JOIN history_highlights hh ON hd.highlight_id = hh.id
-                WHERE hd.slug = :slug
-                LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':slug', $slug, PDO::PARAM_STR);
-        $stmt->execute();
-
+        $stmt = $this->connection->prepare("
+            SELECT hd.*, hh.title AS highlight_title, hh.description AS highlight_description
+            FROM history_details hd
+            LEFT JOIN history_highlights hh ON hd.highlight_id = hh.id
+            WHERE hd.slug = :slug
+            LIMIT 1
+        ");
+        $stmt->execute([':slug' => $slug]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get all sections for a detail page
-     */
-    public function getDetailSections($detailId)
+    // Returns all content sections for a detail page, ordered by sort_order
+    public function getDetailSections(int $detailId): array
     {
-        $sql = "SELECT * FROM history_detail_sections 
-                WHERE detail_id = :detail_id 
-                ORDER BY sort_order ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':detail_id', $detailId, PDO::PARAM_INT);
-        $stmt->execute();
-
+        $stmt = $this->connection->prepare("
+            SELECT * FROM history_detail_sections
+            WHERE detail_id = :detail_id
+            ORDER BY sort_order ASC
+        ");
+        $stmt->execute([':detail_id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get gallery images for a detail page
-     */
-    public function getDetailGallery($detailId)
+    // Returns all gallery images for a detail page, ordered by sort_order
+    public function getDetailGallery(int $detailId): array
     {
-        $sql = "SELECT * FROM history_detail_gallery 
-                WHERE detail_id = :detail_id 
-                ORDER BY sort_order ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':detail_id', $detailId, PDO::PARAM_INT);
-        $stmt->execute();
-
+        $stmt = $this->connection->prepare("
+            SELECT * FROM history_detail_gallery
+            WHERE detail_id = :detail_id
+            ORDER BY sort_order ASC
+        ");
+        $stmt->execute([':detail_id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get quick facts for a detail page
-     */
-    public function getDetailFacts($detailId)
+    // Returns all quick facts for a detail page, ordered by sort_order
+    public function getDetailFacts(int $detailId): array
     {
-        $sql = "SELECT * FROM history_detail_facts 
-                WHERE detail_id = :detail_id 
-                ORDER BY sort_order ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':detail_id', $detailId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Get highlight by ID with slug
-     */
-    public function getHighlightWithSlug($highlightId)
-    {
-        $sql = "SELECT hh.*, hd.slug 
-                FROM history_highlights hh
-                LEFT JOIN history_details hd ON hh.id = hd.highlight_id
-                WHERE hh.id = :id
-                LIMIT 1";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':id', $highlightId, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Get all highlights with their slugs for linking
-     */
-    public function getAllHighlightsWithSlugs()
-    {
-        $sql = "SELECT hh.*, hd.slug 
-                FROM history_highlights hh
-                LEFT JOIN history_details hd ON hh.id = hd.highlight_id
-                ORDER BY hh.id ASC";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute();
-
+        $stmt = $this->connection->prepare("
+            SELECT * FROM history_detail_facts
+            WHERE detail_id = :detail_id
+            ORDER BY sort_order ASC
+        ");
+        $stmt->execute([':detail_id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

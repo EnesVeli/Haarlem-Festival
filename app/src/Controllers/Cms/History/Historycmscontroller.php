@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers\Cms\History;
 
 use App\Repositories\HistoryCmsRepository;
@@ -13,6 +14,7 @@ class HistoryCmsController
         $this->requireAdmin();
     }
 
+    // Blocks anyone who isn't logged in as admin
     private function requireAdmin(): void
     {
         if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
@@ -22,7 +24,7 @@ class HistoryCmsController
         }
     }
 
-    // GET /cms/history
+    // GET /cms/history — main dashboard with all tabs
     public function index(): void
     {
         $highlights = $this->repo->getAllHighlights();
@@ -33,40 +35,39 @@ class HistoryCmsController
         require __DIR__ . '/../../../Views/cms/history/index.php';
     }
 
-    // GET /cms/history/detail/{id}
+    // GET /cms/history/detail/{id} — edit or create a highlight detail page
     public function detail(array $vars): void
     {
         $id         = (int)($vars['id'] ?? 0);
         $detail     = $id > 0 ? $this->repo->getDetailById($id) : [];
         $highlights = $this->repo->getAllHighlights();
         $sections   = $id > 0 ? $this->repo->getDetailSections($id) : [];
-        $gallery    = $id > 0 ? $this->repo->getDetailGallery($id)   : [];
-        $facts      = $id > 0 ? $this->repo->getDetailFacts($id)     : [];
+        $gallery    = $id > 0 ? $this->repo->getDetailGallery($id)  : [];
+        $facts      = $id > 0 ? $this->repo->getDetailFacts($id)    : [];
 
         require __DIR__ . '/../../../Views/cms/history/detail.php';
     }
 
-    // POST /cms/history/action  — handles all CRUD via _action field
+    // POST /cms/history/action — single entry point for all CMS form submissions
     public function action(): void
     {
         $action = $_POST['_action'] ?? '';
 
         switch ($action) {
-            case 'save_highlight':   $this->saveHighlight();  break;
+            case 'save_highlight':   $this->saveHighlight();   break;
             case 'delete_highlight': $this->deleteHighlight(); break;
-            case 'save_ticket':      $this->saveTicket();     break;
-            case 'delete_ticket':    $this->deleteTicket();   break;
-            case 'save_content':     $this->saveContent();    break;
-            case 'save_detail':      $this->saveDetail();     break;
-            case 'delete_detail':    $this->deleteDetail();   break;
-            case 'save_section':     $this->saveSection();    break;
-            case 'delete_section':   $this->deleteSection();  break;
-            case 'add_gallery':      $this->addGallery();     break;
-            case 'delete_gallery':   $this->deleteGallery();  break;
-            case 'save_fact':        $this->saveFact();       break;
-            case 'delete_fact':      $this->deleteFact();     break;
-            default:
-                $this->redirect('/cms/history');
+            case 'save_ticket':      $this->saveTicket();      break;
+            case 'delete_ticket':    $this->deleteTicket();    break;
+            case 'save_content':     $this->saveContent();     break;
+            case 'save_detail':      $this->saveDetail();      break;
+            case 'delete_detail':    $this->deleteDetail();    break;
+            case 'save_section':     $this->saveSection();     break;
+            case 'delete_section':   $this->deleteSection();   break;
+            case 'add_gallery':      $this->addGallery();      break;
+            case 'delete_gallery':   $this->deleteGallery();   break;
+            case 'save_fact':        $this->saveFact();        break;
+            case 'delete_fact':      $this->deleteFact();      break;
+            default:                 $this->redirect('/cms/history');
         }
     }
 
@@ -77,12 +78,12 @@ class HistoryCmsController
         $id    = (int)($_POST['id'] ?? 0);
         $title = trim($_POST['title'] ?? '');
         $desc  = trim($_POST['description'] ?? '');
-        $image = null;
 
+        // Keep the existing image if no new file was uploaded
         if (!empty($_FILES['image']['tmp_name'])) {
             $image = $this->uploadFile($_FILES['image']);
-        } elseif ($id > 0) {
-            $existing = $this->repo->getHighlightById($id);
+        } else {
+            $existing = $id > 0 ? $this->repo->getHighlightById($id) : [];
             $image    = $existing['image'] ?? null;
         }
 
@@ -110,10 +111,15 @@ class HistoryCmsController
         $price = (float)($_POST['price'] ?? 0);
         $spots = (int)($_POST['available_spots'] ?? 0);
 
+        // Only allow known types; default to individual
+        $type = in_array($_POST['ticket_type'] ?? '', ['individual', 'family'])
+            ? $_POST['ticket_type']
+            : 'individual';
+
         if ($id > 0) {
-            $this->repo->updateTicket($id, $slot, $price, $spots);
+            $this->repo->updateTicket($id, $slot, $type, $price);
         } else {
-            $this->repo->createTicket($slot, $price, $spots);
+            $this->repo->createTicket($slot, $type, $price);
         }
 
         $this->redirect('/cms/history#tab-tickets', 'Ticket slot saved.');
@@ -129,14 +135,14 @@ class HistoryCmsController
 
     private function saveContent(): void
     {
-        $sections = ['hero', 'intro', 'walk', 'cta'];
-
-        foreach ($sections as $s) {
+        foreach (['hero', 'intro', 'walk', 'cta'] as $s) {
             $title    = trim($_POST["{$s}_title"]    ?? '');
             $subtitle = trim($_POST["{$s}_subtitle"] ?? '');
-            $image    = $_POST["{$s}_img_current"]   ?? null;
-            $imgLeft  = $_POST["{$s}_img_left_current"]  ?? null;
-            $imgRight = $_POST["{$s}_img_right_current"] ?? null;
+
+            // Keep current images unless new ones were uploaded
+            $image    = $_POST["{$s}_img_current"]        ?? null;
+            $imgLeft  = $_POST["{$s}_img_left_current"]   ?? null;
+            $imgRight = $_POST["{$s}_img_right_current"]  ?? null;
 
             if (!empty($_FILES["{$s}_image"]['tmp_name'])) {
                 $image = $this->uploadFile($_FILES["{$s}_image"]);
@@ -171,10 +177,11 @@ class HistoryCmsController
             'meta_description' => trim($_POST['meta_description'] ?? ''),
         ];
 
+        // Keep the existing hero image if no new file was uploaded
         if (!empty($_FILES['hero_image']['tmp_name'])) {
             $data['hero_image'] = $this->uploadFile($_FILES['hero_image']);
         } elseif ($id > 0) {
-            $existing = $this->repo->getDetailById($id);
+            $existing           = $this->repo->getDetailById($id);
             $data['hero_image'] = $existing['hero_image'] ?? null;
         }
 
@@ -199,22 +206,22 @@ class HistoryCmsController
     {
         $id       = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
-        $image    = null;
 
+        // Keep the existing image if no new file was uploaded
         if (!empty($_FILES['image_path']['tmp_name'])) {
             $image = $this->uploadFile($_FILES['image_path']);
-        } elseif ($id > 0) {
-            $existing = $this->repo->getSectionById($id);
+        } else {
+            $existing = $id > 0 ? $this->repo->getSectionById($id) : [];
             $image    = $existing['image_path'] ?? null;
         }
 
         $data = [
-            ':detail_id'    => $detailId,
-            ':section_type'  => trim($_POST['section_type'] ?? ''),
+            ':detail_id'     => $detailId,
+            ':section_type'  => trim($_POST['section_type']  ?? ''),
             ':section_title' => trim($_POST['section_title'] ?? ''),
-            ':content'       => trim($_POST['content'] ?? ''),
+            ':content'       => trim($_POST['content']       ?? ''),
             ':image_path'    => $image,
-            ':sort_order'    => (int)($_POST['sort_order'] ?? 0),
+            ':sort_order'    => (int)($_POST['sort_order']   ?? 0),
         ];
 
         if ($id > 0) {
@@ -237,17 +244,14 @@ class HistoryCmsController
 
     private function addGallery(): void
     {
-        $detailId  = (int)($_POST['detail_id'] ?? 0);
-        $caption   = trim($_POST['caption'] ?? '');
-        $sortOrder = (int)($_POST['sort_order'] ?? 0);
-        $imagePath = '';
+        $detailId = (int)($_POST['detail_id'] ?? 0);
+        $caption  = trim($_POST['caption']    ?? '');
+        $order    = (int)($_POST['sort_order'] ?? 0);
 
+        // Only save if an image was actually uploaded
         if (!empty($_FILES['image_path']['tmp_name'])) {
             $imagePath = $this->uploadFile($_FILES['image_path']);
-        }
-
-        if ($imagePath) {
-            $this->repo->createGalleryImage($detailId, $imagePath, $caption, $sortOrder);
+            $this->repo->createGalleryImage($detailId, $imagePath, $caption, $order);
         }
 
         $this->redirect("/cms/history/detail/{$detailId}", 'Image added.');
@@ -265,14 +269,14 @@ class HistoryCmsController
 
     private function saveFact(): void
     {
-        $id       = (int)($_POST['id'] ?? 0);
+        $id       = (int)($_POST['id']        ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
 
         $data = [
             ':detail_id'  => $detailId,
-            ':icon'       => trim($_POST['icon'] ?? ''),
-            ':label'      => trim($_POST['label'] ?? ''),
-            ':value'      => trim($_POST['value'] ?? ''),
+            ':icon'       => trim($_POST['icon']       ?? ''),
+            ':label'      => trim($_POST['label']      ?? ''),
+            ':value'      => trim($_POST['value']      ?? ''),
             ':sort_order' => (int)($_POST['sort_order'] ?? 0),
         ];
 
@@ -295,19 +299,29 @@ class HistoryCmsController
 
     // ── Helpers ───────────────────────────────────────────────────────────
 
+    // Saves an uploaded file to the History uploads folder and returns its filename
     private function uploadFile(array $file): string
     {
         $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
-        if (!is_dir($dir)) mkdir($dir, 0755, true);
+
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         $ext      = pathinfo($file['name'], PATHINFO_EXTENSION);
         $filename = time() . '_' . uniqid() . '.' . $ext;
         move_uploaded_file($file['tmp_name'], $dir . $filename);
+
         return $filename;
     }
 
+    // Redirects to a URL and optionally sets a flash success message
     private function redirect(string $url, string $flash = ''): void
     {
-        if ($flash) $_SESSION['flash'] = $flash;
+        if ($flash) {
+            $_SESSION['flash'] = $flash;
+        }
+
         header('Location: ' . $url);
         exit;
     }

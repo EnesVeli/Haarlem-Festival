@@ -13,28 +13,21 @@ class HistoryService
         $this->repository = new HistoryRepository();
     }
 
-    public function getHighlights()
-    {
-        return $this->repository->getAllHighlightsWithSlugs();
-    }
-
-    /**
-     * Returns only individual time-slot tickets.
-     * Used by the index page sidebar to display available slots.
-     */
+    // Used by the index page — returns only individual time-slot tickets (flat array)
     public function getTickets(): array
     {
-        $grouped = $this->repository->getAvailableTickets();
-        return $grouped['individual'] ?? [];
+        return $this->getGroupedTickets()['individual'];
     }
 
-    /**
-     * Returns tickets grouped by type: ['individual' => [...], 'family' => [...]]
-     * Used by the booking page so both prices come from the DB.
-     */
+    // Used by the booking page — returns tickets split into ['individual' => [...], 'family' => [...]]
     public function getGroupedTickets(): array
     {
         return $this->repository->getAvailableTickets();
+    }
+
+    public function getHighlights(): array
+    {
+        return $this->repository->getAllHighlightsWithSlugs();
     }
 
     public function getContent(): array
@@ -42,15 +35,13 @@ class HistoryService
         return $this->repository->getAllContent();
     }
 
-    public function getContentBySection($section)
+    public function getContentBySection(string $section): array|false
     {
         return $this->repository->getContentBySection($section);
     }
 
-    /**
-     * Get complete detail page data
-     */
-    public function getDetailPage($slug)
+    // Returns all data needed to render a highlight's detail page
+    public function getDetailPage(string $slug): ?array
     {
         $detail = $this->repository->getDetailBySlug($slug);
 
@@ -66,17 +57,13 @@ class HistoryService
         ];
     }
 
-    /**
-     * Get other highlights to show in "Complete Your Journey" section
-     */
-    public function getOtherHighlights($currentSlug, $limit = 2)
+    // Returns up to $limit other highlights for the "Complete Your Journey" section
+    public function getOtherHighlights(string $currentSlug, int $limit = 2): array
     {
-        $allHighlights = $this->repository->getAllHighlightsWithSlugs();
+        $all = $this->repository->getAllHighlightsWithSlugs();
 
-        $others = array_filter($allHighlights, function ($h) use ($currentSlug) {
-            return $h['slug'] !== $currentSlug && !empty($h['slug']);
-        });
+        $others = array_filter($all, fn($h) => $h['slug'] !== $currentSlug && !empty($h['slug']));
 
-        return array_slice($others, 0, $limit);
+        return array_slice(array_values($others), 0, $limit);
     }
 }
