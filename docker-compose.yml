@@ -15,6 +15,7 @@ services:
             context: .
             dockerfile: PHP.Dockerfile
         volumes:
+            - ./localpath/php.ini:/usr/local/etc/php/conf.d/custom.ini
             - ./app:/app
     mysql:
         image: mariadb:latest

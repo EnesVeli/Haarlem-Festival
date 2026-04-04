@@ -104,6 +104,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant/image',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']);
     
     // Stories in Haarlem — public pages
     $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);

@@ -1267,6 +1267,8 @@
     gap: 8px;
 
     margin: auto;
+
+    width: 100%;
 }
 
 .restaurant-main-image-container{
@@ -1290,11 +1292,25 @@
 
     width: calc(50% - 4px);
 
+    aspect-ratio : 5 / 4;
+
+    justify-items: center;
+    align-items: center;
+
     overflow: hidden;
+    
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .restaurant-sub-image{
+    display: flex;
     position: relative;
+
+    height: 100%;
+    width: 100%;
+
+    object-fit: cover;
 }
 
 .restaurant-main-image{

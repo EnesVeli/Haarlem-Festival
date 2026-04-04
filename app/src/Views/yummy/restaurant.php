@@ -18,13 +18,30 @@
                 <img class="restaurant-main-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->restaurant->main_img_path; ?>">
             </div>
             <? if(count($view_model->images) > 0): ?>
-                <div class="restaurant-images-container">
-                    <? foreach($view_model->images as $image): ?>
-                        <div class="restaurant-sub-image-container">
-                            <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $image->path; ?>">
-                        </div>                      
-                    <? endforeach; ?>
-                </div>
+                <? if(count($view_model->images) > 5): ?>
+                    <div class="restaurant-images-container">
+                        <? for($i = 0; $i < 5; $i++): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
+                            </div>                      
+                        <? endfor; ?>
+                    </div>
+                    <div class="restaurant-images-container">
+                        <? for($i = 5; $i < count($view_model->images); $i++): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
+                            </div>                      
+                        <? endfor; ?>
+                    </div>
+                <? else: ?>
+                    <div class="restaurant-images-container">
+                        <? foreach($view_model->images as $image): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $image->path; ?>">
+                            </div>                      
+                        <? endforeach; ?>
+                    </div>
+                <? endif; ?>
             <? endif; ?>
             <div class="restaurant-main-text"><? echo htmlspecialchars($view_model->restaurant->text)?></div>
             <? if(count($view_model->dishes) > 0): ?>

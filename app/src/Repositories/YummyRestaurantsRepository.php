@@ -28,9 +28,16 @@ class YummyRestaurantsRepository extends Repository
      * @param int $restaurant_id id of searched restaurant.
      * @return ?Restaurant returns restaurant object if found, null if not.
      */
-    public function getRestaurantById(string $restaurant_id): ?Restaurant
+    public function getRestaurantById(string $restaurant_id, bool $admin = true): ?Restaurant
     {
-        $stmt = $this->connection->prepare("SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id AND `active` = 1");
+        if($admin){
+            $sql = "SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id;";
+        }
+        else{
+            $sql = "SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id AND `active` = 1;";
+        }
+
+        $stmt = $this->connection->prepare($sql);
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
@@ -421,5 +428,47 @@ class YummyRestaurantsRepository extends Repository
         $res = $stmt->fetch(PDO::FETCH_DEFAULT);
 
         return $res == false ? null : $res[0];
+    }
+
+    /**
+     * Deletes an additional image of restaurant by image_id.
+     * @param int $image_id id deleted restaurant image.
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function deleteRestaurantImage(int $image_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `YummyRestaurantImages` WHERE `image_id` = :image_id;");
+
+        return $stmt->execute(['image_id' => $image_id]);
+    }
+
+    /**
+     * Edits restaurant in db.
+     * @param int $restaurant_id id of edited restaurant.
+     * @param array $args associative array of fields that should be changed: field_name => field_value (if array key do not match db names, throws error).
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function editRestaurant(int $restaurant_id, array $args) : bool {
+        if(count($args) == 0) return true;
+
+        // Get keys
+        $keys = array_keys($args);
+
+        // Prepare sql query
+        $sql = 'UPDATE `YummyRestaurants` SET `' . $keys[0] .'`=:' . $keys[0];
+
+        for($i = 1; $i < count($keys); ++$i) {
+            $sql = $sql . ', `' . $keys[$i] .'`=' . $keys[$i] == 'active' ? 'b' : '' . ':' . $keys[$i];
+        }
+
+        $sql = $sql . ' WHERE `restaurant_id` = :restaurant_id;';
+
+        $args['restaurant_id'] = $restaurant_id;
+
+        print_r($args); echo $sql; exit; // Debug!
+
+        // Execute
+        $stmt = $this->connection->prepare($sql);
+
+        return $stmt->execute($args);
     }
 }

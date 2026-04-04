@@ -5,6 +5,7 @@ namespace App\Controllers\Cms\Yummy;
 use App\Controllers\Cms\BaseCmsController;
 use App\Framework\Session;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\FileToLargeException;
 use App\Models\Exceptions\MaxCountExceededException;
 use App\Services\Yummy\YummyCmsService;
 use Exception;
@@ -142,32 +143,62 @@ class AdminYummyController extends BaseCmsController {
     }
 
     public function editRestaurant(){
-        
+        $this->requireAdmin();
+
+        try{    
+            $this->service->editRestaurant($_POST, $_FILES);
+
+            Session::set('temp_success', "Successfully edited restaurant.");
+
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+            exit;
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Restaurant edit failed! Something went wrong, try again later." . $ex->getMessage());
+        }
+
+        if(isset($_POST['restaurant_id'])){
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+        }
+        else{
+            header('location: /cms/yummy/restaurant-list');
+        }
     }
 
     public function addImage(){
         $this->requireAdmin();
 
-        print_r($_POST);
+        /*$inipath = php_ini_loaded_file();
 
-        echo 'Files:';
-
-        print_r($_FILES);
-        
-        exit;
+        if ($inipath) {
+            echo 'Loaded php.ini: ' . $inipath;
+        } else {
+        echo 'A php.ini file is not loaded';
+        }*/
 
         try{
-            if(!isset($_POST['restaurant_id']) || !isset($_FILES['image_add']['tmp_name'])) throw new EmptyFieldException(); 
+            if(!isset($_POST['restaurant_id']) || !isset($_FILES['image_add'])) throw new EmptyFieldException(); 
+
+            if(empty($_FILES['image_add']['tmp_name'])) throw new FileToLargeException();
                      
             // Creating image file
             $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($_FILES['image_add']['name'], PATHINFO_EXTENSION);
             $path = __DIR__ . '/../../../../public/assets/uploads/yummy/restaurants/' . $file_name;
             move_uploaded_file($_FILES['image_add']['tmp_name'], $path);    
 
+            //echo 'pathinfo: ' . pathinfo($_FILES['image_add']['name'], PATHINFO_EXTENSION) . "\n file_name: " . $file_name . "\n file_path: " . $path . "\n tmp: " . $_FILES['image_add']['tmp_name'];
+            //exit;
+
             // Creating image
             if($this->service->addRestaurantImage($_POST['restaurant_id'], $file_name)){
-                Session::set('success_message', "Successfully added new image to restaurant.");
+                Session::set('temp_success', "Successfully added new image to restaurant.");
             } 
+
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+            exit;
+        }
+        catch(FileToLargeException $ex){
+            Session::set('temp_error', "Faild to add image to restaurant. The file size is too big. Max file size is 8 megabytes.");
         }
         catch(MaxCountExceededException $ex){
             Session::set('temp_error', "The maximum count of additional images for restaurant is 11. Delete some images to add a new one's.");
@@ -179,6 +210,36 @@ class AdminYummyController extends BaseCmsController {
             Session::set('temp_error', "Something went wrong try again later.");
         }
 
-        header('location: /cms/yummy/restaurant');
+        if(isset($_POST['restaurant_id'])){
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+        }
+        else{
+            header('location: /cms/yummy/restaurant-list');
+        }
+    }
+
+    public function deleteImage(){
+        $this->requireAdmin();
+
+        try{
+            if(!isset($_POST['restaurant_id']) || !isset($_POST['image_id'])) throw new EmptyFieldException(); 
+                    
+            if($this->service->removeRestaurantImage($_POST['image_id'])){
+                Session::set('temp_success', "Successfully deleted image of restaurant.");
+            } 
+
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+            exit;
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Image delete failed! Something went wrong, try again later.");
+        }
+
+        if(isset($_POST['restaurant_id'])){
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+        }
+        else{
+            header('location: /cms/yummy/restaurant-list');
+        }
     }
 }

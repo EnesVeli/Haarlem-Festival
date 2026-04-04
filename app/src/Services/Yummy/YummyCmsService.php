@@ -3,6 +3,8 @@
 namespace App\Services\Yummy;
 
 use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\DBDataException;
+use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\MaxCountExceededException;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyRestaurantsRepository;
@@ -164,12 +166,48 @@ class YummyCmsService {
         $count = $this->restaurant_rep->countRestaurantImages($restaurant_id);
 
         if($count == null) throw new DBAccessException();
-        if($count >= 11) throw new MaxCountExceededException();
+        if($count >= 10) throw new MaxCountExceededException();
 
         $res = $this->restaurant_rep->createRestaurantImage($restaurant_id, $image_path);
 
         if($res == null) throw new DBAccessException();
 
         return $res;
+    }
+
+    public function removeRestaurantImage(int $image_id) : bool {
+        return $this->restaurant_rep->deleteRestaurantImage($image_id);
+    }
+
+    public function editRestaurant($post, $files){
+        if($post['restaurant_id'] == null) throw new EmptyFieldException();
+        $restaurant_id = $post['restaurant_id'];
+
+        $res = $this->restaurant_rep->getRestaurantById($restaurant_id);
+        if($res == null) throw new DBDataException();
+
+        $args = array();
+
+        if(isset($post['name']) && $post['name'] != $res->name) $args['name'] = $post['name'];
+
+        if(isset($post['active']) && $post['active'] != $res->active) $args['active'] = $post['active'];
+        
+        if(isset($post['rating']) && $post['rating'] != $res->rating) $args['rating'] = $post['rating'];
+
+        if(isset($post['cost_rating']) && $post['cost_rating'] != $res->cost_rating) $args['cost_rating'] = $post['cost_rating'];
+        
+        if(isset($post['mini_text']) && $post['mini_text'] != $res->mini_text) $args['mini_text'] = $post['mini_text'];
+
+        if(isset($post['text']) && $post['text'] != $res->text) $args['text'] = $post['text'];
+
+        if(isset($post['address_text']) && $post['address_text'] != $res->address_text) $args['address_text'] = $post['address_text'];
+
+        if(isset($post['address_uri']) && $post['address_uri'] != $res->address_uri) $args['address_uri'] = $post['address_uri'];
+
+        if(isset($post['website_link']) && $post['website_link'] != $res->website_link) $args['website_link'] = $post['website_link'];
+
+        if(!$this->restaurant_rep->editRestaurant($restaurant_id, $args)) throw new DBAccessException();
+
+        //if(isset($post['address_uri']) && $post['address_uri'] != $res->address_uri) $args['address_uri'] = $post['address_uri'];
     }
 }
