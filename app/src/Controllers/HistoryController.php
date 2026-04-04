@@ -54,11 +54,17 @@ class HistoryController
     }
 
     public function booking(): void
-     {
-    $ticketId = (int)($_GET['ticket_id'] ?? 0);
-    $tickets  = $this->service->getTickets();
-    $ticket   = array_values(array_filter($tickets, fn($t) => $t['id'] === $ticketId))[0] ?? ($tickets[0] ?? []);
+{
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+
+    $eventId   = (int)($_GET['event_id'] ?? 138); // Event table ID
+    $typeId    = (int)($_GET['type_id']  ?? 138); // Ticket_Type table ID
+    $tickets   = $this->service->getTickets();
+    $ticket    = array_values(array_filter($tickets, fn($t) => $t['id'] === (int)($_GET['ticket_id'] ?? 1)))[0] ?? ($tickets[0] ?? []);
+    $csrfToken = $_SESSION['csrf_token'];
 
     require __DIR__ . '/../Views/history/booking.php';
-     }
+}
 }

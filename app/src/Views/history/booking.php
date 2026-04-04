@@ -221,12 +221,12 @@ function addToCart() {
   form.method = 'POST';
   form.action = '/cart/add';
   const fields = {
-    event_type: 'history',
-    event_id: '<?= $_GET['ticket_id'] ?? 1 ?>',
-    ticket_type: 'single',
+    csrf_token: '<?= htmlspecialchars($csrfToken) ?>',
+    event_id: '<?= $eventId ?>',
+    ticket_type_id: '<?= $typeId ?>',
     quantity: qty.individual + qty.family,
-    price: (qty.individual * prices.individual + qty.family * prices.family).toFixed(2)
-  };
+    redirect_back: '/cart'
+};
   for (const [k, v] of Object.entries(fields)) {
     const input = document.createElement('input');
     input.type = 'hidden'; input.name = k; input.value = v;
