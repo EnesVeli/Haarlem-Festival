@@ -1,0 +1,248 @@
+/* ============================================================
+   booking.css  —  History guided tour booking page
+   ============================================================ */
+
+.booking-back {
+    padding: 14px 0;
+    font-size: .9rem;
+}
+.booking-back a {
+    color: #8b1a1a;
+    text-decoration: none;
+}
+.booking-back a:hover {
+    text-decoration: underline;
+}
+
+.booking-wrapper {
+    background: #f8f5f0;
+    min-height: 60vh;
+    padding: 40px 0 60px;
+}
+
+.booking-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, .08);
+}
+
+.booking-title {
+    font-family: 'Playfair Display', serif;
+    color: #8b1a1a;
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.booking-subtitle {
+    color: #8b1a1a;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 32px;
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid #e8e0d5;
+    margin: 24px 0;
+}
+
+/* ── Tour info box ─────────────────────────────────────── */
+.tour-info-box {
+    border: 2px solid #c9a84c;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+
+.tour-info-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: .95rem;
+}
+
+.tour-info-row:last-child {
+    margin-bottom: 0;
+}
+
+.tour-info-label {
+    color: #555;
+    min-width: 100px;
+}
+
+.tour-info-value {
+    color: #222;
+    font-weight: 500;
+}
+
+/* ── Language selector ─────────────────────────────────── */
+.language-title {
+    color: #c9a84c;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.language-option {
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color .2s;
+}
+
+.language-option:hover,
+.language-option.selected {
+    border-color: #c9a84c;
+}
+
+.language-option input[type=radio] {
+    accent-color: #c9a84c;
+    width: 18px;
+    height: 18px;
+}
+
+.language-name {
+    font-weight: 600;
+    font-size: .95rem;
+}
+
+.guide-name {
+    color: #8b1a1a;
+    font-weight: 600;
+    font-size: .85rem;
+    margin-top: 2px;
+}
+
+/* ── Note box ──────────────────────────────────────────── */
+.note-box {
+    background: #fffbf0;
+    border-left: 3px solid #c9a84c;
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: .85rem;
+    color: #555;
+    margin-top: 20px;
+}
+
+.note-box strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+/* ── Ticket selector ───────────────────────────────────── */
+.tickets-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 20px;
+}
+
+.ticket-option {
+    border: 1.5px solid #c9a84c;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-name {
+    font-weight: 700;
+    font-size: .95rem;
+}
+
+.ticket-desc {
+    font-size: .8rem;
+    color: #777;
+    margin-top: 2px;
+}
+
+.ticket-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 16px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    border-color: #8b1a1a;
+}
+
+.qty-val {
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* ── Order summary ─────────────────────────────────────── */
+.summary-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: .9rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #8b1a1a;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+/* ── Action buttons ────────────────────────────────────── */
+.btn-cancel {
+    border: 1.5px solid #ccc;
+    background: #fff;
+    color: #555;
+    border-radius: 6px;
+    padding: 10px 24px;
+    font-size: .95rem;
+    cursor: pointer;
+}
+
+.btn-book-confirm {
+    background: #8b1a1a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 32px;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    flex: 1;
+    margin-left: 10px;
+}
+
+.btn-book-confirm:hover {
+    background: #6e1414;
+}

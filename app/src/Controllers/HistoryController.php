@@ -23,7 +23,7 @@ class HistoryController
         $viewModel = new HistoryIndexViewModel(
             $this->service->getHighlights(),
             $this->service->getTickets(),
-            $this->service->getContent()   // returns raw rows — ViewModel organizes them
+            $this->service->getContent()
         );
 
         require __DIR__ . '/../Views/history/index.php';
@@ -54,17 +54,37 @@ class HistoryController
     }
 
     public function booking(): void
-{
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        // Date and time passed from the index page slot selector
+        $selectedDate = $_GET['date'] ?? '';
+        $selectedTime = $_GET['time'] ?? '';
+
+        $eventId = (int)($_GET['event_id'] ?? 138);
+        $typeId  = (int)($_GET['type_id']  ?? 138);
+
+        // Get tickets grouped by type for the booking page
+        $ticketGroups     = $this->service->getGroupedTickets();
+        $individualTicket = null;
+
+        // Match the selected time slot to the correct individual ticket row
+        foreach ($ticketGroups['individual'] as $t) {
+            if ($t['time_slot'] === $selectedTime) {
+                $individualTicket = $t;
+                break;
+            }
+        }
+        // Fall back to first individual ticket if no match
+        if (!$individualTicket) {
+            $individualTicket = $ticketGroups['individual'][0] ?? null;
+        }
+
+        $familyTicket = $ticketGroups['family'][0] ?? null;
+        $csrfToken    = $_SESSION['csrf_token'];
+
+        require __DIR__ . '/../Views/history/booking.php';
     }
-
-    $eventId   = (int)($_GET['event_id'] ?? 138); // Event table ID
-    $typeId    = (int)($_GET['type_id']  ?? 138); // Ticket_Type table ID
-    $tickets   = $this->service->getTickets();
-    $ticket    = array_values(array_filter($tickets, fn($t) => $t['id'] === (int)($_GET['ticket_id'] ?? 1)))[0] ?? ($tickets[0] ?? []);
-    $csrfToken = $_SESSION['csrf_token'];
-
-    require __DIR__ . '/../Views/history/booking.php';
-}
 }

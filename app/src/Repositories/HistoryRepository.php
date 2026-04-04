@@ -16,13 +16,26 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAvailableTickets()
+    /**
+     * Returns all available tickets grouped by ticket_type.
+     * Shape: ['individual' => [...rows], 'family' => [...rows]]
+     */
+    public function getAvailableTickets(): array
     {
-        $sql = "SELECT * FROM history_tickets WHERE available_spots > 0 ORDER BY time_slot ASC";
+        $sql = "SELECT * FROM history_tickets
+                WHERE available_spots > 0
+                ORDER BY ticket_type ASC, time_slot ASC";
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $grouped = ['individual' => [], 'family' => []];
+        foreach ($rows as $row) {
+            $type = $row['ticket_type'] ?? 'individual';
+            $grouped[$type][] = $row;
+        }
+        return $grouped;
     }
 
     public function getContentBySection($section)
@@ -137,6 +150,4 @@ class HistoryRepository extends Repository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 }
