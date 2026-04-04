@@ -1,17 +1,15 @@
 <?php
+namespace App\Controllers\Cms\History;
 
-namespace App\Controllers\Cms\Home;
+use App\Repositories\HistoryCmsRepository;
 
-use App\Services\HomeService;
-use App\ViewModels\HomeEditviewmodel;
-
-class HomeCmsController
+class HistoryCmsController
 {
-    private HomeService $homeService;
+    private HistoryCmsRepository $repo;
 
     public function __construct()
     {
-        $this->homeService = new HomeService();
+        $this->repo = new HistoryCmsRepository();
         $this->requireAdmin();
     }
 
@@ -24,82 +22,287 @@ class HomeCmsController
         }
     }
 
-    // GET /cms/home
+    // GET /cms/history
     public function index(): void
     {
-        $viewModel = new HomeEditviewmodel(
-            $this->homeService->getHomeContent(),
-            $this->homeService->getAllHomeEvents()
-        );
+        $highlights = $this->repo->getAllHighlights();
+        $tickets    = $this->repo->getAllTickets();
+        $content    = $this->repo->getAllContentKeyed();
+        $details    = $this->repo->getAllDetails();
 
-        require __DIR__ . '/../../../Views/cms/home/home.php';
+        require __DIR__ . '/../../../Views/cms/history/index.php';
     }
 
-    // POST /cms/home/save-content
-    public function saveContent(): void
+    // GET /cms/history/detail/{id}
+    public function detail(array $vars): void
     {
-        $allowedKeys = [
-            'hero_image', 'hero_title', 'hero_subtitle',
-            'hero_description', 'program_title', 'program_description',
-        ];
+        $id         = (int)($vars['id'] ?? 0);
+        $detail     = $id > 0 ? $this->repo->getDetailById($id) : [];
+        $highlights = $this->repo->getAllHighlights();
+        $sections   = $id > 0 ? $this->repo->getDetailSections($id) : [];
+        $gallery    = $id > 0 ? $this->repo->getDetailGallery($id)   : [];
+        $facts      = $id > 0 ? $this->repo->getDetailFacts($id)     : [];
 
-        $data = [];
-        foreach ($allowedKeys as $key) {
-            if (isset($_POST[$key])) {
-                $data[$key] = trim($_POST[$key]);
-            }
+        require __DIR__ . '/../../../Views/cms/history/detail.php';
+    }
+
+    // POST /cms/history/action  — handles all CRUD via _action field
+    public function action(): void
+    {
+        $action = $_POST['_action'] ?? '';
+
+        switch ($action) {
+            case 'save_highlight':   $this->saveHighlight();  break;
+            case 'delete_highlight': $this->deleteHighlight(); break;
+            case 'save_ticket':      $this->saveTicket();     break;
+            case 'delete_ticket':    $this->deleteTicket();   break;
+            case 'save_content':     $this->saveContent();    break;
+            case 'save_detail':      $this->saveDetail();     break;
+            case 'delete_detail':    $this->deleteDetail();   break;
+            case 'save_section':     $this->saveSection();    break;
+            case 'delete_section':   $this->deleteSection();  break;
+            case 'add_gallery':      $this->addGallery();     break;
+            case 'delete_gallery':   $this->deleteGallery();  break;
+            case 'save_fact':        $this->saveFact();       break;
+            case 'delete_fact':      $this->deleteFact();     break;
+            default:
+                $this->redirect('/cms/history');
         }
-
-        $this->homeService->saveHomeContent($data);
-
-        $this->redirect('/cms/home', 'Content saved.');
     }
 
-    // POST /cms/home/save-event
-    public function saveEvent(): void
-    {
-        $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+    // ── Highlights ────────────────────────────────────────────────────────
 
-        $eventData = [
-            'title'             => trim($_POST['title']             ?? ''),
-            'category'          => trim($_POST['category']          ?? ''),
-            'short_description' => trim($_POST['short_description'] ?? ''),
-            'long_description'  => trim($_POST['long_description']  ?? ''),
-            'venues'            => trim($_POST['venues']            ?? ''),
-            'url'               => trim($_POST['url']               ?? ''),
-            'button_label'      => trim($_POST['button_label']      ?? ''),
-            'icon'              => trim($_POST['icon']              ?? ''),
-            'bg_class'          => trim($_POST['bg_class']          ?? ''),
-            'sort_order'        => (int)($_POST['sort_order']       ?? 0),
-            'is_active'         => isset($_POST['is_active']) ? 1 : 0,
-        ];
+    private function saveHighlight(): void
+    {
+        $id    = (int)($_POST['id'] ?? 0);
+        $title = trim($_POST['title'] ?? '');
+        $desc  = trim($_POST['description'] ?? '');
+        $image = null;
 
         if (!empty($_FILES['image']['tmp_name'])) {
-            $dir      = __DIR__ . '/../../../../public/assets/uploads/History/';
-            if (!is_dir($dir)) mkdir($dir, 0755, true);
-            $ext      = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $filename = time() . '_' . uniqid() . '.' . $ext;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $dir . $filename)) {
-                $eventData['image'] = $filename;
-            }
-        } elseif (!empty($_POST['existing_image'])) {
-            $eventData['image'] = trim($_POST['existing_image']);
+            $image = $this->uploadFile($_FILES['image']);
+        } elseif ($id > 0) {
+            $existing = $this->repo->getHighlightById($id);
+            $image    = $existing['image'] ?? null;
         }
 
-        $this->homeService->saveHomeEvent($id, $eventData);
+        if ($id > 0) {
+            $this->repo->updateHighlight($id, $title, $desc, $image);
+        } else {
+            $this->repo->createHighlight($title, $desc, $image);
+        }
 
-        $this->redirect('/cms/home', 'Event card saved.');
+        $this->redirect('/cms/history', 'Highlight saved.');
     }
 
-    // POST /cms/home/delete-event
-    public function deleteEvent(): void
+    private function deleteHighlight(): void
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $this->repo->deleteHighlight((int)($_POST['id'] ?? 0));
+        $this->redirect('/cms/history', 'Highlight deleted.');
+    }
+
+    // ── Tickets ───────────────────────────────────────────────────────────
+
+    private function saveTicket(): void
+    {
+        $id    = (int)($_POST['id'] ?? 0);
+        $slot  = trim($_POST['time_slot'] ?? '');
+        $price = (float)($_POST['price'] ?? 0);
+        $spots = (int)($_POST['available_spots'] ?? 0);
+
         if ($id > 0) {
-            $this->homeService->deleteHomeEvent($id);
+            $this->repo->updateTicket($id, $slot, $price, $spots);
+        } else {
+            $this->repo->createTicket($slot, $price, $spots);
         }
 
-        $this->redirect('/cms/home', 'Event card deleted.');
+        $this->redirect('/cms/history#tab-tickets', 'Ticket slot saved.');
+    }
+
+    private function deleteTicket(): void
+    {
+        $this->repo->deleteTicket((int)($_POST['id'] ?? 0));
+        $this->redirect('/cms/history#tab-tickets', 'Ticket deleted.');
+    }
+
+    // ── Page Content ──────────────────────────────────────────────────────
+
+    private function saveContent(): void
+    {
+        $sections = ['hero', 'intro', 'walk', 'cta'];
+
+        foreach ($sections as $s) {
+            $title    = trim($_POST["{$s}_title"]    ?? '');
+            $subtitle = trim($_POST["{$s}_subtitle"] ?? '');
+            $image    = $_POST["{$s}_img_current"]   ?? null;
+            $imgLeft  = $_POST["{$s}_img_left_current"]  ?? null;
+            $imgRight = $_POST["{$s}_img_right_current"] ?? null;
+
+            if (!empty($_FILES["{$s}_image"]['tmp_name'])) {
+                $image = $this->uploadFile($_FILES["{$s}_image"]);
+            }
+            if (!empty($_FILES["{$s}_image_left"]['tmp_name'])) {
+                $imgLeft = $this->uploadFile($_FILES["{$s}_image_left"]);
+            }
+            if (!empty($_FILES["{$s}_image_right"]['tmp_name'])) {
+                $imgRight = $this->uploadFile($_FILES["{$s}_image_right"]);
+            }
+
+            $this->repo->upsertContent($s, $title, $subtitle, $image, $imgLeft, $imgRight);
+        }
+
+        $this->redirect('/cms/history#tab-content', 'Content saved.');
+    }
+
+    // ── Details ───────────────────────────────────────────────────────────
+
+    private function saveDetail(): void
+    {
+        $id = (int)($_POST['id'] ?? 0);
+
+        $data = [
+            'highlight_id'     => (int)($_POST['highlight_id'] ?? 0),
+            'slug'             => trim($_POST['slug'] ?? ''),
+            'page_title'       => trim($_POST['page_title'] ?? ''),
+            'hero_image'       => null,
+            'location'         => trim($_POST['location'] ?? ''),
+            'founded_year'     => trim($_POST['founded_year'] ?? ''),
+            'style_type'       => trim($_POST['style_type'] ?? ''),
+            'meta_description' => trim($_POST['meta_description'] ?? ''),
+        ];
+
+        if (!empty($_FILES['hero_image']['tmp_name'])) {
+            $data['hero_image'] = $this->uploadFile($_FILES['hero_image']);
+        } elseif ($id > 0) {
+            $existing = $this->repo->getDetailById($id);
+            $data['hero_image'] = $existing['hero_image'] ?? null;
+        }
+
+        if ($id > 0) {
+            $this->repo->updateDetail($id, $data);
+            $this->redirect("/cms/history/detail/{$id}", 'Detail page saved.');
+        } else {
+            $newId = $this->repo->createDetail($data);
+            $this->redirect("/cms/history/detail/{$newId}", 'Detail page created.');
+        }
+    }
+
+    private function deleteDetail(): void
+    {
+        $this->repo->deleteDetail((int)($_POST['id'] ?? 0));
+        $this->redirect('/cms/history#tab-details', 'Detail page deleted.');
+    }
+
+    // ── Sections ──────────────────────────────────────────────────────────
+
+    private function saveSection(): void
+    {
+        $id       = (int)($_POST['id'] ?? 0);
+        $detailId = (int)($_POST['detail_id'] ?? 0);
+        $image    = null;
+
+        if (!empty($_FILES['image_path']['tmp_name'])) {
+            $image = $this->uploadFile($_FILES['image_path']);
+        } elseif ($id > 0) {
+            $existing = $this->repo->getSectionById($id);
+            $image    = $existing['image_path'] ?? null;
+        }
+
+        $data = [
+            ':detail_id'    => $detailId,
+            ':section_type'  => trim($_POST['section_type'] ?? ''),
+            ':section_title' => trim($_POST['section_title'] ?? ''),
+            ':content'       => trim($_POST['content'] ?? ''),
+            ':image_path'    => $image,
+            ':sort_order'    => (int)($_POST['sort_order'] ?? 0),
+        ];
+
+        if ($id > 0) {
+            $this->repo->updateSection($id, $data);
+        } else {
+            $this->repo->createSection($data);
+        }
+
+        $this->redirect("/cms/history/detail/{$detailId}", 'Section saved.');
+    }
+
+    private function deleteSection(): void
+    {
+        $detailId = (int)($_POST['detail_id'] ?? 0);
+        $this->repo->deleteSection((int)($_POST['id'] ?? 0));
+        $this->redirect("/cms/history/detail/{$detailId}", 'Section deleted.');
+    }
+
+    // ── Gallery ───────────────────────────────────────────────────────────
+
+    private function addGallery(): void
+    {
+        $detailId  = (int)($_POST['detail_id'] ?? 0);
+        $caption   = trim($_POST['caption'] ?? '');
+        $sortOrder = (int)($_POST['sort_order'] ?? 0);
+        $imagePath = '';
+
+        if (!empty($_FILES['image_path']['tmp_name'])) {
+            $imagePath = $this->uploadFile($_FILES['image_path']);
+        }
+
+        if ($imagePath) {
+            $this->repo->createGalleryImage($detailId, $imagePath, $caption, $sortOrder);
+        }
+
+        $this->redirect("/cms/history/detail/{$detailId}", 'Image added.');
+    }
+
+    private function deleteGallery(): void
+    {
+        $img      = $this->repo->getGalleryImageById((int)($_POST['id'] ?? 0));
+        $detailId = $img['detail_id'] ?? 0;
+        $this->repo->deleteGalleryImage((int)($_POST['id'] ?? 0));
+        $this->redirect("/cms/history/detail/{$detailId}", 'Image deleted.');
+    }
+
+    // ── Facts ─────────────────────────────────────────────────────────────
+
+    private function saveFact(): void
+    {
+        $id       = (int)($_POST['id'] ?? 0);
+        $detailId = (int)($_POST['detail_id'] ?? 0);
+
+        $data = [
+            ':detail_id'  => $detailId,
+            ':icon'       => trim($_POST['icon'] ?? ''),
+            ':label'      => trim($_POST['label'] ?? ''),
+            ':value'      => trim($_POST['value'] ?? ''),
+            ':sort_order' => (int)($_POST['sort_order'] ?? 0),
+        ];
+
+        if ($id > 0) {
+            $this->repo->updateFact($id, $data);
+        } else {
+            $this->repo->createFact($data);
+        }
+
+        $this->redirect("/cms/history/detail/{$detailId}", 'Fact saved.');
+    }
+
+    private function deleteFact(): void
+    {
+        $fact     = $this->repo->getFactById((int)($_POST['id'] ?? 0));
+        $detailId = $fact['detail_id'] ?? 0;
+        $this->repo->deleteFact((int)($_POST['id'] ?? 0));
+        $this->redirect("/cms/history/detail/{$detailId}", 'Fact deleted.');
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+
+    private function uploadFile(array $file): string
+    {
+        $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+        $ext      = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = time() . '_' . uniqid() . '.' . $ext;
+        move_uploaded_file($file['tmp_name'], $dir . $filename);
+        return $filename;
     }
 
     private function redirect(string $url, string $flash = ''): void
