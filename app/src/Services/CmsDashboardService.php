@@ -14,7 +14,7 @@ class CmsDashboardService
                 [
                     'title' => 'Main',
                     'description' => 'Manage the homepage and general festival content.',
-                    'url' => '/cms/main',
+                    'url' => '/cms/home',
                 ],
                 [
                     'title' => 'History',
