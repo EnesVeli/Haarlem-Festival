@@ -100,7 +100,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
 
     // History CMS
-    $r->addRoute('GET',  '/ms/history',             [\App\Controllers\Cms\History\HistoryCmsController::class, 'index']);
+    $r->addRoute('GET',  '/cms/history',             [\App\Controllers\Cms\History\HistoryCmsController::class, 'index']);
     $r->addRoute('GET',  '/cms/history/detail/{id}', [\App\Controllers\Cms\History\HistoryCmsController::class, 'detail']);
     $r->addRoute('POST', '/cms/history/action',      [\App\Controllers\Cms\History\HistoryCmsController::class, 'action']);
     // Yummy
