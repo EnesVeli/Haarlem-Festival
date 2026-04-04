@@ -36,31 +36,34 @@ class PaymentController
 
     // POST /checkout/process  — simulate payment and redirect to confirmation
     public function process(): void
-    {
-        $userId        = $_SESSION['user_id'];
-        $paymentMethod = $_POST['payment_method'] ?? 'credit_card';
+{
+    $userId    = $_SESSION['user_id'];
+    $cartItems = $this->cartRepo->getItemsByUser($userId);
 
-        // Get cart items
-        $cartItems = $this->cartRepo->getItemsByUser($userId);
-        if (empty($cartItems)) {
-            header('Location: /cart');
-            exit;
-        }
-
-        $cartTotal = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cartItems));
-
-        // Create order record
-        $orderId = $this->createOrder($userId, $paymentMethod, $cartTotal);
-
-        // Clear cart
-        $this->cartRepo->clearCart($userId);
-
-        // Store order ID in session for confirmation page
-        $_SESSION['last_order_id'] = $orderId;
-
-        header('Location: /checkout/confirmation');
+    if (empty($cartItems)) {
+        header('Location: /cart');
         exit;
     }
+
+    $user = [
+        'name'  => $_SESSION['name']  ?? 'Customer',
+        'email' => $_SESSION['email'] ?? '',
+    ];
+
+    $orderService = new \App\Services\OrderService();
+    $orderId = $orderService->completeOrder(
+        $userId,
+        $cartItems,
+        $_POST['payment_method'] ?? 'credit_card',
+        $user
+    );
+
+    $this->cartRepo->clearCart($userId);
+    $_SESSION['last_order_id'] = $orderId;
+
+    header('Location: /checkout/confirmation');
+    exit;
+}
 
     // GET /checkout/confirmation
     public function confirmation(): void

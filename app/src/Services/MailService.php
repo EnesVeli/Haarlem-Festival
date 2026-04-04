@@ -77,5 +77,43 @@ class MailService
         $this->sendHTMLMail($receiver_email, $receiver_name, 'Password Reset', $html, 
         'This is your password reset link: https://localhost/password-reset-start?key=' . $reset_key . '. \n
         Do not give it to anyone.\nThe link will expire in 15 minutes.');
+    } 
+    public function sendOrderConfirmation(
+    string $email,
+    string $name,
+    array  $ticketPdfs,
+    string $invoicePdf,
+    string $invoiceNumber
+): void {
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host       = Config::MAIL_HOST;
+    $mail->SMTPAuth   = true;
+    $mail->Username   = Config::MAIL_USERNAME;
+    $mail->Password   = Config::MAIL_PASSWORD;
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = Config::MAIL_PORT;
+
+    $mail->setFrom(Config::MAIL_EMAIL, 'Festival Haarlem');
+    $mail->addAddress($email, $name);
+    $mail->isHTML(true);
+    $mail->Subject = 'Your Festival Haarlem Tickets & Invoice';
+    $mail->Body    = '<h2>Thank you for your order!</h2><p>Your tickets and invoice are attached.</p>';
+    $mail->AltBody = 'Thank you for your order! Your tickets and invoice are attached.';
+
+    foreach ($ticketPdfs as $i => $pdf) {
+        $mail->addStringAttachment($pdf, 'ticket-' . ($i + 1) . '.pdf', 'base64', 'application/pdf');
     }
+
+    $mail->addStringAttachment($invoicePdf, $invoiceNumber . '.pdf', 'base64', 'application/pdf');
+
+    if (!$mail->send()) {
+        throw new Exception($mail->ErrorInfo);
+    }
+}
+    
+
+
+    
+      
 }
