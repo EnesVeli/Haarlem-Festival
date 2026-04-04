@@ -42,9 +42,7 @@ if (!isset($user) || !$user) {
             <li><a href="/dance">Dance</a></li>
 
             <?php if ($user && strtolower($user['role'] ?? '') === 'admin'): ?>
-                <li><a href="/cms/jazz/home">Dashboard</a></li>
-                <li><a href="/cms/history">History CMS</a></li>
-                <li><a href="/cms/home">Home CMS</a></li>
+                <li><a href="/cms">Dashboard</a></li>
             <?php endif; ?>
         </ul>
 
@@ -71,7 +69,7 @@ if (!isset($user) || !$user) {
                         </a>
 
                         <?php if (strtolower($user['role'] ?? '') === 'admin'): ?>
-                            <a href="/cms/jazz/home" class="profile-menu-item">
+                            <a href="/cms" class="profile-menu-item">
                                 <i class="bi bi-speedometer2"></i> CMS Dashboard
                             </a>
                         <?php endif; ?>

@@ -8,4 +8,5 @@ class YummyRestaurantViewModel {
     public Restaurant $restaurant;
     public array $tags;
     public array $images;
+    public array $dishes;
 }

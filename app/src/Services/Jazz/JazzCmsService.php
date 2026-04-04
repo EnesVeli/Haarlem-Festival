@@ -14,11 +14,7 @@ class JazzCmsService
         $this->jazzRepo = new JazzRepository();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard
-    |--------------------------------------------------------------------------
-    */
+    //dashboard
 
     public function getDashboardData(): array
     {
@@ -27,11 +23,7 @@ class JazzCmsService
         ];
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Hero
-    |--------------------------------------------------------------------------
-    */
+    //hero
 
     public function getHeroPageData(): array
     {
@@ -46,11 +38,7 @@ class JazzCmsService
         $this->jazzRepo->updateHero($data);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Intro
-    |--------------------------------------------------------------------------
-    */
+   //intro
 
     public function getIntroPageData(): array
     {
@@ -65,11 +53,7 @@ class JazzCmsService
         $this->jazzRepo->updateIntro($data);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Experiences
-    |--------------------------------------------------------------------------
-    */
+   //Experiences
 
     public function getExperiencesPageData(): array
     {
@@ -102,11 +86,7 @@ class JazzCmsService
         $this->jazzRepo->deleteExperience($id);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Performers
-    |--------------------------------------------------------------------------
-    */
+   //Performers
 
     public function getPerformersPageData(): array
     {
@@ -139,11 +119,7 @@ class JazzCmsService
         $this->jazzRepo->deletePerformer($id);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Recommendations
-    |--------------------------------------------------------------------------
-    */
+ //recommendations
 
     public function getRecommendationsPageData(): array
     {
@@ -176,11 +152,7 @@ class JazzCmsService
         $this->jazzRepo->deleteRecommendation($id);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Locations
-    |--------------------------------------------------------------------------
-    */
+   //locations
 
     public function getLocationsPageData(): array
     {

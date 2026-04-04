@@ -19,7 +19,7 @@ use App\Models\Restaurant;
         </div>
 
         <div class="home-topper-filter"></div>
-        <img class="home-topper-img" src="/assets/css/uploads/yummy/home_topper.jpg">
+        <img class="home-topper-img" src="/assets/uploads/yummy/home_topper.jpg">
     </section>
 
     <section class="home-restaurant-section">
@@ -39,17 +39,17 @@ use App\Models\Restaurant;
                 <div class="home-restaurant-list-wrap">
                     <?php foreach($view_model->restaurants as $res):?>
                         <div class="home-restaurant-card">
-                            <img class="home-restaurant-img" src="<? echo '/assets/css/uploads/yummy/restaurants/' . $res->main_img_path; ?>">
+                            <img class="home-restaurant-img" src="<? echo '/assets/uploads/yummy/restaurants/' . $res->main_img_path; ?>">
                             <h3 class="home-restaurant-title"><? echo htmlspecialchars($res->name); ?></h3>
                             <div class="home-restaurant-card-sub">
                                 <div class="home-restaurant-rating"><? echo $res->getRatingFormated(); ?></div>
                                 <? $stars = $res->getStars(); ?>
                                 <div class="home-restaurant-star-container">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
-                                    <img class="home-restaurant-star" src="<? echo '/assets/css/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[0] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[1] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[2] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[3] . '.png'; ?>">
+                                    <img class="home-restaurant-star" src="<? echo '/assets/uploads/yummy/star/' . $stars[4] . '.png'; ?>">
                                 </div>
                                 <div class="home-restaurant-euro-dot">.</div>
                                 <div class="home-restaurant-euro"><? echo $res->getCostRatingString(); ?></div>
@@ -76,7 +76,7 @@ use App\Models\Restaurant;
                 <div class="home-guide-list-wrap">
                     <?php foreach($view_model->guides as $g):?>
                         <div class="home-guide-card">
-                            <img class="home-guide-img" src="<? echo '/assets/css/uploads/yummy/guides/' . $g->mini_img_path; ?>">
+                            <img class="home-guide-img" src="<? echo '/assets/uploads/yummy/guides/' . $g->mini_img_path; ?>">
                             <h3 class="home-guide-title"><? echo htmlspecialchars($g->mini_title); ?></h3>
                             <div class="home-guide-text"><? echo htmlspecialchars($g->mini_text); ?></div>
                             <a class="home-guide-view-button" href="<? echo '/yummy/guide?id=' . $g->guide_id; ?>">Learn more...</a>
