@@ -12,6 +12,8 @@ class HomeService
         $this->repository = new HomeRepository();
     }
 
+    // ─── READ ────────────────────────────────────────────────────────────────
+
     public function getHomeContent(): array
     {
         return $this->repository->getHomeContent();
@@ -22,6 +24,12 @@ class HomeService
         return $this->repository->getHomeEvents();
     }
 
+    /** Returns ALL event cards (including inactive) for the CMS. */
+    public function getAllHomeEvents(): array
+    {
+        return $this->repository->getAllHomeEvents();
+    }
+
     public function getVenueList(): array
     {
         return [
@@ -30,5 +38,22 @@ class HomeService
             'Grote Markt', 'Corrie ten Boom house',
             'Verhalenhuis Haarlem', 'Elswout Theater', 'De Schuur', 'Café de Roemer',
         ];
+    }
+
+   
+
+    public function saveHomeContent(array $data): void
+    {
+        $this->repository->saveHomeContent($data);
+    }
+
+    public function saveHomeEvent(?int $id, array $data): void
+    {
+        $this->repository->saveHomeEvent($id, $data);
+    }
+
+    public function deleteHomeEvent(int $id): void
+    {
+        $this->repository->deleteHomeEvent($id);
     }
 }

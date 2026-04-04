@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Services\HomeService;
+use App\ViewModels\HomeViewModel;
 
 class HomeController
 {
@@ -14,9 +15,11 @@ class HomeController
 
     public function index(): void
     {
-        $homeContent = $this->homeService->getHomeContent();
-        $eventCards  = $this->homeService->getHomeEvents(); 
-        $venueList   = $this->homeService->getVenueList();
+        $viewModel = new HomeViewModel(
+            $this->homeService->getHomeContent(),
+            $this->homeService->getHomeEvents(),
+            $this->homeService->getVenueList()
+        );
 
         require __DIR__ . '/../Views/home.php';
     }

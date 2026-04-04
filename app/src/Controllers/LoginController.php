@@ -31,7 +31,7 @@ class LoginController
     
         } catch (Exception $e) {
             Session::set('login_error', $e->getMessage());
-            header("Location: /login");
+            header("Location: /login"); 
             exit;
         }
     }

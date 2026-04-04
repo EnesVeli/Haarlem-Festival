@@ -137,4 +137,6 @@ class HistoryRepository extends Repository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 }
