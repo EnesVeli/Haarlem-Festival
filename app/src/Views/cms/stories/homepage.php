@@ -64,6 +64,39 @@ $c = $viewModel->content;
                         value="<?= htmlspecialchars($c->cta_text ?? '') ?>" aria-label="Call to action text">
                 </div>
 
+                <h5 class="mt-4">Ticket Info - Card 1 (Pay as you like)</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="ticket_info_title_1">Card 1 Title</label>
+                    <input type="text" id="ticket_info_title_1" name="ticket_info_title_1" class="form-control"
+                        value="<?= htmlspecialchars($c->ticket_info_title_1 ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ticket_info_body_1">Card 1 Body Text</label>
+                    <textarea id="ticket_info_body_1" name="ticket_info_body_1" class="form-control" rows="4"><?= htmlspecialchars($c->ticket_info_body_1 ?? '') ?></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ticket_info_note_1">Card 1 Note (italic line)</label>
+                    <input type="text" id="ticket_info_note_1" name="ticket_info_note_1" class="form-control"
+                        value="<?= htmlspecialchars($c->ticket_info_note_1 ?? '') ?>">
+                </div>
+
+                <h5 class="mt-4">Ticket Info - Card 2 (HaarlemPas)</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="ticket_info_title_2">Card 2 Title</label>
+                    <input type="text" id="ticket_info_title_2" name="ticket_info_title_2" class="form-control"
+                        value="<?= htmlspecialchars($c->ticket_info_title_2 ?? '') ?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ticket_info_body_2">Card 2 Body Text</label>
+                    <textarea id="ticket_info_body_2" name="ticket_info_body_2" class="form-control" rows="3"><?= htmlspecialchars($c->ticket_info_body_2 ?? '') ?></textarea>
+                </div>
+
+                <h5 class="mt-4">CTA Banner (bottom of page)</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="cta_description">CTA Description Text</label>
+                    <textarea id="cta_description" name="cta_description" class="form-control" rows="2"><?= htmlspecialchars($c->cta_description ?? '') ?></textarea>
+                </div>
+
                 <!-- Hero Image -->
                 <div class="mb-3">
                     <label for="image" class="form-label">Hero Image</label>

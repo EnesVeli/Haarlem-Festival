@@ -12,6 +12,10 @@ use App\ViewModels\CmsStoriesHomepageViewModel;
  */
 class CmsStoriesHomepageController extends BaseController
 {
+    private const MAX_IMAGE_SIZE_BYTES = 5_242_880; // 5 MB
+    private const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+    private const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
     /** @var IStoriesHomepageService */
     private IStoriesHomepageService $homepageService;
 
@@ -69,8 +73,14 @@ class CmsStoriesHomepageController extends BaseController
      */
     public function update(array $vars = []): void
     {
-        // CSRF check
-        if (($_POST['csrf_token'] ?? '') !== ($_SESSION['csrf_token'] ?? '')) {
+        $sessionToken = $_SESSION['csrf_token'] ?? '';
+        $postedToken = $_POST['csrf_token'] ?? '';
+        if (
+            !is_string($sessionToken) ||
+            !is_string($postedToken) ||
+            $sessionToken === '' ||
+            !hash_equals($sessionToken, $postedToken)
+        ) {
             http_response_code(403);
             echo 'Invalid CSRF token.';
             return;
@@ -83,24 +93,20 @@ class CmsStoriesHomepageController extends BaseController
             'body_html'  => $_POST['body_html']   ?? '',
             'quote_text' => $_POST['quote_text']  ?? '',
             'cta_text'   => $_POST['cta_text']    ?? '',
+            'ticket_info_title_1' => $_POST['ticket_info_title_1'] ?? '',
+            'ticket_info_body_1'  => $_POST['ticket_info_body_1'] ?? '',
+            'ticket_info_note_1'  => $_POST['ticket_info_note_1'] ?? '',
+            'ticket_info_title_2' => $_POST['ticket_info_title_2'] ?? '',
+            'ticket_info_body_2'  => $_POST['ticket_info_body_2'] ?? '',
+            'cta_description'     => $_POST['cta_description'] ?? '',
             'image_path' => $_POST['existing_image_path'] ?? '',
         ];
 
-        // Handle optional image upload
-        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = '/assets/images/stories/';
-            $fileName  = time() . '_' . basename($_FILES['image']['name']);
-            $fullDir   = $_SERVER['DOCUMENT_ROOT'] . $uploadDir;
-
-            if (!is_dir($fullDir)) {
-                mkdir($fullDir, 0777, true);
-            }
-
-            $destPath = $fullDir . $fileName;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $destPath)) {
-                $data['image_path'] = $uploadDir . $fileName;
-            }
+        $imagePath = $this->processImageUpload($_FILES['image'] ?? null, (string) $data['image_path']);
+        if ($imagePath === null) {
+            return;
         }
+        $data['image_path'] = $imagePath;
 
         try {
             $this->homepageService->saveStoriesContent($data);
@@ -111,5 +117,66 @@ class CmsStoriesHomepageController extends BaseController
 
         header('Location: /cms/stories/homepage');
         exit;
+    }
+
+    /**
+     * Validates and stores uploaded image.
+     */
+    private function processImageUpload(mixed $imageFile, string $existingImagePath): ?string
+    {
+        if (!is_array($imageFile) || !isset($imageFile['error'])) {
+            return $existingImagePath;
+        }
+
+        if ((int) $imageFile['error'] === UPLOAD_ERR_NO_FILE) {
+            return $existingImagePath;
+        }
+
+        if ((int) $imageFile['error'] !== UPLOAD_ERR_OK) {
+            http_response_code(422);
+            echo 'Image upload failed.';
+            return null;
+        }
+
+        if (!isset($imageFile['size']) || (int) $imageFile['size'] > self::MAX_IMAGE_SIZE_BYTES) {
+            http_response_code(422);
+            echo 'Image exceeds maximum size of 5 MB.';
+            return null;
+        }
+
+        $originalName = (string) ($imageFile['name'] ?? '');
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        if (!in_array($extension, self::ALLOWED_IMAGE_EXTENSIONS, true)) {
+            http_response_code(422);
+            echo 'Invalid image extension. Allowed: jpg, jpeg, png, webp.';
+            return null;
+        }
+
+        $tmpPath = (string) ($imageFile['tmp_name'] ?? '');
+        $mimeType = mime_content_type($tmpPath) ?: '';
+        if (!in_array($mimeType, self::ALLOWED_IMAGE_MIME_TYPES, true)) {
+            http_response_code(422);
+            echo 'Invalid image MIME type.';
+            return null;
+        }
+
+        $uploadDir = '/assets/images/stories/';
+        $fullDir = $_SERVER['DOCUMENT_ROOT'] . $uploadDir;
+        if (!is_dir($fullDir) && !mkdir($fullDir, 0755, true) && !is_dir($fullDir)) {
+            http_response_code(500);
+            echo 'Failed to create upload directory.';
+            return null;
+        }
+
+        $fileName = bin2hex(random_bytes(16)) . '.' . $extension;
+        $destination = $fullDir . $fileName;
+
+        if (!move_uploaded_file($tmpPath, $destination)) {
+            http_response_code(500);
+            echo 'Failed to save uploaded image.';
+            return null;
+        }
+
+        return $uploadDir . $fileName;
     }
 }

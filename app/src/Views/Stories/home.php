@@ -46,16 +46,17 @@ foreach ($events as $event) {
             <h2 class="stories-section-title stories-section-title--left">Info About Tickets</h2>
             <div class="stories-ticket-grid">
                 <article class="stories-ticket-card">
-                    <h3>Pay as you like</h3>
-                    <p>Some activities are priced <strong>pay as you like</strong>. We aim to keep these events as
-                        accessible as possible so that everyone has the opportunity to participate. We encourage
-                        visitors to donate based on how they valued the experience.</p>
+                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_1 ?? 'Pay as you like') ?></h3>
+                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_1 ?? 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.') ?></p>
+                    <?php if (!empty($homepageContent->ticket_info_note_1)): ?>
+                    <p><em><?= htmlspecialchars($homepageContent->ticket_info_note_1) ?></em></p>
+                    <?php else: ?>
                     <p><em>A reservation is required to guarantee entry.</em></p>
+                    <?php endif; ?>
                 </article>
                 <article class="stories-ticket-card">
-                    <h3>HaarlemPas discount</h3>
-                    <p>People with the <strong>HaarlemPas</strong> receive a 25% discount on entry fees for all stories
-                        in events with a fixed ticket price.</p>
+                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_2 ?? 'HaarlemPas discount') ?></h3>
+                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_2 ?? 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.') ?></p>
                 </article>
             </div>
         </div>
@@ -170,8 +171,7 @@ foreach ($events as $event) {
             <div class="stories-cta-box">
                 <div class="stories-cta-text">
                     <h2><?= htmlspecialchars($ctaText) ?></h2>
-                    <p>Combine Stories in Haarlem with other festival events across the city and build your perfect
-                        weekend program.</p>
+                    <p><?= htmlspecialchars($homepageContent->cta_description ?? 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.') ?></p>
                 </div>
                 <div class="stories-cta-buttons">
                     <a href="/tickets" class="stories-cta-button stories-cta-button--dark">Book tickets</a>

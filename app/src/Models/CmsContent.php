@@ -32,4 +32,22 @@ class CmsContent
 
     /** @var string|null Call-to-action text. */
     public ?string $cta_text;
+
+    /** @var string|null Ticket info card 1 title. */
+    public ?string $ticket_info_title_1;
+
+    /** @var string|null Ticket info card 1 body. */
+    public ?string $ticket_info_body_1;
+
+    /** @var string|null Ticket info card 1 note text. */
+    public ?string $ticket_info_note_1;
+
+    /** @var string|null Ticket info card 2 title. */
+    public ?string $ticket_info_title_2;
+
+    /** @var string|null Ticket info card 2 body. */
+    public ?string $ticket_info_body_2;
+
+    /** @var string|null CTA description text shown under CTA heading. */
+    public ?string $cta_description;
 }

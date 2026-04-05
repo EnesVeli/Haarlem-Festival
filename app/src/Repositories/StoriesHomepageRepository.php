@@ -23,7 +23,9 @@ class StoriesHomepageRepository extends Repository implements IStoriesHomepageRe
     public function getBySlug(string $slug): ?CmsContent
     {
         $stmt = $this->connection->prepare(
-            "SELECT content_id, slug, title, subtitle, body_html, image_path, quote_text, cta_text
+            "SELECT content_id, slug, title, subtitle, body_html, image_path, quote_text, cta_text,
+                    ticket_info_title_1, ticket_info_body_1, ticket_info_note_1,
+                    ticket_info_title_2, ticket_info_body_2, cta_description
                FROM `CMS_Content`
               WHERE slug = :slug
               LIMIT 1"
@@ -53,7 +55,13 @@ class StoriesHomepageRepository extends Repository implements IStoriesHomepageRe
                     body_html  = :body_html,
                     image_path = :image_path,
                     quote_text = :quote_text,
-                    cta_text   = :cta_text
+                    cta_text   = :cta_text,
+                    ticket_info_title_1 = :ticket_info_title_1,
+                    ticket_info_body_1  = :ticket_info_body_1,
+                    ticket_info_note_1  = :ticket_info_note_1,
+                    ticket_info_title_2 = :ticket_info_title_2,
+                    ticket_info_body_2  = :ticket_info_body_2,
+                    cta_description     = :cta_description
               WHERE slug = :slug"
         );
 
@@ -64,6 +72,12 @@ class StoriesHomepageRepository extends Repository implements IStoriesHomepageRe
             ':image_path' => $data['image_path']  ?? null,
             ':quote_text' => $data['quote_text']  ?? null,
             ':cta_text'   => $data['cta_text']    ?? null,
+            ':ticket_info_title_1' => $data['ticket_info_title_1'] ?? null,
+            ':ticket_info_body_1'  => $data['ticket_info_body_1'] ?? null,
+            ':ticket_info_note_1'  => $data['ticket_info_note_1'] ?? null,
+            ':ticket_info_title_2' => $data['ticket_info_title_2'] ?? null,
+            ':ticket_info_body_2'  => $data['ticket_info_body_2'] ?? null,
+            ':cta_description'     => $data['cta_description'] ?? null,
             ':slug'       => $slug,
         ]);
     }

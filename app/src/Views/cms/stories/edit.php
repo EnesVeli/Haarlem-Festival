@@ -13,6 +13,8 @@
         <?php if ($event): ?>
         <input type="hidden" name="event_id" value="<?= $event->event_id ?>">
         <input type="hidden" name="existing_image" value="<?= htmlspecialchars($event->image_path) ?>">
+        <input type="hidden" name="existing_gallery_1" value="<?= htmlspecialchars($event->gallery_image_1 ?? '') ?>">
+        <input type="hidden" name="existing_gallery_2" value="<?= htmlspecialchars($event->gallery_image_2 ?? '') ?>">
         <?php endif; ?>
 
         <div class="mb-3">
@@ -103,7 +105,7 @@
         <div class="mb-3">
             <label class="form-label"><?= htmlspecialchars($tt['name']) ?></label>
             <?php if ($tt['is_pay_as_you_like']): ?>
-            <span class="d-block">Pay as you like — no fixed price</span>
+            <span class="d-block text-muted">Pay as you like &mdash; no fixed price</span>
             <?php else: ?>
             <input type="number" step="0.01" min="0" class="form-control"
                 name="ticket_prices[<?= (int)$tt['type_id'] ?>]"
@@ -113,11 +115,41 @@
         <?php endforeach; ?>
 
         <div class="mb-3">
-            <label for="image">Image Upload</label>
+            <label class="form-label" for="image">Image Upload</label>
             <input type="file" class="form-control" id="image" name="image" accept="image/*">
             <?php if (!empty($event->image_path)): ?>
             <small class="text-muted">Current image: <?= htmlspecialchars($event->image_path) ?></small>
             <?php endif; ?>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="gallery_image_1">Gallery Image 1</label>
+            <input type="file" class="form-control" id="gallery_image_1" name="gallery_image_1" accept="image/*">
+            <?php if (!empty($event->gallery_image_1)): ?>
+            <small class="text-muted">Current image: <?= htmlspecialchars($event->gallery_image_1) ?></small>
+            <?php endif; ?>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="gallery_image_2">Gallery Image 2</label>
+            <input type="file" class="form-control" id="gallery_image_2" name="gallery_image_2" accept="image/*">
+            <?php if (!empty($event->gallery_image_2)): ?>
+            <small class="text-muted">Current image: <?= htmlspecialchars($event->gallery_image_2) ?></small>
+            <?php endif; ?>
+        </div>
+
+
+
+        <div class="mb-3">
+            <label class="form-label" for="audio_title">Audio Title</label>
+            <input type="text" class="form-control" id="audio_title" name="audio_title"
+                value="<?= htmlspecialchars($event->audio_title ?? '') ?>">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="audio_transcript">Audio Transcript</label>
+            <textarea class="form-control" id="audio_transcript" name="audio_transcript"
+                rows="4"><?= htmlspecialchars($event->audio_transcript ?? '') ?></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Save Event</button>

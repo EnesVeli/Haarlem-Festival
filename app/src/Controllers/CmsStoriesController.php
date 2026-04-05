@@ -82,10 +82,20 @@ class CmsStoriesController extends BaseController
         }
         $data['image_path'] = $imagePath;
 
+        $gallery1 = $this->processImageUpload($_FILES['gallery_image_1'] ?? null, $data['gallery_image_1']);
+        $gallery2 = $this->processImageUpload($_FILES['gallery_image_2'] ?? null, $data['gallery_image_2']);
+        if ($gallery1 === null || $gallery2 === null) {
+            return;
+        }
+        $data['gallery_image_1'] = $gallery1;
+        $data['gallery_image_2'] = $gallery2;
+
         if (!empty($_POST['event_id']) && is_numeric($_POST['event_id'])) {
             $this->service->updateEvent((int) $_POST['event_id'], $data);
         } else {
-            $this->service->createEvent($data);
+            $newEventId = $this->service->createEvent($data);
+            $this->redirect('/cms/stories/edit?id=' . $newEventId);
+            return;
         }
 
         if (isset($_POST['ticket_prices']) && is_array($_POST['ticket_prices']) && !empty($_POST['event_id']) && is_numeric($_POST['event_id'])) {
@@ -203,6 +213,11 @@ class CmsStoriesController extends BaseController
             'performer_bio' => trim((string) ($post['performer_bio'] ?? '')) ?: null,
             'venue_id' => (int) $venueIdRaw,
             'image_path' => trim((string) ($post['existing_image'] ?? '')),
+            'gallery_image_1' => trim((string) ($post['existing_gallery_1'] ?? '')),
+            'gallery_image_2' => trim((string) ($post['existing_gallery_2'] ?? '')),
+            'audio_preview_path' => trim((string) ($post['existing_audio'] ?? '')),
+            'audio_title' => trim((string) ($post['audio_title'] ?? '')) ?: null,
+            'audio_transcript' => trim((string) ($post['audio_transcript'] ?? '')) ?: null,
         ];
     }
 

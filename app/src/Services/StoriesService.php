@@ -36,9 +36,18 @@ class StoriesService
     }
 
     /** Inserts a new story event. */
-    public function createEvent(array $data): bool
+    public function createEvent(array $data): int
     {
-        return $this->repository->insert($data);
+        $eventId = $this->repository->insert($data);
+        $isPayAsYouLike = !empty($data['is_pay_as_you_like']);
+        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+
+        return $eventId;
+    }
+
+    public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
+    {
+        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
     }
 
     /** Updates an existing story event. */

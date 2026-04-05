@@ -52,6 +52,12 @@ class StoriesHomepageService implements IStoriesHomepageService
             'image_path' => strip_tags($data['image_path']  ?? ''),
             'quote_text' => strip_tags($data['quote_text']  ?? ''),
             'cta_text'   => strip_tags($data['cta_text']    ?? ''),
+            'ticket_info_title_1' => strip_tags($data['ticket_info_title_1'] ?? ''),
+            'ticket_info_body_1'  => strip_tags($data['ticket_info_body_1'] ?? ''),
+            'ticket_info_note_1'  => strip_tags($data['ticket_info_note_1'] ?? ''),
+            'ticket_info_title_2' => strip_tags($data['ticket_info_title_2'] ?? ''),
+            'ticket_info_body_2'  => strip_tags($data['ticket_info_body_2'] ?? ''),
+            'cta_description'     => strip_tags($data['cta_description'] ?? ''),
         ];
 
         $this->repository->updateBySlug('stories', $clean);
