@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 03:24 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Apr 05, 2026 at 08:01 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -691,7 +691,7 @@ CREATE TABLE `jazz_hero` (
 --
 
 INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
-(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1773540403_HeroImageMAIN.jpg', 1);
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1774369165_wallpaperflare.com_wallpaper.jpg', 1);
 
 -- --------------------------------------------------------
 
@@ -963,13 +963,6 @@ CREATE TABLE `PasswordResetToken` (
   `activated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
---
--- Dumping data for table `PasswordResetToken`
---
-
-INSERT INTO `PasswordResetToken` (`token_id`, `user_id`, `key`, `created_at`, `activated_at`) VALUES
-(2, 6, '$2y$12$kLZMRm/v5N83Emyi8ZM7z.tmlllfSONqbWppn3ltxS7QBztKfXhuG', '2026-03-13 12:32:09', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -1152,8 +1145,7 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$gwDEB6ZIvcwqXe2i50b5we1styaheGqIc4qRlvrARK5rBreZRbK4G', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
-(6, 'elena.sadko@gmail.com', '$2y$12$Zg7P22jNmZtkM1EdZczHUe8EwCbiOGnO.XAPybPnES2ah1nBSlrtW', 'Elena Shkvarnytska', 'customer', NULL, '2026-02-27 12:41:38'),
+(5, 'tim.sadko@gmail.com', '$2y$12$sOh6J5iK/ZUShL/9ssKWIeRWZ/j0M3QpC.cL2EcCT6ZkxzMGmXPIO', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15'),
 (9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39'),
@@ -1200,6 +1192,78 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 (19, 'New Vegas', 'Koningstraat 5, 2011 TB Haarlem'),
 (20, 'Grand Cafe Brinkmann', 'Grote Markt 13, 2011 RC Haarlem'),
 (21, 'Urban Frenchy Bistro Toujours', 'Oude Groenmarkt 10-12, 2011 HL Haarlem');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyBookings`
+--
+
+CREATE TABLE `YummyBookings` (
+  `booking_id` int(16) NOT NULL,
+  `reservation_id` int(16) NOT NULL,
+  `user_id` int(16) NOT NULL,
+  `date` date NOT NULL,
+  `adult_number` tinyint(3) UNSIGNED NOT NULL,
+  `child_number` tinyint(3) UNSIGNED NOT NULL,
+  `comment` varchar(512) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyBookings`
+--
+
+INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
+(1, 10, 5, '2026-03-21', 5, 4, 'My comment.'),
+(2, 10, 5, '2026-03-21', 5, 5, 'Some IMPORTANT comment.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyCMS`
+--
+
+CREATE TABLE `YummyCMS` (
+  `cms_id` int(16) NOT NULL,
+  `home_title` varchar(128) NOT NULL,
+  `home_subtitle` varchar(1024) NOT NULL,
+  `home_image` varchar(128) NOT NULL,
+  `list_title` varchar(128) NOT NULL,
+  `list_subtitle` varchar(1024) NOT NULL,
+  `list_image` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyCMS`
+--
+
+INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`, `home_image`, `list_title`, `list_subtitle`, `list_image`) VALUES
+(1, 'Food and Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.\r\n', '1235190b4dd7cdb965aef2716996357d.jpg', 'Restaurants, Cafes and Bars', 'Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard. ', '8895154f69e848c7ae3b2ddc7886f2d2.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyDishes`
+--
+
+CREATE TABLE `YummyDishes` (
+  `dish_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `text` varchar(256) NOT NULL,
+  `image_path` varchar(128) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyDishes`
+--
+
+INSERT INTO `YummyDishes` (`dish_id`, `restaurant_id`, `name`, `text`, `image_path`) VALUES
+(1, 1, 'Ratatouille', 'Rich, creamy Parmesan ratatouille with baba ganoush and gnocchi hearty and flavorful comfort refined.', '55t.png'),
+(2, 1, 'Kingfish', 'Delicately seasoned kingfish with yuzu, dashi, and caviar bright, silky, and elegantly balanced. ', '22t.png'),
+(3, 1, 'Tarbot', 'Perfectly cooked turbot with vin jaune, creamy parsnip, and caviar accents sophisticated seafood delight.', '11t.png'),
+(4, 1, 'Kingfish', 'Delicately seasoned kingfish with yuzu, dashi, and caviar bright, silky, and elegantly balanced. ', '22t.png'),
+(5, 1, 'Tarbot', 'Perfectly cooked turbot with vin jaune, creamy parsnip, and caviar accents sophisticated seafood delight.', '11t.png');
 
 -- --------------------------------------------------------
 
@@ -1258,6 +1322,74 @@ INSERT INTO `YummyGuides` (`guide_id`, `mini_img_path`, `mini_title`, `mini_text
 (3, 'ec39dac2209ad74ecc7ddb524164516fb3acfdb3.jpg', 'Haarlem’s Coziest Cafés and Coffee Spots', 'Discover Haarlem’s charming cafés offering great coffee, home made cakes, relaxed brunches, and welcoming atmospheres ideal for a break while exploring the city or meeting friends.', b'1'),
 (4, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1'),
 (5, '11b05b574d74972f10ccb0f89d246c5aed797e7f.jpg\r\n', 'Where to Eat Cheap and Well in Haarlem', 'Find affordable restaurants in Haarlem serving tasty meals without breaking the budget, from casual eateries to quick bites perfect for students, families, and budget friendly dining.', b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyOpeningHours`
+--
+
+CREATE TABLE `YummyOpeningHours` (
+  `id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `monday` varchar(64) NOT NULL,
+  `tuesday` varchar(64) NOT NULL,
+  `wednesday` varchar(64) NOT NULL,
+  `thursday` varchar(64) NOT NULL,
+  `friday` varchar(64) NOT NULL,
+  `saturday` varchar(64) NOT NULL,
+  `sunday` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyOpeningHours`
+--
+
+INSERT INTO `YummyOpeningHours` (`id`, `restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
+(1, 1, 'Closed', 'Closed', '18:00-21:30', '18:00-21:30', '18:30-21:30', '18:30-21:30', '18:30-21:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyReservationSlots`
+--
+
+CREATE TABLE `YummyReservationSlots` (
+  `reservation_id` int(16) NOT NULL,
+  `slot_id` int(16) NOT NULL,
+  `date` date NOT NULL,
+  `booked` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyReservationSlots`
+--
+
+INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booked`) VALUES
+(1, 1, '2026-03-19', 0),
+(2, 2, '2026-03-19', 0),
+(3, 3, '2026-03-19', 0),
+(7, 1, '2026-03-20', 1),
+(8, 2, '2026-03-20', 0),
+(9, 3, '2026-03-20', 0),
+(10, 1, '2026-03-21', 19),
+(11, 2, '2026-03-21', 0),
+(12, 3, '2026-03-21', 0),
+(13, 1, '2026-03-22', 0),
+(14, 2, '2026-03-22', 0),
+(15, 3, '2026-03-22', 0),
+(16, 1, '2026-03-23', 0),
+(17, 2, '2026-03-23', 0),
+(18, 3, '2026-03-23', 0),
+(19, 1, '2026-03-24', 0),
+(20, 2, '2026-03-24', 0),
+(21, 3, '2026-03-24', 0),
+(22, 1, '2026-03-25', 0),
+(23, 2, '2026-03-25', 0),
+(24, 3, '2026-03-25', 0),
+(25, 1, '2026-03-26', 0),
+(26, 2, '2026-03-26', 0),
+(27, 3, '2026-03-26', 0);
 
 -- --------------------------------------------------------
 
@@ -1345,8 +1477,8 @@ CREATE TABLE `YummyRestaurantImages` (
 --
 
 INSERT INTO `YummyRestaurantImages` (`image_id`, `restaurant_id`, `path`) VALUES
-(10, 1, '123.png'),
-(11, 1, '223.png');
+(10, 1, 'd5df10fcc034f9c8de2d8339057be489.png'),
+(11, 1, '6e2fbde707772677afbbf2491c05c6dc.png');
 
 -- --------------------------------------------------------
 
@@ -1363,7 +1495,6 @@ CREATE TABLE `YummyRestaurants` (
   `cost_rating` bit(4) NOT NULL,
   `active` bit(1) NOT NULL DEFAULT b'0',
   `text` varchar(2048) NOT NULL DEFAULT '',
-  `opening_hours` varchar(128) NOT NULL DEFAULT '',
   `address_text` varchar(128) NOT NULL DEFAULT '',
   `address_uri` varchar(256) NOT NULL DEFAULT '',
   `website_link` varchar(256) DEFAULT NULL
@@ -1373,15 +1504,37 @@ CREATE TABLE `YummyRestaurants` (
 -- Dumping data for table `YummyRestaurants`
 --
 
-INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `opening_hours`, `address_text`, `address_uri`, `website_link`) VALUES
-(1, 'rff.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Closed\r\nClosed\r\n18:00–21:30\r\n18:00–21:00\r\n18:30–21:30\r\n18:30–21:30\r\n18:30–21:30', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
-(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', '', NULL),
-(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', '', NULL),
-(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', '', NULL),
-(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', '', NULL),
-(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', '', NULL),
-(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', '', NULL),
-(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', '', NULL);
+INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link`) VALUES
+(1, 'b3d3e9891fc40495c3eadd6cace50138.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'0', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
+(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', NULL),
+(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', NULL),
+(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', NULL),
+(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', NULL),
+(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', NULL),
+(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', NULL),
+(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `YummyRestaurantTimeSlots`
+--
+
+CREATE TABLE `YummyRestaurantTimeSlots` (
+  `slot_id` int(16) NOT NULL,
+  `restaurant_id` int(16) NOT NULL,
+  `time` time NOT NULL,
+  `capacity` smallint(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyRestaurantTimeSlots`
+--
+
+INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`) VALUES
+(1, 1, '17:00:00', 30),
+(2, 1, '19:00:00', 30),
+(3, 1, '21:00:00', 30);
 
 --
 -- Indexes for dumped tables
@@ -1642,6 +1795,27 @@ ALTER TABLE `Venue`
   ADD KEY `idx_name` (`name`);
 
 --
+-- Indexes for table `YummyBookings`
+--
+ALTER TABLE `YummyBookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `reservation_id` (`reservation_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `YummyCMS`
+--
+ALTER TABLE `YummyCMS`
+  ADD PRIMARY KEY (`cms_id`);
+
+--
+-- Indexes for table `YummyDishes`
+--
+ALTER TABLE `YummyDishes`
+  ADD PRIMARY KEY (`dish_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
 -- Indexes for table `YummyFoodTypes`
 --
 ALTER TABLE `YummyFoodTypes`
@@ -1653,6 +1827,20 @@ ALTER TABLE `YummyFoodTypes`
 --
 ALTER TABLE `YummyGuides`
   ADD PRIMARY KEY (`guide_id`);
+
+--
+-- Indexes for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
+
+--
+-- Indexes for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  ADD PRIMARY KEY (`reservation_id`),
+  ADD KEY `slot_id` (`slot_id`);
 
 --
 -- Indexes for table `YummyRestaurantFoodTypes`
@@ -1674,6 +1862,13 @@ ALTER TABLE `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurants`
   ADD PRIMARY KEY (`restaurant_id`);
+
+--
+-- Indexes for table `YummyRestaurantTimeSlots`
+--
+ALTER TABLE `YummyRestaurantTimeSlots`
+  ADD PRIMARY KEY (`slot_id`),
+  ADD KEY `restaurant_id` (`restaurant_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1863,7 +2058,7 @@ ALTER TABLE `OrderItem`
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `Ticket`
@@ -1902,6 +2097,18 @@ ALTER TABLE `YummyGuides`
   MODIFY `guide_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+
+--
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
@@ -1911,13 +2118,19 @@ ALTER TABLE `YummyRestaurantFoodTypes`
 -- AUTO_INCREMENT for table `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurantImages`
-  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
 --
 ALTER TABLE `YummyRestaurants`
   MODIFY `restaurant_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `YummyRestaurantTimeSlots`
+--
+ALTER TABLE `YummyRestaurantTimeSlots`
+  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
@@ -2013,7 +2226,7 @@ ALTER TABLE `OrderItem`
 -- Constraints for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `Ticket`
@@ -2029,17 +2242,42 @@ ALTER TABLE `Ticket_Type`
   ADD CONSTRAINT `Ticket_Type_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `Event` (`event_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `YummyBookings`
+--
+ALTER TABLE `YummyBookings`
+  ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `YummyReservationSlots` (`reservation_id`),
+  ADD CONSTRAINT `2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+
+--
+-- Constraints for table `YummyDishes`
+--
+ALTER TABLE `YummyDishes`
+  ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `YummyOpeningHours`
+--
+ALTER TABLE `YummyOpeningHours`
+  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `YummyReservationSlots`
+--
+ALTER TABLE `YummyReservationSlots`
+  ADD CONSTRAINT `YummyReservationSlots_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
+
+--
 -- Constraints for table `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`),
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`);
+  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurantImages`
-  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`);
+  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -8,18 +8,40 @@
     <div class="restaurant-main-container">     
         <div class="restaurant-main-left">
             <a class="restaurant-go-back-link" href="/yummy/list">← Back to Restaurants List</a>
+            <?php if(!empty($error_message)): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= htmlspecialchars($error_message) ?>
+                </div>
+            <?php endif; ?>
             <h1 class="restaurant-name-title"><? echo htmlspecialchars($view_model->restaurant->name); ?></h1>
             <div class="restaurant-main-image-container">
                 <img class="restaurant-main-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->restaurant->main_img_path; ?>">
             </div>
             <? if(count($view_model->images) > 0): ?>
-                <div class="restaurant-images-container">
-                    <? foreach($view_model->images as $image): ?>
-                        <div class="restaurant-sub-image-container">
-                            <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $image->path; ?>">
-                        </div>                      
-                    <? endforeach; ?>
-                </div>
+                <? if(count($view_model->images) > 5): ?>
+                    <div class="restaurant-images-container">
+                        <? for($i = 0; $i < 5; $i++): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
+                            </div>                      
+                        <? endfor; ?>
+                    </div>
+                    <div class="restaurant-images-container">
+                        <? for($i = 5; $i < count($view_model->images); $i++): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
+                            </div>                      
+                        <? endfor; ?>
+                    </div>
+                <? else: ?>
+                    <div class="restaurant-images-container">
+                        <? foreach($view_model->images as $image): ?>
+                            <div class="restaurant-sub-image-container">
+                                <img class="restaurant-sub-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $image->path; ?>">
+                            </div>                      
+                        <? endforeach; ?>
+                    </div>
+                <? endif; ?>
             <? endif; ?>
             <div class="restaurant-main-text"><? echo htmlspecialchars($view_model->restaurant->text)?></div>
             <? if(count($view_model->dishes) > 0): ?>
@@ -64,7 +86,7 @@
                 <div>Opening Hours*:</div>
                 <div class="restaurant-opening-hours-container">
                     <div class="restaurant-opening-hours-weekdays">Monday&#10;Tuesday&#10;Wednesday&#10;Thursday&#10;Friday&#10;Saturday&#10;Sunday</div>
-                    <div class="restaurant-opening-hours-time"><? echo htmlspecialchars($view_model->restaurant->opening_hours); ?></div>
+                    <div class="restaurant-opening-hours-time"><? echo htmlspecialchars($view_model->hours->monday); ?>&#10;<? echo htmlspecialchars($view_model->hours->tuesday); ?>&#10;<? echo htmlspecialchars($view_model->hours->wednesday); ?>&#10;<? echo htmlspecialchars($view_model->hours->thursday); ?>&#10;<? echo htmlspecialchars($view_model->hours->friday); ?>&#10;<? echo htmlspecialchars($view_model->hours->saturday); ?>&#10;<? echo htmlspecialchars($view_model->hours->sunday); ?></div>
                 </div>
                 <div class="restaurant-opening-hours-comment">*(Opening hours may change on holidays)</div>
             </div>

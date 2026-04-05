@@ -1,0 +1,26 @@
+<? if(isset($view_model)): ?>
+    <div class="cms-topper">
+        <div class="cms-topper-container">
+            <span class="cms-topper-admin-label">ADMIN PANEL</span>
+            <h1 class="cms-topper-title"><?= htmlspecialchars($view_model->topper->title) ?></h1>
+
+            <?php if (!empty($view_model->topper->subtitle)): ?>
+                <p class="cms-topper-subtitle"><?= htmlspecialchars($view_model->topper->subtitle) ?></p>
+            <?php endif; ?>
+        </div>
+
+        <div class="cms-topper-buttons">
+            <a href="<?= htmlspecialchars($view_model->topper->button_link) ?>" class="cms-topper-view-button">
+                <?= htmlspecialchars($view_model->topper->button_text) ?>
+            </a>
+        </div>
+    </div>
+<? else: ?>
+    <div class="cms-topper">
+        <div class="cms-topper-container">
+            <span class="cms-topper-admin-label">ADMIN PANEL</span>
+            <h1 class="cms-topper-title">Yummy CMS</h1>
+            <p class="cms-topper-subtitle">Something went wrong.</p>
+        </div>
+    </div>
+<? endif; ?>

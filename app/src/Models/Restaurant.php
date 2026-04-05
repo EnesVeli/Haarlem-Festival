@@ -11,7 +11,6 @@ class Restaurant {
     public int $cost_rating;
     public bool $active;
     public string $text;
-    public string $opening_hours;
     public string $address_text;
     public string $address_uri;
     public ?string $website_link;

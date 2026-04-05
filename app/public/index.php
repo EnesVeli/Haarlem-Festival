@@ -13,7 +13,6 @@ use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
 use PHPMailer\PHPMailer\PHPMailer;
 
-$test = new PHPMailer(true);
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
@@ -107,6 +106,19 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Yummy
     $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
+    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+    $r->addRoute('GET', '/yummy/book', [\App\Controllers\YummyController::class, 'bookingPage']);
+    $r->addRoute('POST', '/yummy/book', [\App\Controllers\YummyController::class, 'book']);
+    // Yummy - CMS
+    $r->addRoute('GET', '/cms/yummy/',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
+    $r->addRoute('POST', '/cms/yummy/home',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editHome']);
+    $r->addRoute('GET', '/cms/yummy/list',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'list']);
+    $r->addRoute('POST', '/cms/yummy/list',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editList']);
+    $r->addRoute('GET', '/cms/yummy/restaurant-list',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurantList']);
+    $r->addRoute('GET', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
+    $r->addRoute('POST', '/cms/yummy/restaurant',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/image',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete',      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']);
     
     // Tickets — main landing & per-event-type sub-pages
     $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);

@@ -14,12 +14,12 @@ use App\Models\Restaurant;
     <section class="home-topper">
         <div class="home-topper-text-container">
             <div class="home-topper-little-text">The Festival / Events / Yummy</div>
-            <h1 class="home-topper-title">Food And Drinks</h1>
-            <div class="home-topper-text">Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.</div>
+            <h1 class="home-topper-title"><? echo htmlspecialchars($view_model->title); ?></h1>
+            <div class="home-topper-text"><? echo htmlspecialchars($view_model->subtitle); ?></div>
         </div>
 
         <div class="home-topper-filter"></div>
-        <img class="home-topper-img" src="/assets/uploads/yummy/home_topper.jpg">
+        <img class="home-topper-img" src="<? echo '/assets/uploads/yummy/topper/' . $view_model->topper_path; ?>">
     </section>
 
     <section class="home-restaurant-section">
