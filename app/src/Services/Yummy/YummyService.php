@@ -137,7 +137,7 @@ class YummyService
     public function getRestaurantViewModel(string $id) : YummyRestaurantViewModel {
         $view_model = new YummyRestaurantViewModel();
 
-        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id);
+        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id, false);
         $view_model->hours = $this->restaurant_repository->getRestaurantOpeningHours((int)$id);
         $view_model->tags = $this->type_repository->getRestaurantTypes((int)$id);
 
