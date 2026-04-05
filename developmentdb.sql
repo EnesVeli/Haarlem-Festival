@@ -169,6 +169,8 @@ CREATE TABLE `Event` (
   `audio_preview_path` varchar(500) DEFAULT NULL,
   `audio_title` varchar(255) DEFAULT NULL,
   `audio_transcript` text DEFAULT NULL
+  `audio_title` varchar(255) DEFAULT NULL,
+  `audio_transcript` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -384,7 +386,7 @@ CREATE TABLE `history_content` (
 --
 
 INSERT INTO `history_content` (`id`, `section`, `title`, `subtitle`, `image`, `image_left`, `image_right`) VALUES
-(1, 'hero', 'A Journey Through Haarlem\'s Legacy', 'Discover the city of painters, merchants, and hidden courtyards.', 'hero-history.png', NULL, NULL),
+(1, 'hero', 'A Journey Through Haarlem\'s Legacy', 'Discover the city of painters, merchants, and hidden courtyard.', 'hero-history.png', NULL, NULL),
 (2, 'intro', 'The Golden City of the North', 'Long before Amsterdam rose to global fame, Haarlem thrived.', NULL, 'grote-markt.jpg', 'historic-buildings.jpg'),
 (3, 'walk', 'Better Your Walk', 'Guided tours available for a deeper experience.', 'walk-guide.jpg', NULL, NULL),
 (4, 'cta', 'Ready to plan your festival weekend?', 'Combine history with other festival events.', 'cta-bg.jpg', NULL, NULL);
@@ -412,8 +414,8 @@ CREATE TABLE `history_details` (
 --
 
 INSERT INTO `history_details` (`id`, `highlight_id`, `slug`, `page_title`, `hero_image`, `location`, `founded_year`, `style_type`, `meta_description`) VALUES
-(1, 3, 'teylers-museum', 'Teylers Museum', 'teylers-museum-hero.jpg', 'Haarlem City Center', '1784', 'Art & Science', 'Discover Teylers Museum, the oldest museum in the Netherlands, featuring art, science, and natural history collections.'),
-(2, 2, 'st-bavos-cathedral', 'St. Bavo\'s Cathedral', 'st-bavos-hero.jpg', 'Haarlem City Center', '1570-1520', 'Gothic', 'Explore St. Bavo\'s Cathedral, the magnificent Gothic church with the famous Müller Organ.');
+(1, 3, 'teylers-museum', 'Teylers Museum', 'tylershomepage.png', 'Haarlem City Center', '1784', 'Art & Science', 'Discover Teylers Museum, the oldest museum in the Netherlands, featuring art, science, and natural history collections.'),
+(2, 2, 'st-bavos-cathedral', 'St. Bavo\'s Cathedral', 'bavo homepage.png', 'Haarlem City Center', '1570-1520', 'Gothic', 'Explore St. Bavo\'s Cathedral, the magnificent Gothic church with the famous Müller Organ.');
 
 -- --------------------------------------------------------
 
@@ -463,12 +465,12 @@ CREATE TABLE `history_detail_gallery` (
 --
 
 INSERT INTO `history_detail_gallery` (`id`, `detail_id`, `image_path`, `caption`, `sort_order`) VALUES
-(1, 1, 'teylers-gallery-1.jpg', 'Main exhibition hall', 1),
-(2, 1, 'teylers-gallery-2.jpg', 'Historic interior', 2),
-(3, 1, 'teylers-gallery-3.jpg', 'Riverside view', 3),
-(4, 2, 'st-bavos-gallery-1.jpg', 'Exterior architecture', 1),
-(5, 2, 'st-bavos-gallery-2.jpg', 'Interior dome', 2),
-(6, 2, 'st-bavos-gallery-3.jpg', 'Waterfront boats', 3);
+(1, 1, 'tylers-image-1.png', 'Main exhibition hall', 1),
+(2, 1, 'tylers-image-2.png', 'Historic interior', 2),
+(3, 1, 'tylers-image-3.png', 'Riverside view', 3),
+(4, 2, 'st-bavos-1.png', 'St. Bavo\'s Cathedral interior', 1),
+(5, 2, 'st-bavos-2.png', 'St. Bavo\'s Cathedral dome', 2),
+(6, 2, 'st-bavos-3.png', 'St. Bavo\'s Cathedral detail', 3);
 
 -- --------------------------------------------------------
 
@@ -496,7 +498,7 @@ INSERT INTO `history_detail_sections` (`id`, `detail_id`, `section_type`, `secti
 (3, 1, 'highlight', 'Art & Drawings', 'The collection encompasses works by Old Masters such as Michelangelo, Raphael, alongside significant holdings from Dutch artists including Rembrandt and Hendrik Willem Mesdag.\n\nThe museum houses over 25,000 drawings spanning from the Renaissance to the 19th century—an unparalleled resource for art historians and enthusiasts.', NULL, 3),
 (4, 1, 'special', 'Pieter Teyler\'s Legacy', 'Pieter Teyler was a wealthy silk merchant and banker who had no children. In his will, he established a foundation that would use his fortune for the benefit of the public through research and artistic creation. His legacy continues to inspire scholarly work and artistic development.\n\nThe institution he founded remains committed to his vision of making knowledge and beauty accessible to all.', NULL, 4),
 (5, 2, 'about', 'About St. Bavo\'s Church', 'The Grote Kerk, known as St. Bavo\'s Church, dominates Haarlem\'s skyline from the central market square. A church has stood on this site since at least the 10th century, but the current Gothic building was constructed between 1370 and 1520, transforming it into Haarlem\'s most prominent landmark.\n\nThe church briefly served as a Catholic cathedral from 1559 to 1578 before the Protestant Reformation reached Haarlem. During the 1578 uprising known as the \"Haarlemse Noon,\" the building was seized and converted to Protestant use. Since then, it has been known simply as the Grote Kerk, meaning \"Great Church,\" reflecting its role as a Protestant place of worship rather than its former Catholic dedication to Saint Bavo.', NULL, 1),
-(6, 2, 'special', 'The Müller Organ', 'The church houses one of Europe\'s most celebrated organs, built between 1735 and 1738 by Amsterdam organ builder Christian Müller. At the time of its completion, it was the largest organ in the world, featuring over 5,000 pipes and standing nearly 30 meters tall.\n\nThe instrument\'s gilded case is adorned with 32 life-size sculptures, making it as visually impressive as it is musically significant. Renowned composers like George Frideric Handel and a 10-year-old Wolfgang Amadeus Mozart traveled to Haarlem specifically to play it.', 'muller-organ.jpg', 2),
+(6, 2, 'special', 'The Müller Organ', 'The church houses one of Europe\'s most celebrated organs, built between 1735 and 1738 by Amsterdam organ builder Christian Müller. At the time of its completion, it was the largest organ in the world, featuring over 5,000 pipes and standing nearly 30 meters tall.\n\nThe instrument\'s gilded case is adorned with 32 life-size sculptures, making it as visually impressive as it is musically significant. Renowned composers like George Frideric Handel and a 10-year-old Wolfgang Amadeus Mozart traveled to Haarlem specifically to play it.', 'st-bavos-2.png', 2),
 (7, 2, 'history', 'Historical Significance', 'St. Bavo\'s witnessed crucial moments in Dutch history, particularly during the Protestant Reformation when religious control of the Netherlands shifted dramatically. The building\'s architectural evolution from medieval times through the Renaissance period tells the story of Haarlem\'s changing fortunes and religious landscape.\n\nToday, it continues to serve both as a Protestant church and as a cultural venue hosting concerts and exhibitions, making it a living monument to the city\'s past and present.', NULL, 3);
 
 -- --------------------------------------------------------
@@ -528,6 +530,7 @@ INSERT INTO `history_highlights` (`id`, `title`, `description`, `image`) VALUES
 
 CREATE TABLE `history_tickets` (
   `id` int(11) NOT NULL,
+  `ticket_type` enum('individual','family') NOT NULL DEFAULT 'individual',
   `ticket_type` enum('individual','family') NOT NULL DEFAULT 'individual',
   `time_slot` varchar(50) NOT NULL,
   `price` decimal(6,2) NOT NULL,
@@ -597,6 +600,7 @@ CREATE TABLE `home_events` (
 INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long_description`, `venues`, `image`, `bg_class`, `icon`, `url`, `button_label`, `sort_order`, `is_active`) VALUES
 (1, 'Haarlem Jazz', 'Music', 'Experience world-class jazz performances across multiple venues. From smooth classics to contemporary fusion.', 'From soft saxophone melodies to energetic jam nights, Haarlem Jazz mixes tradition, modern sound, and warm summer nights...', 'Patronaat Haarlem, Grand Cafe Brinkman, New Vegas', 'Jazz.png', 'jazz-bg', 'bi-music-note-beamed', '/jazz', 'Jazz', 1, 1),
 (2, 'Dance!', 'Music', 'Top DJs bring the energy with electrifying performances. Get ready to move to the best electronic beats.', 'Dance is the electronic music experience of The Festival: three nights filled with house, techno and trance across Haarlem and Bloemendaal.', 'Various venues across Haarlem', 'Dance.png', 'dance-bg', 'bi-disc', '/dance', 'Dance', 2, 1),
+(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/food', 'Yummy', 3, 1),
 (3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/food', 'Yummy', 3, 1),
 (4, 'A Stroll through History!', 'Culture', 'Walk through centuries of Dutch heritage. Discover Haarlem\'s historic landmarks with expert guides.', 'Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.', 'Grote Markt, Corrie ten Boom house', 'bavo-church.jpg', 'history-bg', 'bi-clock-history', '/history', 'History', 4, 1),
 (5, 'Stories in Haarlem', 'Culture', 'Immerse yourself in captivating narratives. From local legends to international storytellers.', 'During the last weekend of July, Stories in Haarlem brings live stories, podcasts and family shows to different locations across the city.', 'Verhalenhuis Haarlem, Elswout Theater, De Schuur, Café de Roemer', 'Story.jpg', 'stories-bg', 'bi-book', '/stories', 'Stories', 5, 1);
@@ -1107,6 +1111,84 @@ INSERT INTO `Ticket_Type` (`type_id`, `event_id`, `name`, `price`, `is_pay_as_yo
 (175, 175, 'Regular Ticket', 35.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00'),
 (176, 176, 'Regular Ticket', 35.00, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00'),
 (177, 177, 'Regular Ticket', 35.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00');
+(25, 15, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00'),
+(101, 101, 'Regular Ticket', 15.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00'),
+(102, 102, 'Regular Ticket', 15.00, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00'),
+(103, 103, 'Regular Ticket', 15.00, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00'),
+(104, 104, 'Regular Ticket', 10.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00'),
+(105, 105, 'Regular Ticket', 10.00, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00'),
+(106, 106, 'Regular Ticket', 10.00, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00'),
+(107, 107, 'Regular Ticket', 15.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00'),
+(108, 108, 'Regular Ticket', 15.00, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00'),
+(109, 109, 'Regular Ticket', 15.00, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00'),
+(110, 110, 'Regular Ticket', 10.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00'),
+(111, 111, 'Regular Ticket', 10.00, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00'),
+(112, 112, 'Regular Ticket', 10.00, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00'),
+(113, 113, 'Regular Ticket', 15.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00'),
+(114, 114, 'Regular Ticket', 15.00, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00'),
+(115, 115, 'Regular Ticket', 15.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00'),
+(116, 116, 'Regular Ticket', 10.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00'),
+(117, 117, 'Regular Ticket', 10.00, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00'),
+(118, 118, 'Regular Ticket', 10.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00'),
+(119, 119, 'Regular Ticket', 0.00, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
+(120, 120, 'Regular Ticket', 0.00, 0, '2026-07-26 16:00:00', '2026-07-26 17:00:00'),
+(121, 121, 'Regular Ticket', 0.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:00:00'),
+(122, 122, 'Regular Ticket', 0.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:00:00'),
+(123, 123, 'Regular Ticket', 0.00, 0, '2026-07-26 19:00:00', '2026-07-26 20:00:00'),
+(124, 124, 'Regular Ticket', 0.00, 0, '2026-07-26 20:00:00', '2026-07-26 21:00:00'),
+(125, 125, 'Regular Ticket', 0.00, 0, '2026-07-24 20:00:00', '2026-07-24 21:30:00'),
+(126, 126, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
+(127, 127, 'Regular Ticket', 0.00, 0, '2026-07-24 23:00:00', '2026-07-24 23:59:00'),
+(128, 128, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
+(129, 129, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
+(130, 130, 'Regular Ticket', 0.00, 0, '2026-07-25 14:00:00', '2026-07-25 20:00:00'),
+(131, 131, 'Regular Ticket', 0.00, 0, '2026-07-25 22:00:00', '2026-07-25 23:30:00'),
+(132, 132, 'Regular Ticket', 0.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:30:00'),
+(133, 133, 'Regular Ticket', 0.00, 0, '2026-07-25 23:00:00', '2026-07-25 23:59:00'),
+(134, 134, 'Regular Ticket', 0.00, 0, '2026-07-26 14:00:00', '2026-07-26 20:00:00'),
+(135, 135, 'Regular Ticket', 0.00, 0, '2026-07-26 19:00:00', '2026-07-26 20:30:00'),
+(136, 136, 'Regular Ticket', 0.00, 0, '2026-07-26 21:00:00', '2026-07-26 22:30:00'),
+(137, 137, 'Regular Ticket', 0.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00'),
+(138, 138, 'Regular Ticket', 17.50, 0, '2026-07-23 10:00:00', '2026-07-23 12:30:00'),
+(139, 139, 'Regular Ticket', 17.50, 0, '2026-07-23 13:00:00', '2026-07-23 15:30:00'),
+(140, 140, 'Regular Ticket', 17.50, 0, '2026-07-23 16:00:00', '2026-07-23 18:30:00'),
+(141, 141, 'Regular Ticket', 17.50, 0, '2026-07-24 10:00:00', '2026-07-24 12:30:00'),
+(142, 142, 'Regular Ticket', 17.50, 0, '2026-07-24 13:00:00', '2026-07-24 15:30:00'),
+(143, 143, 'Regular Ticket', 17.50, 0, '2026-07-24 16:00:00', '2026-07-24 18:30:00'),
+(144, 144, 'Regular Ticket', 17.50, 0, '2026-07-25 10:00:00', '2026-07-25 12:30:00'),
+(145, 145, 'Regular Ticket', 17.50, 0, '2026-07-25 13:00:00', '2026-07-25 15:30:00'),
+(146, 146, 'Regular Ticket', 17.50, 0, '2026-07-25 16:00:00', '2026-07-25 18:30:00'),
+(147, 147, 'Regular Ticket', 17.50, 0, '2026-07-26 10:00:00', '2026-07-26 12:30:00'),
+(148, 148, 'Regular Ticket', 17.50, 0, '2026-07-26 13:00:00', '2026-07-26 15:30:00'),
+(149, 149, 'Regular Ticket', 17.50, 0, '2026-07-26 16:00:00', '2026-07-26 18:30:00'),
+(150, 150, 'Regular Ticket', 35.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:30:00'),
+(151, 151, 'Regular Ticket', 45.00, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00'),
+(152, 152, 'Regular Ticket', 45.00, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00'),
+(153, 153, 'Regular Ticket', 45.00, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00'),
+(154, 154, 'Regular Ticket', 35.00, 0, '2026-07-23 17:00:00', '2026-07-23 18:30:00'),
+(155, 155, 'Regular Ticket', 35.00, 0, '2026-07-23 16:30:00', '2026-07-23 18:00:00'),
+(156, 156, 'Regular Ticket', 35.00, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00'),
+(157, 157, 'Regular Ticket', 35.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:30:00'),
+(158, 158, 'Regular Ticket', 45.00, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00'),
+(159, 159, 'Regular Ticket', 45.00, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00'),
+(160, 160, 'Regular Ticket', 45.00, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00'),
+(161, 161, 'Regular Ticket', 35.00, 0, '2026-07-24 17:00:00', '2026-07-24 18:30:00'),
+(162, 162, 'Regular Ticket', 35.00, 0, '2026-07-24 16:30:00', '2026-07-24 18:00:00'),
+(163, 163, 'Regular Ticket', 35.00, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00'),
+(164, 164, 'Regular Ticket', 35.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:30:00'),
+(165, 165, 'Regular Ticket', 45.00, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00'),
+(166, 166, 'Regular Ticket', 45.00, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00'),
+(167, 167, 'Regular Ticket', 45.00, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00'),
+(168, 168, 'Regular Ticket', 35.00, 0, '2026-07-25 17:00:00', '2026-07-25 18:30:00'),
+(169, 169, 'Regular Ticket', 35.00, 0, '2026-07-25 16:30:00', '2026-07-25 18:00:00'),
+(170, 170, 'Regular Ticket', 35.00, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00'),
+(171, 171, 'Regular Ticket', 35.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00'),
+(172, 172, 'Regular Ticket', 45.00, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00'),
+(173, 173, 'Regular Ticket', 45.00, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00'),
+(174, 174, 'Regular Ticket', 45.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00'),
+(175, 175, 'Regular Ticket', 35.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00'),
+(176, 176, 'Regular Ticket', 35.00, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00'),
+(177, 177, 'Regular Ticket', 35.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00');
 
 -- --------------------------------------------------------
 
@@ -1164,6 +1246,23 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 (2, 'De Schuur', 'Lange Begijnestraat 9, 2011 HH Haarlem'),
 (3, 'Kweekcafé', 'Kleverlaan 9, 2023 JC Haarlem'),
 (4, 'Corrie ten Boom huis', 'Barteljorisstraat 19, Haarlem'),
+(5, 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen'),
+(6, 'Patronaat', 'Zijlvest 21, 2011 VB Haarlem'),
+(7, 'Grote Markt', 'Grote Markt, Haarlem'),
+(8, 'Lichtfabriek', 'Minckelersweg 2, 2031 EM Haarlem'),
+(9, 'Slachthuis', 'Rockplein 6, 2033 KK Haarlem'),
+(10, 'Jopenkerk', 'Gedempte Voldersgracht 2, 2011 WD Haarlem'),
+(11, 'XO the Club', 'Grote Markt 8, 2011 RD Haarlem'),
+(12, 'Puncher Comedy Club', 'Grote Markt 10, 2011 RD Haarlem'),
+(13, 'Caprera Openluchttheater', 'Hoge Duin en Daalseweg 2, 2061 AG Bloemendaal'),
+(14, 'Bavokerk', 'Grote Markt 22, 2011 RD Haarlem'),
+(15, 'Cafe de Roemer', 'Botermarkt 17, 2011 XL Haarlem'),
+(16, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(17, 'Restaurant ML', 'Kleine Houtstraat 70, 2011 DR Haarlem'),
+(18, 'Restaurant Fris', 'Twijnderslaan 7, 2012 BG Haarlem'),
+(19, 'New Vegas', 'Koningstraat 5, 2011 TB Haarlem'),
+(20, 'Grand Cafe Brinkmann', 'Grote Markt 13, 2011 RC Haarlem'),
+(21, 'Urban Frenchy Bistro Toujours', 'Oude Groenmarkt 10-12, 2011 HL Haarlem');
 (5, 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen'),
 (6, 'Patronaat', 'Zijlvest 21, 2011 VB Haarlem'),
 (7, 'Grote Markt', 'Grote Markt, Haarlem'),
@@ -1328,6 +1427,7 @@ CREATE TABLE `YummyRestaurantImages` (
 INSERT INTO `YummyRestaurantImages` (`image_id`, `restaurant_id`, `path`) VALUES
 (10, 1, '123.png'),
 (11, 1, '223.png');
+(11, 1, '223.png');
 
 -- --------------------------------------------------------
 
@@ -1403,6 +1503,28 @@ ALTER TABLE `Event`
   ADD KEY `idx_type` (`type`),
   ADD KEY `idx_start_time` (`start_time`),
   ADD KEY `idx_slug` (`slug`);
+
+--
+-- Indexes for table `festival_events`
+--
+ALTER TABLE `festival_events`
+  ADD PRIMARY KEY (`festival_event_id`);
+
+--
+-- Indexes for table `festival_event_tickets`
+--
+ALTER TABLE `festival_event_tickets`
+  ADD PRIMARY KEY (`festival_event_ticket_id`),
+  ADD UNIQUE KEY `qr_token` (`qr_token`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `festival_event_ticket_type_id` (`festival_event_ticket_type_id`);
+
+--
+-- Indexes for table `festival_event_ticket_types`
+--
+ALTER TABLE `festival_event_ticket_types`
+  ADD PRIMARY KEY (`festival_event_ticket_type_id`),
+  ADD KEY `festival_event_id` (`festival_event_id`);
 
 --
 -- Indexes for table `festival_events`
@@ -1559,6 +1681,22 @@ ALTER TABLE `jazz_performer_tracks`
 --
 ALTER TABLE `jazz_recommendations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `Order`
+--
+ALTER TABLE `Order`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `idx_user_id` (`user_id`),
+  ADD KEY `idx_status` (`status`);
+
+--
+-- Indexes for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `idx_order_id` (`order_id`),
+  ADD KEY `idx_type_id` (`type_id`);
 
 --
 -- Indexes for table `Order`
@@ -1844,6 +1982,7 @@ ALTER TABLE `Ticket`
 --
 ALTER TABLE `Ticket_Type`
   MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
 
 --
 -- AUTO_INCREMENT for table `User`
@@ -1855,6 +1994,7 @@ ALTER TABLE `User`
 -- AUTO_INCREMENT for table `Venue`
 --
 ALTER TABLE `Venue`
+  MODIFY `venue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
   MODIFY `venue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
@@ -1880,6 +2020,7 @@ ALTER TABLE `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantImages`
   MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
@@ -1902,6 +2043,12 @@ ALTER TABLE `CartItem`
 --
 ALTER TABLE `Event`
   ADD CONSTRAINT `Event_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `Venue` (`venue_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `festival_event_ticket_types`
+--
+ALTER TABLE `festival_event_ticket_types`
+  ADD CONSTRAINT `festival_event_ticket_types_ibfk_1` FOREIGN KEY (`festival_event_id`) REFERENCES `festival_events` (`festival_event_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `festival_event_ticket_types`
@@ -1963,6 +2110,19 @@ ALTER TABLE `jazz_performer_locations`
 --
 ALTER TABLE `jazz_performer_tracks`
   ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Order`
+--
+ALTER TABLE `Order`
+  ADD CONSTRAINT `Order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `OrderItem`
+--
+ALTER TABLE `OrderItem`
+  ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `Order`

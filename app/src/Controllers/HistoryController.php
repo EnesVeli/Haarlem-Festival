@@ -55,9 +55,21 @@ class HistoryController
 
     public function booking(): void
      {
-    $ticketId = (int)($_GET['ticket_id'] ?? 0);
-    $tickets  = $this->service->getTickets();
-    $ticket   = array_values(array_filter($tickets, fn($t) => $t['id'] === $ticketId))[0] ?? ($tickets[0] ?? []);
+    $ticketId     = (int)($_GET['ticket_id'] ?? 0);
+    $tickets      = $this->service->getTickets();
+    $ticket       = array_values(array_filter($tickets, fn($t) => $t['id'] === $ticketId))[0] ?? ($tickets[0] ?? []);
+    $selectedDate = $_GET['date'] ?? 'Thursday';
+    $selectedTime = $_GET['time'] ?? '';
+
+    // Generate CSRF token if not set
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    $csrfToken = $_SESSION['csrf_token'];
+
+    // These are what the new CartController expects
+    $eventId = 138; // first history event — good enough as fallback
+    $typeId  = 138;
 
     require __DIR__ . '/../Views/history/booking.php';
      }
