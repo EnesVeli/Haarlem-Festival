@@ -125,7 +125,7 @@ require __DIR__ . '/../partials/header.php';
                     
                     <div class="ticket-selector">
                         <label><strong>Select a Date:</strong></label>
-                        <select class="date-select">
+                        <select class="date-select" onchange="updateDayLabel(this.value)">
                             <option>Select</option>
                             <option>Thursday</option>
                             <option>Friday</option>
@@ -133,7 +133,7 @@ require __DIR__ . '/../partials/header.php';
                             <option>Sunday</option>
                         </select>
                         
-                        <div class="available-slots-label">Available Time Slots (Thursday)</div>
+                        <div class="available-slots-label" id="slots-day-label">Available Time Slots (Thursday)</div>
                     </div>
                     
                     <div class="tickets-list">
@@ -141,7 +141,6 @@ require __DIR__ . '/../partials/header.php';
                             <div class="ticket-row" style="cursor:pointer"
                                  onclick="selectTicket(<?= $ticket['id'] ?>, '<?= htmlspecialchars($ticket['time_slot']) ?>')">
                                 <div class="ticket-time"><?= htmlspecialchars($ticket['time_slot']) ?></div>
-                                <div class="ticket-price">€<?= number_format($ticket['price'], 2) ?></div>
                                 <div class="ticket-spots"><?= htmlspecialchars($ticket['available_spots']) ?> spots left</div>
                             </div>
                         <?php endforeach; ?>
@@ -152,6 +151,12 @@ require __DIR__ . '/../partials/header.php';
                     <script>
                     let selectedTicketId = null;
                     let selectedTime = '';
+                    function updateDayLabel(day) {
+                        const label = document.getElementById('slots-day-label');
+                        label.textContent = day === 'Select'
+                            ? 'Available Time Slots'
+                            : 'Available Time Slots (' + day + ')';
+                    }
                     function selectTicket(id, time) {
                         selectedTicketId = id;
                         selectedTime = time;

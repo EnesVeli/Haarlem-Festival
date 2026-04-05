@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 01:12 PM
+-- Generation Time: Apr 05, 2026 at 03:24 PM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -59,6 +59,36 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cms_content`
 --
 
@@ -110,36 +140,6 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -528,7 +528,6 @@ INSERT INTO `history_highlights` (`id`, `title`, `description`, `image`) VALUES
 
 CREATE TABLE `history_tickets` (
   `id` int(11) NOT NULL,
-  `ticket_type` enum('individual','family') NOT NULL DEFAULT 'individual',
   `time_slot` varchar(50) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `available_spots` int(11) NOT NULL DEFAULT 0
@@ -538,10 +537,30 @@ CREATE TABLE `history_tickets` (
 -- Dumping data for table `history_tickets`
 --
 
-INSERT INTO `history_tickets` (`id`, `ticket_type`, `time_slot`, `price`, `available_spots`) VALUES
-(1, 'individual', '10:00 AM', 12.50, 15),
-(2, 'individual', '01:00 PM', 12.50, 10),
-(3, 'family', '04:00 PM', 15.00, 8);
+INSERT INTO `history_tickets` (`id`, `time_slot`, `price`, `available_spots`) VALUES
+(1, '10:00 AM', 5.00, 15),
+(2, '01:00 PM', 12.50, 10),
+(3, '04:00 PM', 60.00, 8);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `history_ticket_prices`
+--
+
+CREATE TABLE `history_ticket_prices` (
+  `id` int(11) NOT NULL,
+  `ticket_type` enum('individual','family') NOT NULL,
+  `price` decimal(6,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `history_ticket_prices`
+--
+
+INSERT INTO `history_ticket_prices` (`id`, `ticket_type`, `price`) VALUES
+(1, 'individual', 12.50),
+(2, 'family', 60.00);
 
 -- --------------------------------------------------------
 
@@ -1376,6 +1395,14 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
+
+--
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1384,14 +1411,6 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
-
---
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `Event`
@@ -1472,6 +1491,13 @@ ALTER TABLE `history_highlights`
 --
 ALTER TABLE `history_tickets`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `history_ticket_prices`
+--
+ALTER TABLE `history_ticket_prices`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `ticket_type` (`ticket_type`);
 
 --
 -- Indexes for table `home_content`
@@ -1657,19 +1683,19 @@ ALTER TABLE `YummyRestaurants`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
-
---
--- AUTO_INCREMENT for table `cms_content`
---
-ALTER TABLE `cms_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `CMS_Content`
 --
 ALTER TABLE `CMS_Content`
   MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `Event`
@@ -1736,6 +1762,12 @@ ALTER TABLE `history_highlights`
 --
 ALTER TABLE `history_tickets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `history_ticket_prices`
+--
+ALTER TABLE `history_ticket_prices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `home_content`

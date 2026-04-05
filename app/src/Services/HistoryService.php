@@ -23,9 +23,19 @@ class HistoryService
         return $this->repository->getAvailableTickets();
     }
 
-  public function getContent(): array
+    public function getTicketPrices(): array
     {
-    return $this->repository->getAllContent();  //  just return raw rows
+        return $this->repository->getTicketPrices();
+    }
+
+    public function updateTicketPrice(string $type, float $price): void
+    {
+        $this->repository->updateTicketPrice($type, $price);
+    }
+
+    public function getContent(): array
+    {
+        return $this->repository->getAllContent();
     }
 
     public function getContentBySection($section)
@@ -33,39 +43,30 @@ class HistoryService
         return $this->repository->getContentBySection($section);
     }
 
-    /**
-     * Get complete detail page data
-     */
     public function getDetailPage($slug)
     {
         $detail = $this->repository->getDetailBySlug($slug);
-        
+
         if (!$detail) {
             return null;
         }
 
         return [
-            'detail' => $detail,
+            'detail'   => $detail,
             'sections' => $this->repository->getDetailSections($detail['id']),
-            'gallery' => $this->repository->getDetailGallery($detail['id']),
-            'facts' => $this->repository->getDetailFacts($detail['id'])
+            'gallery'  => $this->repository->getDetailGallery($detail['id']),
+            'facts'    => $this->repository->getDetailFacts($detail['id']),
         ];
     }
 
-    
-
-    /**
-     * Get other highlights to show in "Complete Your Journey" section
-     */
     public function getOtherHighlights($currentSlug, $limit = 2)
     {
         $allHighlights = $this->repository->getAllHighlightsWithSlugs();
-        
-        // Filter out current highlight and limit results
-        $others = array_filter($allHighlights, function($h) use ($currentSlug) {
+
+        $others = array_filter($allHighlights, function ($h) use ($currentSlug) {
             return $h['slug'] !== $currentSlug && !empty($h['slug']);
         });
-        
+
         return array_slice($others, 0, $limit);
     }
 }

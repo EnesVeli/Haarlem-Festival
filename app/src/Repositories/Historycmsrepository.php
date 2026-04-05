@@ -109,6 +109,27 @@ class HistoryCmsRepository extends Repository
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTicketPrices(): array
+    {
+        $rows = $this->connection
+            ->query("SELECT * FROM history_ticket_prices")
+            ->fetchAll(PDO::FETCH_ASSOC);
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['ticket_type']] = $row;
+        }
+        return $result;
+    }
+
+    public function updateTicketPrice(string $type, float $price): void
+    {
+        $stmt = $this->connection->prepare(
+            "UPDATE history_ticket_prices SET price = :price WHERE ticket_type = :type"
+        );
+        $stmt->execute([':price' => $price, ':type' => $type]);
+    }
+
     public function getTicketById(int $id): ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM history_tickets WHERE id=:id");
