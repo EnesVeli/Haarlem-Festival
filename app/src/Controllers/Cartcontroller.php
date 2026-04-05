@@ -1,27 +1,36 @@
 <?php
 namespace App\Controllers;
 
-use App\Services\CartService;
+use App\Interfaces\ICartService;
 
-class CartController
+/**
+ * Handles cart pages and cart mutations.
+ */
+class CartController extends BaseController
 {
-    private CartService $cartService;
+    private ICartService $cartService;
 
-    public function __construct()
+    /**
+     * @param ICartService $cartService Cart business logic service
+     */
+    public function __construct(ICartService $cartService)
     {
-        $this->cartService = new CartService();
+        $this->cartService = $cartService;
     }
 
-    // Guard 
-
+    /**
+     * Requires authenticated user for cart actions.
+     */
     private function mustBeLoggedIn(): void
     {
         if (empty($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
+            $this->redirect('/login');
         }
     }
 
+    /**
+     * Validates CSRF token for POST actions.
+     */
     private function validateCsrfToken(): void
     {
         $sessionToken = $_SESSION['csrf_token'] ?? '';
@@ -34,22 +43,29 @@ class CartController
         }
     }
 
-    // GET /cart
+    /**
+     * Renders cart page.
+     */
     public function index(): void
     {
         $this->mustBeLoggedIn();
 
         $cart = $this->cartService->getCart((int)$_SESSION['user_id']);
 
-        $success = $_SESSION['cart_success'] ?? null;
-        $error   = $_SESSION['cart_error']   ?? null;
-        unset($_SESSION['cart_success'], $_SESSION['cart_error']);
+        $success = $this->popFlash('cart_success');
+        $error = $this->popFlash('cart_error');
 
-        require __DIR__ . '/../Views/Cart/index.php';
+        $this->render('Cart/index', [
+            'cart' => $cart,
+            'success' => $success,
+            'error' => $error,
+            'csrfToken' => $this->ensureCsrfToken(),
+        ]);
     }
 
-    // POST /cart/add
-
+    /**
+     * Adds one ticket selection to cart.
+     */
     public function add(): void
     {
         $this->mustBeLoggedIn();
@@ -85,17 +101,17 @@ class CartController
             $_SESSION['cart_error'] = $e->getMessage();
         }
 
-        // Redirect back to where they came from, or to cart
         $redirect = (string)($_POST['redirect_back'] ?? '/cart');
         if ($redirect === '' || $redirect[0] !== '/' || str_starts_with($redirect, '//')) {
             $redirect = '/cart';
         }
-        header('Location: ' . $redirect);
-        exit;
+        $_SESSION['cart_count'] = $this->cartService->getItemCount((int)$_SESSION['user_id']);
+        $this->redirect($redirect);
     }
 
-    // POST /cart/update 
-
+    /**
+     * Updates quantity for one cart item.
+     */
     public function update(): void
     {
         $this->mustBeLoggedIn();
@@ -112,11 +128,13 @@ class CartController
             $_SESSION['cart_error'] = $e->getMessage();
         }
 
-        header('Location: /cart');
-        exit;
+        $_SESSION['cart_count'] = $this->cartService->getItemCount((int)$_SESSION['user_id']);
+        $this->redirect('/cart');
     }
 
-    //POST /cart/remove
+    /**
+     * Removes one cart item.
+     */
     public function remove(): void
     {
         $this->mustBeLoggedIn();
@@ -132,7 +150,7 @@ class CartController
             $_SESSION['cart_error'] = $e->getMessage();
         }
 
-        header('Location: /cart');
-        exit;
+        $_SESSION['cart_count'] = $this->cartService->getItemCount((int)$_SESSION['user_id']);
+        $this->redirect('/cart');
     }
 }

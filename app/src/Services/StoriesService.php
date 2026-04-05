@@ -69,4 +69,14 @@ class StoriesService
     {
         return $this->repository->getScheduleByName($name);
     }
+
+    public function getTicketTypesForCms(int $eventId): array
+    {
+        return $this->repository->getTicketTypesByEventId($eventId);
+    }
+
+    public function updateTicketTypePrice(int $typeId, float $price): void
+    {
+        $this->repository->updateTicketTypePrice($typeId, $price);
+    }
 }

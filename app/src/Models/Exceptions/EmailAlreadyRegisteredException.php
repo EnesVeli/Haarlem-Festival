@@ -5,7 +5,7 @@ namespace App\Models\Exceptions;
 use Exception;
 use Throwable;
 
-class EmailAlreadyRegesteredException extends Exception {
+class EmailAlreadyRegisteredException extends Exception {
     public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null){
         parent::__construct($message, $code, $previous);
     }

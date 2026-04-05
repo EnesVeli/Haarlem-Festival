@@ -59,7 +59,7 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
         <h3 class="stories-booking-section-title">Choose Your Ticket</h3>
 
         <form action="/cart/add" method="POST" id="bookingForm" aria-label="Ticket booking form">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <input type="hidden" name="event_id" value="<?= (int)$event->event_id ?>">
             <input type="hidden" name="ticket_type_id" id="ticketTypeIdField" value="<?= $regularTicketId ?>">
             <input type="hidden" name="redirect_back" value="/cart">

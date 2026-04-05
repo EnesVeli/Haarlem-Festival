@@ -6,6 +6,8 @@ use PDO;
 
 class NonStoriesTicketsRepository extends Repository
 {
+    private const REGULAR_TICKET_NAME = 'Regular Ticket';
+
     /**
      * Returns all events for a non-stories category.
      *
@@ -32,12 +34,15 @@ class NonStoriesTicketsRepository extends Repository
                   ON v.venue_id = e.venue_id
                 LEFT JOIN Ticket_Type tt
                   ON tt.event_id = e.event_id
-                 AND tt.name = 'Regular Ticket'
+                 AND tt.name = :regularTicketName
                 WHERE e.type = :type
                 ORDER BY e.start_time ASC";
 
         $stmt = $this->connection->prepare($sql);
-        $stmt->execute(['type' => $eventType]);
+        $stmt->execute([
+            'type' => $eventType,
+            'regularTicketName' => self::REGULAR_TICKET_NAME,
+        ]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

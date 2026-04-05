@@ -59,7 +59,12 @@ class StoriesController extends BaseController
      */
      public function show(array $vars): void
     {
-        $slug  = htmlspecialchars(trim($vars['slug']));
+        $slug = trim((string) ($vars['slug'] ?? ''));
+        if (!preg_match('/^[a-z0-9\-]+$/i', $slug)) {
+            $this->notFound();
+            return;
+        }
+
         $event = $this->service->getEventBySlug($slug);
 
         if ($event === null) {
@@ -89,7 +94,12 @@ class StoriesController extends BaseController
      */
     public function book(array $vars): void
     {
-        $slug  = htmlspecialchars(trim($vars['slug']));
+        $slug = trim((string) ($vars['slug'] ?? ''));
+        if (!preg_match('/^[a-z0-9\-]+$/i', $slug)) {
+            $this->notFound();
+            return;
+        }
+
         $event = $this->service->getEventBySlug($slug);
 
         if ($event === null) {
@@ -104,6 +114,7 @@ class StoriesController extends BaseController
             'pageCSS'     => 'stories.css',
             'event'       => $event,
             'ticketTypes' => $ticketTypes,
+            'csrfToken'   => $this->ensureCsrfToken(),
         ]);
     }
 }

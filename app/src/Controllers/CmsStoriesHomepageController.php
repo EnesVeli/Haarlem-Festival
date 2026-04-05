@@ -64,7 +64,7 @@ class CmsStoriesHomepageController extends BaseController
     /**
      * POST /cms/stories/homepage — verify CSRF, handle image upload, save, redirect.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars 
      * @return void
      */
     public function update(array $vars = []): void

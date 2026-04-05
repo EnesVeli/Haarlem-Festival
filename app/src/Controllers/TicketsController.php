@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers;
 
-use App\Services\NonStoriesTicketsService;
+use App\Interfaces\INonStoriesTicketsService;
 use App\Services\StoriesService;
 use App\ViewModels\TicketsCategoryViewModel;
 use App\ViewModels\TicketsStoriesViewModel;
@@ -17,14 +17,14 @@ class TicketsController extends BaseController
 {
     /** @var StoriesService Service for fetching story events. */
     private StoriesService $storiesService;
-    private NonStoriesTicketsService $nonStoriesTicketsService;
+    private INonStoriesTicketsService $nonStoriesTicketsService;
 
     /**
      * Constructor — receives the StoriesService via dependency injection.
      *
      * @param StoriesService $storiesService Service for story events
      */
-    public function __construct(StoriesService $storiesService, NonStoriesTicketsService $nonStoriesTicketsService)
+    public function __construct(StoriesService $storiesService, INonStoriesTicketsService $nonStoriesTicketsService)
     {
         $this->storiesService = $storiesService;
         $this->nonStoriesTicketsService = $nonStoriesTicketsService;
@@ -63,13 +63,7 @@ class TicketsController extends BaseController
     public function stories(array $vars = []): void
     {
         $events = $this->storiesService->getAllEvents();
-
-        // Generate or reuse a CSRF token for the add-to-cart forms
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-
-        $viewModel = new TicketsStoriesViewModel($events, $_SESSION['csrf_token']);
+        $viewModel = new TicketsStoriesViewModel($events, $this->ensureCsrfToken());
 
         $this->render('tickets/stories', [
             'viewModel' => $viewModel,
@@ -78,38 +72,56 @@ class TicketsController extends BaseController
         ]);
     }
 
+    /**
+     * Renders Jazz ticket category page.
+     *
+     * @param array $vars Route parameters (unused)
+     */
     public function jazz(array $vars = []): void
     {
         $this->renderCategory('jazz');
     }
 
+    /**
+     * Renders Dance ticket category page.
+     *
+     * @param array $vars Route parameters (unused)
+     */
     public function dance(array $vars = []): void
     {
         $this->renderCategory('dance');
     }
 
+    /**
+     * Renders History ticket category page.
+     *
+     * @param array $vars Route parameters (unused)
+     */
     public function history(array $vars = []): void
     {
         $this->renderCategory('history');
     }
 
+    /**
+     * Renders Yummy ticket category page.
+     *
+     * @param array $vars Route parameters (unused)
+     */
     public function yummy(array $vars = []): void
     {
         $this->renderCategory('yummy');
     }
 
+    /**
+     * Shared category rendering logic for non-stories tickets.
+     */
     private function renderCategory(string $categoryKey): void
     {
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-
         $eventsByDay = $this->nonStoriesTicketsService->getCategoryTickets($categoryKey);
-        $viewModel = new TicketsCategoryViewModel($categoryKey, $eventsByDay, $_SESSION['csrf_token']);
+        $viewModel = new TicketsCategoryViewModel($categoryKey, $eventsByDay, $this->ensureCsrfToken());
 
-        $success = $_SESSION['cart_success'] ?? null;
-        $error = $_SESSION['cart_error'] ?? null;
-        unset($_SESSION['cart_success'], $_SESSION['cart_error']);
+        $success = $this->popFlash('cart_success');
+        $error = $this->popFlash('cart_error');
 
         $this->render('tickets/category', [
             'viewModel' => $viewModel,

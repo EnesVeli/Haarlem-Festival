@@ -31,7 +31,8 @@ foreach ($events as $event) {
                     <a href="#program" class="stories-primary-button">View program</a>
                     <p class="stories-hero-subtitle"><?= htmlspecialchars($pageSubtitle) ?></p>
                 </div>
-                <div class="stories-hero-image"<?php if (!empty($heroImage)): ?> style="background-image: url('<?= htmlspecialchars($heroImage) ?>');"<?php endif; ?>></div>
+                <div class="stories-hero-image" <?php if (!empty($heroImage)): ?>
+                    style="background-image: url('<?= htmlspecialchars($heroImage) ?>');" <?php endif; ?>></div>
             </div>
         </div>
     </section>

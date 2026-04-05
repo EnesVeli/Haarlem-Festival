@@ -36,6 +36,7 @@
                         <div id="message-container"></div>
 
                         <form method="post" action="/register" novalidate>
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Full Name</label>
                                 <input type="text" id="name" name="name" class="form-control"
