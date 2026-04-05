@@ -47,7 +47,7 @@ class AdminYummyController extends BaseCmsController {
             Session::set('temp_error', "Something went wrong try again later." . $ex->getMessage());
         }
 
-        header('location: /cms/yummy/');
+        header('location: /cms/yummy');
     }
 
     public function list(){

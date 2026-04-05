@@ -351,6 +351,8 @@ class YummyCmsService {
         // Crafting path
         $path = __DIR__ . '/../../../public/assets/uploads/' . $end_dir . $file_name;
 
+        if(!file_exists($path)) return false;
+
         return unlink($path);
     }
 }
