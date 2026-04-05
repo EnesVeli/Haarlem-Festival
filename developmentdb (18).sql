@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 12:31 AM
+-- Generation Time: Apr 05, 2026 at 10:54 AM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -524,6 +524,7 @@ INSERT INTO `history_highlights` (`id`, `title`, `description`, `image`) VALUES
 
 CREATE TABLE `history_tickets` (
   `id` int(11) NOT NULL,
+  `ticket_type` enum('individual','family') NOT NULL DEFAULT 'individual',
   `time_slot` varchar(50) NOT NULL,
   `price` decimal(6,2) NOT NULL,
   `available_spots` int(11) NOT NULL DEFAULT 0
@@ -533,10 +534,10 @@ CREATE TABLE `history_tickets` (
 -- Dumping data for table `history_tickets`
 --
 
-INSERT INTO `history_tickets` (`id`, `time_slot`, `price`, `available_spots`) VALUES
-(1, '10:00 AM', 12.50, 15),
-(2, '01:00 PM', 12.50, 10),
-(3, '04:00 PM', 15.00, 8);
+INSERT INTO `history_tickets` (`id`, `ticket_type`, `time_slot`, `price`, `available_spots`) VALUES
+(1, 'individual', '10:00 AM', 12.50, 15),
+(2, 'individual', '01:00 PM', 12.50, 10),
+(3, 'family', '04:00 PM', 15.00, 8);
 
 -- --------------------------------------------------------
 

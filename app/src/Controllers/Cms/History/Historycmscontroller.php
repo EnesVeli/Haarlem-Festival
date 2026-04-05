@@ -117,9 +117,9 @@ class HistoryCmsController
             : 'individual';
 
         if ($id > 0) {
-            $this->repo->updateTicket($id, $slot, $type, $price);
+            $this->repo->updateTicket($id, $slot, $price, $spots);
         } else {
-            $this->repo->createTicket($slot, $type, $price);
+            $this->repo->createTicket($slot, $price, $spots);
         }
 
         $this->redirect('/cms/history#tab-tickets', 'Ticket slot saved.');

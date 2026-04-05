@@ -1,10 +1,9 @@
 <?php
 
 $pageTitle = "Book Your Guided Tour - Haarlem Festival";
-$pageCSS   = "booking.css";   // loaded by header.php as /assets/css/booking.css
+$pageCSS   = "booking.css";
 require __DIR__ . '/../partials/header.php';
 
-// Safe price values — fall back to sensible defaults if DB rows are missing
 $individualPrice = (float)($individualTicket['price'] ?? 17.50);
 $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
 ?>
@@ -77,7 +76,7 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
         <div class="col-md-6">
           <p class="tickets-title">Choose Your Tickets</p>
 
-          <!-- Individual ticket — price from DB -->
+          <!-- Individual ticket -->
           <div class="ticket-option">
             <div>
               <div class="ticket-name">Individual Tickets</div>
@@ -88,14 +87,14 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
                 €<?= number_format($individualPrice, 2) ?>
               </span>
               <div class="qty-control">
-                <button class="qty-btn" onclick="changeQty('individual', -1)">−</button>
+                <button type="button" class="qty-btn" onclick="changeQty('individual', -1)">−</button>
                 <span class="qty-val" id="qty-individual">1</span>
-                <button class="qty-btn" onclick="changeQty('individual', 1)">+</button>
+                <button type="button" class="qty-btn" onclick="changeQty('individual', 1)">+</button>
               </div>
             </div>
           </div>
 
-          <!-- Family ticket — price from DB -->
+          <!-- Family ticket -->
           <div class="ticket-option">
             <div>
               <div class="ticket-name">Family Ticket</div>
@@ -106,9 +105,9 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
                 €<?= number_format($familyPrice, 2) ?>
               </span>
               <div class="qty-control">
-                <button class="qty-btn" onclick="changeQty('family', -1)">−</button>
+                <button type="button" class="qty-btn" onclick="changeQty('family', -1)">−</button>
                 <span class="qty-val" id="qty-family">0</span>
-                <button class="qty-btn" onclick="changeQty('family', 1)">+</button>
+                <button type="button" class="qty-btn" onclick="changeQty('family', 1)">+</button>
               </div>
             </div>
           </div>
@@ -122,8 +121,8 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
           </div>
 
           <div class="d-flex mt-4">
-            <button class="btn-cancel" onclick="history.back()">Cancel</button>
-            <button class="btn-book-confirm" onclick="addToCart()">Add to Program</button>
+            <button type="button" class="btn-cancel" onclick="window.history.back()">Cancel</button>
+            <button type="button" class="btn-book-confirm" onclick="addToCart()">Add to Program</button>
           </div>
         </div>
 
@@ -133,7 +132,6 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
 </div>
 
 <script>
-// Prices always injected from PHP (from the DB), never hardcoded
 const prices = {
     individual: <?= json_encode($individualPrice) ?>,
     family:     <?= json_encode($familyPrice) ?>
