@@ -97,37 +97,78 @@ function imgPreview(string $filename, string $field): string {
          TAB 2 – TICKETS
     ════════════════════════════════════════════════════ -->
     <div class="tab-pane fade" id="tab-tickets">
-      <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center bg-dark text-white">
-          <strong>Tour Ticket Slots</strong>
-          <button class="btn btn-sm btn-light" onclick="openTicketModal()">+ Add</button>
+      <div class="row g-4">
+
+        <!-- Individual Price -->
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">
+              <strong>🎫 Individual Ticket Price</strong>
+              <small class="text-white-50 d-block">Per person &middot; Ages 12 and above</small>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($ticketPrices['individual']['price'] ?? 0, 2) ?></strong></p>
+              <form method="POST" action="/cms/history/action">
+                <input type="hidden" name="_action" value="save_ticket_price">
+                <input type="hidden" name="ticket_type" value="individual">
+                <div class="input-group">
+                  <span class="input-group-text">€</span>
+                  <input type="number" name="price" class="form-control"
+                         step="0.01" min="0"
+                         value="<?= number_format($ticketPrices['individual']['price'] ?? 0, 2) ?>"
+                         required>
+                  <button class="btn btn-dark" type="submit">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Family Price -->
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-header bg-dark text-white">
+              <strong>👪 Family Ticket Price</strong>
+              <small class="text-white-50 d-block">Up to 4 people</small>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($ticketPrices['family']['price'] ?? 0, 2) ?></strong></p>
+              <form method="POST" action="/cms/history/action">
+                <input type="hidden" name="_action" value="save_ticket_price">
+                <input type="hidden" name="ticket_type" value="family">
+                <div class="input-group">
+                  <span class="input-group-text">€</span>
+                  <input type="number" name="price" class="form-control"
+                         step="0.01" min="0"
+                         value="<?= number_format($ticketPrices['family']['price'] ?? 0, 2) ?>"
+                         required>
+                  <button class="btn btn-dark" type="submit">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Time Slots (read-only info) -->
+      <div class="card shadow-sm mt-4">
+        <div class="card-header bg-secondary text-white">
+          <strong>🕐 Available Time Slots</strong>
+          <small class="text-white-50 ms-2">These apply to both ticket types</small>
         </div>
         <div class="card-body p-0">
           <table class="table table-hover mb-0 align-middle">
             <thead class="table-light">
-              <tr><th>Time Slot</th><th>Price (€)</th><th>Spots</th><th style="width:110px"></th></tr>
+              <tr><th>Time Slot</th><th>Spots Available</th></tr>
             </thead>
             <tbody>
               <?php foreach ($tickets as $t): ?>
               <tr>
                 <td><?= htmlspecialchars($t['time_slot']) ?></td>
-                <td>€<?= number_format($t['price'], 2) ?></td>
                 <td><?= (int)$t['available_spots'] ?></td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1"
-                    onclick='openTicketModal(<?= json_encode($t) ?>)'>Edit</button>
-                  <form method="POST" action="/cms/history/action" class="d-inline"
-                        onsubmit="return confirm('Delete?')">
-                    <input type="hidden" name="_action" value="delete_ticket">
-                    <input type="hidden" name="id" value="<?= $t['id'] ?>">
-                    <button class="btn btn-sm btn-outline-danger">Del</button>
-                  </form>
-                </td>
               </tr>
               <?php endforeach; ?>
-              <?php if (empty($tickets)): ?>
-                <tr><td colspan="4" class="text-center text-muted py-3">No slots yet.</td></tr>
-              <?php endif; ?>
             </tbody>
           </table>
         </div>
@@ -271,36 +312,7 @@ function imgPreview(string $filename, string $field): string {
 <!-- ══════════════════════════════════════════════════════════════════════
      MODAL – TICKET
 ══════════════════════════════════════════════════════════════════════════ -->
-<div class="modal fade" id="ticketModal" tabindex="-1">
-  <div class="modal-dialog modal-sm">
-    <form method="POST" action="/cms/history/action" class="modal-content">
-      <input type="hidden" name="_action" value="save_ticket">
-      <input type="hidden" name="id" id="t_id" value="0">
-      <div class="modal-header bg-dark text-white">
-        <h5 class="modal-title" id="t_modalTitle">Add Ticket Slot</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Time Slot</label>
-          <input type="text" name="time_slot" id="t_time_slot" class="form-control" placeholder="e.g. 10:00 AM" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Price (€)</label>
-          <input type="number" name="price" id="t_price" class="form-control" step="0.01" min="0" required>
-        </div>
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Available Spots</label>
-          <input type="number" name="available_spots" id="t_spots" class="form-control" min="0" required>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-dark">Save</button>
-      </div>
-    </form>
-  </div>
-</div>
+
 
 <script>
 function openHighlightModal(data = null) {
@@ -315,14 +327,6 @@ function openHighlightModal(data = null) {
   new bootstrap.Modal(document.getElementById('highlightModal')).show();
 }
 
-function openTicketModal(data = null) {
-  document.getElementById('t_id').value        = data?.id ?? 0;
-  document.getElementById('t_time_slot').value = data?.time_slot ?? '';
-  document.getElementById('t_price').value     = data?.price ?? '';
-  document.getElementById('t_spots').value     = data?.available_spots ?? '';
-  document.getElementById('t_modalTitle').textContent = data ? 'Edit Ticket Slot' : 'Add Ticket Slot';
-  new bootstrap.Modal(document.getElementById('ticketModal')).show();
-}
 </script>
 
 <?php require __DIR__ . '/../../partials/footer.php'; ?>

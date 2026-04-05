@@ -27,10 +27,11 @@ class HistoryCmsController
     // GET /cms/history — main dashboard with all tabs
     public function index(): void
     {
-        $highlights = $this->repo->getAllHighlights();
-        $tickets    = $this->repo->getAllTickets();
-        $content    = $this->repo->getAllContentKeyed();
-        $details    = $this->repo->getAllDetails();
+        $highlights   = $this->repo->getAllHighlights();
+        $tickets      = $this->repo->getAllTickets();
+        $ticketPrices = $this->repo->getTicketPrices();
+        $content      = $this->repo->getAllContentKeyed();
+        $details      = $this->repo->getAllDetails();
 
         require __DIR__ . '/../../../Views/cms/history/index.php';
     }
@@ -56,8 +57,9 @@ class HistoryCmsController
         switch ($action) {
             case 'save_highlight':   $this->saveHighlight();   break;
             case 'delete_highlight': $this->deleteHighlight(); break;
-            case 'save_ticket':      $this->saveTicket();      break;
-            case 'delete_ticket':    $this->deleteTicket();    break;
+            case 'save_ticket':        $this->saveTicket();        break;
+            case 'delete_ticket':      $this->deleteTicket();      break;
+            case 'save_ticket_price':  $this->saveTicketPrice();  break;
             case 'save_content':     $this->saveContent();     break;
             case 'save_detail':      $this->saveDetail();      break;
             case 'delete_detail':    $this->deleteDetail();    break;
@@ -127,6 +129,18 @@ class HistoryCmsController
     {
         $this->repo->deleteTicket((int)($_POST['id'] ?? 0));
         $this->redirect('/cms/history#tab-tickets', 'Ticket deleted.');
+    }
+
+    private function saveTicketPrice(): void
+    {
+        $type  = $_POST['ticket_type'] ?? '';
+        $price = (float)($_POST['price'] ?? 0);
+
+        if (in_array($type, ['individual', 'family']) && $price >= 0) {
+            $this->repo->updateTicketPrice($type, $price);
+        }
+
+        $this->redirect('/cms/history#tab-tickets', 'Ticket price updated.');
     }
 
     // ── Page Content ──────────────────────────────────────────────────────
