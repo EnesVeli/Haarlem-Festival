@@ -123,6 +123,8 @@ class HistoryRepository extends Repository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    
+
     /**
      * Get all highlights with their slugs for linking
      */
