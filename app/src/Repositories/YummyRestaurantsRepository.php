@@ -212,7 +212,7 @@ class YummyRestaurantsRepository extends Repository
 
     /**
      * @param int $restaurant_id id of searched restaurant.
-     * @return ?OpeningHours returns opening hours of restaurant, returns null, if nothing were found.
+     * @return ?OpeningHours returns opening hours of restaurant. Returns null if nothing were found.
      */
     public function getRestaurantOpeningHours(int $restaurant_id) : ?OpeningHours {
         $stmt = $this->connection->prepare("SELECT `id`, `restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday` FROM `YummyOpeningHours` WHERE `restaurant_id` = :restaurant_id LIMIT 1");
@@ -415,7 +415,7 @@ class YummyRestaurantsRepository extends Repository
     /**
      * Returns number of additional images that restaurant has.
      * @param int $restaurant_id id of searched restaurant.
-     * @return int returns count if operation was successfull, otherwise null.
+     * @return ?int returns count if operation was successfull, otherwise null.
      */
     public function countRestaurantImages(int $restaurant_id) : ?int {
         $stmt = $this->connection->prepare("SELECT COUNT(*)
@@ -442,33 +442,101 @@ class YummyRestaurantsRepository extends Repository
     }
 
     /**
-     * Edits restaurant in db.
+     * Edits selected field(s) in restaurant in db.
      * @param int $restaurant_id id of edited restaurant.
-     * @param array $args associative array of fields that should be changed: field_name => field_value (if array key do not match db names, throws error).
-     * @return bool returns true if operation was successfull, otherwise false.
+     * @param array $values array of edited values.
+     * @param array $fields array of edited fields.
+     * @param array $types array of edited types (PDO::PARAM_INT, PDO::PARAM_STR, etc.).
+     * @return ?bool returns true if operation was successfull, otherwise false. If $fields, $values or $types are empty, or have different length, returns null.
      */
-    public function editRestaurant(int $restaurant_id, array $args) : bool {
-        if(count($args) == 0) return true;
-
-        // Get keys
-        $keys = array_keys($args);
+    public function editRestaurant(int $restaurant_id, array $values, array $fields, array $types) : ?bool {
+        if(count($fields) == 0 || count($values) != count($fields) || count($values) != count($types)) return null;
 
         // Prepare sql query
-        $sql = 'UPDATE `YummyRestaurants` SET `' . $keys[0] .'`=:' . $keys[0];
+        $sql = 'UPDATE `YummyRestaurants` SET ' . $fields[0] .'= ?';
 
-        for($i = 1; $i < count($keys); ++$i) {
-            $sql = $sql . ', `' . $keys[$i] .'`=' . $keys[$i] == 'active' ? 'b' : '' . ':' . $keys[$i];
+        for($i = 1; $i < count($fields); ++$i) {
+            $sql = $sql . ', ' . $fields[$i] . '= ?';
         }
 
-        $sql = $sql . ' WHERE `restaurant_id` = :restaurant_id;';
+        $sql = $sql . ' WHERE restaurant_id = ?;';
 
-        $args['restaurant_id'] = $restaurant_id;
-
-        print_r($args); echo $sql; exit; // Debug!
+        //print_r($fields); echo $sql; exit; // Debug!
 
         // Execute
         $stmt = $this->connection->prepare($sql);
 
-        return $stmt->execute($args);
+        $count = 0;
+
+        for (; $count < count($fields); $count++) { 
+            $stmt->bindValue($count + 1, $values[$count], $types[$count]);
+        }
+
+        $stmt->bindValue($count + 1, $restaurant_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Edits selected field(s) in opening hours in db.
+     * @param int $restaurant_id id of restaurant that the opeing hours are assigned to.
+     * @param array $values array of edited values.
+     * @param array $fields array of edited fields.
+     * @return ?bool returns true if operation was successfull, otherwise false. If $fields or $values are empty, or have different length, returns null.
+     */
+    public function editOpeningHours(int $restaurant_id, array $values, array $fields){
+        if(count($fields) == 0 || count($values) != count($fields)) return null;
+
+        // Prepare sql query
+        $sql = 'UPDATE `YummyOpeningHours` SET ' . $fields[0] .'= ?';
+
+        for($i = 1; $i < count($fields); ++$i) {
+            $sql = $sql . ', ' . $fields[$i] . '= ?';
+        }
+
+        $sql = $sql . ' WHERE restaurant_id = ?;';
+
+        //print_r($fields); echo $sql; exit; // Debug!
+
+        // Execute
+        $stmt = $this->connection->prepare($sql);
+
+        $count = 0;
+
+        for (; $count < count($fields); $count++) { 
+            $stmt->bindValue($count + 1, $values[$count]);
+        }
+
+        $stmt->bindValue($count + 1, $restaurant_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Edits image path of the additional image of restaurant.
+     * @param int $image_id id of edited restaurant image.
+     * @param string $path new path to image.
+     * @return bool returns true if operation was successfull, otherwise false.
+     */
+    public function editRestaurantImage(int $image_id, string $path) : bool {
+        $stmt = $this->connection->prepare("UPDATE `YummyRestaurantImages` SET `path`=:path WHERE `image_id` = :image_id;");
+
+        return $stmt->execute(['image_id' => $image_id, 'path' => $path]);
+    }
+
+    /**
+     * returns path to additional restaurant image.
+     * @param int $image_id id of requested restaurant image path.
+     * @return ?string returns image path, or null if an error occurred.
+     */
+    public function getRestaurantImagePath(int $image_id) : ?string
+    {
+        $stmt = $this->connection->prepare("SELECT `path` FROM `YummyRestaurantImages` WHERE `image_id`=:image_id;");
+
+        $stmt->execute(['image_id' => $image_id]);
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res == false ? null : $res[0];
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\DBDataException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\MaxCountExceededException;
+use App\Models\Restaurant;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use App\ViewModels\Yummy\Cms\YummyHomeViewModel;
@@ -13,6 +14,7 @@ use App\ViewModels\Yummy\Cms\YummyListViewModel;
 use App\ViewModels\Yummy\Cms\YummyRestaurantListViewModel;
 use App\ViewModels\Yummy\Cms\YummyRestaurantViewModel;
 use App\ViewModels\Yummy\Cms\YummyTopper;
+use PDO;
 use RoundingMode;
 use Uri\InvalidUriException;
 
@@ -46,8 +48,18 @@ class YummyCmsService {
         return $view_model;
     }
 
-    public function editHome(string $title, string $subtitle, ?string $image){
-        $this->cms_rep->updateHomeData($title, $subtitle, $image);
+    public function editHome(string $title, string $subtitle, $image){
+        if($image != null){
+            $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
+            
+            $old_image_path = $this->cms_rep->getHomeImage();
+        }     
+
+        $this->cms_rep->updateHomeData($title, $subtitle, $img_path);
+
+        if($img_path != null && $old_image_path != null){
+            $this->deleteImageFromDir('yummy/topper/', $old_image_path); 
+        }
     }
 
     public function getListViewModel() : YummyListViewModel{
@@ -71,8 +83,18 @@ class YummyCmsService {
         return $view_model;
     }
 
-    public function editList(string $title, string $subtitle, ?string $image){
-        $this->cms_rep->updateListData($title, $subtitle, $image);
+    public function editList(string $title, string $subtitle, ?array $image){
+        if($image != null){
+            $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
+            
+            $old_image_path = $this->cms_rep->getListImage();
+        }     
+
+        $this->cms_rep->updateListData($title, $subtitle, $img_path);
+
+        if($img_path != null && $old_image_path != null){
+            $this->deleteImageFromDir('yummy/topper/', $old_image_path); 
+        }
     }
 
     public function getRestaurantListViewModel(int $sort, int $order, int $page) : YummyRestaurantListViewModel {
@@ -100,6 +122,7 @@ class YummyCmsService {
         $view_model->sort_field = $sort;
         $view_model->sort_order = $order;
 
+        // Calculate offset and limit for page number selection
         $offset = 0; // Left offset of pages button
         $limit = 0; // Right offset of pages button
 
@@ -162,11 +185,16 @@ class YummyCmsService {
         return $view_model;
     }
 
-    public function addRestaurantImage(int $restaurant_id, string $image_path) : bool {
+    public function addRestaurantImage(int $restaurant_id, $image) : bool {
+        if(!isset($image)) throw new EmptyFieldException();
+
         $count = $this->restaurant_rep->countRestaurantImages($restaurant_id);
 
         if($count == null) throw new DBAccessException();
         if($count >= 10) throw new MaxCountExceededException();
+
+        $image_path = $this->addImageToDir('yummy/restaurants/', $image['name'], $image['tmp_name']);
+        if($image_path == null) throw new DBAccessException();
 
         $res = $this->restaurant_rep->createRestaurantImage($restaurant_id, $image_path);
 
@@ -179,35 +207,150 @@ class YummyCmsService {
         return $this->restaurant_rep->deleteRestaurantImage($image_id);
     }
 
-    public function editRestaurant($post, $files){
+    /**
+     * Edit restaurant.
+     * @param mixed $post $_POST
+     * @param mixed $files $_FILES
+     * @throws EmptyFieldException if restaurant_id in $post is null or empty.
+     * @throws DBAccessException if there are any error during query execution.
+     * @return bool true if at least one field was edited, if no changes were made returns false.
+     */
+    public function editRestaurant($post, $files) : bool {
         if($post['restaurant_id'] == null) throw new EmptyFieldException();
         $restaurant_id = $post['restaurant_id'];
 
+        // Edit restaurant 
         $res = $this->restaurant_rep->getRestaurantById($restaurant_id);
-        if($res == null) throw new DBDataException();
+        if($res == null) throw new DBAccessException();
 
-        $args = array();
+        $values = array();
+        $fields = array();
+        $types = array();
 
-        if(isset($post['name']) && $post['name'] != $res->name) $args['name'] = $post['name'];
+        if(isset($files['main_img_path']['tmp_name'])){
+            $main_image = $this->addImageToDir('yummy/restaurants/', $files['main_img_path']['name'], $files['main_img_path']['tmp_name']);
 
-        if(isset($post['active']) && $post['active'] != $res->active) $args['active'] = $post['active'];
+            if($main_image != null){
+                $this->addFieldForce($values, $fields, $types, 'main_img_path', $main_image, PDO::PARAM_STR);
+            }
+        }
+
+        $this->addField($values, $fields, $types, 'name',         $res->name,         $post['name'],          PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'active',  (int)$res->active,  (int)$post['active'],        PDO::PARAM_INT);
+        $this->addField($values, $fields, $types, 'rating',       $res->rating,       $post['rating'],        PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'cost_rating',  $res->cost_rating,  $post['cost_rating'],   PDO::PARAM_INT);
+        $this->addField($values, $fields, $types, 'mini_text',    $res->mini_text,    $post['mini_text'],     PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'text',         $res->text,         $post['text'],          PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'address_text', $res->address_text, $post['address_text'],  PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'address_uri',  $res->address_uri,  $post['address_uri'],   PDO::PARAM_STR);
+        $this->addField($values, $fields, $types, 'website_link', $res->website_link, $post['website_link'],  PDO::PARAM_STR);
+
+        $edit_restaurant = $this->restaurant_rep->editRestaurant($restaurant_id, $values, $fields, $types);
+        if($edit_restaurant != null && !$edit_restaurant) throw new DBAccessException();
+
+        if(isset($main_image)) $this->deleteImageFromDir('yummy/restaurants/', $res->main_img_path); // Delete old main image
+
+        // Edit opening hours 
+        $hours = $this->restaurant_rep->getRestaurantOpeningHours($restaurant_id);
+        if($hours == null) throw new DBAccessException();
         
-        if(isset($post['rating']) && $post['rating'] != $res->rating) $args['rating'] = $post['rating'];
+        $values = array();
+        $fields = array();
 
-        if(isset($post['cost_rating']) && $post['cost_rating'] != $res->cost_rating) $args['cost_rating'] = $post['cost_rating'];
+        $this->addFieldTypeless($values, $fields, 'monday',    $hours->monday,    $post['opening_hours_monday']);
+        $this->addFieldTypeless($values, $fields, 'tuesday',   $hours->tuesday,   $post['opening_hours_tuesday']);
+        $this->addFieldTypeless($values, $fields, 'wednesday', $hours->wednesday, $post['opening_hours_wednesday']);
+        $this->addFieldTypeless($values, $fields, 'thursday',  $hours->thursday,  $post['opening_hours_thursday']);
+        $this->addFieldTypeless($values, $fields, 'friday',    $hours->friday,    $post['opening_hours_friday']);
+        $this->addFieldTypeless($values, $fields, 'saturday',  $hours->saturday,  $post['opening_hours_saturday']);
+        $this->addFieldTypeless($values, $fields, 'sunday',    $hours->sunday,    $post['opening_hours_sunday']);
+
+        $edit_hours = $this->restaurant_rep->editOpeningHours($restaurant_id, $values, $fields);
+        if($edit_hours != null && !$edit_hours) throw new DBAccessException();
+
+        // Edit additional images
+        $images_count = $this->restaurant_rep->countRestaurantImages($restaurant_id);
+        if($images_count == null) throw new DBAccessException();
+
+        $add_image_edit = null;
         
-        if(isset($post['mini_text']) && $post['mini_text'] != $res->mini_text) $args['mini_text'] = $post['mini_text'];
+        for ($i = 0; $i < $images_count; $i++) { 
+            if(isset($files['additional_image_' . $i]) && isset($post['additional_image_id_' . $i])){
+                $new_path = $this->addImageToDir('yummy/restaurants/', $files['additional_image_' . $i]['name'], $files['additional_image_' . $i]['tmp_name']);
 
-        if(isset($post['text']) && $post['text'] != $res->text) $args['text'] = $post['text'];
+                if($new_path == null) continue;
 
-        if(isset($post['address_text']) && $post['address_text'] != $res->address_text) $args['address_text'] = $post['address_text'];
+                $id = $post['additional_image_id_' . $i];
 
-        if(isset($post['address_uri']) && $post['address_uri'] != $res->address_uri) $args['address_uri'] = $post['address_uri'];
+                $old_path = $this->restaurant_rep->getRestaurantImagePath($id);
 
-        if(isset($post['website_link']) && $post['website_link'] != $res->website_link) $args['website_link'] = $post['website_link'];
+                $edit = $this->restaurant_rep->editRestaurantImage($id, $new_path);
 
-        if(!$this->restaurant_rep->editRestaurant($restaurant_id, $args)) throw new DBAccessException();
+                if($edit == false) throw new DBAccessException();
 
-        //if(isset($post['address_uri']) && $post['address_uri'] != $res->address_uri) $args['address_uri'] = $post['address_uri'];
+                if($edit) $add_image_edit = true;
+
+                if(isset($old_path)) $this->deleteImageFromDir('yummy/restaurants/', $old_path);
+            }
+        }
+
+        if($edit_restaurant == null && $edit_hours == null && $add_image_edit == null) return false;
+
+        return true;
+    }
+
+    private function addFieldTypeless(array& $values, array& $fields, string $field_query, $old_value, $new_value){
+        if(isset($new_value) && $new_value != $old_value){
+            array_push($values, $new_value);
+            array_push($fields, $field_query);
+        }
+    }
+
+    private function addField(array& $values, array& $fields, array& $types, string $field_query, $old_value, $new_value, $type){
+        if(isset($new_value) && $new_value != $old_value){
+            array_push($values, $new_value);
+            array_push($fields, $field_query);
+            array_push($types, $type);
+        }
+    }
+
+    private function addFieldForce(array& $values, array& $fields, array& $types, string $field_query, $new_value, $type){
+        array_push($values, $new_value);
+        array_push($fields, $field_query);
+        array_push($types, $type);
+    }
+
+    /**
+     * Moves file from uploads to specified directory in uploads folder.
+     * @param string $end_dir relative to uploads folder path do directory (e.g. 'yummy/topper/'), path must end with '/'.
+     * @param mixed $origin_name name of origin file.
+     * @param mixed $tmp_name tmp name of uploded file.
+     * @return ?string on success returns new file name with extention. On fail returns null.
+     */
+    private function addImageToDir(string $end_dir, $origin_name, $tmp_name) : ?string {
+        if($tmp_name == null) return null;
+
+        // Crafting path
+        $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($origin_name, PATHINFO_EXTENSION);
+        $path = __DIR__ . '/../../../public/assets/uploads/' . $end_dir . $file_name;
+
+        if(move_uploaded_file($tmp_name, $path)) return $file_name;
+        
+        return null;
+    }
+
+    /**
+     * Deletes file from specified directory in uploads folder.
+     * @param string $end_dir relative to uploads folder path do directory (e.g. 'yummy/topper/'), path must end with '/'.
+     * @param mixed $file_name name of origin file.
+     * @return bool true on success, false on failure.
+     */
+    private function deleteImageFromDir(string $end_dir, $file_name) : bool {
+        if($file_name == null) return false;
+
+        // Crafting path
+        $path = __DIR__ . '/../../../public/assets/uploads/' . $end_dir . $file_name;
+
+        return unlink($path);
     }
 }

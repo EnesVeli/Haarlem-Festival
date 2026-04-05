@@ -23,6 +23,21 @@ class YummyCmsRepository extends Repository
     }
 
     /**
+     * returns path to home page image.
+     * @return ?string returns image path, or null if an error occurred.
+     */
+    public function getHomeImage() : ?string
+    {
+        $stmt = $this->connection->prepare("SELECT `home_image` FROM `YummyCMS` WHERE `cms_id` = 1");
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res == false ? null : $res[0];
+    }
+
+    /**
      * updates home_title, home_subtitle and optinaly home_image in db.
      * @return bool returns true if operation was successfull, otherwise false.
      */
@@ -55,6 +70,21 @@ class YummyCmsRepository extends Repository
         $res = $stmt->fetch(PDO::FETCH_ASSOC); 
 
         return $res == false ? null : $res;
+    }
+
+    /**
+     * returns path to list page image.
+     * @return ?string returns image path, or null if an error occurred.
+     */
+    public function getListImage() : ?string
+    {
+        $stmt = $this->connection->prepare("SELECT `list_image` FROM `YummyCMS` WHERE `cms_id` = 1");
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res == false ? null : $res[0];
     }
 
     /**

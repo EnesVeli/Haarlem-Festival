@@ -41,22 +41,10 @@ class AdminYummyController extends BaseCmsController {
         try{
             if(!isset($_POST['title']) || !isset($_POST['subtitle'])) throw new EmptyFieldException();          
 
-            if($_FILES['topper_image']['name'] != null){
-                // Creating image file
-                $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($_FILES['topper_image']['name'], PATHINFO_EXTENSION);
-                $path = __DIR__ . '/../../../../public/assets/uploads/yummy/topper/' . $file_name;
-
-                move_uploaded_file($_FILES['topper_image']['tmp_name'], $path);
-
-                // Sending data to db
-                $this->service->editHome($_POST['title'], $_POST['subtitle'], $file_name);
-            }
-            else{
-                $this->service->editHome($_POST['title'], $_POST['subtitle'], null);
-            }
+            $this->service->editHome($_POST['title'], $_POST['subtitle'], $_FILES['topper_image']);
         }
         catch(Exception $ex){    
-            Session::set('temp_error', "Something went wrong try again later.");
+            Session::set('temp_error', "Something went wrong try again later." . $ex->getMessage());
         }
 
         header('location: /cms/yummy/');
@@ -85,19 +73,7 @@ class AdminYummyController extends BaseCmsController {
         try{
             if(!isset($_POST['title']) || !isset($_POST['subtitle'])) throw new EmptyFieldException();                    
 
-            if($_FILES['topper_image']['name'] != null){
-                // Creating image file
-                $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($_FILES['topper_image']['name'], PATHINFO_EXTENSION);
-                $path = __DIR__ . '/../../../../public/assets/uploads/yummy/topper/' . $file_name;
-
-                move_uploaded_file($_FILES['topper_image']['tmp_name'], $path);
-
-                // Sending data to db
-                $this->service->editList($_POST['title'], $_POST['subtitle'], $file_name);
-            }
-            else{
-                $this->service->editList($_POST['title'], $_POST['subtitle'], null);
-            }    
+            $this->service->editList($_POST['title'], $_POST['subtitle'], $_FILES['topper_image']);
         }
         catch(Exception $ex){    
             Session::set('temp_error', "Something went wrong try again later.");
@@ -146,15 +122,15 @@ class AdminYummyController extends BaseCmsController {
         $this->requireAdmin();
 
         try{    
-            $this->service->editRestaurant($_POST, $_FILES);
-
-            Session::set('temp_success', "Successfully edited restaurant.");
+            if($this->service->editRestaurant($_POST, $_FILES)){
+                Session::set('temp_success', "Successfully edited restaurant.");
+            }         
 
             header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
             exit;
-        }
+        }   
         catch(Exception $ex){
-            Session::set('temp_error', "Restaurant edit failed! Something went wrong, try again later." . $ex->getMessage());
+            Session::set('temp_error', "Restaurant edit failed! Something went wrong, try again later.");
         }
 
         if(isset($_POST['restaurant_id'])){
@@ -179,18 +155,7 @@ class AdminYummyController extends BaseCmsController {
         try{
             if(!isset($_POST['restaurant_id']) || !isset($_FILES['image_add'])) throw new EmptyFieldException(); 
 
-            if(empty($_FILES['image_add']['tmp_name'])) throw new FileToLargeException();
-                     
-            // Creating image file
-            $file_name = bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($_FILES['image_add']['name'], PATHINFO_EXTENSION);
-            $path = __DIR__ . '/../../../../public/assets/uploads/yummy/restaurants/' . $file_name;
-            move_uploaded_file($_FILES['image_add']['tmp_name'], $path);    
-
-            //echo 'pathinfo: ' . pathinfo($_FILES['image_add']['name'], PATHINFO_EXTENSION) . "\n file_name: " . $file_name . "\n file_path: " . $path . "\n tmp: " . $_FILES['image_add']['tmp_name'];
-            //exit;
-
-            // Creating image
-            if($this->service->addRestaurantImage($_POST['restaurant_id'], $file_name)){
+            if($this->service->addRestaurantImage($_POST['restaurant_id'], $_FILES['image_add'])){
                 Session::set('temp_success', "Successfully added new image to restaurant.");
             } 
 

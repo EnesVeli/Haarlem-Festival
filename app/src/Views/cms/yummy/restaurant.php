@@ -30,7 +30,7 @@
 
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Name:</label>
-                            <input id="name" name="name" type="text" class="cms-text-input" value="<? echo htmlspecialchars($view_model->res->name) ?>">
+                            <input id="name" name="name" type="text" class="cms-text-input" maxlength="64" value="<? echo htmlspecialchars($view_model->res->name) ?>">
                         </div>
 
                         <div class="cms-form-subsection">
@@ -59,24 +59,24 @@
 
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Mini Text:</label>
-                            <textarea id="mini_text" name="mini_text" class="cms-text-text-area text-mid"><? echo htmlspecialchars($view_model->res->mini_text) ?></textarea>
+                            <textarea id="mini_text" name="mini_text" class="cms-text-text-area text-mid" maxlength="256"><? echo htmlspecialchars($view_model->res->mini_text) ?></textarea>
                         </div>
 
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Text:</label>
-                            <textarea id="text" name="text" class="cms-text-text-area text-long"><? echo htmlspecialchars($view_model->res->text) ?></textarea>
+                            <textarea id="text" name="text" class="cms-text-text-area text-long" maxlength="2048"><? echo htmlspecialchars($view_model->res->text) ?></textarea>
                         </div>
 
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Address:</label>
-                            <input id="address_text" name="address_text" type="text" class="cms-text-input" value="<? echo htmlspecialchars($view_model->res->address_text) ?>">
+                            <input id="address_text" name="address_text" type="text" class="cms-text-input" maxlength="128" value="<? echo htmlspecialchars($view_model->res->address_text) ?>">
                         </div>
 
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Address Google Uri:</label>
                             <div class="cms-uri-input-container">
-                                <input id="address_uri" name="address_uri" type="text" value="<? echo htmlspecialchars($view_model->res->address_uri) ?>">
-                                <button onclick="googleUriButtonClick()">View</button>
+                                <input id="address_uri" name="address_uri" type="text" maxlength="256" value="<? echo htmlspecialchars($view_model->res->address_uri) ?>">
+                                <button type="button" onclick="googleUriButtonClick()">View</button>
                             </div>            
                             <div>*It should be part of uri in google maps: https://www.google.com/maps/place/<strong>Ratatouille+Food+%26+Wine</strong>/...*</div>
                         </div>
@@ -84,8 +84,8 @@
                         <div class="cms-form-subsection">
                             <label class="cms-form-label">Website Link:</label>
                             <div class="cms-uri-input-container">
-                                <input id="website_link" name="website_link" type="text" value="<? echo htmlspecialchars($view_model->res->website_link) ?>">
-                                <button onclick="websiteLinkButtonClick()">View</button>
+                                <input id="website_link" name="website_link" type="text" maxlength="256" value="<? echo htmlspecialchars($view_model->res->website_link) ?>">
+                                <button type="button" onclick="websiteLinkButtonClick()">View</button>
                             </div>           
                         </div>
 
@@ -94,31 +94,31 @@
                             <div class="cms-opening-hours-container">
                                 <div>
                                     <label>Monday:</label>
-                                    <input id="opening_hours_monday" name="opening_hours_monday" type="text" value="<? echo htmlspecialchars($view_model->hours->monday) ?>">
+                                    <input id="opening_hours_monday" name="opening_hours_monday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->monday) ?>">
                                 </div>
                                 <div>
                                     <label>Tuesday:</label>
-                                    <input id="opening_hours_tuesday" name="opening_hours_tuesday" type="text" value="<? echo htmlspecialchars($view_model->hours->tuesday) ?>">
+                                    <input id="opening_hours_tuesday" name="opening_hours_tuesday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->tuesday) ?>">
                                 </div>
                                 <div>
                                     <label>Wednesday:</label>
-                                    <input id="opening_hours_wednesday" name="opening_hours_wednesday" type="text" value="<? echo htmlspecialchars($view_model->hours->wednesday) ?>">
+                                    <input id="opening_hours_wednesday" name="opening_hours_wednesday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->wednesday) ?>">
                                 </div>
                                 <div>
                                     <label>Thursday:</label>
-                                    <input id="opening_hours_thursday" name="opening_hours_thursday" type="text" value="<? echo htmlspecialchars($view_model->hours->thursday) ?>">
+                                    <input id="opening_hours_thursday" name="opening_hours_thursday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->thursday) ?>">
                                 </div>
                                 <div>
                                     <label>Friday:</label>
-                                    <input id="opening_hours_friday" name="opening_hours_friday" type="text" value="<? echo htmlspecialchars($view_model->hours->friday) ?>">
+                                    <input id="opening_hours_friday" name="opening_hours_friday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->friday) ?>">
                                 </div>
                                 <div>
                                     <label>Saturday:</label>
-                                    <input id="opening_hours_saturday" name="opening_hours_saturday" type="text" value="<? echo htmlspecialchars($view_model->hours->saturday) ?>">
+                                    <input id="opening_hours_saturday" name="opening_hours_saturday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->saturday) ?>">
                                 </div>
                                 <div>
                                     <label>Sunday:</label>
-                                    <input id="opening_hours_sunday" name="opening_hours_sunday" type="text" value="<? echo htmlspecialchars($view_model->hours->sunday) ?>">
+                                    <input id="opening_hours_sunday" name="opening_hours_sunday" type="text" maxlength="64" value="<? echo htmlspecialchars($view_model->hours->sunday) ?>">
                                 </div>
                             </div>
                         </div>
@@ -175,7 +175,8 @@
                                                 </th>
                                                 <th>
                                                     <div class="cms-file-image-input" id="<? echo 'upload_' . $i; ?>">
-                                                        <input id="<? echo 'image_' . $i; ?>" type="file" onchange="previewImagesFile(<? echo $i; ?>)">
+                                                        <input id="<? echo 'image_' . $i; ?>" name="<? echo 'additional_image_' . $i;?>" type="file" onchange="previewImagesFile(<? echo $i; ?>)">
+                                                        <input type="hidden" name="<? echo 'additional_image_id_' . $i; ?>" value="<? echo $view_model->images[$i]->image_id; ?>">
                                                         <div id="<? echo 'image_perview_' . $i; ?>" class="cms-file-image-input-preview" style="display: none;">
                                                             <img id="<? echo 'image_perview_image_' . $i; ?>" src="#">
                                                         </div>
