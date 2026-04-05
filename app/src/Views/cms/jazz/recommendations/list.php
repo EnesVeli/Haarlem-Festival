@@ -74,10 +74,10 @@ Add Recommendation
 
 <td>
 
-<?php if (!empty($rec->image_path)): ?>
+<?php if (!empty($rec->imagePath)): ?>
 
 <img
-src="<?= htmlspecialchars($rec->image_path) ?>"
+src="<?= htmlspecialchars($rec->imagePath) ?>"
 class="jazz-cms-image-preview"
 style="max-width:80px;"
 >
@@ -90,10 +90,10 @@ style="max-width:80px;"
 
 </td>
 
-<td><?= (int)($rec->sort_order ?? 0) ?></td>
+<td><?= (int)($rec->sortOrder ?? 0) ?></td>
 
 <td>
-<?= ((int)($rec->is_active ?? 0) === 1) ? 'Yes' : 'No' ?>
+<?= ((int)($rec->isActive ?? 0) === 1) ? 'Yes' : 'No' ?>
 </td>
 
 <td class="jazz-cms-actions">

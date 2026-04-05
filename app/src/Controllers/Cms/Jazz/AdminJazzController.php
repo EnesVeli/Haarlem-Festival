@@ -159,15 +159,21 @@ class AdminJazzController extends BaseCmsController
     public function editPerformer(): void
     {
         $id = (int)($_GET['id'] ?? 0);
-
+    
         if ($id <= 0) {
             header('Location: /cms/jazz/performers');
             exit;
         }
-
+    
         $data = $this->service->getPerformerByIdData($id);
-        $vm = new JazzPerformersCmsViewModel([], $data['user'], $data['performer'] ?? []);
-
+        $vm = new JazzPerformersCmsViewModel(
+            [],
+            $data['user'],
+            $data['performer'] ?? null,
+            $data['highlights'] ?? [],
+            $data['tracks'] ?? []
+        );
+    
         require __DIR__ . '/../../../Views/cms/jazz/performers/edit.php';
     }
 

@@ -686,4 +686,90 @@ public function getTracksByPerformer(int $performerId): array
         $stmt = $this->connection->prepare("DELETE FROM jazz_locations WHERE id = :id");
         $stmt->execute([':id' => $id]);
     }
+    public function updateHighlightsByPerformer(int $performerId, array $highlights): void
+{
+    $deleteStmt = $this->connection->prepare("
+        DELETE FROM jazz_performer_highlights
+        WHERE performer_id = :performer_id
+    ");
+    $deleteStmt->execute([':performer_id' => $performerId]);
+
+    $insertStmt = $this->connection->prepare("
+        INSERT INTO jazz_performer_highlights (
+            performer_id,
+            title,
+            description,
+            sort_order
+        )
+        VALUES (
+            :performer_id,
+            :title,
+            :description,
+            :sort_order
+        )
+    ");
+
+    foreach ($highlights as $highlight) {
+        $title = trim($highlight['title'] ?? '');
+
+        if ($title === '') {
+            continue;
+        }
+
+        $insertStmt->execute([
+            ':performer_id' => $performerId,
+            ':title' => $title,
+            ':description' => $highlight['description'] ?? '',
+            ':sort_order' => (int)($highlight['sort_order'] ?? 0),
+        ]);
+    }
+}
+
+public function updateTracksByPerformer(int $performerId, array $tracks): void
+{
+    $deleteStmt = $this->connection->prepare("
+        DELETE FROM jazz_performer_tracks
+        WHERE performer_id = :performer_id
+    ");
+    $deleteStmt->execute([':performer_id' => $performerId]);
+
+    $insertStmt = $this->connection->prepare("
+        INSERT INTO jazz_performer_tracks (
+            performer_id,
+            title,
+            release_date_text,
+            description,
+            image_path,
+            listen_url,
+            sort_order
+        )
+        VALUES (
+            :performer_id,
+            :title,
+            :release_date_text,
+            :description,
+            :image_path,
+            :listen_url,
+            :sort_order
+        )
+    ");
+
+    foreach ($tracks as $track) {
+        $title = trim($track['title'] ?? '');
+
+        if ($title === '') {
+            continue;
+        }
+
+        $insertStmt->execute([
+            ':performer_id' => $performerId,
+            ':title' => $title,
+            ':release_date_text' => $track['release_date_text'] ?? null,
+            ':description' => $track['description'] ?? null,
+            ':image_path' => $track['image_path'] ?? null,
+            ':listen_url' => $track['listen_url'] ?? null,
+            ':sort_order' => (int)($track['sort_order'] ?? 0),
+        ]);
+    }
+}
 }

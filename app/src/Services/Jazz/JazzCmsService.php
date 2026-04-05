@@ -129,6 +129,8 @@ class JazzCmsService
         return [
             'user' => Session::user(),
             'performer' => $this->jazzRepo->getPerformerById($id),
+            'highlights' => $this->jazzRepo->getHighlightsByPerformer($id),
+            'tracks' => $this->jazzRepo->getTracksByPerformer($id),
         ];
     }
 
@@ -155,12 +157,26 @@ class JazzCmsService
             if ($heroFile && !empty($heroFile['tmp_name'])) {
                 $data['hero_image_path'] = $this->uploadImage($heroFile, '/assets/uploads/jazz/performers/');
             }
-
+    
             if ($imageFile && !empty($imageFile['tmp_name'])) {
                 $data['image_path'] = $this->uploadImage($imageFile, '/assets/uploads/jazz/performers/');
             }
-
+    
             $this->jazzRepo->updatePerformer($data);
+    
+            $performerId = (int)($data['id'] ?? 0);
+    
+            if ($performerId > 0) {
+                $this->jazzRepo->updateHighlightsByPerformer(
+                    $performerId,
+                    $data['highlights'] ?? []
+                );
+    
+                $this->jazzRepo->updateTracksByPerformer(
+                    $performerId,
+                    $data['tracks'] ?? []
+                );
+            }
         } catch (\Exception $error) {
             die('Could not update performer.');
         }

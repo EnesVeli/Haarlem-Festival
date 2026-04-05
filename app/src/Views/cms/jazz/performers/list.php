@@ -73,14 +73,14 @@ Add Performer
 
 <td><?= htmlspecialchars($performer->name ?? '') ?></td>
 
-<td><?= htmlspecialchars($performer->performance_style ?? '') ?></td>
+<td><?= htmlspecialchars($performer->performanceStyle ?? '') ?></td>
 
 <td>
 
-<?php if (!empty($performer->image_path)): ?>
+<?php if (!empty($performer->imagePath)): ?>
 
 <img
-src="<?= htmlspecialchars($performer->image_path) ?>"
+src="<?= htmlspecialchars($performer->imagePath) ?>"
 class="jazz-cms-image-preview"
 style="max-width:80px;"
 >
@@ -93,10 +93,10 @@ style="max-width:80px;"
 
 </td>
 
-<td><?= (int)($performer->sort_order ?? 0) ?></td>
+<td><?= (int)($performer->sortOrder ?? 0) ?></td>
 
 <td>
-<?= ((int)($performer->is_active ?? 0) === 1) ? 'Yes' : 'No' ?>
+<?= ((int)($performer->isActive ?? 0) === 1) ? 'Yes' : 'No' ?>
 </td>
 
 <td class="jazz-cms-actions">

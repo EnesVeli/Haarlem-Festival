@@ -76,12 +76,7 @@ $heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
                     <h3>Genre / Performance Style</h3>
 
                     <div class="perf-style-cards">
-                        <div class="perf-style-card">
-                            <div class="perf-style-card-title">Genre</div>
-                            <div class="perf-style-card-value">
-                                <?= htmlspecialchars($style ?: 'Jazz') ?>
-                            </div>
-                        </div>
+                
 
                         <div class="perf-style-card">
                             <div class="perf-style-card-title">Performance Style</div>

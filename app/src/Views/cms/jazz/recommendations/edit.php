@@ -73,7 +73,7 @@ value="<?= htmlspecialchars($rec->url ?? '') ?>"
 type="number"
 name="sort_order"
 class="jazz-cms-input"
-value="<?= (int)($rec->sort_order ?? 0) ?>"
+value="<?= (int)($rec->sortOrder ?? 0) ?>"
 >
 </div>
 
@@ -81,8 +81,8 @@ value="<?= (int)($rec->sort_order ?? 0) ?>"
 <label class="jazz-cms-label">Active</label>
 
 <select name="is_active" class="jazz-cms-input">
-<option value="1" <?= ((int)($rec->is_active ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-<option value="0" <?= ((int)($rec->is_active ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+<option value="1" <?= ((int)($rec->isActive ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+<option value="0" <?= ((int)($rec->isActive ?? 0) === 0) ? 'selected' : '' ?>>No</option>
 </select>
 
 </div>
@@ -112,14 +112,14 @@ accept="image/*"
 Upload path: <code>/public/uploads/recommendations/</code>
 </small>
 
-<?php if (!empty($rec->image_path)): ?>
+<?php if (!empty($rec->imagePath)): ?>
 
 <div class="jazz-cms-image-preview-wrap">
 
 <p class="jazz-cms-preview-label">Current Image</p>
 
 <img
-src="<?= htmlspecialchars($rec->image_path) ?>"
+src="<?= htmlspecialchars($rec->imagePath) ?>"
 class="jazz-cms-image-preview"
 >
 
