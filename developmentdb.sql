@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 10:54 AM
+-- Generation Time: Apr 05, 2026 at 12:13 PM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -380,7 +380,7 @@ CREATE TABLE `history_content` (
 --
 
 INSERT INTO `history_content` (`id`, `section`, `title`, `subtitle`, `image`, `image_left`, `image_right`) VALUES
-(1, 'hero', 'A Journey Through Haarlem\'s Legacy', 'Discover the city of painters, merchants, and hidden courtyards.', 'hero-history.png', NULL, NULL),
+(1, 'hero', 'A Journey Through Haarlem\'s Legacy', 'Discover the city of painters, merchants, and hidden courtyard.', 'hero-history.png', NULL, NULL),
 (2, 'intro', 'The Golden City of the North', 'Long before Amsterdam rose to global fame, Haarlem thrived.', NULL, 'grote-markt.jpg', 'historic-buildings.jpg'),
 (3, 'walk', 'Better Your Walk', 'Guided tours available for a deeper experience.', 'walk-guide.jpg', NULL, NULL),
 (4, 'cta', 'Ready to plan your festival weekend?', 'Combine history with other festival events.', 'cta-bg.jpg', NULL, NULL);
@@ -462,9 +462,9 @@ INSERT INTO `history_detail_gallery` (`id`, `detail_id`, `image_path`, `caption`
 (1, 1, 'teylers-gallery-1.jpg', 'Main exhibition hall', 1),
 (2, 1, 'teylers-gallery-2.jpg', 'Historic interior', 2),
 (3, 1, 'teylers-gallery-3.jpg', 'Riverside view', 3),
-(4, 2, 'st-bavos-gallery-1.jpg', 'Exterior architecture', 1),
-(5, 2, 'st-bavos-gallery-2.jpg', 'Interior dome', 2),
-(6, 2, 'st-bavos-gallery-3.jpg', 'Waterfront boats', 3);
+(4, 2, 'st-bavos-1.png', 'St. Bavo\'s Cathedral interior', 1),
+(5, 2, 'st-bavos-2.png', 'St. Bavo\'s Cathedral dome', 2),
+(6, 2, 'st-bavos-3.png', 'St. Bavo\'s Cathedral detail', 3);
 
 -- --------------------------------------------------------
 
@@ -492,7 +492,7 @@ INSERT INTO `history_detail_sections` (`id`, `detail_id`, `section_type`, `secti
 (3, 1, 'highlight', 'Art & Drawings', 'The collection encompasses works by Old Masters such as Michelangelo, Raphael, alongside significant holdings from Dutch artists including Rembrandt and Hendrik Willem Mesdag.\n\nThe museum houses over 25,000 drawings spanning from the Renaissance to the 19th century—an unparalleled resource for art historians and enthusiasts.', NULL, 3),
 (4, 1, 'special', 'Pieter Teyler\'s Legacy', 'Pieter Teyler was a wealthy silk merchant and banker who had no children. In his will, he established a foundation that would use his fortune for the benefit of the public through research and artistic creation. His legacy continues to inspire scholarly work and artistic development.\n\nThe institution he founded remains committed to his vision of making knowledge and beauty accessible to all.', NULL, 4),
 (5, 2, 'about', 'About St. Bavo\'s Church', 'The Grote Kerk, known as St. Bavo\'s Church, dominates Haarlem\'s skyline from the central market square. A church has stood on this site since at least the 10th century, but the current Gothic building was constructed between 1370 and 1520, transforming it into Haarlem\'s most prominent landmark.\n\nThe church briefly served as a Catholic cathedral from 1559 to 1578 before the Protestant Reformation reached Haarlem. During the 1578 uprising known as the \"Haarlemse Noon,\" the building was seized and converted to Protestant use. Since then, it has been known simply as the Grote Kerk, meaning \"Great Church,\" reflecting its role as a Protestant place of worship rather than its former Catholic dedication to Saint Bavo.', NULL, 1),
-(6, 2, 'special', 'The Müller Organ', 'The church houses one of Europe\'s most celebrated organs, built between 1735 and 1738 by Amsterdam organ builder Christian Müller. At the time of its completion, it was the largest organ in the world, featuring over 5,000 pipes and standing nearly 30 meters tall.\n\nThe instrument\'s gilded case is adorned with 32 life-size sculptures, making it as visually impressive as it is musically significant. Renowned composers like George Frideric Handel and a 10-year-old Wolfgang Amadeus Mozart traveled to Haarlem specifically to play it.', 'muller-organ.jpg', 2),
+(6, 2, 'special', 'The Müller Organ', 'The church houses one of Europe\'s most celebrated organs, built between 1735 and 1738 by Amsterdam organ builder Christian Müller. At the time of its completion, it was the largest organ in the world, featuring over 5,000 pipes and standing nearly 30 meters tall.\n\nThe instrument\'s gilded case is adorned with 32 life-size sculptures, making it as visually impressive as it is musically significant. Renowned composers like George Frideric Handel and a 10-year-old Wolfgang Amadeus Mozart traveled to Haarlem specifically to play it.', 'st-bavos-2.png', 2),
 (7, 2, 'history', 'Historical Significance', 'St. Bavo\'s witnessed crucial moments in Dutch history, particularly during the Protestant Reformation when religious control of the Netherlands shifted dramatically. The building\'s architectural evolution from medieval times through the Renaissance period tells the story of Haarlem\'s changing fortunes and religious landscape.\n\nToday, it continues to serve both as a Protestant church and as a cultural venue hosting concerts and exhibitions, making it a living monument to the city\'s past and present.', NULL, 3);
 
 -- --------------------------------------------------------
@@ -536,7 +536,7 @@ CREATE TABLE `history_tickets` (
 
 INSERT INTO `history_tickets` (`id`, `ticket_type`, `time_slot`, `price`, `available_spots`) VALUES
 (1, 'individual', '10:00 AM', 12.50, 15),
-(2, 'individual', '01:00 PM', 12.50, 10),
+(2, 'individual', '01:00 PM', 5.00, 10),
 (3, 'family', '04:00 PM', 15.00, 8);
 
 -- --------------------------------------------------------
@@ -620,7 +620,9 @@ CREATE TABLE `Invoice` (
 
 INSERT INTO `Invoice` (`invoice_id`, `order_id`, `invoice_number`, `invoice_date`, `total_amount`, `vat_percentage`, `client_name`, `client_address`) VALUES
 (1, 2, 'INV-2026-000002', '2026-04-04 13:07:44', 15.00, 9.00, 'Enes Veli Yigit', 'ENESVELIYIGIT@GMAIL.COM'),
-(2, 3, 'INV-2026-000003', '2026-04-04 14:43:24', 92.00, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com');
+(2, 3, 'INV-2026-000003', '2026-04-04 14:43:24', 92.00, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
+(3, 4, 'INV-2026-000004', '2026-04-05 11:36:20', 35.00, 9.00, 'hanish', 'hanish@admin.com'),
+(4, 5, 'INV-2026-000005', '2026-04-05 11:37:14', 35.00, 9.00, 'hanish', 'cloutnorcal@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -893,7 +895,9 @@ CREATE TABLE `Order` (
 INSERT INTO `Order` (`order_id`, `user_id`, `order_date`, `status`, `payment_method`) VALUES
 (1, 8, '2026-04-04 12:30:19', 'paid', 'ideal'),
 (2, 8, '2026-04-04 13:07:44', 'paid', 'credit_card'),
-(3, 8, '2026-04-04 14:43:24', 'paid', 'paypal');
+(3, 8, '2026-04-04 14:43:24', 'paid', 'paypal'),
+(4, 10, '2026-04-05 11:36:20', 'paid', 'credit_card'),
+(5, 10, '2026-04-05 11:37:14', 'paid', 'credit_card');
 
 -- --------------------------------------------------------
 
@@ -916,7 +920,9 @@ CREATE TABLE `OrderItem` (
 INSERT INTO `OrderItem` (`item_id`, `type_id`, `order_id`, `quantity`, `unit_price`) VALUES
 (1, 5, 2, 1, 15.00),
 (2, 5, 3, 1, 77.00),
-(3, 19, 3, 2, 7.50);
+(3, 19, 3, 2, 7.50),
+(4, 138, 4, 2, 17.50),
+(5, 138, 5, 2, 17.50);
 
 -- --------------------------------------------------------
 
@@ -961,7 +967,11 @@ INSERT INTO `Ticket` (`ticket_id`, `order_id`, `type_id`, `barcode`, `is_scanned
 (1, 2, 5, '73e5fcc1f892d424d88fee18df23869ba2ab0f40b323795069f7a49d11e2a6c2', 0),
 (2, 3, 5, 'b1422480999148cba3bfbd7507c81584f3d13fc127b4d048f55f06745a28140c', 0),
 (3, 3, 19, '12918c9bc5668131db58b5b5b554995e6110cb4eb525f3c8f02834a8cfd3aaa9', 0),
-(4, 3, 19, '2ecdacf07b04021d978dec65664d54d592429a9db7422e84fdce96e7b1492f23', 0);
+(4, 3, 19, '2ecdacf07b04021d978dec65664d54d592429a9db7422e84fdce96e7b1492f23', 0),
+(5, 4, 138, 'a21263cec2e2fffeae4c111a5d067153c0bdcd32065c5ab7358cfe1d7265b583', 0),
+(6, 4, 138, 'f4e4c67049512b7b6a2ad3c1904ead58cab5bd098b0cea0c662a497a1bfa6b9a', 0),
+(7, 5, 138, '712188bb738d400bafc52a3476fabe1348a9620c015cd84860f81dc057999c17', 0),
+(8, 5, 138, '3ea3a7dabdcaa9ca01a929b4d7f7df70eafb81f5ee81fdb3c46f080d4228621d', 0);
 
 -- --------------------------------------------------------
 
@@ -1117,7 +1127,7 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15'),
 (9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39'),
-(10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'customer', NULL, '2026-03-26 16:32:54'),
+(10, 'cloutnorcal@gmail.com', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'hanish', 'customer', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18');
 
@@ -1635,7 +1645,7 @@ ALTER TABLE `YummyRestaurants`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `CMS_Content`
@@ -1731,7 +1741,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `Invoice`
 --
 ALTER TABLE `Invoice`
-  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1797,13 +1807,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `Order`
 --
 ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `OrderItem`
 --
 ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1815,7 +1825,7 @@ ALTER TABLE `PasswordResetToken`
 -- AUTO_INCREMENT for table `Ticket`
 --
 ALTER TABLE `Ticket`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `Ticket_Type`
