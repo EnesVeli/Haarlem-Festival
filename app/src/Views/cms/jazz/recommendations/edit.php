@@ -3,7 +3,7 @@
 $pageTitle = 'Edit Recommendation';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$rec = $vm->recommendation ?? [];
+$rec = $vm->recommendation ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 
@@ -33,9 +33,9 @@ require __DIR__ . '/../partials/tabs.php';
 
 <h2 class="jazz-cms-section-title">Edit Recommendation</h2>
 
-<form action="/cms/jazz/recommendations/update?id=<?= (int)$rec['id'] ?>" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
+<form action="/cms/jazz/recommendations/update?id=<?= (int)($rec->id ?? 0) ?>" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
 
-<input type="hidden" name="id" value="<?= (int)$rec['id'] ?>">
+<input type="hidden" name="id" value="<?= (int)($rec->id ?? 0) ?>">
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Title</label>
@@ -43,7 +43,7 @@ require __DIR__ . '/../partials/tabs.php';
 type="text"
 name="title"
 class="jazz-cms-input"
-value="<?= htmlspecialchars($rec['title'] ?? '') ?>"
+value="<?= htmlspecialchars($rec->title ?? '') ?>"
 required
 >
 </div>
@@ -54,7 +54,7 @@ required
 name="description"
 class="jazz-cms-textarea"
 rows="4"
-><?= htmlspecialchars($rec['description'] ?? '') ?></textarea>
+><?= htmlspecialchars($rec->description ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -63,7 +63,7 @@ rows="4"
 type="text"
 name="url"
 class="jazz-cms-input"
-value="<?= htmlspecialchars($rec['url'] ?? '') ?>"
+value="<?= htmlspecialchars($rec->url ?? '') ?>"
 >
 </div>
 
@@ -73,7 +73,7 @@ value="<?= htmlspecialchars($rec['url'] ?? '') ?>"
 type="number"
 name="sort_order"
 class="jazz-cms-input"
-value="<?= (int)($rec['sort_order'] ?? 0) ?>"
+value="<?= (int)($rec->sort_order ?? 0) ?>"
 >
 </div>
 
@@ -81,8 +81,8 @@ value="<?= (int)($rec['sort_order'] ?? 0) ?>"
 <label class="jazz-cms-label">Active</label>
 
 <select name="is_active" class="jazz-cms-input">
-<option value="1" <?= ((int)($rec['is_active'] ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-<option value="0" <?= ((int)($rec['is_active'] ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+<option value="1" <?= ((int)($rec->is_active ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+<option value="0" <?= ((int)($rec->is_active ?? 0) === 0) ? 'selected' : '' ?>>No</option>
 </select>
 
 </div>
@@ -112,14 +112,14 @@ accept="image/*"
 Upload path: <code>/public/uploads/recommendations/</code>
 </small>
 
-<?php if (!empty($rec['image_path'])): ?>
+<?php if (!empty($rec->image_path)): ?>
 
 <div class="jazz-cms-image-preview-wrap">
 
 <p class="jazz-cms-preview-label">Current Image</p>
 
 <img
-src="<?= htmlspecialchars($rec['image_path']) ?>"
+src="<?= htmlspecialchars($rec->image_path) ?>"
 class="jazz-cms-image-preview"
 >
 

@@ -2,81 +2,109 @@
 
 namespace App\Controllers;
 
-use App\Services\Jazz\JazzService;
 use App\Framework\Session;
+use App\Interfaces\Services\IJazzService;
+use App\Services\Jazz\JazzService;
 use App\ViewModels\Jazz\JazzHomeViewModel;
 use App\ViewModels\Jazz\JazzPerformerViewModel;
+use Throwable;
 
-class JazzController
+class JazzController extends BaseController
 {
-    public function index()
+    private IJazzService $service;
+
+    public function __construct(?IJazzService $service = null)
     {
-        $service = new JazzService();
-        $data = $service->getHomePageData();
-
-        $vm = new JazzHomeViewModel(
-            $data['hero'],
-            $data['intro'],
-            $data['experiences'],
-            $data['performers'],
-            $data['recommendations'],
-            $data['locations'],
-            Session::user()
-        );
-
-        require __DIR__ . '/../Views/jazz/home.php';
+        $this->service = $service ?? new JazzService();
     }
 
-    public function schedule()
+    public function index(): void
     {
-        require __DIR__ . '/../Views/jazz/schedule.php';
-    }
+        try {
+            $data = $this->service->getHomePageData();
 
-    public function tickets()
-    {
-        require __DIR__ . '/../Views/jazz/tickets.php';
-    }
+            $vm = new JazzHomeViewModel(
+                $data['hero'],
+                $data['intro'],
+                $data['experiences'],
+                $data['performers'],
+                $data['recommendations'],
+                $data['locations'],
+                Session::user()
+            );
 
-    public function performer()
-    {
-        $id = (int)($_GET['id'] ?? 0);
-
-        if ($id <= 0) {
-            http_response_code(404);
-            echo '404 - Performer not found';
-            return;
+            $this->render('jazz/home', [
+                'vm' => $vm,
+                'pageTitle' => 'Haarlem Jazz',
+                'pageCSS' => 'jazz.css',
+                'mainClass' => 'jazz-main',
+                'user' => Session::user()
+            ]);
+        } catch (Throwable $e) {
+            http_response_code(500);
+            echo 'Something went wrong while loading the Jazz page.';
         }
-
-        $service = new JazzService();
-        $data = $service->getPerformerDetail($id);
-
-        if (!$data) {
-            http_response_code(404);
-            echo '404 - Performer not found';
-            return;
-        }
-
-        $vm = new JazzPerformerViewModel(
-            $data['performer'],
-            $data['appearances'],
-            $data['highlights'],
-            $data['tracks'],
-            $data['locations'],
-            $data['recommendations'],
-            Session::user()
-        );
-
-        require __DIR__ . '/../Views/jazz/performer.php';
     }
-    public function experiences(): void
-{
-    $repo = new \App\Repositories\JazzRepository();
-    $experiences = $repo->getExperiences();
 
-    $pageTitle = 'Jazz CMS - Experiences';
-    $pageCSS = 'jazz.css';
-    $user = \App\Framework\Session::user();
+    public function schedule(): void
+    {
+        $this->render('jazz/schedule', [
+            'pageTitle' => 'Jazz Schedule',
+            'pageCSS' => 'jazz.css',
+            'mainClass' => 'jazz-main',
+            'user' => Session::user()
+        ]);
+    }
 
-    require __DIR__ . '/../../../Views/cms/jazz/experiences.php';
-}
+    public function tickets(): void
+    {
+        $this->render('jazz/tickets', [
+            'pageTitle' => 'Jazz Tickets',
+            'pageCSS' => 'jazz.css',
+            'mainClass' => 'jazz-main',
+            'user' => Session::user()
+        ]);
+    }
+
+    public function performer(): void
+    {
+        try {
+            $id = (int)($_GET['id'] ?? 0);
+    
+            if ($id <= 0) {
+                http_response_code(404);
+                echo '404 - Performer not found';
+                return;
+            }
+    
+            $data = $this->service->getPerformerDetail($id);
+    
+            if (!$data) {
+                http_response_code(404);
+                echo '404 - Performer not found';
+                return;
+            }
+    
+            $vm = new JazzPerformerViewModel(
+                $data['performer'],
+                $data['appearances'],
+                $data['highlights'],
+                $data['tracks'],
+                $data['locations'],
+                $data['recommendations'],
+                Session::user()
+            );
+    
+            $this->render('jazz/performer', [
+                'vm' => $vm,
+                'pageTitle' => 'Jazz Performer',
+                'pageCSS' => 'jazz.css',
+                'mainClass' => 'jazz-main',
+                'user' => Session::user()
+            ]);
+        } catch (Throwable $error) {
+            http_response_code(500);
+            echo $error->getMessage();
+        }
+    }
 }

@@ -3,7 +3,7 @@
 $pageTitle = 'Intro Content';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$intro = $vm->intro ?? [];
+$intro = $vm->intro;
 
 require __DIR__ . '/../../partials/header.php';
 
@@ -34,7 +34,7 @@ require __DIR__ . '/partials/cmsHero.php';
 
             <form action="/cms/jazz/intro/update" method="POST" class="jazz-cms-form">
 
-                <input type="hidden" name="id" value="<?= htmlspecialchars($intro['id'] ?? '') ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($intro?->id ?? '') ?>">
 
                 <div class="jazz-cms-form-row">
                     <label class="jazz-cms-label">Title</label>
@@ -42,7 +42,7 @@ require __DIR__ . '/partials/cmsHero.php';
                         type="text"
                         name="title"
                         class="jazz-cms-input"
-                        value="<?= htmlspecialchars($intro['title'] ?? '') ?>"
+                        value="<?= htmlspecialchars($intro?->title ?? '') ?>"
                         required
                     >
                 </div>
@@ -54,7 +54,7 @@ require __DIR__ . '/partials/cmsHero.php';
                         class="jazz-cms-textarea"
                         rows="6"
                         required
-                    ><?= htmlspecialchars($intro['description'] ?? '') ?></textarea>
+                    ><?= htmlspecialchars($intro?->description ?? '') ?></textarea>
                 </div>
 
                 <div class="jazz-cms-form-actions">

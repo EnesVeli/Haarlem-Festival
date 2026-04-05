@@ -2,18 +2,20 @@
 
 namespace App\ViewModels\Jazz\JazzCmsViewModels;
 
+use App\Models\Jazz\JazzRecommendation;
+
 class JazzRecommendationsCmsViewModel
 {
     public array $recommendations;
-    public array $recommendation;
+    public ?JazzRecommendation $recommendation;
     public ?array $currentUser;
     public string $activeTab;
 
-    public function __construct(array $recommendations = [], ?array $currentUser = null, array $recommendation = [])
+    public function __construct(array $recommendations, ?array $currentUser, ?JazzRecommendation $recommendation = null)
     {
         $this->recommendations = $recommendations;
-        $this->recommendation = $recommendation;
         $this->currentUser = $currentUser;
+        $this->recommendation = $recommendation;
         $this->activeTab = 'recommendations';
     }
 }

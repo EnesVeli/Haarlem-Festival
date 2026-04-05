@@ -107,6 +107,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/stories/save',   [\App\Controllers\CmsStoriesController::class, 'save']);
     $r->addRoute('POST', '/cms/stories/delete', [\App\Controllers\CmsStoriesController::class, 'delete']);
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+
+ // 
+    $r->addRoute('GET', '/employee/scan', [\App\Controllers\EventTicketScanController::class, 'index']);
+$r->addRoute('POST', '/employee/scan', [\App\Controllers\EventTicketScanController::class, 'scan']);
+
+$r->addRoute('GET', '/ticket/qr/{id:\d+}', [\App\Controllers\EventTicketQrController::class, 'show']);
 });
 
 // Fetch method and URI from Server

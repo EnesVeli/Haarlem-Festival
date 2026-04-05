@@ -2,10 +2,13 @@
 
 namespace App\ViewModels\Jazz;
 
+use App\Models\Jazz\JazzHero;
+use App\Models\Jazz\JazzIntro;
+
 class JazzHomeViewModel
 {
-    public ?array $hero;
-    public ?array $intro;
+    public ?JazzHero $hero;
+    public ?JazzIntro $intro;
     public array $experiences;
     public array $performers;
     public array $recommendations;
@@ -13,8 +16,8 @@ class JazzHomeViewModel
     public ?array $currentUser;
 
     public function __construct(
-        ?array $hero,
-        ?array $intro,
+        ?JazzHero $hero,
+        ?JazzIntro $intro,
         array $experiences,
         array $performers,
         array $recommendations,

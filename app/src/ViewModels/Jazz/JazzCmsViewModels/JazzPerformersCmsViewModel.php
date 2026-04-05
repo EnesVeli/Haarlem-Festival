@@ -2,18 +2,20 @@
 
 namespace App\ViewModels\Jazz\JazzCmsViewModels;
 
+use App\Models\Jazz\JazzPerformer;
+
 class JazzPerformersCmsViewModel
 {
     public array $performers;
-    public array $performer;
+    public ?JazzPerformer $performer;
     public ?array $currentUser;
     public string $activeTab;
 
-    public function __construct(array $performers = [], ?array $currentUser = null, array $performer = [])
+    public function __construct(array $performers, ?array $currentUser, ?JazzPerformer $performer = null)
     {
         $this->performers = $performers;
-        $this->performer = $performer;
         $this->currentUser = $currentUser;
+        $this->performer = $performer;
         $this->activeTab = 'performers';
     }
 }

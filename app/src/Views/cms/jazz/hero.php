@@ -3,7 +3,7 @@
 $pageTitle = 'Hero Section';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$hero = $vm->hero ?? [];
+$hero = $vm->hero;
 
 require __DIR__ . '/../../partials/header.php';
 
@@ -34,7 +34,7 @@ require __DIR__ . '/partials/cmsHero.php';
 
             <form action="/cms/jazz/hero/update" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
 
-                <input type="hidden" name="id" value="<?= htmlspecialchars($hero['id'] ?? '') ?>">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($hero?->id ?? '') ?>">
 
                 <div class="jazz-cms-form-row">
                     <label class="jazz-cms-label">Title</label>
@@ -42,7 +42,7 @@ require __DIR__ . '/partials/cmsHero.php';
                         type="text"
                         name="title"
                         class="jazz-cms-input"
-                        value="<?= htmlspecialchars($hero['title'] ?? '') ?>"
+                        value="<?= htmlspecialchars($hero?->title ?? '') ?>"
                         required
                     >
                 </div>
@@ -53,7 +53,7 @@ require __DIR__ . '/partials/cmsHero.php';
                         name="subtitle"
                         class="jazz-cms-textarea"
                         rows="4"
-                    ><?= htmlspecialchars($hero['subtitle'] ?? '') ?></textarea>
+                    ><?= htmlspecialchars($hero?->subtitle ?? '') ?></textarea>
                 </div>
 
                 <div class="jazz-cms-form-row">
@@ -78,16 +78,16 @@ require __DIR__ . '/partials/cmsHero.php';
                         Upload path: <code>/public/uploads/hero/</code>
                     </small>
 
-                    <?php if (!empty($hero['image_path'])): ?>
+                    <?php if (!empty($hero?->imagePath)): ?>
                         <div class="jazz-cms-image-preview-wrap">
                             <p class="jazz-cms-preview-label">Current Image</p>
                             <img
-                                src="<?= htmlspecialchars($hero['image_path']) ?>"
+                                src="<?= htmlspecialchars($hero->imagePath) ?>"
                                 alt="Hero image"
                                 class="jazz-cms-image-preview"
                             >
                             <p class="jazz-cms-image-path">
-                                <?= htmlspecialchars($hero['image_path']) ?>
+                                <?= htmlspecialchars($hero->imagePath) ?>
                             </p>
                         </div>
                     <?php endif; ?>
@@ -96,8 +96,8 @@ require __DIR__ . '/partials/cmsHero.php';
                 <div class="jazz-cms-form-row">
                     <label class="jazz-cms-label">Active</label>
                     <select name="is_active" class="jazz-cms-input">
-                        <option value="1" <?= ((int)($hero['is_active'] ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-                        <option value="0" <?= ((int)($hero['is_active'] ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+                        <option value="1" <?= ((int)($hero?->isActive ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+                        <option value="0" <?= ((int)($hero?->isActive ?? 0) === 0) ? 'selected' : '' ?>>No</option>
                     </select>
                 </div>
 

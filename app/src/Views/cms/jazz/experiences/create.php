@@ -3,6 +3,7 @@
 $pageTitle = 'Create Experience';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
+$experience = $vm->experience ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 
@@ -39,6 +40,7 @@ require __DIR__ . '/../partials/cmsHero.php';
                         type="text"
                         name="title"
                         class="jazz-cms-input"
+                        value="<?= htmlspecialchars($experience?->title ?? '') ?>"
                         required
                     >
                 </div>
@@ -50,7 +52,7 @@ require __DIR__ . '/../partials/cmsHero.php';
                         class="jazz-cms-textarea"
                         rows="5"
                         required
-                    ></textarea>
+                    ><?= htmlspecialchars($experience?->description ?? '') ?></textarea>
                 </div>
 
                 <div class="jazz-cms-form-row">
@@ -59,7 +61,7 @@ require __DIR__ . '/../partials/cmsHero.php';
                         type="number"
                         name="sort_order"
                         class="jazz-cms-input"
-                        value="0"
+                        value="<?= htmlspecialchars($experience?->sortOrder ?? 0) ?>"
                         required
                     >
                 </div>

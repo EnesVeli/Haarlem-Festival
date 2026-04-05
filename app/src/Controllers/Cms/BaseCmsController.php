@@ -24,4 +24,21 @@ abstract class BaseCmsController
             exit;
         }
     }
+
+    protected function render(string $view, array $data = []): void
+    {
+        extract($data);
+
+        $viewsPath = __DIR__ . '/../../Views/';
+
+        require $viewsPath . 'partials/header.php';
+        require $viewsPath . $view . '.php';
+        require $viewsPath . 'partials/footer.php';
+    }
+
+    protected function redirect(string $url): void
+    {
+        header('Location: ' . $url);
+        exit;
+    }
 }

@@ -130,7 +130,7 @@ class CartService
 {
     $map = [
         'history' => ['table' => 'history_tickets', 'id_col' => 'id'],
-        // 'jazz'  => ['table' => 'jazz_tickets',   'id_col' => 'id'],
+        'jazz' => ['table' => 'festival_events', 'id_col' => 'festival_event_id'],
     ];
 
     if (!isset($map[$eventType])) {
