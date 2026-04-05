@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 12:13 PM
+-- Generation Time: Apr 05, 2026 at 12:21 PM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -408,8 +408,8 @@ CREATE TABLE `history_details` (
 --
 
 INSERT INTO `history_details` (`id`, `highlight_id`, `slug`, `page_title`, `hero_image`, `location`, `founded_year`, `style_type`, `meta_description`) VALUES
-(1, 3, 'teylers-museum', 'Teylers Museum', 'teylers-museum-hero.jpg', 'Haarlem City Center', '1784', 'Art & Science', 'Discover Teylers Museum, the oldest museum in the Netherlands, featuring art, science, and natural history collections.'),
-(2, 2, 'st-bavos-cathedral', 'St. Bavo\'s Cathedral', 'st-bavos-hero.jpg', 'Haarlem City Center', '1570-1520', 'Gothic', 'Explore St. Bavo\'s Cathedral, the magnificent Gothic church with the famous Müller Organ.');
+(1, 3, 'teylers-museum', 'Teylers Museum', 'tylershomepage.png', 'Haarlem City Center', '1784', 'Art & Science', 'Discover Teylers Museum, the oldest museum in the Netherlands, featuring art, science, and natural history collections.'),
+(2, 2, 'st-bavos-cathedral', 'St. Bavo\'s Cathedral', 'bavo homepage.png', 'Haarlem City Center', '1570-1520', 'Gothic', 'Explore St. Bavo\'s Cathedral, the magnificent Gothic church with the famous Müller Organ.');
 
 -- --------------------------------------------------------
 
@@ -459,9 +459,9 @@ CREATE TABLE `history_detail_gallery` (
 --
 
 INSERT INTO `history_detail_gallery` (`id`, `detail_id`, `image_path`, `caption`, `sort_order`) VALUES
-(1, 1, 'teylers-gallery-1.jpg', 'Main exhibition hall', 1),
-(2, 1, 'teylers-gallery-2.jpg', 'Historic interior', 2),
-(3, 1, 'teylers-gallery-3.jpg', 'Riverside view', 3),
+(1, 1, 'tylers-image-1.png', 'Main exhibition hall', 1),
+(2, 1, 'tylers-image-2.png', 'Historic interior', 2),
+(3, 1, 'tylers-image-3.png', 'Riverside view', 3),
 (4, 2, 'st-bavos-1.png', 'St. Bavo\'s Cathedral interior', 1),
 (5, 2, 'st-bavos-2.png', 'St. Bavo\'s Cathedral dome', 2),
 (6, 2, 'st-bavos-3.png', 'St. Bavo\'s Cathedral detail', 3);
