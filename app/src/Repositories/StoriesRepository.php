@@ -46,14 +46,41 @@ class StoriesRepository extends Repository
         $stmt->setFetchMode(PDO::FETCH_CLASS, StoryEvent::class);
         return $stmt->fetch() ?: null;
     }
-    public function insert(array $data): bool
+    public function insert(array $data): int
     {
-        $sql = "INSERT INTO Event (name, slug, description, language, age_group, story_type, is_pay_as_you_like, start_time, end_time, max_tickets, performer_name, performer_bio, image_path, venue_id, type)
-                VALUES (:name, :slug, :description, :language, :age_group, :story_type, :is_pay_as_you_like, :start_time, :end_time, :max_tickets, :performer_name, :performer_bio, :image_path, :venue_id, :type)";
+        $sql = "INSERT INTO Event (
+                    name, slug, description, language, age_group, story_type, is_pay_as_you_like,
+                    start_time, end_time, max_tickets, performer_name, performer_bio,
+                    image_path, gallery_image_1, gallery_image_2,
+                    audio_preview_path, audio_title, audio_transcript,
+                    venue_id, type
+                ) VALUES (
+                    :name, :slug, :description, :language, :age_group, :story_type, :is_pay_as_you_like,
+                    :start_time, :end_time, :max_tickets, :performer_name, :performer_bio,
+                    :image_path, :gallery_image_1, :gallery_image_2,
+                    :audio_preview_path, :audio_title, :audio_transcript,
+                    :venue_id, :type
+                )";
         
         $data['type'] = self::EVENT_TYPE;
         $stmt = $this->connection->prepare($sql);
-        return $stmt->execute($data);
+        $stmt->execute($data);
+        return (int) $this->connection->lastInsertId();
+    }
+
+    public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
+    {
+        $sql = "INSERT INTO Ticket_Type (event_id, name, price, is_pay_as_you_like)
+                VALUES
+                (:event_id, 'Regular Ticket', 0.00, :is_pay_as_you_like),
+                (:event_id2, 'HaarlemPas (25% off)', 0.00, 0)";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':event_id' => $eventId,
+            ':event_id2' => $eventId,
+            ':is_pay_as_you_like' => $isPayAsYouLike ? 1 : 0,
+        ]);
     }
 
     public function update(int $id, array $data): bool
@@ -62,7 +89,10 @@ class StoriesRepository extends Repository
                 name = :name, slug = :slug, description = :description, language = :language, 
                 age_group = :age_group, story_type = :story_type, is_pay_as_you_like = :is_pay_as_you_like, 
                 start_time = :start_time, end_time = :end_time, max_tickets = :max_tickets, 
-                performer_name = :performer_name, performer_bio = :performer_bio, image_path = :image_path, venue_id = :venue_id
+                performer_name = :performer_name, performer_bio = :performer_bio, image_path = :image_path,
+                gallery_image_1 = :gallery_image_1, gallery_image_2 = :gallery_image_2,
+                audio_preview_path = :audio_preview_path, audio_title = :audio_title, audio_transcript = :audio_transcript,
+                venue_id = :venue_id
                 WHERE event_id = :id AND type = :type";
 
         $data['id'] = $id;
@@ -105,4 +135,43 @@ class StoriesRepository extends Repository
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
+    
+    /* Fetches all sessions that share the same event name.*/
+    public function getScheduleByName(string $name): array
+    {
+        $sql = "SELECT event_id, start_time, end_time, language, slug
+                FROM Event
+                WHERE name = :name AND type = :type
+                ORDER BY start_time ASC";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([':name' => $name, ':type' => self::EVENT_TYPE]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTicketTypesByEventId(int $eventId): array
+    {
+        $sql = "SELECT type_id, name, price, is_pay_as_you_like
+                FROM Ticket_Type
+                WHERE event_id = :event_id
+                ORDER BY type_id";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([':event_id' => $eventId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateTicketTypePrice(int $typeId, float $price): void
+    {
+        $sql = "UPDATE Ticket_Type
+                SET price = :price
+                WHERE type_id = :type_id";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':price' => $price,
+            ':type_id' => $typeId,
+        ]);
+    }
+    
 }

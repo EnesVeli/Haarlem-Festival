@@ -15,23 +15,17 @@ class HistoryController
         $this->service = new HistoryService();
     }
 
-    /**
-     * Display the main history page
-     */
     public function index()
     {
         $viewModel = new HistoryIndexViewModel(
             $this->service->getHighlights(),
             $this->service->getTickets(),
-            $this->service->getContent()   // returns raw rows — ViewModel organizes them
+            $this->service->getContent()
         );
 
         require __DIR__ . '/../Views/history/index.php';
     }
 
-    /**
-     * Display a detail page for a specific highlight
-     */
     public function detail($vars)
     {
         $slug     = $vars['slug'] ?? '';
@@ -51,5 +45,29 @@ class HistoryController
         );
 
         require __DIR__ . '/../Views/history/detail.php';
+    }
+
+    public function booking(): void
+    {
+        $ticketId     = (int)($_GET['ticket_id'] ?? 0);
+        $tickets      = $this->service->getTickets();
+        $ticket       = array_values(array_filter($tickets, fn($t) => $t['id'] === $ticketId))[0] ?? ($tickets[0] ?? []);
+        $selectedDate = $_GET['date'] ?? 'Thursday';
+        $selectedTime = $_GET['time'] ?? '';
+
+        // Load individual and family prices from the dedicated prices table
+        $prices           = $this->service->getTicketPrices();
+        $individualTicket = $prices['individual'] ?? ['price' => 17.50];
+        $familyTicket     = $prices['family']     ?? ['price' => 60.00];
+
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        $csrfToken = $_SESSION['csrf_token'];
+
+        $eventId = 138;
+        $typeId  = 138;
+
+        require __DIR__ . '/../Views/history/booking.php';
     }
 }

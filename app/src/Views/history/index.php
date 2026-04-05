@@ -6,7 +6,7 @@ require __DIR__ . '/../partials/header.php';
 ?>
 
 <!-- HERO SECTION -->
-<section class="history-hero" style="background-image: url('/assets/uploads/history/<?= htmlspecialchars($viewModel->heroImage()) ?>'); background-size: cover; background-position: center;">
+<section class="history-hero" style="background-image: url('/assets/uploads/History/<?= htmlspecialchars($viewModel->heroImage()) ?>'); background-size: cover; background-position: center;">
     <div class="container">
         <div class="hero-content">
             <h1><?= htmlspecialchars($viewModel->heroTitle()) ?></h1>
@@ -44,8 +44,8 @@ require __DIR__ . '/../partials/header.php';
             </div>
             
             <div class="golden-city-images">
-                <img src="/assets/uploads/history/grote-markt.jpg" alt="Grote Markt" class="city-image">
-                <img src="/assets/uploads/history/historic-buildings.jpg" alt="Historic Buildings" class="city-image">
+                <img src="/assets/uploads/History/grote-markt.jpg" alt="Grote Markt" class="city-image">
+                <img src="/assets/uploads/History/historic-buildings.jpg" alt="Historic Buildings" class="city-image">
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@ require __DIR__ . '/../partials/header.php';
                 <div class="highlights-grid">
                     <?php foreach ($viewModel->highlights as $highlight): ?>
                         <div class="highlight-card">
-                            <img src="/assets/uploads/history/<?= htmlspecialchars($highlight['image']) ?>" 
+                            <img src="/assets/uploads/History/<?= htmlspecialchars($highlight['image']) ?>" 
                                  alt="<?= htmlspecialchars($highlight['title']) ?>" 
                                  class="highlight-image">
                             <div class="highlight-body">
@@ -92,9 +92,11 @@ require __DIR__ . '/../partials/header.php';
                 <div class="map-section">
                     <h3>Walking Route Map</h3>
                     <div class="map-container">
-                        <div class="map-placeholder">
-                            <p>Interactive Map - Route through Historic Haarlem</p>
-                        </div>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m24!1m8!1m3!1d4892.354522174083!2d4.6374!3d52.3813!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x47c5ef8a08c20de5%3A0x6f0da2e6e5df6e90!2sGrote+Kerk+Haarlem!3m2!1d52.3813!2d4.6374!4m5!1s0x47c5ef8b5b0f5555%3A0x7e1fae8c8a52a68!2sTeylers+Museum%2C+Spaarne+16%2C+2011+CH+Haarlem!3m2!1d52.3795!2d4.6397!5e0!3m2!1sen!2snl!4v1700000000000"
+                            width="100%" height="400" style="border:0;border-radius:8px;" allowfullscreen=""
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
@@ -107,7 +109,7 @@ require __DIR__ . '/../partials/header.php';
                     <p><?= htmlspecialchars($viewModel->walkSubtitle()) ?></p>
                     
                     <?php if ($viewModel->hasWalkImage()): ?>
-                        <img src="/assets/uploads/history/<?= htmlspecialchars($viewModel->walkImage()) ?>" alt="Walk guide">
+                        <img src="/assets/uploads/History/<?= htmlspecialchars($viewModel->walkImage()) ?>" alt="Walk guide">
                     <?php endif; ?>
                     
                     <div class="walk-features">
@@ -123,7 +125,7 @@ require __DIR__ . '/../partials/header.php';
                     
                     <div class="ticket-selector">
                         <label><strong>Select a Date:</strong></label>
-                        <select class="date-select">
+                        <select class="date-select" onchange="updateDayLabel(this.value)">
                             <option>Select</option>
                             <option>Thursday</option>
                             <option>Friday</option>
@@ -131,20 +133,42 @@ require __DIR__ . '/../partials/header.php';
                             <option>Sunday</option>
                         </select>
                         
-                        <div class="available-slots-label">Available Time Slots (Thursday)</div>
+                        <div class="available-slots-label" id="slots-day-label">Available Time Slots (Thursday)</div>
                     </div>
                     
                     <div class="tickets-list">
                         <?php foreach ($viewModel->tickets as $ticket): ?>
-                            <div class="ticket-row">
+                            <div class="ticket-row" style="cursor:pointer"
+                                 onclick="selectTicket(<?= $ticket['id'] ?>, '<?= htmlspecialchars($ticket['time_slot']) ?>')">
                                 <div class="ticket-time"><?= htmlspecialchars($ticket['time_slot']) ?></div>
-                                <div class="ticket-price">€<?= number_format($ticket['price'], 2) ?></div>
                                 <div class="ticket-spots"><?= htmlspecialchars($ticket['available_spots']) ?> spots left</div>
                             </div>
                         <?php endforeach; ?>
                     </div>
                     
-                    <button class="btn-book">Book</button>
+                    <button class="btn-book" onclick="goToBooking()">Book</button>
+
+                    <script>
+                    let selectedTicketId = null;
+                    let selectedTime = '';
+                    function updateDayLabel(day) {
+                        const label = document.getElementById('slots-day-label');
+                        label.textContent = day === 'Select'
+                            ? 'Available Time Slots'
+                            : 'Available Time Slots (' + day + ')';
+                    }
+                    function selectTicket(id, time) {
+                        selectedTicketId = id;
+                        selectedTime = time;
+                        document.querySelectorAll('.ticket-row').forEach(r => r.style.background = '');
+                        event.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+                    }
+                    function goToBooking() {
+                        const date = document.querySelector('.date-select').value;
+                        if (!selectedTicketId) { alert('Please select a time slot first.'); return; }
+                        window.location.href = `/history/booking?ticket_id=${selectedTicketId}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(selectedTime)}`;
+                    }
+                    </script>
                 </div>
             </div>
         </div>
@@ -173,21 +197,21 @@ require __DIR__ . '/../partials/header.php';
         <h2 class="section-title-burgundy mb-5">Complete Your Journey</h2>
         <div class="journey-grid">
             <div class="journey-card">
-                <img src="/assets/uploads/history/stories-haarlem.jpg" alt="Stories in Haarlem">
+                <img src="/assets/uploads/History/stories-haarlem.jpg" alt="Stories in Haarlem">
                 <div class="journey-body">
                     <h3>Stories in Haarlem</h3>
                     <p>Guided walking tour through Haarlem with local storytellers sharing tales of the city's rich past.</p>
                 </div>
             </div>
             <div class="journey-card">
-                <img src="/assets/uploads/history/jazz-event.jpg" alt="Jazz">
+                <img src="/assets/uploads/History/jazz-event.jpg" alt="Jazz">
                 <div class="journey-body">
                     <h3>Jazz</h3>
                     <p>Interactive magic and illusion show at the famous Teylers Museum, perfect for families and wonder-seekers.</p>
                 </div>
             </div>
             <div class="journey-card">
-                <img src="/assets/uploads/history/yummy-event.jpg" alt="Yummy">
+                <img src="/assets/uploads/History/yummy-event.jpg" alt="Yummy">
                 <div class="journey-body">
                     <h3>Yummy!</h3>
                     <p>Culinary storytelling experience with local chefs and food historians exploring Dutch cuisine traditions.</p>

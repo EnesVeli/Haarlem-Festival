@@ -25,6 +25,28 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTicketPrices(): array
+    {
+        $sql  = "SELECT * FROM history_ticket_prices";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Return keyed by ticket_type for easy access: ['individual' => [...], 'family' => [...]]
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['ticket_type']] = $row;
+        }
+        return $result;
+    }
+
+    public function updateTicketPrice(string $type, float $price): void
+    {
+        $sql  = "UPDATE history_ticket_prices SET price = :price WHERE ticket_type = :type";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([':price' => $price, ':type' => $type]);
+    }
+
     public function getContentBySection($section)
     {
         $sql = "SELECT * FROM history_content WHERE section = :section LIMIT 1";
@@ -44,9 +66,6 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get detail page by slug
-     */
     public function getDetailBySlug($slug)
     {
         $sql = "SELECT hd.*, hh.title as highlight_title, hh.description as highlight_description
@@ -61,9 +80,6 @@ class HistoryRepository extends Repository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get all sections for a detail page
-     */
     public function getDetailSections($detailId)
     {
         $sql = "SELECT * FROM history_detail_sections 
@@ -76,9 +92,6 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get gallery images for a detail page
-     */
     public function getDetailGallery($detailId)
     {
         $sql = "SELECT * FROM history_detail_gallery 
@@ -91,9 +104,6 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get quick facts for a detail page
-     */
     public function getDetailFacts($detailId)
     {
         $sql = "SELECT * FROM history_detail_facts 
@@ -106,9 +116,6 @@ class HistoryRepository extends Repository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get highlight by ID with slug
-     */
     public function getHighlightWithSlug($highlightId)
     {
         $sql = "SELECT hh.*, hd.slug 
@@ -123,9 +130,6 @@ class HistoryRepository extends Repository
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Get all highlights with their slugs for linking
-     */
     public function getAllHighlightsWithSlugs()
     {
         $sql = "SELECT hh.*, hd.slug 

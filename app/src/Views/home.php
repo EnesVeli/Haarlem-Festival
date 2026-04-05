@@ -1,21 +1,19 @@
 <?php
-$user        = $user        ?? null;
-$homeContent = $homeContent ?? [];
-$eventCards  = $eventCards  ?? [];
-$venueList   = $venueList   ?? [];
-$pageTitle   = 'Home - The Festival Haarlem';
+/** @var \App\ViewModels\HomeViewModel $viewModel */
+$user      = $user ?? null;
+$pageTitle = $viewModel->pageTitle;
 
 require __DIR__ . '/partials/header.php';
 ?>
 <link href="/assets/css/home.css" rel="stylesheet">
 
 <!-- ===== HERO ===== -->
-<section class="hero-main" style="background-image: url('/assets/css/uploads/history/<?= htmlspecialchars($homeContent['hero_image'] ?? 'Heroimage.png') ?>');">
+<section class="hero-main" style="background-image: url('/assets/uploads/History/<?= htmlspecialchars($viewModel->heroImage) ?>');">
     <div class="hero-overlay"></div>
     <div class="hero-content-wrapper">
-        <h1 class="hero-title">THE FESTIVAL</h1>
-        <p class="hero-subtitle">5 Events • 4 Days • One Haarlem</p>
-        <p class="hero-desc">Discover the vibrant heart of Haarlem this July during The Festival, a unique four day celebration that transforms our historic city into a stage for culture, music, and culinary excellence.</p>
+        <h1 class="hero-title"><?= htmlspecialchars($viewModel->heroTitle) ?></h1>
+        <p class="hero-subtitle"><?= htmlspecialchars($viewModel->heroSubtitle) ?></p>
+        <p class="hero-desc"><?= htmlspecialchars($viewModel->heroDescription) ?></p>
         <div class="hero-buttons">
             <a href="#events" class="btn btn-hero-primary">Explore Events</a>
             <a href="/program" class="btn btn-hero-outline">Build My Program</a>
@@ -27,15 +25,11 @@ require __DIR__ . '/partials/header.php';
     </div>
 </section>
 
-<!-- ===== WHAT IS MY PROGRAM (comes first after hero) ===== -->
+<!-- ===== WHAT IS MY PROGRAM ===== -->
 <section class="how-to-use">
     <div class="container">
-        <h2 class="section-heading">
-            <?= htmlspecialchars($homeContent['program_title'] ?? 'What Is My Program?') ?>
-        </h2>
-        <p class="section-description">
-            <?= htmlspecialchars($homeContent['program_description'] ?? '') ?>
-        </p>
+        <h2 class="section-heading"><?= htmlspecialchars($viewModel->programTitle) ?></h2>
+        <p class="section-description"><?= htmlspecialchars($viewModel->programDescription) ?></p>
         <div class="how-to-steps">
             <div class="step-card">
                 <div class="step-number">1</div>
@@ -56,20 +50,19 @@ require __DIR__ . '/partials/header.php';
     </div>
 </section>
 
-<!-- ===== FESTIVAL EVENTS (comes second) ===== -->
+<!-- ===== FESTIVAL EVENTS ===== -->
 <section class="festival-events" id="events">
     <div class="container">
         <h2 class="section-heading">Festival Events</h2>
         <p class="section-description">Whether you are a history buff, a jazz enthusiast, or a foodie, you will find your perfect rhythm in our city.</p>
 
         <div class="events-grid">
-            <?php foreach ($eventCards as $card): ?>
+            <?php foreach ($viewModel->eventCards as $card): ?>
             <div class="event-card">
-                <!-- Colored bar with category + icon -->
                 <div class="event-card-header <?= htmlspecialchars($card['bg_class']) ?>">
                     <span class="event-category-label"><?= htmlspecialchars($card['category']) ?></span>
                     <?php if (!empty($card['image'])): ?>
-                        <img src="/assets/css/uploads/history/<?= htmlspecialchars($card['image']) ?>"
+                        <img src="/assets/uploads/History/<?= htmlspecialchars($card['image']) ?>"
                              alt="<?= htmlspecialchars($card['title']) ?>" class="event-card-img" loading="lazy">
                     <?php else: ?>
                         <i class="bi <?= htmlspecialchars($card['icon']) ?> event-card-icon"></i>

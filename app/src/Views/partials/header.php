@@ -26,6 +26,8 @@
 if (!isset($user) || !$user) {
     $user = \App\Framework\Session::user();
 }
+
+$cartCount = (int)($cartCount ?? $_SESSION['cart_count'] ?? 0);
 ?>
 
 <nav class="top-nav">
@@ -42,7 +44,7 @@ if (!isset($user) || !$user) {
             <li><a href="/dance">Dance</a></li>
 
             <?php if ($user && strtolower($user['role'] ?? '') === 'admin'): ?>
-                <li><a href="/cms/jazz/home">Dashboard</a></li>
+                <li><a href="/cms">Dashboard</a></li>
             <?php endif; ?>
         </ul>
 
@@ -69,7 +71,7 @@ if (!isset($user) || !$user) {
                         </a>
 
                         <?php if (strtolower($user['role'] ?? '') === 'admin'): ?>
-                            <a href="/cms/jazz/home" class="profile-menu-item">
+                            <a href="/cms" class="profile-menu-item">
                                 <i class="bi bi-speedometer2"></i> CMS Dashboard
                             </a>
                         <?php endif; ?>
@@ -87,7 +89,7 @@ if (!isset($user) || !$user) {
 
             <a href="/cart" class="cart-icon">
                 <i class="bi bi-cart3"></i>
-                <span class="cart-badge">0</span>
+                <span class="cart-badge"><?= (int)$cartCount ?></span>
             </a>
         </div>
     </div>
