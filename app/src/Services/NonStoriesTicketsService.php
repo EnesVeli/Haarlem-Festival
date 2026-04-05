@@ -1,10 +1,14 @@
 <?php
 namespace App\Services;
 
+use App\Interfaces\INonStoriesTicketsService;
 use App\Repositories\NonStoriesTicketsRepository;
 use InvalidArgumentException;
 
-class NonStoriesTicketsService
+/**
+ * Provides grouped ticket data for non-stories categories.
+ */
+class NonStoriesTicketsService implements INonStoriesTicketsService
 {
     private const CATEGORY_TYPE_MAP = [
         'jazz' => 1,
@@ -24,6 +28,9 @@ class NonStoriesTicketsService
 
     /**
      * Returns grouped events for one category key.
+     *
+     * Note: availability is resolved per event inside the loop (N+1 pattern),
+     * which is acceptable for current dataset size.
      *
      * @return array<string, array<int, array<string, mixed>>>
      */

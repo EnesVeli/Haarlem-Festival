@@ -1,7 +1,5 @@
 <?php
 $pageTitle = 'My Personal Program - The Festival Haarlem';
-require __DIR__ . '/../partials/header.php';
-
 $serviceFee = 2.50;
 $vatRate    = 0.09;
 $subtotal   = $cart['total'] ?? 0;
@@ -50,7 +48,8 @@ $total      = $subtotal + $serviceFee + $vat;
                 $timeLabel  = $eventStart ? (date('H:i', strtotime($eventStart)) . ' - ' . date('H:i', strtotime($eventEnd))) : '';
                 ?>
                 <div class="program-card">
-                    <div class="program-card__image" style="background-image: url('<?= htmlspecialchars($eventImage) ?>');">
+                    <div class="program-card__image"
+                        style="background-image: url('<?= htmlspecialchars($eventImage) ?>');">
                         <?php if ($dateLabel): ?>
                         <div class="program-card__date-overlay">
                             <span class="program-card__date"><?= $dateLabel ?></span>
@@ -62,7 +61,8 @@ $total      = $subtotal + $serviceFee + $vat;
                     <div class="program-card__info">
                         <h3 class="program-card__name"><?= htmlspecialchars($eventName) ?></h3>
                         <?php if ($venueName): ?>
-                        <p class="program-card__venue"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($venueName) ?></p>
+                        <p class="program-card__venue"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($venueName) ?>
+                        </p>
                         <?php endif; ?>
                         <p class="program-card__ticket">
                             <?= (int)$item['quantity'] ?> &times; &euro;<?= number_format((float)$item['price'], 2) ?>
@@ -71,7 +71,7 @@ $total      = $subtotal + $serviceFee + $vat;
                     </div>
 
                     <form method="post" action="/cart/remove" class="program-card__remove">
-                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                         <input type="hidden" name="cart_item_id" value="<?= (int)$item['cart_item_id'] ?>">
                         <button type="submit" class="program-card__remove-btn" title="Remove">
                             <i class="bi bi-trash"></i> Remove
@@ -122,5 +122,3 @@ $total      = $subtotal + $serviceFee + $vat;
 
     </div>
 </div>
-
-<?php require __DIR__ . '/../partials/footer.php'; ?>

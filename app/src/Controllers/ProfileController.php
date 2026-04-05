@@ -8,9 +8,9 @@ class ProfileController
 {
     private UserService $userService;
 
-    public function __construct()
+    public function __construct(UserService $userService)
     {
-        $this->userService = new UserService();
+        $this->userService = $userService;
     }
 
     private function mustBeLoggedIn(): void //base controllr

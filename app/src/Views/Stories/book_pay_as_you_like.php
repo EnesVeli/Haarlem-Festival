@@ -45,7 +45,7 @@ $defaultAmount = 10.00;
         </div>
 
         <form action="/cart/add" method="POST" id="bookingForm" aria-label="Pay-as-you-like ticket booking form">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <input type="hidden" name="event_id" value="<?= (int)$event->event_id ?>">
             <input type="hidden" name="ticket_type_id" value="<?= $payAsYouLikeTicketId ?>">
             <input type="hidden" name="custom_price" id="customPriceField" value="<?= number_format($defaultAmount, 2, '.', '') ?>">

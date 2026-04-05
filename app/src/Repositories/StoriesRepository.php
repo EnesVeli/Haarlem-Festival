@@ -118,5 +118,30 @@ class StoriesRepository extends Repository
         $stmt->execute([':name' => $name, ':type' => self::EVENT_TYPE]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getTicketTypesByEventId(int $eventId): array
+    {
+        $sql = "SELECT type_id, name, price, is_pay_as_you_like
+                FROM Ticket_Type
+                WHERE event_id = :event_id
+                ORDER BY type_id";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([':event_id' => $eventId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateTicketTypePrice(int $typeId, float $price): void
+    {
+        $sql = "UPDATE Ticket_Type
+                SET price = :price
+                WHERE type_id = :type_id";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute([
+            ':price' => $price,
+            ':type_id' => $typeId,
+        ]);
+    }
     
 }

@@ -1,10 +1,11 @@
 <?php
 namespace App\Services;
 
+use App\Interfaces\ICartService;
 use App\Repositories\CartRepository;
 use Exception;
 
-class CartService
+class CartService implements ICartService
 {
     private const EVENT_TYPE_LABELS = [
         1 => 'jazz',
@@ -16,9 +17,9 @@ class CartService
 
     private CartRepository $cartRepository;
 
-    public function __construct()
+    public function __construct(CartRepository $cartRepository)
     {
-        $this->cartRepository = new CartRepository();
+        $this->cartRepository = $cartRepository;
     }
 
     public function addItemByTicketType(

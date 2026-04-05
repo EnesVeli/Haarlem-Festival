@@ -8,7 +8,6 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 session_start();
-$_SESSION['csrf_token'] ??= bin2hex(random_bytes(32));
 
 use FastRoute\RouteCollector;
 use App\Controllers\HomeController;
@@ -176,6 +175,32 @@ switch ($routeInfo[0]) {
             $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
             $controller = new $class($storiesService, $homepageService);
 
+        } elseif ($class === \App\Controllers\RegisterController::class) {
+            $userRepository = new \App\Repositories\UserRepository();
+            $verificationService = new \App\Services\VerificationService();
+            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $captchaService = new \App\Services\CaptchaService();
+            $controller = new $class($userService, $captchaService);
+
+        } elseif ($class === \App\Controllers\LoginController::class) {
+            $userRepository = new \App\Repositories\UserRepository();
+            $verificationService = new \App\Services\VerificationService();
+            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $cartRepository = new \App\Repositories\CartRepository();
+            $cartService = new \App\Services\CartService($cartRepository);
+            $controller = new $class($userService, $cartService);
+
+        } elseif ($class === \App\Controllers\ProfileController::class) {
+            $userRepository = new \App\Repositories\UserRepository();
+            $verificationService = new \App\Services\VerificationService();
+            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $controller = new $class($userService);
+
+        } elseif ($class === \App\Controllers\CartController::class) {
+            $cartRepository = new \App\Repositories\CartRepository();
+            $cartService = new \App\Services\CartService($cartRepository);
+            $controller = new $class($cartService);
+
         } elseif ($class === \App\Controllers\CmsStoriesController::class) {
             $storiesRepo    = new \App\Repositories\StoriesRepository();
             $storiesService = new \App\Services\StoriesService($storiesRepo);
@@ -185,7 +210,8 @@ switch ($routeInfo[0]) {
             $storiesRepo = new \App\Repositories\StoriesRepository();
             $storiesService = new \App\Services\StoriesService($storiesRepo);
             $nonStoriesRepo = new \App\Repositories\NonStoriesTicketsRepository();
-            $cartService = new \App\Services\CartService();
+            $cartRepository = new \App\Repositories\CartRepository();
+            $cartService = new \App\Services\CartService($cartRepository);
             $nonStoriesService = new \App\Services\NonStoriesTicketsService($nonStoriesRepo, $cartService);
             $controller = new $class($storiesService, $nonStoriesService);
 

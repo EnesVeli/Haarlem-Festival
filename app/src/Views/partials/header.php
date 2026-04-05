@@ -27,15 +27,7 @@ if (!isset($user) || !$user) {
     $user = \App\Framework\Session::user();
 }
 
-$cartCount = 0;
-if (!empty($user['user_id'])) {
-    try {
-        $cartService = new \App\Services\CartService();
-        $cartCount = $cartService->getItemCount((int)$user['user_id']);
-    } catch (\Throwable $e) {
-        $cartCount = 0;
-    }
-}
+$cartCount = (int)($cartCount ?? $_SESSION['cart_count'] ?? 0);
 ?>
 
 <nav class="top-nav">
