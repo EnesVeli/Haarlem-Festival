@@ -7,6 +7,9 @@
 <main class="cms-container container mt-5 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Stories Management</h1>
+        <a href="/cms/stories/homepage" class="btn btn-secondary me-2">
+            <i class="bi bi-house-door"></i> Edit Homepage Content
+        </a>
         <a href="/cms/stories/edit" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Add New Story Event
         </a>

@@ -1333,3 +1333,140 @@
         text-align: center;
     }
 }
+/* Audio Player Specific Styling */
+.stories-audio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.stories-audio-label {
+    color: #e3000f; /* Haarlem Festival Red Accent */
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: uppercase;
+}
+.stories-audio-timer {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-family: monospace;
+}
+.stories-audio-player-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e9ecef;
+}
+.stories-audio-title-text {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+.stories-custom-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.stories-play-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.2s;
+    padding-left: 4px; /* visually center the play triangle */
+}
+.stories-play-btn.playing {
+    padding-left: 0; /* reset for pause icon */
+}
+.stories-play-btn:hover {
+    background-color: #e3000f;
+}
+.stories-audio-slider {
+    flex-grow: 1;
+    cursor: pointer;
+    height: 6px;
+    -webkit-appearance: none;
+    background: #dee2e6;
+    border-radius: 5px;
+    outline: none;
+}
+.stories-audio-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e3000f;
+    cursor: pointer;
+}
+.stories-audio-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e3000f;
+    cursor: pointer;
+    border: none;
+}
+.stories-transcript-toggle {
+    margin-top: 10px;
+}
+.stories-transcript-toggle a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.stories-transcript-toggle a:hover {
+    text-decoration: underline;
+}
+.stories-transcript-box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #555;
+    padding: 15px;
+    border-radius: 6px;
+}
+/* Dynamic Schedule Styling */
+.stories-schedule-list {
+    margin-top: 10px;
+}
+.stories-schedule-row--dynamic {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+.stories-schedule-row--dynamic:last-child {
+    border-bottom: none;
+}
+.stories-schedule-date {
+    display: block;
+    font-weight: bold;
+    font-size: 0.9em;
+    width: 100%;
+}
+.stories-schedule-time {
+    font-size: 0.9em;
+    color: #555;
+}
+.stories-badge--small {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    margin-left: auto;
+}

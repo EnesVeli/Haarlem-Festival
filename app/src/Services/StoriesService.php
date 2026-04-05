@@ -36,9 +36,18 @@ class StoriesService
     }
 
     /** Inserts a new story event. */
-    public function createEvent(array $data): bool
+    public function createEvent(array $data): int
     {
-        return $this->repository->insert($data);
+        $eventId = $this->repository->insert($data);
+        $isPayAsYouLike = !empty($data['is_pay_as_you_like']);
+        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+
+        return $eventId;
+    }
+
+    public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
+    {
+        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
     }
 
     /** Updates an existing story event. */
@@ -63,5 +72,20 @@ class StoriesService
     public function getHomepageContent(): ?array
     {
         return $this->repository->getHomepageContent();
+    }
+     /** Returns all schedule sessions that share the same event name */
+    public function getScheduleForEvent(string $name): array
+    {
+        return $this->repository->getScheduleByName($name);
+    }
+
+    public function getTicketTypesForCms(int $eventId): array
+    {
+        return $this->repository->getTicketTypesByEventId($eventId);
+    }
+
+    public function updateTicketTypePrice(int $typeId, float $price): void
+    {
+        $this->repository->updateTicketTypePrice($typeId, $price);
     }
 }

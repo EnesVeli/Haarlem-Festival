@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Models\Exceptions\EmailAlreadyRegesteredException;
+use App\Models\Exceptions\EmailAlreadyRegisteredException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Repositories\UserRepository;
 use Exception;
@@ -12,10 +12,10 @@ class UserService
 
     private VerificationService $verification_service;
 
-    public function __construct()
+    public function __construct(UserRepository $userRepository, VerificationService $verification_service)
     {
-        $this->userRepository = new UserRepository();
-        $this->verification_service = new VerificationService();
+        $this->userRepository = $userRepository;
+        $this->verification_service = $verification_service;
     }
 
     public function registerUser(string $name, string $email, string $password, string $password_confirm): void
@@ -25,7 +25,7 @@ class UserService
         $this->verification_service->verifyEmail($email);
         $this->verification_service->verifyPassword($password, $password_confirm);
 
-        if ($this->userRepository->findByEmail($email)) throw new EmailAlreadyRegesteredException();
+        if ($this->userRepository->findByEmail($email)) throw new EmailAlreadyRegisteredException();
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
@@ -69,7 +69,7 @@ class UserService
             $this->userRepository->updateName($userId, $name);
         }
 
-        // email (for now: direct update; later: confirmation flow)
+        // email 
         if ($email !== '' && $email !== $user['email']) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception("Invalid email format.");
@@ -94,9 +94,6 @@ class UserService
             $hash = password_hash($newPass, PASSWORD_DEFAULT);
             $this->userRepository->updatePassword($userId, $hash);
         }
-        // user model
-        //validation method
-        //image upload method
         // profile picture upload (store path in profile_picture_url)
         if (!empty($files['profile_picture']['name'])) {
             $tmp  = $files['profile_picture']['tmp_name'];
@@ -106,10 +103,10 @@ class UserService
 
             $ext = strtolower(pathinfo($files['profile_picture']['name'], PATHINFO_EXTENSION));
             $allowed = ['jpg','jpeg','png','webp'];
-            if (!in_array($ext, $allowed, true)) throw new Exception("Only jpg, png, webp allowed."); //sescure image upload handling (so no maltious code) research
+            if (!in_array($ext, $allowed, true)) throw new Exception("Only jpg, png, webp allowed."); 
 
             $dir = __DIR__ . '/../../public/assets/uploads';
-            if (!is_dir($dir)) mkdir($dir, 0777, true); //too permissive public
+            if (!is_dir($dir)) mkdir($dir, 0755, true);
 
             $filename = "user_{$userId}_" . time() . "." . $ext;
             $dest = $dir . "/" . $filename;

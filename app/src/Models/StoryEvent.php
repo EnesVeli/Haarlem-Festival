@@ -31,4 +31,5 @@ class StoryEvent
     // Audio preview
     public ?string $audio_preview_path;
     public ?string $audio_title;
+    public ?string $audio_transcript;
 }

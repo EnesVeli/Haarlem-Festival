@@ -52,6 +52,8 @@ class HistoryService
         ];
     }
 
+    
+
     /**
      * Get other highlights to show in "Complete Your Journey" section
      */

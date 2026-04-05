@@ -66,20 +66,9 @@
 }
 
 .program-card__ticket {
-    font-size: 0.82rem;
-    color: #555;
+    font-size: 0.86rem;
+    color: #4f4b47;
     margin: 0 0 0.2rem;
-}
-
-.program-card__type {
-    display: inline-block;
-    font-size: 0.68rem;
-    background: #f0b321;
-    color: #1e1e1e;
-    padding: 0.1rem 0.4rem;
-    border-radius: 999px;
-    font-weight: 700;
-    margin-left: 0.3rem;
 }
 
 .program-card__subtotal {
@@ -91,19 +80,29 @@
 
 .program-card__remove {
     padding: 0 1rem;
+    display: flex;
+    align-items: center;
 }
 
 .program-card__remove-btn {
-    background: none;
-    border: none;
-    color: #8b1e1e;
-    font-size: 0.82rem;
+    background: #8b1e1e;
+    border: 1px solid #7a1818;
+    color: #fff;
+    font-size: 0.78rem;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 0.35rem 0.7rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1;
+    transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .program-card__remove-btn:hover {
-    text-decoration: underline;
+    background: #741414;
+    border-color: #661010;
 }
 
 /* Summary Sidebar */

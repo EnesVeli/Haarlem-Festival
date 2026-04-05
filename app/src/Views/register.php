@@ -8,9 +8,12 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <style>
-        <?php include '/app/public/assets/css/main.css'; ?>
-  </style>
+    <?php include '/app/public/assets/css/main.css';
+    ?>
+    </style>
 </head>
 
 <body class="bg-light">
@@ -22,9 +25,9 @@
                 <div class="card shadow-sm border-0 mt-5">
                     <div class="card-body p-4">
                         <?php if(!empty($error_message)): ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?= htmlspecialchars($error_message) ?>
-                            </div>
+                        <div class="alert alert-danger" role="alert">
+                            <?= htmlspecialchars($error_message) ?>
+                        </div>
                         <?php endif; ?>
 
                         <h1 class="h4 mb-3">Create Account</h1>
@@ -33,6 +36,7 @@
                         <div id="message-container"></div>
 
                         <form method="post" action="/register" novalidate>
+                            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Full Name</label>
                                 <input type="text" id="name" name="name" class="form-control"
@@ -53,15 +57,18 @@
 
                             <div class="mb-3">
                                 <label for="password-confirm" class="form-label">Password</label>
-                                <input type="password" id="password-confirm" name="password-confirm" class="form-control"
-                                    placeholder="Min. 8 characters" minlength="8" required autocomplete="new-password">
+                                <input type="password" id="password-confirm" name="password-confirm"
+                                    class="form-control" placeholder="Min. 8 characters" minlength="8" required
+                                    autocomplete="new-password">
                             </div>
 
+                            <div class="mb-3 d-flex justify-content-center">
+                                <div class="g-recaptcha" data-sitekey="<?= \App\Config::RECAPTCHA_SITE_KEY ?>"></div>
+                            </div>
                             <div class="d-grid gap-2">
                                 <button type="submit" id="submit-btn" class="btn btn-primary">
                                     Create Account
                                 </button>
-
                                 <a class="btn btn-outline-secondary" href="/login">
                                     Already have an account? Login
                                 </a>
