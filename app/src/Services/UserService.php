@@ -9,12 +9,11 @@ use Exception;
 class UserService
 {
     private UserRepository $userRepository;
-
     private VerificationService $verification_service;
 
     public function __construct()
     {
-        $this->userRepository =  new UserRepository();
+        $this->userRepository = new UserRepository();
         $this->verification_service = new VerificationService();
     }
 
