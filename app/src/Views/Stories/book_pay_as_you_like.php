@@ -40,7 +40,7 @@ $defaultAmount = 10.00;
             <div class="stories-booking-selected-time">
                 <span class="stories-booking-selected-time__label">SELECTED TIME</span>
                 <span class="stories-booking-selected-time__value"><?= $startTime ?> - <?= $endTime ?></span>
-                <span class="stories-booking-selected-time__lang"><?= htmlspecialchars($event->language === 'ENG' ? 'English' : 'Dutch') ?></span>
+                <span class="stories-booking-selected-time__lang"><?= htmlspecialchars($event->language === 'EN' ? 'English' : 'Dutch') ?></span>
             </div>
         </div>
 
