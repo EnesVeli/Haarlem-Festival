@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 06, 2026 at 12:41 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Apr 06, 2026 at 04:39 PM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -54,39 +54,7 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 (24, 11, 'history', 138, 'single', 1, 0.00, '2026-04-01 14:54:29'),
 (25, 11, 'history', 138, 'single', 1, 17.50, '2026-04-01 15:26:12'),
 (34, 12, 'stories', 3, 'single', 1, 10.00, '2026-04-04 18:07:40'),
-(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52'),
-(41, 2, 'yummy', 151, 'single', 1, 45.00, '2026-04-06 11:48:55'),
-(42, 2, 'jazz', 101, 'single', 1, 15.00, '2026-04-06 11:48:58');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
+(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52');
 
 -- --------------------------------------------------------
 
@@ -142,6 +110,36 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -346,7 +344,12 @@ INSERT INTO `festival_event_tickets` (`festival_event_ticket_id`, `user_id`, `fe
 (10, 1, 1, 'a1b2c3d4e5f60718293a4b5c6d7e8f90', 1, '2026-04-05 20:46:24', '2026-04-05 20:44:41', 'HF-NEW1'),
 (11, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4e', 1, '2026-04-05 21:24:22', '2026-04-05 21:22:36', 'HF-NEW2'),
 (12, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3e5t', 1, '2026-04-05 21:25:45', '2026-04-05 21:25:15', 'HF-NEW3'),
-(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6');
+(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6'),
+(36, 15, 139, '0c5008a761f8499ba7f5dbcfa2ed423adf310327e1a8964e', 1, '2026-04-06 16:36:21', '2026-04-06 16:35:57', 'HF-D172DA'),
+(37, 15, 104, '848489e60dcf2f389330f11d822bac093b8145fcc8b1ad00', 0, NULL, '2026-04-06 16:35:57', 'HF-EB9AC6'),
+(38, 15, 104, 'a9aa17d563d1ad0b4011d2daf547a7e804a4e60df1887970', 0, NULL, '2026-04-06 16:35:57', 'HF-71F4D6'),
+(39, 15, 101, 'a0f7276493002e4a8144e8e1595fca589b9c87195ae19706', 0, NULL, '2026-04-06 16:35:57', 'HF-8A5E23'),
+(40, 15, 101, '1ab3cc5bdbc336dc7bd6a6e6d792fcd527068e4f946b790c', 0, NULL, '2026-04-06 16:35:57', 'HF-815AB8');
 
 -- --------------------------------------------------------
 
@@ -650,7 +653,12 @@ CREATE TABLE `Invoice` (
 INSERT INTO `Invoice` (`invoice_id`, `order_id`, `invoice_number`, `invoice_date`, `total_amount`, `vat_percentage`, `client_name`, `client_address`) VALUES
 (1, 2, 'INV-2026-000002', '2026-04-04 13:07:44', 15.00, 9.00, 'Enes Veli Yigit', 'ENESVELIYIGIT@GMAIL.COM'),
 (2, 3, 'INV-2026-000003', '2026-04-04 14:43:24', 92.00, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
-(3, 4, 'INV-2026-000004', '2026-04-05 13:05:43', 80.38, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com');
+(3, 4, 'INV-2026-000004', '2026-04-05 13:05:43', 80.38, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
+(4, 9, 'INV-2026-000009', '2026-04-06 15:48:27', 75.00, 9.00, 'achraf derouich', 'achraf@admin.com'),
+(5, 10, 'INV-2026-000010', '2026-04-06 15:50:39', 75.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
+(6, 11, 'INV-2026-000011', '2026-04-06 15:52:11', 30.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
+(7, 12, 'INV-2026-000012', '2026-04-06 16:06:50', 65.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
+(8, 14, 'INV-2026-000014', '2026-04-06 16:35:57', 67.50, 9.00, 'Said', 'saidraghoua@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -931,7 +939,13 @@ INSERT INTO `Order` (`order_id`, `user_id`, `order_date`, `status`, `payment_met
 (5, 2, '2026-04-06 11:49:14', 'pending', 'credit_card'),
 (6, 2, '2026-04-06 11:51:49', 'pending', 'credit_card'),
 (7, 2, '2026-04-06 11:56:24', 'pending', 'credit_card'),
-(8, 2, '2026-04-06 11:57:51', 'pending', 'credit_card');
+(8, 2, '2026-04-06 11:57:51', 'pending', 'credit_card'),
+(9, 2, '2026-04-06 15:48:27', 'paid', 'credit_card'),
+(10, 15, '2026-04-06 15:50:39', 'paid', 'credit_card'),
+(11, 15, '2026-04-06 15:52:11', 'paid', 'credit_card'),
+(12, 15, '2026-04-06 16:06:50', 'paid', 'credit_card'),
+(13, 15, '2026-04-06 16:32:46', 'pending', 'credit_card'),
+(14, 15, '2026-04-06 16:35:57', 'paid', 'credit_card');
 
 -- --------------------------------------------------------
 
@@ -964,7 +978,21 @@ INSERT INTO `OrderItem` (`item_id`, `type_id`, `order_id`, `quantity`, `unit_pri
 (10, 101, 5, 1, 15.00),
 (11, 101, 6, 1, 15.00),
 (12, 101, 7, 1, 15.00),
-(13, 101, 8, 1, 15.00);
+(13, 101, 8, 1, 15.00),
+(14, 107, 9, 2, 15.00),
+(15, 151, 9, 1, 45.00),
+(16, 152, 10, 1, 45.00),
+(17, 129, 10, 1, 0.00),
+(18, 104, 10, 3, 10.00),
+(19, 129, 11, 3, 0.00),
+(20, 104, 11, 3, 10.00),
+(21, 125, 12, 3, 0.00),
+(22, 138, 12, 2, 17.50),
+(23, 101, 12, 2, 15.00),
+(24, 139, 13, 1, 17.50),
+(25, 139, 14, 1, 17.50),
+(26, 104, 14, 2, 10.00),
+(27, 101, 14, 2, 15.00);
 
 -- --------------------------------------------------------
 
@@ -1169,7 +1197,9 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
-(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
+(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09'),
+(14, 'employee@employee.com', '$2y$12$0dv.PkporKCvCDhcNPZnDu64yyr8Ar34Gbixnhsq8zq3yWFtWQFKu', 'Employee', 'employee', NULL, '2026-04-06 13:17:11'),
+(15, 'saidraghoua@gmail.com', '$2y$12$FcpFaTHQ5P9XKHdjW1UU..X3o.HPI6S7NbBWOdiflwlDPWHcxBCjW', 'Said', 'customer', NULL, '2026-04-06 15:49:47');
 
 -- --------------------------------------------------------
 
@@ -1565,14 +1595,6 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
-
---
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1581,6 +1603,14 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
+
+--
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `Event`
@@ -1895,19 +1925,19 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
-
---
--- AUTO_INCREMENT for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
+-- AUTO_INCREMENT for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `Event`
@@ -1925,7 +1955,7 @@ ALTER TABLE `festival_events`
 -- AUTO_INCREMENT for table `festival_event_tickets`
 --
 ALTER TABLE `festival_event_tickets`
-  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `festival_event_ticket_types`
@@ -1997,7 +2027,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `Invoice`
 --
 ALTER TABLE `Invoice`
-  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -2063,13 +2093,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `Order`
 --
 ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `OrderItem`
 --
 ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -2093,7 +2123,7 @@ ALTER TABLE `Ticket_Type`
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `Venue`
@@ -2169,8 +2199,7 @@ ALTER TABLE `Event`
 -- Constraints for table `festival_event_tickets`
 --
 ALTER TABLE `festival_event_tickets`
-  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `festival_event_tickets_ibfk_2` FOREIGN KEY (`festival_event_ticket_type_id`) REFERENCES `festival_event_ticket_types` (`festival_event_ticket_type_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `festival_event_ticket_types`
@@ -2277,31 +2306,6 @@ ALTER TABLE `YummyBookings`
 --
 ALTER TABLE `YummyDishes`
   ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyOpeningHours`
---
-ALTER TABLE `YummyOpeningHours`
-  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyReservationSlots`
---
-ALTER TABLE `YummyReservationSlots`
-  ADD CONSTRAINT `YummyReservationSlots_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
-
---
--- Constraints for table `YummyRestaurantFoodTypes`
---
-ALTER TABLE `YummyRestaurantFoodTypes`
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyRestaurantImages`
---
-ALTER TABLE `YummyRestaurantImages`
-  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
