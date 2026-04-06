@@ -150,7 +150,7 @@ class CartService implements ICartService
     private function assertAvailabilityForQuantity(int $eventId, int $requestedQuantity, int $existingQuantity = 0): void
     {
         $available = $this->getSellableAvailability($eventId) + $existingQuantity;
-
+        
         if ($requestedQuantity > $available) {
             throw new Exception("Not enough tickets available. Only {$available} spots left.");
         }

@@ -2,10 +2,6 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
-// Show errors for development
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 session_start();
 
