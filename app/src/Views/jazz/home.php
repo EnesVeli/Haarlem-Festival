@@ -38,8 +38,7 @@ $locations = $vm->locations;
   </p>
 
   <div class="text-center mb-4">
-    <a class="btn btn-burgundy me-2" href="/jazz/schedule">Jazz Schedule</a>
-    <a class="btn btn-outline-burgundy" href="/jazz/tickets">Jazz Tickets</a>
+    <a class="btn btn-outline-burgundy" href="/tickets/jazz">Jazz Tickets</a>
   </div>
 
   <h3 class="text-center jazz-section-title mt-4">Jazz Experiences</h3>
@@ -108,7 +107,7 @@ $locations = $vm->locations;
 
   <p class="text-center mt-4 mb-2" style="font-family:'Playfair Display',serif;">
     Secure your spot at Haarlem Jazz 2026 —
-    <a href="#" style="color:var(--burgundy); font-weight:700;">Buy your tickets</a>
+    <a href="/tickets/jazz" style="color:var(--burgundy); font-weight:700;">Buy your tickets</a>
     today!
   </p>
 
