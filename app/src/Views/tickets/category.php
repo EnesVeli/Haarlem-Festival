@@ -86,8 +86,12 @@
                                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($viewModel->csrfToken) ?>">
                                         <input type="hidden" name="event_id" value="<?= $eventId ?>">
                                         <input type="hidden" name="ticket_type_id" value="<?= $ticketTypeId ?>">
-                                        <input type="hidden" name="quantity" value="1">
                                         <input type="hidden" name="redirect_back" value="/tickets/<?= htmlspecialchars($viewModel->categoryKey) ?>">
+                                        <div class="tickets-qty-stepper">
+                                            <button type="button" class="tickets-qty-btn tickets-qty-btn--minus" aria-label="Decrease quantity">−</button>
+                                            <input type="number" name="quantity" value="1" min="1" max="<?= $available ?>" class="tickets-qty-input" aria-label="Quantity">
+                                            <button type="button" class="tickets-qty-btn tickets-qty-btn--plus" aria-label="Increase quantity">+</button>
+                                        </div>
                                         <button type="submit"
                                                 class="tickets-btn tickets-btn--price"
                                                 aria-label="Add <?= htmlspecialchars((string)$event['name']) ?> to cart">
@@ -112,3 +116,24 @@
 
     </div>
 </section>
+
+<script>
+document.querySelectorAll('.tickets-qty-stepper').forEach(function (stepper) {
+    const input = stepper.querySelector('.tickets-qty-input');
+    const minus = stepper.querySelector('.tickets-qty-btn--minus');
+    const plus  = stepper.querySelector('.tickets-qty-btn--plus');
+
+    function update() {
+        const min = parseInt(input.min) || 1;
+        const max = parseInt(input.max) || 99;
+        input.value = Math.min(Math.max(parseInt(input.value) || 1, min), max);
+        minus.disabled = parseInt(input.value) <= min;
+        plus.disabled  = parseInt(input.value) >= max;
+    }
+
+    minus.addEventListener('click', function () { input.value = parseInt(input.value) - 1; update(); });
+    plus.addEventListener ('click', function () { input.value = parseInt(input.value) + 1; update(); });
+    input.addEventListener('input', update);
+    update();
+});
+</script>

@@ -127,16 +127,7 @@ $heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
                     <?= htmlspecialchars($noteText ?: 'Also available for FREE on Sunday at Grote Markt.') ?>
                 </div>
 
-                <<form action="/cart/add" method="POST">
-    <input type="hidden" name="event_type" value="jazz">
-    <input type="hidden" name="event_id" value="<?= (int) ($performer->id ?? 0) ?>">
-    <input type="hidden" name="ticket_type" value="single">
-    <input type="hidden" name="quantity" value="1">
-    <input type="hidden" name="price" value="<?= htmlspecialchars($priceText ?: '15.90') ?>">
-    <input type="hidden" name="redirect_back" value="<?= htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/jazz') ?>">
-
-    <button type="submit" class="perf-reserve-button">Reserve</button>
-</form>  <!-- link to  caart item-->
+                <a href="/tickets/jazz" class="perf-reserve-button">Reserve</a>
             </aside>
 
         </div>
