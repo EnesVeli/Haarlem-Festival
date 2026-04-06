@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 05, 2026 at 08:01 PM
+-- Generation Time: Apr 06, 2026 at 12:41 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -54,7 +54,9 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 (24, 11, 'history', 138, 'single', 1, 0.00, '2026-04-01 14:54:29'),
 (25, 11, 'history', 138, 'single', 1, 17.50, '2026-04-01 15:26:12'),
 (34, 12, 'stories', 3, 'single', 1, 10.00, '2026-04-04 18:07:40'),
-(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52');
+(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52'),
+(41, 2, 'yummy', 151, 'single', 1, 45.00, '2026-04-06 11:48:55'),
+(42, 2, 'jazz', 101, 'single', 1, 15.00, '2026-04-06 11:48:58');
 
 -- --------------------------------------------------------
 
@@ -329,18 +331,22 @@ CREATE TABLE `festival_event_tickets` (
   `festival_event_ticket_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `festival_event_ticket_type_id` int(11) NOT NULL,
-  `qr_token` varchar(255) NOT NULL,
+  `qr_token` varchar(128) NOT NULL,
   `is_scanned` tinyint(1) NOT NULL DEFAULT 0,
   `scanned_at` datetime DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp()
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `ticket_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `festival_event_tickets`
 --
 
-INSERT INTO `festival_event_tickets` (`festival_event_ticket_id`, `user_id`, `festival_event_ticket_type_id`, `qr_token`, `is_scanned`, `scanned_at`, `created_at`) VALUES
-(5, 1, 1, 'TEST-QR-12345', 1, '2026-03-26 18:59:33', '2026-03-26 17:59:20');
+INSERT INTO `festival_event_tickets` (`festival_event_ticket_id`, `user_id`, `festival_event_ticket_type_id`, `qr_token`, `is_scanned`, `scanned_at`, `created_at`, `ticket_code`) VALUES
+(10, 1, 1, 'a1b2c3d4e5f60718293a4b5c6d7e8f90', 1, '2026-04-05 20:46:24', '2026-04-05 20:44:41', 'HF-NEW1'),
+(11, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4e', 1, '2026-04-05 21:24:22', '2026-04-05 21:22:36', 'HF-NEW2'),
+(12, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3e5t', 1, '2026-04-05 21:25:45', '2026-04-05 21:25:15', 'HF-NEW3'),
+(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6');
 
 -- --------------------------------------------------------
 
@@ -763,8 +769,8 @@ CREATE TABLE `jazz_performers` (
 --
 
 INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
-(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', NULL),
-(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', '', '', '', '', '', '', '', '', NULL),
+(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
+(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1775427024_Screenshot 2026-04-06 at 00.10.13.png', 'Smooth, expressive', '', '', '', '', '', '', '', NULL),
 (3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
 (4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
 (5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
@@ -823,7 +829,8 @@ INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `descrip
 (5, 3, 'Formation and Early Success', 'Since their formation, Gare du Nord built a strong reputation through atmospheric live performances and a distinctive blend of smooth jazz, soul, and lounge influences. Their stylish sound quickly attracted attention from audiences looking for intimate and elegant festival experiences.', 1),
 (6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
 (7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
-(8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4);
+(8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4),
+(10, 4, 'rhythm & blues', 'Gumbo Kings are a five-piece Dutch band with a modern take on soul, rhythm & blues, and roots music. Their live sound mixes the groove of New Orleans funk, the grit of blues, and a stylish, energetic stage presence. Official band material describes them as a sharply dressed group with their own modern view on soul and rhythm & blues, while other profiles describe their sound as blending New Orleans funk, Delta blues, and Memphis-style melodies.\r\n', -2);
 
 -- --------------------------------------------------------
 
@@ -869,7 +876,9 @@ CREATE TABLE `jazz_performer_tracks` (
 
 INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
 (1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
-(2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2);
+(2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2),
+(5, 4, 'In The Dark', '2018', 'ne fjbjfb', '', 'jqwfrbkwf', 1),
+(6, 4, 'Hotel Belvédère', '2018', 'erfhiebfnw', '', 'jwbjjwbjw', 5);
 
 -- --------------------------------------------------------
 
@@ -918,7 +927,11 @@ INSERT INTO `Order` (`order_id`, `user_id`, `order_date`, `status`, `payment_met
 (1, 8, '2026-04-04 12:30:19', 'paid', 'ideal'),
 (2, 8, '2026-04-04 13:07:44', 'paid', 'credit_card'),
 (3, 8, '2026-04-04 14:43:24', 'paid', 'paypal'),
-(4, 8, '2026-04-05 13:05:43', 'paid', 'credit_card');
+(4, 8, '2026-04-05 13:05:43', 'paid', 'credit_card'),
+(5, 2, '2026-04-06 11:49:14', 'pending', 'credit_card'),
+(6, 2, '2026-04-06 11:51:49', 'pending', 'credit_card'),
+(7, 2, '2026-04-06 11:56:24', 'pending', 'credit_card'),
+(8, 2, '2026-04-06 11:57:51', 'pending', 'credit_card');
 
 -- --------------------------------------------------------
 
@@ -947,7 +960,11 @@ INSERT INTO `OrderItem` (`item_id`, `type_id`, `order_id`, `quantity`, `unit_pri
 (6, 1, 4, 1, 6.00),
 (7, 7, 4, 1, 9.38),
 (8, 143, 4, 1, 17.50),
-(9, 138, 4, 1, 17.50);
+(9, 138, 4, 1, 17.50),
+(10, 101, 5, 1, 15.00),
+(11, 101, 6, 1, 15.00),
+(12, 101, 7, 1, 15.00),
+(13, 101, 8, 1, 15.00);
 
 -- --------------------------------------------------------
 
@@ -1145,11 +1162,11 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$sOh6J5iK/ZUShL/9ssKWIeRWZ/j0M3QpC.cL2EcCT6ZkxzMGmXPIO', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
+(5, 'tim.sadko@gmail.com', '$2y$12$hn3z4x0E55UTyIQSkbnNu.1ouAnMxByNFdog/lgNhi0iDE0D9S1ga', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15'),
 (9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39'),
-(10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'customer', NULL, '2026-03-26 16:32:54'),
+(10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
 (13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
@@ -1238,7 +1255,7 @@ CREATE TABLE `YummyCMS` (
 --
 
 INSERT INTO `YummyCMS` (`cms_id`, `home_title`, `home_subtitle`, `home_image`, `list_title`, `list_subtitle`, `list_image`) VALUES
-(1, 'Food and Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.\r\n', '1235190b4dd7cdb965aef2716996357d.jpg', 'Restaurants, Cafes and Bars', 'Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard. ', '8895154f69e848c7ae3b2ddc7886f2d2.jpg');
+(1, 'Food and Drinks', 'Discover Haarlem’s vibrant food and drink scene, from elegant fine dining restaurants and cosy cafes to lively bars and quick bite spots. Whether you’re looking for a relaxed coffee break, a casual lunch, craft cocktails, or an unforgettable dinner experience, Haarlem offers something for every taste, mood, and moment right in the heart of the city.\r\n', '0b6f1e1d15de5247f57367596f4fe6b2.jpg', 'Restaurants, Cafes and Bars', 'Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard. ', 'abdbf9e23e9e2ba94b6b22efaffa0a44.jpg');
 
 -- --------------------------------------------------------
 
@@ -1505,7 +1522,7 @@ CREATE TABLE `YummyRestaurants` (
 --
 
 INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link`) VALUES
-(1, 'b3d3e9891fc40495c3eadd6cace50138.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'0', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
+(1, 'b3d3e9891fc40495c3eadd6cace50138.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
 (2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', NULL),
 (4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', NULL),
 (5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', NULL),
@@ -1878,7 +1895,7 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `CMS_Content`
@@ -1908,7 +1925,7 @@ ALTER TABLE `festival_events`
 -- AUTO_INCREMENT for table `festival_event_tickets`
 --
 ALTER TABLE `festival_event_tickets`
-  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `festival_event_ticket_types`
@@ -2022,7 +2039,7 @@ ALTER TABLE `jazz_performer_appearances`
 -- AUTO_INCREMENT for table `jazz_performer_highlights`
 --
 ALTER TABLE `jazz_performer_highlights`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_locations`
@@ -2034,7 +2051,7 @@ ALTER TABLE `jazz_performer_locations`
 -- AUTO_INCREMENT for table `jazz_performer_tracks`
 --
 ALTER TABLE `jazz_performer_tracks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `jazz_recommendations`
@@ -2046,19 +2063,19 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `Order`
 --
 ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `OrderItem`
 --
 ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `Ticket`
@@ -2118,7 +2135,7 @@ ALTER TABLE `YummyRestaurantFoodTypes`
 -- AUTO_INCREMENT for table `YummyRestaurantImages`
 --
 ALTER TABLE `YummyRestaurantImages`
-  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `image_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurants`
@@ -2147,6 +2164,13 @@ ALTER TABLE `CartItem`
 --
 ALTER TABLE `Event`
   ADD CONSTRAINT `Event_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `Venue` (`venue_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `festival_event_tickets`
+--
+ALTER TABLE `festival_event_tickets`
+  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `festival_event_tickets_ibfk_2` FOREIGN KEY (`festival_event_ticket_type_id`) REFERENCES `festival_event_ticket_types` (`festival_event_ticket_type_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `festival_event_ticket_types`
