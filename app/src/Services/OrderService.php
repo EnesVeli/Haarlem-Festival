@@ -37,11 +37,13 @@ class OrderService
 
             $this->orderRepo->addOrderItem($orderId, $typeId, $quantity, $unitPrice);
 
+            /*
             // Create one Ticket row per ticket purchased
             for ($i = 0; $i < $quantity; $i++) {
                 $barcode = hash_hmac('sha256', $orderId . '-' . $typeId . '-' . $i . '-' . $userId, 'festival_secret_key');
-                $this->ticketRepo->createTicket($userId, $orderId, $typeId, $barcode);
+                $this->ticketRepo->createTicket($userId, $typeId, $barcode);
             }
+                */
         }
 
         // 3 — Mark order as paid
