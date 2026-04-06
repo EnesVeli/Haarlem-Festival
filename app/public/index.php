@@ -2,7 +2,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
-
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 session_start();
 
 use FastRoute\RouteCollector;
@@ -190,14 +192,14 @@ switch ($routeInfo[0]) {
         } elseif ($class === \App\Controllers\RegisterController::class) {
             $userRepository = new \App\Repositories\UserRepository();
             $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $userService = new \App\Services\UserService();
             $captchaService = new \App\Services\CaptchaService();
             $controller = new $class($userService, $captchaService);
 
         } elseif ($class === \App\Controllers\LoginController::class) {
             $userRepository = new \App\Repositories\UserRepository();
             $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $userService = new \App\Services\UserService();
             $cartRepository = new \App\Repositories\CartRepository();
             $cartService = new \App\Services\CartService($cartRepository);
             $controller = new $class($userService, $cartService);
@@ -205,7 +207,7 @@ switch ($routeInfo[0]) {
         } elseif ($class === \App\Controllers\ProfileController::class) {
             $userRepository = new \App\Repositories\UserRepository();
             $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
+            $userService = new \App\Services\UserService();
             $controller = new $class($userService);
 
         } elseif ($class === \App\Controllers\CartController::class) {
