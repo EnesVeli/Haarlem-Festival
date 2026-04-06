@@ -3,7 +3,7 @@
 $pageTitle = 'Edit Location';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$location = $vm->location ?? [];
+$location = $vm->location ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 
@@ -33,9 +33,9 @@ require __DIR__ . '/../partials/tabs.php';
 
 <h2 class="jazz-cms-section-title">Edit Location</h2>
 
-<form action="/cms/jazz/locations/update?id=<?= (int)$location['id'] ?>" method="POST" class="jazz-cms-form">
+<form action="/cms/jazz/locations/update?id=<?= (int)($location->id ?? 0) ?>" method="POST" class="jazz-cms-form">
 
-<input type="hidden" name="id" value="<?= (int)$location['id'] ?>">
+<input type="hidden" name="id" value="<?= (int)($location->id ?? 0) ?>">
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Name</label>
@@ -43,7 +43,7 @@ require __DIR__ . '/../partials/tabs.php';
 type="text"
 name="name"
 class="jazz-cms-input"
-value="<?= htmlspecialchars($location['name'] ?? '') ?>"
+value="<?= htmlspecialchars($location->name ?? '') ?>"
 required
 >
 </div>
@@ -54,7 +54,7 @@ required
 type="text"
 name="address"
 class="jazz-cms-input"
-value="<?= htmlspecialchars($location['address'] ?? '') ?>"
+value="<?= htmlspecialchars($location->address ?? '') ?>"
 required
 >
 </div>
@@ -65,15 +65,15 @@ required
 name="google_maps_embed_url"
 class="jazz-cms-textarea"
 rows="4"
-><?= htmlspecialchars($location['google_maps_embed_url'] ?? '') ?></textarea>
+><?= htmlspecialchars($location->google_maps_embed_url ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Active</label>
 
 <select name="is_active" class="jazz-cms-input">
-<option value="1" <?= ((int)($location['is_active'] ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-<option value="0" <?= ((int)($location['is_active'] ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+<option value="1" <?= ((int)($location->is_active ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+<option value="0" <?= ((int)($location->is_active ?? 0) === 0) ? 'selected' : '' ?>>No</option>
 </select>
 
 </div>

@@ -147,6 +147,18 @@ class CartService implements ICartService
         return max(0, $sellableCapacity - $reservedInCarts - $paidTickets);
     }
 
+    private function getAvailableSpots(string $eventType, int $eventId): ?int
+    {
+        $map = [
+            'history' => ['table' => 'history_tickets', 'id_col' => 'id'],
+            'jazz' => ['table' => 'festival_events', 'id_col' => 'festival_event_id'],
+        ];
+
+        if (!isset($map[$eventType])) {
+            return null;
+        }
+    }
+  
     private function assertAvailabilityForQuantity(int $eventId, int $requestedQuantity, int $existingQuantity = 0): void
     {
         $available = $this->getSellableAvailability($eventId) + $existingQuantity;

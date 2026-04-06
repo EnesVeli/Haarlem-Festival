@@ -1,63 +1,48 @@
 <?php
 
-$performer = $vm->performer ?? [];
+$performer = $vm->performer;
 $appearances = $vm->appearances ?? [];
 $highlights = $vm->highlights ?? [];
 $tracks = $vm->tracks ?? [];
 $locations = $vm->locations ?? [];
 $recommendations = $vm->recommendations ?? [];
-$user = $vm->currentUser ?? null;
 
-$mainClass = 'jazz-main';
-$pageTitle = htmlspecialchars(($performer['name'] ?? 'Performer') . ' - Haarlem Jazz');
-$activePage = 'jazz';
-
-$name = $performer['name'] ?? '';
-$bio = $performer['bio'] ?? '';
-$imagePath = $performer['image_path'] ?? '';
-$style = $performer['performance_style'] ?? '';
-$eventDate = $performer['event_date_text'] ?? '';
-$eventTime = $performer['event_time_text'] ?? '';
-$venueName = $performer['venue_name'] ?? '';
-$venueAddress = $performer['venue_address'] ?? '';
-$priceText = $performer['price_text'] ?? '';
-$noteText = $performer['note_text'] ?? '';
-$audioUrl = $performer['audio_url'] ?? '';
+$name = $performer->name ?? '';
+$bio = $performer->bio ?? '';
+$imagePath = $performer->imagePath ?? '';
+$style = $performer->performanceStyle ?? '';
+$eventDate = $performer->eventDateText ?? '';
+$eventTime = $performer->eventTimeText ?? '';
+$venueName = $performer->venueName ?? '';
+$venueAddress = $performer->venueAddress ?? '';
+$priceText = $performer->priceText ?? '';
+$noteText = $performer->noteText ?? '';
+$audioUrl = $performer->audioUrl ?? '';
 
 $firstAppearance = $appearances[0] ?? null;
-
-require __DIR__ . '/../partials/header.php';
+$heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
 ?>
 
-<style>
-<?php include '/app/public/assets/css/jazz.css'; ?>
-</style>
-
-<main class="container perf-page">
-
+<div class="container perf-page">
     <a class="perf-back-link" href="/jazz">← Back to Jazz Main Page</a>
 
-    <?php
-$heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ?? '');
-?>
+    <section class="perf-hero-banner">
+        <?php if (!empty($heroBannerImage)): ?>
+            <div
+                class="perf-hero-banner-bg"
+                style="background-image: url('<?= htmlspecialchars($heroBannerImage) ?>');">
+            </div>
+        <?php else: ?>
+            <div class="perf-hero-banner-bg"></div>
+        <?php endif; ?>
 
-<section class="perf-hero-banner">
-    <?php if (!empty($heroBannerImage)): ?>
-        <div
-            class="perf-hero-banner-bg"
-            style="background-image: url('<?= htmlspecialchars($heroBannerImage) ?>');">
+        <div class="perf-hero-banner-shade"></div>
+
+        <div class="perf-hero-banner-text">
+            <h1><?= htmlspecialchars($name) ?></h1>
+            <p><?= htmlspecialchars($style ?: 'Live jazz performance during Haarlem Jazz.') ?></p>
         </div>
-    <?php else: ?>
-        <div class="perf-hero-banner-bg"></div>
-    <?php endif; ?>
-
-    <div class="perf-hero-banner-shade"></div>
-
-    <div class="perf-hero-banner-text">
-        <h1><?= htmlspecialchars($name) ?></h1>
-        <p><?= htmlspecialchars($style ?: 'Live jazz performance during Haarlem Jazz.') ?></p>
-    </div>
-</section>
+    </section>
 
     <section class="perf-intro-copy">
         <p><?= htmlspecialchars($bio) ?></p>
@@ -91,12 +76,7 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
                     <h3>Genre / Performance Style</h3>
 
                     <div class="perf-style-cards">
-                        <div class="perf-style-card">
-                            <div class="perf-style-card-title">Genre</div>
-                            <div class="perf-style-card-value">
-                                <?= htmlspecialchars($style ?: 'Jazz') ?>
-                            </div>
-                        </div>
+                
 
                         <div class="perf-style-card">
                             <div class="perf-style-card-title">Performance Style</div>
@@ -114,13 +94,13 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
 
                 <?php if ($firstAppearance): ?>
                     <div class="perf-detail-row">
-                        <strong><?= htmlspecialchars($firstAppearance['day_text'] ?? '') ?></strong>
-                        <div><?= htmlspecialchars($firstAppearance['time_text'] ?? '') ?></div>
+                        <strong><?= htmlspecialchars($firstAppearance->dayText ?? '') ?></strong>
+                        <div><?= htmlspecialchars($firstAppearance->timeText ?? '') ?></div>
                     </div>
 
                     <div class="perf-detail-row">
-                        <strong><?= htmlspecialchars($firstAppearance['location_text'] ?? $venueName) ?></strong>
-                        <div><?= htmlspecialchars($firstAppearance['note_text'] ?? $venueAddress) ?></div>
+                        <strong><?= htmlspecialchars($firstAppearance->locationText ?? $venueName) ?></strong>
+                        <div><?= htmlspecialchars($firstAppearance->noteText ?? $venueAddress) ?></div>
                         <a href="#maps">View on map</a>
                     </div>
                 <?php else: ?>
@@ -147,7 +127,16 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
                     <?= htmlspecialchars($noteText ?: 'Also available for FREE on Sunday at Grote Markt.') ?>
                 </div>
 
-                <button type="button" class="perf-reserve-button">Reserve</button>
+                <<form action="/cart/add" method="POST">
+    <input type="hidden" name="event_type" value="jazz">
+    <input type="hidden" name="event_id" value="<?= (int) ($performer->id ?? 0) ?>">
+    <input type="hidden" name="ticket_type" value="single">
+    <input type="hidden" name="quantity" value="1">
+    <input type="hidden" name="price" value="<?= htmlspecialchars($priceText ?: '15.90') ?>">
+    <input type="hidden" name="redirect_back" value="<?= htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/jazz') ?>">
+
+    <button type="submit" class="perf-reserve-button">Reserve</button>
+</form>  <!-- link to  caart item-->
             </aside>
 
         </div>
@@ -160,8 +149,8 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
             <?php if (!empty($highlights)): ?>
                 <?php foreach ($highlights as $highlight): ?>
                     <div class="perf-highlight-block">
-                        <h3><?= htmlspecialchars($highlight['title'] ?? '') ?></h3>
-                        <p><?= htmlspecialchars($highlight['description'] ?? '') ?></p>
+                        <h3><?= htmlspecialchars($highlight->title) ?></h3>
+                        <p><?= htmlspecialchars($highlight->description) ?></p>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -176,18 +165,18 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
                 <?php foreach ($tracks as $track): ?>
                     <div class="perf-track-row">
                         <div class="perf-track-cover">
-                            <?php if (!empty($track['image_path'])): ?>
-                                <img src="<?= htmlspecialchars($track['image_path']) ?>" alt="<?= htmlspecialchars($track['title'] ?? '') ?>">
+                            <?php if (!empty($track->imagePath)): ?>
+                                <img src="<?= htmlspecialchars($track->imagePath) ?>" alt="<?= htmlspecialchars($track->title) ?>">
                             <?php endif; ?>
                         </div>
 
                         <div class="perf-track-text">
-                            <div class="perf-track-name"><?= htmlspecialchars($track['title'] ?? '') ?></div>
-                            <div class="perf-track-date"><?= htmlspecialchars($track['release_date_text'] ?? '') ?></div>
-                            <div class="perf-track-description"><?= htmlspecialchars($track['description'] ?? '') ?></div>
+                            <div class="perf-track-name"><?= htmlspecialchars($track->title) ?></div>
+                            <div class="perf-track-date"><?= htmlspecialchars($track->releaseDateText ?? '') ?></div>
+                            <div class="perf-track-description"><?= htmlspecialchars($track->description ?? '') ?></div>
 
-                            <?php if (!empty($track['listen_url'])): ?>
-                                <a class="perf-track-listen" href="<?= htmlspecialchars($track['listen_url']) ?>" target="_blank">Listen now</a>
+                            <?php if (!empty($track->listenUrl)): ?>
+                                <a class="perf-track-listen" href="<?= htmlspecialchars($track->listenUrl) ?>" target="_blank">Listen now</a>
                             <?php else: ?>
                                 <button type="button" class="perf-track-listen">Listen now</button>
                             <?php endif; ?>
@@ -218,13 +207,13 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
         <?php if (!empty($appearances)): ?>
             <?php foreach ($appearances as $appearance): ?>
                 <div class="perf-appearance-item">
-                    <span class="perf-appearance-day"><?= htmlspecialchars($appearance['day_text'] ?? '') ?>:</span>
-                    <?= htmlspecialchars($appearance['time_text'] ?? '') ?>
-                    <?php if (!empty($appearance['location_text'])): ?>
-                        @ <?= htmlspecialchars($appearance['location_text']) ?>
+                    <span class="perf-appearance-day"><?= htmlspecialchars($appearance->dayText) ?>:</span>
+                    <?= htmlspecialchars($appearance->timeText) ?>
+                    <?php if (!empty($appearance->locationText)): ?>
+                        @ <?= htmlspecialchars($appearance->locationText) ?>
                     <?php endif; ?>
-                    <?php if (!empty($appearance['note_text'])): ?>
-                        (<?= htmlspecialchars($appearance['note_text']) ?>)
+                    <?php if (!empty($appearance->noteText)): ?>
+                        (<?= htmlspecialchars($appearance->noteText) ?>)
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
@@ -246,10 +235,10 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
             <?php if (!empty($locations)): ?>
                 <?php foreach ($locations as $location): ?>
                     <div class="card-soft map-card">
-                        <div class="map-title"><?= htmlspecialchars($location['name'] ?? '') ?></div>
+                        <div class="map-title"><?= htmlspecialchars($location->name) ?></div>
                         <div class="map-frame">
                             <iframe
-                                src="<?= htmlspecialchars($location['google_maps_embed_url'] ?? '') ?>"
+                                src="<?= htmlspecialchars($location->googleMapsEmbedUrl ?? '') ?>"
                                 loading="lazy"
                                 allowfullscreen>
                             </iframe>
@@ -268,12 +257,12 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
         <?php if (!empty($recommendations)): ?>
             <?php foreach ($recommendations as $recommendation): ?>
                 <div class="col-12 col-md-4">
-                    <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($recommendation['url'] ?? '#') ?>">
+                    <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($recommendation->url ?? '#') ?>">
 
-                        <?php if (!empty($recommendation['image_path'])): ?>
+                        <?php if (!empty($recommendation->imagePath)): ?>
                             <img
-                                src="<?= htmlspecialchars($recommendation['image_path']) ?>"
-                                alt="<?= htmlspecialchars($recommendation['title'] ?? 'Recommendation') ?>"
+                                src="<?= htmlspecialchars($recommendation->imagePath) ?>"
+                                alt="<?= htmlspecialchars($recommendation->title ?: 'Recommendation') ?>"
                                 class="img-placeholder rec"
                             >
                         <?php else: ?>
@@ -282,11 +271,11 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
 
                         <div class="p-3">
                             <h4 class="perf-more-like-card-title">
-                                <?= htmlspecialchars($recommendation['title'] ?? '') ?>
+                                <?= htmlspecialchars($recommendation->title) ?>
                             </h4>
 
                             <p class="text-muted mb-0" style="font-size:12px;">
-                                <?= htmlspecialchars($recommendation['description'] ?? '') ?>
+                                <?= htmlspecialchars($recommendation->description) ?>
                             </p>
                         </div>
                     </a>
@@ -296,7 +285,4 @@ $heroBannerImage = $performer['hero_image_path'] ?? ($performer['image_path'] ??
             <div class="text-muted">No recommendations found.</div>
         <?php endif; ?>
     </div>
-
-</main>
-
-<?php require __DIR__ . '/../partials/footer.php'; ?>
+</div>

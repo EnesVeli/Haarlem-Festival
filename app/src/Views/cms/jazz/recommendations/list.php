@@ -68,16 +68,16 @@ Add Recommendation
 
 <tr>
 
-<td><?= (int)$rec['id'] ?></td>
+<td><?= (int)($rec->id ?? 0) ?></td>
 
-<td><?= htmlspecialchars($rec['title'] ?? '') ?></td>
+<td><?= htmlspecialchars($rec->title ?? '') ?></td>
 
 <td>
 
-<?php if (!empty($rec['image_path'])): ?>
+<?php if (!empty($rec->imagePath)): ?>
 
 <img
-src="<?= htmlspecialchars($rec['image_path']) ?>"
+src="<?= htmlspecialchars($rec->imagePath) ?>"
 class="jazz-cms-image-preview"
 style="max-width:80px;"
 >
@@ -90,23 +90,23 @@ style="max-width:80px;"
 
 </td>
 
-<td><?= (int)($rec['sort_order'] ?? 0) ?></td>
+<td><?= (int)($rec->sortOrder ?? 0) ?></td>
 
 <td>
-<?= ((int)($rec['is_active'] ?? 0) === 1) ? 'Yes' : 'No' ?>
+<?= ((int)($rec->isActive ?? 0) === 1) ? 'Yes' : 'No' ?>
 </td>
 
 <td class="jazz-cms-actions">
 
 <a
-href="/cms/jazz/recommendations/edit?id=<?= (int)$rec['id'] ?>"
+href="/cms/jazz/recommendations/edit?id=<?= (int)$rec->id ?>"
 class="jazz-cms-btn jazz-cms-btn-outline"
 >
 Edit
 </a>
 
 <a
-href="/cms/jazz/recommendations/delete?id=<?= (int)$rec['id'] ?>"
+href="/cms/jazz/recommendations/delete?id=<?= (int)$rec->id ?>"
 class="jazz-cms-btn jazz-cms-btn-danger"
 onclick="return confirm('Delete this recommendation?')"
 >

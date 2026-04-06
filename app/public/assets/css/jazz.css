@@ -2198,3 +2198,252 @@ h1,h2,h3,h4{ font-family:"Playfair", serif; }
     grid-template-columns: 1fr;
   }
 }
+.scanner-page {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.scanner-title {
+  margin: 0 0 8px;
+  font-family: "Playfair Display", serif;
+  font-size: 36px;
+  color: #0D1B2A;
+}
+
+.scanner-subtitle {
+  margin: 0 0 18px;
+  color: #555;
+  font-size: 15px;
+}
+
+.scanner-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+}
+
+.scanner-reader {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.scanner-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scanner-label {
+  font-weight: 700;
+  color: #0D1B2A;
+}
+
+.scanner-input {
+  width: 100%;
+  border: 1px solid #d7dce1;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  background: #fff;
+  color: #1f2937;
+  box-sizing: border-box;
+}
+
+.scanner-input:focus {
+  outline: none;
+  border-color: #0D1B2A;
+  box-shadow: 0 0 0 3px rgba(13, 27, 42, 0.08);
+}
+
+.scanner-button {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: #0D1B2A;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.scanner-button:hover {
+  background: #f4c542;
+  color: #0D1B2A;
+}
+
+.scanner-result {
+  margin-top: 16px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+  border-left: 5px solid #d93025;
+}
+
+.scanner-result-success {
+  border-left-color: #1e8e3e;
+}
+
+.scanner-result-warning {
+  border-left-color: #f9a825;
+}
+
+.scanner-result-error {
+  border-left-color: #d93025;
+}
+
+.scanner-result-title {
+  margin: 0 0 10px;
+  font-size: 22px;
+  font-family: "Playfair Display", serif;
+  color: #0D1B2A;
+}
+
+.scanner-ticket-details p {
+  margin: 8px 0;
+  color: #222;
+}
+
+@media (max-width: 576px) {
+  .scanner-title {
+    font-size: 30px;
+  }
+
+  .scanner-page {
+    padding: 18px 14px 30px;
+  }
+}
+#reader {
+  width: 100%;
+  min-height: 260px;
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.scanner-result-success {
+  background: #ecfdf3;
+  border-left: 6px solid #16a34a;
+}
+
+.scanner-result-warning {
+  background: #fff7ed;
+  border-left: 6px solid #f59e0b;
+}
+
+.scanner-result-error {
+  background: #fef2f2;
+  border-left: 6px solid #dc2626;
+}
+
+.scanner-result-title {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.scanner-result-success .scanner-result-title {
+  color: #166534;
+}
+
+.scanner-result-warning .scanner-result-title {
+  color: #b45309;
+}
+
+.scanner-result-error .scanner-result-title {
+  color: #b91c1c;
+}
+
+.scanner-result-message {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: #374151;
+}
+.scanner-result {
+  margin-top: 24px;
+  padding: 28px;
+  border-radius: 24px;
+  border: 3px solid transparent;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.scanner-result-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.scanner-result-icon {
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 38px;
+  font-weight: 700;
+  color: white;
+}
+
+.scanner-result-title {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.scanner-result-message {
+  margin: 8px 0 0;
+  font-size: 18px;
+  color: #374151;
+}
+
+.scanner-result-success {
+  background: #ecfdf3;
+  border-color: #22c55e;
+}
+
+.scanner-result-success .scanner-result-icon {
+  background: #22c55e;
+}
+
+.scanner-result-success .scanner-result-title {
+  color: #166534;
+}
+
+.scanner-result-warning {
+  background: #fff7ed;
+  border-color: #f59e0b;
+}
+
+.scanner-result-warning .scanner-result-icon {
+  background: #f59e0b;
+}
+
+.scanner-result-warning .scanner-result-title {
+  color: #b45309;
+}
+
+.scanner-result-error {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.scanner-result-error .scanner-result-icon {
+  background: #ef4444;
+}
+
+.scanner-result-error .scanner-result-title {
+  color: #b91c1c;
+}
+
+.scanner-ticket-details p {
+  margin: 10px 0;
+  font-size: 18px;
+}

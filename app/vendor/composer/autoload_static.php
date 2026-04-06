@@ -93,10 +93,10 @@ class ComposerStaticInit5ca017e837f7c267036485661a47e287
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' =>
+        'c' =>
         array (
-            'Svg\\' => 4,
-            'Sabberworm\\CSS\\' => 15,
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
         ),
         'P' =>
         array (
@@ -123,13 +123,13 @@ class ComposerStaticInit5ca017e837f7c267036485661a47e287
     );
 
     public static $prefixDirsPsr4 = array (
-        'Svg\\' =>
+        'chillerlan\\Settings\\' =>
         array (
-            0 => __DIR__ . '/..' . '/dompdf/php-svg-lib/src/Svg',
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
         ),
-        'Sabberworm\\CSS\\' =>
+        'chillerlan\\QRCode\\' =>
         array (
-            0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'PHPMailer\\PHPMailer\\' =>
         array (

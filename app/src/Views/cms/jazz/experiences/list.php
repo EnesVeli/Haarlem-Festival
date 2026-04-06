@@ -59,16 +59,16 @@ require __DIR__ . '/../partials/cmsHero.php';
                     <?php else: ?>
                         <?php foreach ($experiences as $experience): ?>
                             <tr>
-                                <td><?= (int)($experience['id'] ?? 0) ?></td>
+                                <td><?= (int) ($experience->id ?? 0) ?></td>
 
-                                <td><?= htmlspecialchars($experience['title'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($experience->title ?? '') ?></td>
 
-                                <td><?= htmlspecialchars($experience['description'] ?? '') ?></td>
+                                <td><?= htmlspecialchars($experience->description ?? '') ?></td>
 
                                 <td>
-                                    <?php if (!empty($experience['image_path'])): ?>
+                                    <?php if (!empty($experience->imagePath)): ?>
                                         <img
-                                            src="<?= htmlspecialchars($experience['image_path']) ?>"
+                                            src="<?= htmlspecialchars($experience->imagePath) ?>"
                                             alt="Experience image"
                                             class="jazz-cms-image-preview"
                                             style="max-width:100px;"
@@ -78,22 +78,22 @@ require __DIR__ . '/../partials/cmsHero.php';
                                     <?php endif; ?>
                                 </td>
 
-                                <td><?= (int)($experience['sort_order'] ?? 0) ?></td>
+                                <td><?= (int) ($experience->sortOrder ?? 0) ?></td>
 
                                 <td>
-                                    <?= ((int)($experience['is_active'] ?? 0) === 1) ? 'Yes' : 'No' ?>
+                                    <?= ((int) ($experience->isActive ?? 0) === 1) ? 'Yes' : 'No' ?>
                                 </td>
 
                                 <td class="jazz-cms-actions">
                                     <a
-                                        href="/cms/jazz/experiences/edit?id=<?= (int)($experience['id'] ?? 0) ?>"
+                                        href="/cms/jazz/experiences/edit?id=<?= (int) ($experience->id ?? 0) ?>"
                                         class="jazz-cms-btn jazz-cms-btn-outline"
                                     >
                                         Edit
                                     </a>
 
                                     <a
-                                        href="/cms/jazz/experiences/delete?id=<?= (int)($experience['id'] ?? 0) ?>"
+                                        href="/cms/jazz/experiences/delete?id=<?= (int) ($experience->id ?? 0) ?>"
                                         class="jazz-cms-btn jazz-cms-btn-danger"
                                         onclick="return confirm('Delete this experience?')"
                                     >

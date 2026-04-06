@@ -105,6 +105,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
     $r->addRoute('GET', '/yummy/book', [\App\Controllers\YummyController::class, 'bookingPage']);
     $r->addRoute('POST', '/yummy/book', [\App\Controllers\YummyController::class, 'book']);
+    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+  
     // Yummy - CMS
     $r->addRoute('GET', '/cms/yummy',                          [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
     $r->addRoute('POST', '/cms/yummy/home',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editHome']);
@@ -134,6 +136,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/stories/edit',   [\App\Controllers\CmsStoriesController::class, 'edit']);
     $r->addRoute('POST', '/cms/stories/save',   [\App\Controllers\CmsStoriesController::class, 'save']);
     $r->addRoute('POST', '/cms/stories/delete', [\App\Controllers\CmsStoriesController::class, 'delete']);
+
+    // ticket scanner
+    $r->addRoute('GET', '/employee/scan', [\App\Controllers\TicketScanController::class, 'index']);
+    $r->addRoute('POST', '/employee/scan', [\App\Controllers\TicketScanController::class, 'scan']);
+    $r->addRoute('GET', '/ticket/qr/{id:\d+}', [\App\Controllers\TicketQrController::class, 'show']);
 
     // CMS — Stories Homepage content
     $r->addRoute('GET',  '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'edit']);

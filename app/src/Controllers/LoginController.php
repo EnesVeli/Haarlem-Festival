@@ -28,18 +28,24 @@ class LoginController
         try {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-    
+
             if ($email === '' || $password === '') {
                 throw new Exception("Email and password are required.");
             }
-    
-            $user = $this->userService->authenticate($email, $password);
+
+            $user = (new UserService())->authenticate($email, $password);
             Session::login($user);
-            $_SESSION['cart_count'] = $this->cartService->getItemCount((int)$user['user_id']);
-    
-            header('Location: ' . (Session::isAdmin() ? '/cms' : '/'));
+            
+            if (Session::isAdmin()) {
+                header('Location: /cms');
+            } elseif (($user['role'] ?? '') === 'employee') {
+                header('Location: /employee/scan');
+            } else {
+                header('Location: /');
+            }
+
             exit;
-    
+
         } catch (Exception $e) {
             Session::set('login_error', $e->getMessage());
             header("Location: /login"); 
