@@ -41,11 +41,7 @@ class OrderService
                 $ticketCode = 'HF-' . strtoupper(bin2hex(random_bytes(3)));
 
                 // Persist ticket for scanning
-                try {
-                    $this->ticketRepo->createTicket($userId, $typeId, $qrToken, $ticketCode);
-                } catch (\Throwable) {
-                    // Non-fatal: ticket still appears in PDF/email even if DB insert fails
-                }
+                $this->ticketRepo->createTicket($userId, $typeId, $qrToken, $ticketCode);
 
                 // Collect data for PDF + email (cart items already carry event info)
                 $generatedTickets[] = [
