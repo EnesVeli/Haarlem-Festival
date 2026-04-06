@@ -27,17 +27,18 @@ foreach ($events as $event) {
             <div class="stories-hero-card">
                 <div class="stories-hero-text">
                     <h1><?= htmlspecialchars($pageTitle) ?></h1>
-                    <p class="stories-hero-description"><?= htmlspecialchars($pageDescription) ?></p>
+                    <div class="stories-hero-description"><?= $bodyHtml ?></div>
                     <a href="#program" class="stories-primary-button">View program</a>
                     <p class="stories-hero-subtitle"><?= htmlspecialchars($pageSubtitle) ?></p>
                 </div>
-                <div class="stories-hero-image"<?php if (!empty($heroImage)): ?> style="background-image: url('<?= htmlspecialchars($heroImage) ?>');"<?php endif; ?>></div>
+                <div class="stories-hero-image" <?php if (!empty($heroImage)): ?>
+                    style="background-image: url('<?= htmlspecialchars($heroImage) ?>');" <?php endif; ?>></div>
             </div>
         </div>
     </section>
     <section class="stories-quote-section">
         <div class="stories-container">
-            <p class="stories-quote-text">Every street has a sound. Every building has a memory</p>
+            <p class="stories-quote-text"><?= htmlspecialchars($quoteText) ?></p>
         </div>
     </section>
     <section class="stories-ticket-section">
@@ -45,16 +46,17 @@ foreach ($events as $event) {
             <h2 class="stories-section-title stories-section-title--left">Info About Tickets</h2>
             <div class="stories-ticket-grid">
                 <article class="stories-ticket-card">
-                    <h3>Pay as you like</h3>
-                    <p>Some activities are priced <strong>pay as you like</strong>. We aim to keep these events as
-                        accessible as possible so that everyone has the opportunity to participate. We encourage
-                        visitors to donate based on how they valued the experience.</p>
+                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_1 ?? 'Pay as you like') ?></h3>
+                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_1 ?? 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.') ?></p>
+                    <?php if (!empty($homepageContent->ticket_info_note_1)): ?>
+                    <p><em><?= htmlspecialchars($homepageContent->ticket_info_note_1) ?></em></p>
+                    <?php else: ?>
                     <p><em>A reservation is required to guarantee entry.</em></p>
+                    <?php endif; ?>
                 </article>
                 <article class="stories-ticket-card">
-                    <h3>HaarlemPas discount</h3>
-                    <p>People with the <strong>HaarlemPas</strong> receive a 25% discount on entry fees for all stories
-                        in events with a fixed ticket price.</p>
+                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_2 ?? 'HaarlemPas discount') ?></h3>
+                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_2 ?? 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.') ?></p>
                 </article>
             </div>
         </div>
@@ -168,9 +170,8 @@ foreach ($events as $event) {
         <div class="stories-container">
             <div class="stories-cta-box">
                 <div class="stories-cta-text">
-                    <h2>Ready to plan your festival weekend?</h2>
-                    <p>Combine Stories in Haarlem with other festival events across the city and build your perfect
-                        weekend program.</p>
+                    <h2><?= htmlspecialchars($ctaText) ?></h2>
+                    <p><?= htmlspecialchars($homepageContent->cta_description ?? 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.') ?></p>
                 </div>
                 <div class="stories-cta-buttons">
                     <a href="/tickets" class="stories-cta-button stories-cta-button--dark">Book tickets</a>

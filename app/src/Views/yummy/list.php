@@ -9,12 +9,12 @@
         <a class="list-topper-back" href="/yummy">← Back to Yummy Home Page</a>
         <div class="list-topper-container">
             <div class="list-topper-text-container">
-                <h1 class="list-topper-title">Restaurants, Cafes and Bars</h1>
-                <div class="list-topper-text">Haarlem has built button strong reputation as button destination for high-quality dining, perfectly reflect the city’s diverse and refined food scene. Each offers button distinct experience, catering to different moods while maintaining button consistently high standard.</div>
+                <h1 class="list-topper-title"><? echo htmlspecialchars($view_model->title)?></h1>
+                <div class="list-topper-text"><? echo htmlspecialchars($view_model->subtitle)?></div>
             </div>
 
             <div class="list-topper-filter"></div>
-            <img class="list-topper-img" src="/assets/uploads/yummy/list_topper.jpg">
+            <img class="list-topper-img" src="<? echo '/assets/uploads/yummy/topper/' . $view_model->topper_path; ?>">
         </div>     
     </section> 
 
@@ -208,7 +208,7 @@
         let foods = getListArguments(food_type, 'food_type');
         let cuisines = getListArguments(cuisine_type, 'cuisine_type');
         
-        let uri = '/yummy/list?' // Set base for uri
+        let uri = '/yummy/list?'; // Set base for uri
 
         // Add filters to uri as needed
         if(places != null){

@@ -5,24 +5,27 @@ namespace App\ViewModels;
 class HistoryIndexViewModel
 {
     public array $highlights;
-    public array $tickets;
-    public array $content;
+    public array $tickets;  // individual time-slot tickets only
+    public array $content;  // keyed by section name, e.g. $content['hero']
 
     public function __construct(array $highlights, array $tickets, array $rawContent)
     {
         $this->highlights = $highlights;
         $this->tickets    = $tickets;
-        $this->content    = $this->organizeContent($rawContent);
+        $this->content    = $this->keyContentBySection($rawContent);
     }
 
-    private function organizeContent(array $contentArray): array
+    // Turns the flat DB rows into a section-keyed array so views can do $content['hero']
+    private function keyContentBySection(array $rows): array
     {
-        $content = [];
-        foreach ($contentArray as $item) {
-            $content[$item['section']] = $item;
+        $keyed = [];
+        foreach ($rows as $row) {
+            $keyed[$row['section']] = $row;
         }
-        return $content;
+        return $keyed;
     }
+
+    // ── Content getters with sensible fallback defaults ────────────────────
 
     public function heroImage(): string
     {
@@ -36,7 +39,8 @@ class HistoryIndexViewModel
 
     public function heroSubtitle(): string
     {
-        return $this->content['hero']['subtitle'] ?? "Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.";
+        return $this->content['hero']['subtitle']
+            ?? "Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.";
     }
 
     public function introTitle(): string
@@ -46,7 +50,8 @@ class HistoryIndexViewModel
 
     public function introSubtitle(): string
     {
-        return $this->content['intro']['subtitle'] ?? "Long before Amsterdam rose to global fame, Haarlem was the beating heart of Holland. Granted city rights in 1245, it became a powerhouse of the textile industry, beer brewing, and the arts during the Dutch Golden Age.";
+        return $this->content['intro']['subtitle']
+            ?? "Long before Amsterdam rose to global fame, Haarlem was the beating heart of Holland.";
     }
 
     public function walkTitle(): string
@@ -56,7 +61,8 @@ class HistoryIndexViewModel
 
     public function walkSubtitle(): string
     {
-        return $this->content['walk']['subtitle'] ?? 'You can walk the route freely, but for the full story, our expert guides bring the stones to life.';
+        return $this->content['walk']['subtitle']
+            ?? 'You can walk the route freely, but for the full story, our expert guides bring the stones to life.';
     }
 
     public function walkImage(): string
@@ -76,7 +82,8 @@ class HistoryIndexViewModel
 
     public function ctaSubtitle(): string
     {
-        return $this->content['cta']['subtitle'] ?? 'Combine Stories in Haarlem with other Festival events across the city and build your perfect weekend program.';
+        return $this->content['cta']['subtitle']
+            ?? 'Combine Stories in Haarlem with other Festival events across the city and build your perfect weekend program.';
     }
 
     public function ctaImage(): string

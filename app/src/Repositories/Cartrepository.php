@@ -34,17 +34,37 @@ class CartRepository extends Repository
 
     public function findExisting(int $userId, string $eventType, int $eventId, string $ticketType): ?array
     {
-        $stmt = $this->connection->prepare(
-            "SELECT * FROM `CartItem`
-             WHERE user_id = :uid AND event_type = :et AND event_id = :eid AND ticket_type = :tt
-             LIMIT 1"
-        );
-        $stmt->execute([
-            'uid' => $userId,
-            'et'  => $eventType,
-            'eid' => $eventId,
-            'tt'  => $ticketType,
-        ]);
+        if ($eventType === 'stories') {
+            $stmt = $this->connection->prepare(
+                "SELECT * FROM `CartItem`
+                 WHERE user_id = :uid
+                   AND event_type IN ('stories', 'story')
+                   AND event_id = :eid
+                   AND ticket_type = :tt
+                 LIMIT 1"
+            );
+            $stmt->execute([
+                'uid' => $userId,
+                'eid' => $eventId,
+                'tt'  => $ticketType,
+            ]);
+        } else {
+            $stmt = $this->connection->prepare(
+                "SELECT * FROM `CartItem`
+                 WHERE user_id = :uid
+                   AND event_type = :et
+                   AND event_id = :eid
+                   AND ticket_type = :tt
+                 LIMIT 1"
+            );
+            $stmt->execute([
+                'uid' => $userId,
+                'et'  => $eventType,
+                'eid' => $eventId,
+                'tt'  => $ticketType,
+            ]);
+        }
+
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
@@ -96,6 +116,75 @@ class CartRepository extends Repository
             "SELECT COALESCE(SUM(quantity), 0) FROM `CartItem` WHERE user_id = :uid"
         );
         $stmt->execute(['uid' => $userId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getTicketTypeById(int $ticketTypeId): ?array
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT type_id, event_id, name, price, is_pay_as_you_like
+             FROM `Ticket_Type`
+             WHERE type_id = :id
+             LIMIT 1"
+        );
+        $stmt->execute(['id' => $ticketTypeId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row ?: null;
+    }
+
+    public function getEventTypeCodeByEventId(int $eventId): ?int
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT type
+             FROM `Event`
+             WHERE event_id = :id
+             LIMIT 1"
+        );
+        $stmt->execute(['id' => $eventId]);
+        $value = $stmt->fetchColumn();
+
+        return $value === false ? null : (int) $value;
+    }
+
+    public function getMaxTicketsForEvent(int $eventId): ?int
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT max_tickets
+             FROM `Event`
+             WHERE event_id = :id
+             LIMIT 1"
+        );
+        $stmt->execute(['id' => $eventId]);
+        $value = $stmt->fetchColumn();
+
+        return $value === false ? null : (int) $value;
+    }
+
+    public function getReservedCartQuantityByEvent(int $eventId): int
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT COALESCE(SUM(quantity), 0)
+             FROM `CartItem`
+             WHERE event_id = :id"
+        );
+        $stmt->execute(['id' => $eventId]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getPaidTicketQuantityByEvent(int $eventId): int
+    {
+        $stmt = $this->connection->prepare(
+            "SELECT COALESCE(SUM(oi.quantity), 0)
+             FROM `OrderItem` oi
+             JOIN `Ticket_Type` tt ON tt.type_id = oi.type_id
+             JOIN `Order` o ON o.order_id = oi.order_id
+             WHERE tt.event_id = :id
+               AND o.status = 'paid'"
+        );
+        $stmt->execute(['id' => $eventId]);
+
         return (int) $stmt->fetchColumn();
     }
 }

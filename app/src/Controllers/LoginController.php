@@ -1,12 +1,22 @@
 <?php
 namespace App\Controllers;
 
+use App\Interfaces\ICartService;
 use App\Services\UserService;
 use App\Framework\Session;
 use Exception;
 
 class LoginController
 {
+    private UserService $userService;
+    private ICartService $cartService;
+
+    public function __construct(UserService $userService, ICartService $cartService)
+    {
+        $this->userService = $userService;
+        $this->cartService = $cartService;
+    }
+
     public function index()
     {
         $error = Session::flash('login_error');
@@ -38,7 +48,7 @@ class LoginController
 
         } catch (Exception $e) {
             Session::set('login_error', $e->getMessage());
-            header("Location: /login");
+            header("Location: /login"); 
             exit;
         }
     }
