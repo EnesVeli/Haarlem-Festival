@@ -155,6 +155,18 @@ class CartService implements ICartService
             throw new Exception("Not enough tickets available. Only {$available} spots left.");
         }
     }
+      
+    private function getAvailableSpots(string $eventType, int $eventId): ?int
+    {
+        $map = [
+            'history' => ['table' => 'history_tickets', 'id_col' => 'id'],
+            'jazz' => ['table' => 'festival_events', 'id_col' => 'festival_event_id'],
+        ];
+
+        if (!isset($map[$eventType])) {
+            return null;
+        }
+    }
 
     private function resolveEventTypeLabel(int $eventId): ?string
     {

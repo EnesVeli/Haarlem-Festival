@@ -1,32 +1,20 @@
 <?php
 
-$mainClass = 'jazz-main';
-$pageTitle = 'Haarlem Jazz';
-
 $hero = $vm->hero;
 $intro = $vm->intro;
 $experiences = $vm->experiences;
 $performers = $vm->performers;
 $recommendations = $vm->recommendations;
-$user = $vm->currentUser;
 $locations = $vm->locations;
-
-$activeNav = 'jazz';
-
-require PARTIALS_PATH . '/header.php';
 ?>
-
-<style>
-<?php include '/app/public/assets/css/jazz.css'; ?>
-</style>
 
 <section class="jazz-hero">
   <div class="container">
     <div class="jazz-hero-card">
-      <?php if (!empty($hero['image_path'])): ?>
+      <?php if (!empty($hero?->imagePath)): ?>
         <div
           class="jazz-hero-bg"
-          style="background-image: url('<?= htmlspecialchars($hero['image_path']) ?>');">
+          style="background-image: url('<?= htmlspecialchars($hero->imagePath) ?>');">
         </div>
       <?php else: ?>
         <div class="jazz-hero-bg"></div>
@@ -35,8 +23,8 @@ require PARTIALS_PATH . '/header.php';
       <div class="jazz-hero-shade"></div>
 
       <div class="jazz-hero-text">
-        <h1><?= htmlspecialchars($hero['title'] ?? 'Haarlem Jazz') ?></h1>
-        <p><?= htmlspecialchars($hero['subtitle'] ?? 'Experience the rhythm of Haarlem’s vibrant jazz scene.') ?></p>
+        <h1><?= htmlspecialchars($hero?->title ?? 'Haarlem Jazz') ?></h1>
+        <p><?= htmlspecialchars($hero?->subtitle ?? 'Experience the rhythm of Haarlem’s vibrant jazz scene.') ?></p>
       </div>
     </div>
   </div>
@@ -44,9 +32,9 @@ require PARTIALS_PATH . '/header.php';
 
 <div class="container">
 
-  <h2 class="section-title"><?= htmlspecialchars($intro['title'] ?? 'Welcome to Haarlem Jazz') ?></h2>
+  <h2 class="section-title"><?= htmlspecialchars($intro?->title ?? 'Welcome to Haarlem Jazz') ?></h2>
   <p class="section-sub">
-    <?= htmlspecialchars($intro['description'] ?? '') ?>
+    <?= htmlspecialchars($intro?->description ?? '') ?>
   </p>
 
   <div class="text-center mb-4">
@@ -62,10 +50,10 @@ require PARTIALS_PATH . '/header.php';
       <?php foreach ($experiences as $experience): ?>
         <div class="experience-card">
 
-          <?php if (!empty($experience['image_path'])): ?>
+          <?php if (!empty($experience->imagePath)): ?>
             <img
-              src="<?= htmlspecialchars($experience['image_path']) ?>"
-              alt="<?= htmlspecialchars($experience['title'] ?? 'Experience') ?>"
+              src="<?= htmlspecialchars($experience->imagePath) ?>"
+              alt="<?= htmlspecialchars($experience->title ?: 'Experience') ?>"
               class="experience-img"
             >
           <?php else: ?>
@@ -73,8 +61,8 @@ require PARTIALS_PATH . '/header.php';
           <?php endif; ?>
 
           <div class="experience-body">
-            <h4 class="experience-title"><?= htmlspecialchars($experience['title'] ?? '') ?></h4>
-            <p class="experience-text"><?= htmlspecialchars($experience['description'] ?? '') ?></p>
+            <h4 class="experience-title"><?= htmlspecialchars($experience->title) ?></h4>
+            <p class="experience-text"><?= htmlspecialchars($experience->description) ?></p>
           </div>
         </div>
       <?php endforeach; ?>
@@ -96,25 +84,20 @@ require PARTIALS_PATH . '/header.php';
   <div class="artists-grid mt-3">
     <?php if (!empty($performers)): ?>
       <?php foreach ($performers as $performer): ?>
-        <?php
-        $performerId = (int)($performer['id'] ?? 0);
-        $name = $performer['name'] ?? '';
-        ?>
-
-        <a class="artist-link" href="<?= $performerId > 0 ? "/jazz/performer?id=$performerId" : "#" ?>">
+        <a class="artist-link" href="<?= $performer->id > 0 ? "/jazz/performer?id={$performer->id}" : "#" ?>">
           <div class="card-soft">
 
-            <?php if (!empty($performer['image_path'])): ?>
+            <?php if (!empty($performer->imagePath)): ?>
               <img
-                src="<?= htmlspecialchars($performer['image_path']) ?>"
-                alt="<?= htmlspecialchars($name) ?>"
+                src="<?= htmlspecialchars($performer->imagePath) ?>"
+                alt="<?= htmlspecialchars($performer->name) ?>"
                 class="img-placeholder artist"
               >
             <?php else: ?>
               <div class="img-placeholder artist"></div>
             <?php endif; ?>
 
-            <p class="artist-name"><?= htmlspecialchars($name) ?></p>
+            <p class="artist-name"><?= htmlspecialchars($performer->name) ?></p>
           </div>
         </a>
       <?php endforeach; ?>
@@ -133,12 +116,12 @@ require PARTIALS_PATH . '/header.php';
     <?php if (!empty($locations)): ?>
       <?php foreach ($locations as $location): ?>
         <div class="card-soft map-card">
-          <div class="map-title"><?= htmlspecialchars($location['name'] ?? '') ?></div>
+          <div class="map-title"><?= htmlspecialchars($location->name) ?></div>
 
           <div class="map-frame">
             <iframe
               class="map-iframe"
-              src="<?= htmlspecialchars($location['google_maps_embed_url'] ?? '') ?>"
+              src="<?= htmlspecialchars($location->googleMapsEmbedUrl ?? '') ?>"
               loading="lazy"
               allowfullscreen>
             </iframe>
@@ -158,12 +141,12 @@ require PARTIALS_PATH . '/header.php';
     <?php if (!empty($recommendations)): ?>
       <?php foreach ($recommendations as $recommendation): ?>
         <div class="col-12 col-md-4">
-          <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($recommendation['url'] ?? '#') ?>">
+          <a class="card-soft d-block h-100 text-decoration-none" href="<?= htmlspecialchars($recommendation->url ?? '#') ?>">
 
-            <?php if (!empty($recommendation['image_path'])): ?>
+            <?php if (!empty($recommendation->imagePath)): ?>
               <img
-                src="<?= htmlspecialchars($recommendation['image_path']) ?>"
-                alt="<?= htmlspecialchars($recommendation['title'] ?? 'Recommendation') ?>"
+                src="<?= htmlspecialchars($recommendation->imagePath) ?>"
+                alt="<?= htmlspecialchars($recommendation->title ?: 'Recommendation') ?>"
                 class="img-placeholder rec"
               >
             <?php else: ?>
@@ -172,11 +155,11 @@ require PARTIALS_PATH . '/header.php';
 
             <div class="p-3">
               <h4 style="font-family:'Playfair Display',serif; font-size:18px; margin:0 0 6px; color:var(--burgundy);">
-                <?= htmlspecialchars($recommendation['title'] ?? '') ?>
+                <?= htmlspecialchars($recommendation->title) ?>
               </h4>
 
               <p class="text-muted mb-0" style="font-size:12px;">
-                <?= htmlspecialchars($recommendation['description'] ?? '') ?>
+                <?= htmlspecialchars($recommendation->description) ?>
               </p>
             </div>
           </a>
@@ -188,5 +171,3 @@ require PARTIALS_PATH . '/header.php';
   </div>
 
 </div>
-
-<?php require PARTIALS_PATH . '/footer.php'; ?>

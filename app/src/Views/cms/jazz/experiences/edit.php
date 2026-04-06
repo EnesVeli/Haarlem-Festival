@@ -3,7 +3,7 @@
 $pageTitle = 'Edit Experience';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$experience = $vm->experience ?? [];
+$experience = $vm->experience ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 
@@ -33,9 +33,9 @@ require __DIR__ . '/../partials/tabs.php';
 
 <h2 class="jazz-cms-section-title">Edit Experience</h2>
 
-<form action="/cms/jazz/experiences/update?id=<?= (int)($experience['id'] ?? 0) ?>" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
+<form action="/cms/jazz/experiences/update?id=<?= (int)($experience?->id ?? 0) ?>" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
 
-<input type="hidden" name="id" value="<?= (int)($experience['id'] ?? 0) ?>">
+<input type="hidden" name="id" value="<?= (int)($experience?->id ?? 0) ?>">
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Title</label>
@@ -43,7 +43,7 @@ require __DIR__ . '/../partials/tabs.php';
 type="text"
 name="title"
 class="jazz-cms-input"
-value="<?= htmlspecialchars($experience['title'] ?? '') ?>"
+value="<?= htmlspecialchars($experience?->title ?? '') ?>"
 required
 >
 </div>
@@ -55,7 +55,7 @@ name="description"
 class="jazz-cms-textarea"
 rows="5"
 required
-><?= htmlspecialchars($experience['description'] ?? '') ?></textarea>
+><?= htmlspecialchars($experience?->description ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -64,7 +64,7 @@ required
 type="number"
 name="sort_order"
 class="jazz-cms-input"
-value="<?= (int)($experience['sort_order'] ?? 0) ?>"
+value="<?= (int)($experience?->sortOrder ?? 0) ?>"
 required
 >
 </div>
@@ -73,8 +73,8 @@ required
 <label class="jazz-cms-label">Active</label>
 
 <select name="is_active" class="jazz-cms-input">
-<option value="1" <?= ((int)($experience['is_active'] ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-<option value="0" <?= ((int)($experience['is_active'] ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+<option value="1" <?= ((int)($experience?->isActive ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+<option value="0" <?= ((int)($experience?->isActive ?? 0) === 0) ? 'selected' : '' ?>>No</option>
 </select>
 </div>
 
@@ -82,12 +82,11 @@ required
 
 <label class="jazz-cms-label">Experience Image</label>
 
-<div class="jazz-cms-upload-box" id="experienceUploadBox">
+<div class="jazz-cms-upload-box">
 
 <input
 type="file"
 name="experience_image"
-id="experienceImageInput"
 class="jazz-cms-file-input"
 accept="image/*"
 >
@@ -103,19 +102,19 @@ accept="image/*"
 Upload path: <code>/public/uploads/experiences/</code>
 </small>
 
-<?php if (!empty($experience['image_path'])): ?>
+<?php if (!empty($experience?->imagePath)): ?>
 
 <div class="jazz-cms-image-preview-wrap">
 
 <p class="jazz-cms-preview-label">Current Image</p>
 
 <img
-src="<?= htmlspecialchars($experience['image_path']) ?>"
+src="<?= htmlspecialchars($experience->imagePath) ?>"
 class="jazz-cms-image-preview"
 >
 
 <p class="jazz-cms-image-path">
-<?= htmlspecialchars($experience['image_path']) ?>
+<?= htmlspecialchars($experience->imagePath) ?>
 </p>
 
 </div>
@@ -145,40 +144,5 @@ Save Changes
 </div>
 
 </div>
-
-<script>
-
-const experienceUploadBox = document.getElementById('experienceUploadBox');
-const experienceImageInput = document.getElementById('experienceImageInput');
-
-if (experienceUploadBox && experienceImageInput) {
-
-experienceUploadBox.addEventListener('click', function () {
-experienceImageInput.click();
-});
-
-experienceUploadBox.addEventListener('dragover', function (e) {
-e.preventDefault();
-experienceUploadBox.classList.add('is-dragover');
-});
-
-experienceUploadBox.addEventListener('dragleave', function () {
-experienceUploadBox.classList.remove('is-dragover');
-});
-
-experienceUploadBox.addEventListener('drop', function (e) {
-
-e.preventDefault();
-experienceUploadBox.classList.remove('is-dragover');
-
-if (e.dataTransfer.files.length > 0) {
-experienceImageInput.files = e.dataTransfer.files;
-}
-
-});
-
-}
-
-</script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

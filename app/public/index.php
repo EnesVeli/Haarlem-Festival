@@ -105,6 +105,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
     $r->addRoute('GET', '/yummy/book', [\App\Controllers\YummyController::class, 'bookingPage']);
     $r->addRoute('POST', '/yummy/book', [\App\Controllers\YummyController::class, 'book']);
+    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
+  
     // Yummy - CMS
     $r->addRoute('GET', '/cms/yummy',                          [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
     $r->addRoute('POST', '/cms/yummy/home',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editHome']);
@@ -143,6 +145,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);
     $r->addRoute('POST', '/checkout/process',      [\App\Controllers\PaymentController::class, 'process']);
     $r->addRoute('GET',  '/checkout/confirmation', [\App\Controllers\PaymentController::class, 'confirmation']);
+    
+
+    // ticket scanner
+    $r->addRoute('GET', '/employee/scan', [\App\Controllers\TicketScanController::class, 'index']);
+    $r->addRoute('POST', '/employee/scan', [\App\Controllers\TicketScanController::class, 'scan']);
+    $r->addRoute('GET', '/ticket/qr/{id:\d+}', [\App\Controllers\TicketQrController::class, 'show']);
 });
 
 // Fetch method and URI from Server

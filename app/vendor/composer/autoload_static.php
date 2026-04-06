@@ -97,6 +97,10 @@ class ComposerStaticInit5ca017e837f7c267036485661a47e287
         array (
             'Svg\\' => 4,
             'Sabberworm\\CSS\\' => 15,
+        'c' =>
+        array (
+            'chillerlan\\Settings\\' => 20,
+            'chillerlan\\QRCode\\' => 18,
         ),
         'P' =>
         array (
@@ -130,6 +134,13 @@ class ComposerStaticInit5ca017e837f7c267036485661a47e287
         'Sabberworm\\CSS\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/src',
+        'chillerlan\\Settings\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-settings-container/src',
+        ),
+        'chillerlan\\QRCode\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/chillerlan/php-qrcode/src',
         ),
         'PHPMailer\\PHPMailer\\' =>
         array (

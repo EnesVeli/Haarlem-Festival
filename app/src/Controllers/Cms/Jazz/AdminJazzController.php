@@ -4,7 +4,6 @@ namespace App\Controllers\Cms\Jazz;
 
 use App\Controllers\Cms\BaseCmsController;
 use App\Services\Jazz\JazzCmsService;
-
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzDashboardCmsViewModel;
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzHeroCmsViewModel;
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzIntroCmsViewModel;
@@ -23,12 +22,8 @@ class AdminJazzController extends BaseCmsController
         $this->service = new JazzCmsService();
     }
 
-    private function getUploadRoot(): string
-    {
-        return __DIR__ . '/../../../../public';
-    }
+    // dashboard
 
-  //dashboard
     public function index(): void
     {
         $data = $this->service->getDashboardData();
@@ -37,7 +32,8 @@ class AdminJazzController extends BaseCmsController
         require __DIR__ . '/../../../Views/cms/jazz/dashboard.php';
     }
 
-    //intro
+    // hero
+
     public function hero(): void
     {
         $data = $this->service->getHeroPageData();
@@ -48,36 +44,16 @@ class AdminJazzController extends BaseCmsController
 
     public function updateHero(): void
     {
-        $uploadRoot = $this->getUploadRoot();
-
-        $data = [
-            'id' => $_POST['id'] ?? 0,
-            'title' => $_POST['title'] ?? '',
-            'subtitle' => $_POST['subtitle'] ?? '',
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        if (isset($_FILES['hero_image']) && $_FILES['hero_image']['tmp_name']) {
-            $filename = time() . '_' . basename($_FILES['hero_image']['name']);
-            $path = '/assets/uploads/jazz/hero/' . $filename;
-            $fullPath = $uploadRoot . $path;
-
-            $uploadDir = dirname($fullPath);
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            move_uploaded_file($_FILES['hero_image']['tmp_name'], $fullPath);
-            $data['image_path'] = $path;
-        }
-
-        $this->service->updateHero($data);
+        $this->service->updateHero(
+            $_POST,
+            $_FILES['hero_image'] ?? null
+        );
 
         header('Location: /cms/jazz/hero');
         exit;
     }
 
-  //intro
+    // intro
 
     public function intro(): void
     {
@@ -89,19 +65,13 @@ class AdminJazzController extends BaseCmsController
 
     public function updateIntro(): void
     {
-        $data = [
-            'id' => $_POST['id'] ?? 0,
-            'title' => $_POST['title'] ?? '',
-            'description' => $_POST['description'] ?? ''
-        ];
-
-        $this->service->updateIntro($data);
+        $this->service->updateIntro($_POST);
 
         header('Location: /cms/jazz/intro');
         exit;
     }
 
-   //experiences
+    // experiences
 
     public function experiences(): void
     {
@@ -115,46 +85,31 @@ class AdminJazzController extends BaseCmsController
     {
         $data = $this->service->getDashboardData();
         $vm = new JazzExperiencesCmsViewModel([], $data['user']);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/experiences/create.php';
     }
-    
+
     public function editExperience(): void
     {
         $id = (int)($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /cms/jazz/experiences');
+            exit;
+        }
+
         $data = $this->service->getExperienceByIdData($id);
-    
         $vm = new JazzExperiencesCmsViewModel([], $data['user'], $data['experience'] ?? []);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/experiences/edit.php';
     }
 
     public function storeExperience(): void
     {
-        $uploadRoot = $this->getUploadRoot();
-
-        $data = [
-            'title' => $_POST['title'] ?? '',
-            'description' => $_POST['description'] ?? '',
-            'sort_order' => $_POST['sort_order'] ?? 0,
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        if (isset($_FILES['experience_image']) && $_FILES['experience_image']['tmp_name']) {
-            $filename = time() . '_' . basename($_FILES['experience_image']['name']);
-            $path = '/assets/uploads/jazz/experiences/' . $filename;
-            $fullPath = $uploadRoot . $path;
-
-            $uploadDir = dirname($fullPath);
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            move_uploaded_file($_FILES['experience_image']['tmp_name'], $fullPath);
-            $data['image_path'] = $path;
-        }
-
-        $this->service->storeExperience($data);
+        $this->service->storeExperience(
+            $_POST,
+            $_FILES['experience_image'] ?? null
+        );
 
         header('Location: /cms/jazz/experiences');
         exit;
@@ -162,31 +117,10 @@ class AdminJazzController extends BaseCmsController
 
     public function updateExperience(): void
     {
-        $uploadRoot = $this->getUploadRoot();
-
-        $data = [
-            'id' => $_POST['id'] ?? 0,
-            'title' => $_POST['title'] ?? '',
-            'description' => $_POST['description'] ?? '',
-            'sort_order' => $_POST['sort_order'] ?? 0,
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        if (isset($_FILES['experience_image']) && $_FILES['experience_image']['tmp_name']) {
-            $filename = time() . '_' . basename($_FILES['experience_image']['name']);
-            $path = '/assets/uploads/jazz/experiences/' . $filename;
-            $fullPath = $uploadRoot . $path;
-
-            $uploadDir = dirname($fullPath);
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            move_uploaded_file($_FILES['experience_image']['tmp_name'], $fullPath);
-            $data['image_path'] = $path;
-        }
-
-        $this->service->updateExperience($data);
+        $this->service->updateExperience(
+            $_POST,
+            $_FILES['experience_image'] ?? null
+        );
 
         header('Location: /cms/jazz/experiences');
         exit;
@@ -204,7 +138,7 @@ class AdminJazzController extends BaseCmsController
         exit;
     }
 
-   //performers
+    // performers
 
     public function performers(): void
     {
@@ -218,126 +152,55 @@ class AdminJazzController extends BaseCmsController
     {
         $data = $this->service->getDashboardData();
         $vm = new JazzPerformersCmsViewModel([], $data['user']);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/performers/create.php';
     }
-    
+
     public function editPerformer(): void
     {
         $id = (int)($_GET['id'] ?? 0);
-        $data = $this->service->getPerformerByIdData($id);
     
-        $vm = new JazzPerformersCmsViewModel([], $data['user'], $data['performer'] ?? []);
+        if ($id <= 0) {
+            header('Location: /cms/jazz/performers');
+            exit;
+        }
+    
+        $data = $this->service->getPerformerByIdData($id);
+        $vm = new JazzPerformersCmsViewModel(
+            [],
+            $data['user'],
+            $data['performer'] ?? null,
+            $data['highlights'] ?? [],
+            $data['tracks'] ?? []
+        );
     
         require __DIR__ . '/../../../Views/cms/jazz/performers/edit.php';
     }
 
     public function storePerformer(): void
-{
-    $uploadRoot = $this->getUploadRoot();
+    {
+        $this->service->storePerformer(
+            $_POST,
+            $_FILES['performer_hero_image'] ?? null,
+            $_FILES['performer_image'] ?? null
+        );
 
-    $data = [
-        'name' => $_POST['name'] ?? '',
-        'bio' => $_POST['bio'] ?? '',
-        'performance_style' => $_POST['performance_style'] ?? '',
-        'event_date_text' => $_POST['event_date_text'] ?? '',
-        'event_time_text' => $_POST['event_time_text'] ?? '',
-        'venue_name' => $_POST['venue_name'] ?? '',
-        'venue_address' => $_POST['venue_address'] ?? '',
-        'price_text' => $_POST['price_text'] ?? '',
-        'note_text' => $_POST['note_text'] ?? '',
-        'audio_url' => $_POST['audio_url'] ?? '',
-        'sort_order' => $_POST['sort_order'] ?? 0,
-        'is_active' => $_POST['is_active'] ?? 0
-    ];
-
-    if (isset($_FILES['performer_hero_image']) && $_FILES['performer_hero_image']['tmp_name']) {
-        $filename = time() . '_' . basename($_FILES['performer_hero_image']['name']);
-        $path = '/assets/uploads/jazz/performers/' . $filename;
-        $fullPath = $uploadRoot . $path;
-
-        $uploadDir = dirname($fullPath);
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        move_uploaded_file($_FILES['performer_hero_image']['tmp_name'], $fullPath);
-        $data['hero_image_path'] = $path;
+        header('Location: /cms/jazz/performers');
+        exit;
     }
 
-    if (isset($_FILES['performer_image']) && $_FILES['performer_image']['tmp_name']) {
-        $filename = time() . '_' . basename($_FILES['performer_image']['name']);
-        $path = '/assets/uploads/jazz/performers/' . $filename;
-        $fullPath = $uploadRoot . $path;
+    public function updatePerformer(): void
+    {
+        $this->service->updatePerformer(
+            $_POST,
+            $_FILES['performer_hero_image'] ?? null,
+            $_FILES['performer_image'] ?? null
+        );
 
-        $uploadDir = dirname($fullPath);
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        move_uploaded_file($_FILES['performer_image']['tmp_name'], $fullPath);
-        $data['image_path'] = $path;
+        header('Location: /cms/jazz/performers');
+        exit;
     }
 
-    $this->service->storePerformer($data);
-
-    header('Location: /cms/jazz/performers');
-    exit;
-}
-
-public function updatePerformer(): void
-{
-    $uploadRoot = $this->getUploadRoot();
-
-    $data = [
-        'id' => $_POST['id'] ?? 0,
-        'name' => $_POST['name'] ?? '',
-        'bio' => $_POST['bio'] ?? '',
-        'performance_style' => $_POST['performance_style'] ?? '',
-        'event_date_text' => $_POST['event_date_text'] ?? '',
-        'event_time_text' => $_POST['event_time_text'] ?? '',
-        'venue_name' => $_POST['venue_name'] ?? '',
-        'venue_address' => $_POST['venue_address'] ?? '',
-        'price_text' => $_POST['price_text'] ?? '',
-        'note_text' => $_POST['note_text'] ?? '',
-        'audio_url' => $_POST['audio_url'] ?? '',
-        'sort_order' => $_POST['sort_order'] ?? 0,
-        'is_active' => $_POST['is_active'] ?? 0
-    ];
-
-    if (isset($_FILES['performer_hero_image']) && $_FILES['performer_hero_image']['tmp_name']) {
-        $filename = time() . '_' . basename($_FILES['performer_hero_image']['name']);
-        $path = '/assets/uploads/jazz/performers/' . $filename;
-        $fullPath = $uploadRoot . $path;
-
-        $uploadDir = dirname($fullPath);
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        move_uploaded_file($_FILES['performer_hero_image']['tmp_name'], $fullPath);
-        $data['hero_image_path'] = $path;
-    }
-
-    if (isset($_FILES['performer_image']) && $_FILES['performer_image']['tmp_name']) {
-        $filename = time() . '_' . basename($_FILES['performer_image']['name']);
-        $path = '/assets/uploads/jazz/performers/' . $filename;
-        $fullPath = $uploadRoot . $path;
-
-        $uploadDir = dirname($fullPath);
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        move_uploaded_file($_FILES['performer_image']['tmp_name'], $fullPath);
-        $data['image_path'] = $path;
-    }
-
-    $this->service->updatePerformer($data);
-
-    header('Location: /cms/jazz/performers');
-    exit;
-}
     public function deletePerformer(): void
     {
         $id = (int)($_GET['id'] ?? 0);
@@ -350,7 +213,7 @@ public function updatePerformer(): void
         exit;
     }
 
-  //recommendations
+    // recommendations
 
     public function recommendations(): void
     {
@@ -364,47 +227,31 @@ public function updatePerformer(): void
     {
         $data = $this->service->getDashboardData();
         $vm = new JazzRecommendationsCmsViewModel([], $data['user']);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/recommendations/create.php';
     }
-    
+
     public function editRecommendation(): void
     {
         $id = (int)($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /cms/jazz/recommendations');
+            exit;
+        }
+
         $data = $this->service->getRecommendationByIdData($id);
-    
         $vm = new JazzRecommendationsCmsViewModel([], $data['user'], $data['recommendation'] ?? []);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/recommendations/edit.php';
     }
 
     public function storeRecommendation(): void
     {
-        $uploadRoot = $this->getUploadRoot();
-
-        $data = [
-            'title' => $_POST['title'] ?? '',
-            'description' => $_POST['description'] ?? '',
-            'url' => $_POST['url'] ?? '',
-            'sort_order' => $_POST['sort_order'] ?? 0,
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        if (isset($_FILES['recommendation_image']) && $_FILES['recommendation_image']['tmp_name']) {
-            $filename = time() . '_' . basename($_FILES['recommendation_image']['name']);
-            $path = '/assets/uploads/jazz/recommendations/' . $filename;
-            $fullPath = $uploadRoot . $path;
-
-            $uploadDir = dirname($fullPath);
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            move_uploaded_file($_FILES['recommendation_image']['tmp_name'], $fullPath);
-            $data['image_path'] = $path;
-        }
-
-        $this->service->storeRecommendation($data);
+        $this->service->storeRecommendation(
+            $_POST,
+            $_FILES['recommendation_image'] ?? null
+        );
 
         header('Location: /cms/jazz/recommendations');
         exit;
@@ -412,32 +259,10 @@ public function updatePerformer(): void
 
     public function updateRecommendation(): void
     {
-        $uploadRoot = $this->getUploadRoot();
-
-        $data = [
-            'id' => $_POST['id'] ?? 0,
-            'title' => $_POST['title'] ?? '',
-            'description' => $_POST['description'] ?? '',
-            'url' => $_POST['url'] ?? '',
-            'sort_order' => $_POST['sort_order'] ?? 0,
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        if (isset($_FILES['recommendation_image']) && $_FILES['recommendation_image']['tmp_name']) {
-            $filename = time() . '_' . basename($_FILES['recommendation_image']['name']);
-            $path = '/assets/uploads/jazz/recommendations/' . $filename;
-            $fullPath = $uploadRoot . $path;
-
-            $uploadDir = dirname($fullPath);
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            move_uploaded_file($_FILES['recommendation_image']['tmp_name'], $fullPath);
-            $data['image_path'] = $path;
-        }
-
-        $this->service->updateRecommendation($data);
+        $this->service->updateRecommendation(
+            $_POST,
+            $_FILES['recommendation_image'] ?? null
+        );
 
         header('Location: /cms/jazz/recommendations');
         exit;
@@ -455,7 +280,7 @@ public function updatePerformer(): void
         exit;
     }
 
-    //locations
+    // locations
 
     public function locations(): void
     {
@@ -469,30 +294,28 @@ public function updatePerformer(): void
     {
         $data = $this->service->getDashboardData();
         $vm = new JazzLocationsCmsViewModel([], $data['user']);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/locations/create.php';
     }
-    
+
     public function editLocation(): void
     {
         $id = (int)($_GET['id'] ?? 0);
+
+        if ($id <= 0) {
+            header('Location: /cms/jazz/locations');
+            exit;
+        }
+
         $data = $this->service->getLocationByIdData($id);
-    
         $vm = new JazzLocationsCmsViewModel([], $data['user'], $data['location'] ?? []);
-    
+
         require __DIR__ . '/../../../Views/cms/jazz/locations/edit.php';
     }
 
     public function storeLocation(): void
     {
-        $data = [
-            'name' => $_POST['name'] ?? '',
-            'address' => $_POST['address'] ?? '',
-            'google_maps_embed_url' => $_POST['google_maps_embed_url'] ?? '',
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        $this->service->storeLocation($data);
+        $this->service->storeLocation($_POST);
 
         header('Location: /cms/jazz/locations');
         exit;
@@ -500,15 +323,7 @@ public function updatePerformer(): void
 
     public function updateLocation(): void
     {
-        $data = [
-            'id' => $_POST['id'] ?? 0,
-            'name' => $_POST['name'] ?? '',
-            'address' => $_POST['address'] ?? '',
-            'google_maps_embed_url' => $_POST['google_maps_embed_url'] ?? '',
-            'is_active' => $_POST['is_active'] ?? 0
-        ];
-
-        $this->service->updateLocation($data);
+        $this->service->updateLocation($_POST);
 
         header('Location: /cms/jazz/locations');
         exit;
