@@ -14,7 +14,7 @@ class JazzCmsService
         $this->jazzRepo = new JazzRepository();
     }
 
-    //dashboard
+    // dashboard
 
     public function getDashboardData(): array
     {
@@ -23,37 +23,49 @@ class JazzCmsService
         ];
     }
 
-    //hero
+    // hero
 
     public function getHeroPageData(): array
     {
         return [
             'user' => Session::user(),
-            'hero' => $this->jazzRepo->getHero() ?? [],
+            'hero' => $this->jazzRepo->getHero(),
         ];
     }
 
-    public function updateHero(array $data): void
+    public function updateHero(array $data, ?array $file): void
     {
-        $this->jazzRepo->updateHero($data);
+        try {
+            if ($file && !empty($file['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($file, '/assets/uploads/jazz/hero/');
+            }
+
+            $this->jazzRepo->updateHero($data);
+        } catch (\Exception $error) {
+            die('Could not update hero.');
+        }
     }
 
-   //intro
+    // intro
 
     public function getIntroPageData(): array
     {
         return [
             'user' => Session::user(),
-            'intro' => $this->jazzRepo->getIntro() ?? [],
+            'intro' => $this->jazzRepo->getIntro(),
         ];
     }
 
     public function updateIntro(array $data): void
     {
-        $this->jazzRepo->updateIntro($data);
+        try {
+            $this->jazzRepo->updateIntro($data);
+        } catch (\Exception $error) {
+            die('Could not update intro.');
+        }
     }
 
-   //Experiences
+    // experiences
 
     public function getExperiencesPageData(): array
     {
@@ -67,18 +79,34 @@ class JazzCmsService
     {
         return [
             'user' => Session::user(),
-            'experience' => $this->jazzRepo->getExperienceById($id) ?? [],
+            'experience' => $this->jazzRepo->getExperienceById($id),
         ];
     }
 
-    public function storeExperience(array $data): void
+    public function storeExperience(array $data, ?array $file): void
     {
-        $this->jazzRepo->storeExperience($data);
+        try {
+            if ($file && !empty($file['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($file, '/assets/uploads/jazz/experiences/');
+            }
+
+            $this->jazzRepo->storeExperience($data);
+        } catch (\Exception $error) {
+            die('Could not save experience.');
+        }
     }
 
-    public function updateExperience(array $data): void
+    public function updateExperience(array $data, ?array $file): void
     {
-        $this->jazzRepo->updateExperience($data);
+        try {
+            if ($file && !empty($file['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($file, '/assets/uploads/jazz/experiences/');
+            }
+
+            $this->jazzRepo->updateExperience($data);
+        } catch (\Exception $error) {
+            die('Could not update experience.');
+        }
     }
 
     public function deleteExperience(int $id): void
@@ -86,7 +114,7 @@ class JazzCmsService
         $this->jazzRepo->deleteExperience($id);
     }
 
-   //Performers
+    // performers
 
     public function getPerformersPageData(): array
     {
@@ -100,18 +128,58 @@ class JazzCmsService
     {
         return [
             'user' => Session::user(),
-            'performer' => $this->jazzRepo->getPerformerById($id) ?? [],
+            'performer' => $this->jazzRepo->getPerformerById($id),
+            'highlights' => $this->jazzRepo->getHighlightsByPerformer($id),
+            'tracks' => $this->jazzRepo->getTracksByPerformer($id),
         ];
     }
 
-    public function storePerformer(array $data): void
+    public function storePerformer(array $data, ?array $heroFile, ?array $imageFile): void
     {
-        $this->jazzRepo->storePerformer($data);
+        try {
+            if ($heroFile && !empty($heroFile['tmp_name'])) {
+                $data['hero_image_path'] = $this->uploadImage($heroFile, '/assets/uploads/jazz/performers/');
+            }
+
+            if ($imageFile && !empty($imageFile['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($imageFile, '/assets/uploads/jazz/performers/');
+            }
+
+            $this->jazzRepo->storePerformer($data);
+        } catch (\Exception $error) {
+            die('Could not save performer.');
+        }
     }
 
-    public function updatePerformer(array $data): void
+    public function updatePerformer(array $data, ?array $heroFile, ?array $imageFile): void
     {
-        $this->jazzRepo->updatePerformer($data);
+        try {
+            if ($heroFile && !empty($heroFile['tmp_name'])) {
+                $data['hero_image_path'] = $this->uploadImage($heroFile, '/assets/uploads/jazz/performers/');
+            }
+    
+            if ($imageFile && !empty($imageFile['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($imageFile, '/assets/uploads/jazz/performers/');
+            }
+    
+            $this->jazzRepo->updatePerformer($data);
+    
+            $performerId = (int)($data['id'] ?? 0);
+    
+            if ($performerId > 0) {
+                $this->jazzRepo->updateHighlightsByPerformer(
+                    $performerId,
+                    $data['highlights'] ?? []
+                );
+    
+                $this->jazzRepo->updateTracksByPerformer(
+                    $performerId,
+                    $data['tracks'] ?? []
+                );
+            }
+        } catch (\Exception $error) {
+            die('Could not update performer.');
+        }
     }
 
     public function deletePerformer(int $id): void
@@ -119,7 +187,7 @@ class JazzCmsService
         $this->jazzRepo->deletePerformer($id);
     }
 
- //recommendations
+    // recommendations
 
     public function getRecommendationsPageData(): array
     {
@@ -133,18 +201,34 @@ class JazzCmsService
     {
         return [
             'user' => Session::user(),
-            'recommendation' => $this->jazzRepo->getRecommendationById($id) ?? [],
+            'recommendation' => $this->jazzRepo->getRecommendationById($id),
         ];
     }
 
-    public function storeRecommendation(array $data): void
+    public function storeRecommendation(array $data, ?array $file): void
     {
-        $this->jazzRepo->storeRecommendation($data);
+        try {
+            if ($file && !empty($file['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($file, '/assets/uploads/jazz/recommendations/');
+            }
+
+            $this->jazzRepo->storeRecommendation($data);
+        } catch (\Exception $error) {
+            die('Could not save recommendation.');
+        }
     }
 
-    public function updateRecommendation(array $data): void
+    public function updateRecommendation(array $data, ?array $file): void
     {
-        $this->jazzRepo->updateRecommendation($data);
+        try {
+            if ($file && !empty($file['tmp_name'])) {
+                $data['image_path'] = $this->uploadImage($file, '/assets/uploads/jazz/recommendations/');
+            }
+
+            $this->jazzRepo->updateRecommendation($data);
+        } catch (\Exception $error) {
+            die('Could not update recommendation.');
+        }
     }
 
     public function deleteRecommendation(int $id): void
@@ -152,7 +236,7 @@ class JazzCmsService
         $this->jazzRepo->deleteRecommendation($id);
     }
 
-   //locations
+    // locations
 
     public function getLocationsPageData(): array
     {
@@ -166,22 +250,48 @@ class JazzCmsService
     {
         return [
             'user' => Session::user(),
-            'location' => $this->jazzRepo->getLocationById($id) ?? [],
-        ];
+'location' => $this->jazzRepo->getLocationById($id),        ];
     }
 
     public function storeLocation(array $data): void
     {
-        $this->jazzRepo->storeLocation($data);
+        try {
+            $this->jazzRepo->storeLocation($data);
+        } catch (\Exception $error) {
+            die('Could not save location.');
+        }
     }
 
     public function updateLocation(array $data): void
     {
-        $this->jazzRepo->updateLocation($data);
+        try {
+            $this->jazzRepo->updateLocation($data);
+        } catch (\Exception $error) {
+            die('Could not update location.');
+        }
     }
 
     public function deleteLocation(int $id): void
     {
         $this->jazzRepo->deleteLocation($id);
+    }
+
+    // helper
+
+    private function uploadImage(array $file, string $folder): string
+    {
+        $uploadRoot = dirname(__DIR__, 3) . '/public';
+
+        $filename = time() . '_' . basename($file['name']);
+        $path = $folder . $filename;
+        $fullPath = $uploadRoot . $path;
+
+        if (!is_dir(dirname($fullPath))) {
+            mkdir(dirname($fullPath), 0777, true);
+        }
+
+        move_uploaded_file($file['tmp_name'], $fullPath);
+
+        return $path;
     }
 }

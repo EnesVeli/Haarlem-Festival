@@ -3,7 +3,9 @@
 $pageTitle = 'Edit Performer';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
-$performer = $vm->performer ?? [];
+$performer = $vm->performer ?? null;
+$highlights = $vm->highlights ?? [];
+$tracks = $vm->tracks ?? [];
 
 require __DIR__ . '/../../../partials/header.php';
 ?>
@@ -33,7 +35,7 @@ require __DIR__ . '/../partials/tabs.php';
 
 <form action="/cms/jazz/performers/update" method="POST" enctype="multipart/form-data" class="jazz-cms-form">
 
-<input type="hidden" name="id" value="<?= (int)($performer['id'] ?? 0) ?>">
+<input type="hidden" name="id" value="<?= (int)($performer->id ?? 0) ?>">
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Name</label>
@@ -41,7 +43,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="name"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['name'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->name ?? '') ?>"
         required
     >
 </div>
@@ -52,13 +54,13 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="performance_style"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['performance_style'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->performanceStyle ?? '') ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Bio</label>
-    <textarea name="bio" class="jazz-cms-textarea" rows="5"><?= htmlspecialchars($performer['bio'] ?? '') ?></textarea>
+    <textarea name="bio" class="jazz-cms-textarea" rows="5"><?= htmlspecialchars($performer->bio ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -67,7 +69,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="event_date_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['event_date_text'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->eventDateText ?? '') ?>"
     >
 </div>
 
@@ -77,7 +79,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="event_time_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['event_time_text'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->eventTimeText ?? '') ?>"
     >
 </div>
 
@@ -87,7 +89,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="venue_name"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['venue_name'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->venueName ?? '') ?>"
     >
 </div>
 
@@ -97,7 +99,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="venue_address"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['venue_address'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->venueAddress ?? '') ?>"
     >
 </div>
 
@@ -107,13 +109,13 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="price_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['price_text'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->priceText ?? '') ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Note</label>
-    <textarea name="note_text" class="jazz-cms-textarea" rows="3"><?= htmlspecialchars($performer['note_text'] ?? '') ?></textarea>
+    <textarea name="note_text" class="jazz-cms-textarea" rows="3"><?= htmlspecialchars($performer->noteText ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -122,7 +124,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="audio_url"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer['audio_url'] ?? '') ?>"
+        value="<?= htmlspecialchars($performer->audioUrl ?? '') ?>"
     >
 </div>
 
@@ -132,15 +134,15 @@ require __DIR__ . '/../partials/tabs.php';
         type="number"
         name="sort_order"
         class="jazz-cms-input"
-        value="<?= (int)($performer['sort_order'] ?? 0) ?>"
+        value="<?= (int)($performer->sortOrder ?? 0) ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Active</label>
     <select name="is_active" class="jazz-cms-input">
-        <option value="1" <?= ((int)($performer['is_active'] ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-        <option value="0" <?= ((int)($performer['is_active'] ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+        <option value="1" <?= ((int)($performer->isActive ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+        <option value="0" <?= ((int)($performer->isActive ?? 0) === 0) ? 'selected' : '' ?>>No</option>
     </select>
 </div>
 
@@ -155,7 +157,6 @@ require __DIR__ . '/../partials/tabs.php';
             class="jazz-cms-file-input"
             accept="image/*"
         >
-
         <div class="jazz-cms-upload-inner">
             <strong>Drop image here</strong>
             <span>or choose a file</span>
@@ -167,11 +168,11 @@ require __DIR__ . '/../partials/tabs.php';
         Upload path: <code>/assets/uploads/jazz/performers/</code>
     </small>
 
-    <?php if (!empty($performer['image_path'])): ?>
+    <?php if (!empty($performer->imagePath)): ?>
         <div class="jazz-cms-image-preview-wrap">
             <p class="jazz-cms-preview-label">Current Performer Image</p>
             <img
-                src="<?= htmlspecialchars($performer['image_path']) ?>"
+                src="<?= htmlspecialchars($performer->imagePath) ?>"
                 class="jazz-cms-image-preview"
                 alt="Performer image"
             >
@@ -190,7 +191,6 @@ require __DIR__ . '/../partials/tabs.php';
             class="jazz-cms-file-input"
             accept="image/*"
         >
-
         <div class="jazz-cms-upload-inner">
             <strong>Drop hero image here</strong>
             <span>or choose a file</span>
@@ -202,17 +202,129 @@ require __DIR__ . '/../partials/tabs.php';
         Upload path: <code>/assets/uploads/jazz/performers/</code>
     </small>
 
-    <?php if (!empty($performer['hero_image_path'])): ?>
+    <?php if (!empty($performer->heroImagePath)): ?>
         <div class="jazz-cms-image-preview-wrap">
             <p class="jazz-cms-preview-label">Current Hero Image</p>
             <img
-                src="<?= htmlspecialchars($performer['hero_image_path']) ?>"
+                src="<?= htmlspecialchars($performer->heroImagePath) ?>"
                 class="jazz-cms-image-preview"
                 alt="Hero image"
             >
         </div>
     <?php endif; ?>
 </div>
+
+<hr class="my-4">
+
+<h3 class="jazz-cms-section-title">Career Highlights</h3>
+
+<?php for ($i = 0; $i < 3; $i++): ?>
+    <?php $highlight = $highlights[$i] ?? null; ?>
+
+    <div class="jazz-cms-welcome-card" style="margin-bottom:20px;">
+        <input type="hidden" name="highlights[<?= $i ?>][id]" value="<?= (int)($highlight->id ?? 0) ?>">
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Highlight Title</label>
+            <input
+                type="text"
+                name="highlights[<?= $i ?>][title]"
+                class="jazz-cms-input"
+                value="<?= htmlspecialchars($highlight->title ?? '') ?>"
+            >
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Description</label>
+            <textarea
+                name="highlights[<?= $i ?>][description]"
+                class="jazz-cms-textarea"
+                rows="3"
+            ><?= htmlspecialchars($highlight->description ?? '') ?></textarea>
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Sort Order</label>
+            <input
+                type="number"
+                name="highlights[<?= $i ?>][sort_order]"
+                class="jazz-cms-input"
+                value="<?= (int)($highlight->sortOrder ?? $i) ?>"
+            >
+        </div>
+    </div>
+<?php endfor; ?>
+
+<hr class="my-4">
+
+<h3 class="jazz-cms-section-title">Famous Tracks / Albums</h3>
+
+<?php for ($i = 0; $i < 3; $i++): ?>
+    <?php $track = $tracks[$i] ?? null; ?>
+
+    <div class="jazz-cms-welcome-card" style="margin-bottom:20px;">
+        <input type="hidden" name="tracks[<?= $i ?>][id]" value="<?= (int)($track->id ?? 0) ?>">
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Title</label>
+            <input
+                type="text"
+                name="tracks[<?= $i ?>][title]"
+                class="jazz-cms-input"
+                value="<?= htmlspecialchars($track->title ?? '') ?>"
+            >
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Release Date</label>
+            <input
+                type="text"
+                name="tracks[<?= $i ?>][release_date_text]"
+                class="jazz-cms-input"
+                value="<?= htmlspecialchars($track->releaseDateText ?? '') ?>"
+            >
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Description</label>
+            <textarea
+                name="tracks[<?= $i ?>][description]"
+                class="jazz-cms-textarea"
+                rows="3"
+            ><?= htmlspecialchars($track->description ?? '') ?></textarea>
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Listen URL</label>
+            <input
+                type="text"
+                name="tracks[<?= $i ?>][listen_url]"
+                class="jazz-cms-input"
+                value="<?= htmlspecialchars($track->listenUrl ?? '') ?>"
+            >
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Image Path</label>
+            <input
+                type="text"
+                name="tracks[<?= $i ?>][image_path]"
+                class="jazz-cms-input"
+                value="<?= htmlspecialchars($track->imagePath ?? '') ?>"
+            >
+        </div>
+
+        <div class="jazz-cms-form-row">
+            <label class="jazz-cms-label">Sort Order</label>
+            <input
+                type="number"
+                name="tracks[<?= $i ?>][sort_order]"
+                class="jazz-cms-input"
+                value="<?= (int)($track->sortOrder ?? $i) ?>"
+            >
+        </div>
+    </div>
+<?php endfor; ?>
 
 <div class="jazz-cms-form-actions">
     <a href="/cms/jazz/performers" class="jazz-cms-btn jazz-cms-btn-outline">

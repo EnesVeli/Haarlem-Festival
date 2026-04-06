@@ -1,239 +1,762 @@
-<?php
-require_once __DIR__ . '/../vendor/autoload.php';
-define('VIEW_PATH', __DIR__ . '/../src/Views');
-define('PARTIALS_PATH', VIEW_PATH . '/partials');
-// Show errors for development
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-session_start();
-
-use FastRoute\RouteCollector;
-use App\Controllers\HomeController;
-use PHPMailer\PHPMailer\PHPMailer;
-
-// Define the Routes
-$dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
-    // The Homepage
-    $r->addRoute('GET', '/', [HomeController::class, 'index']);
-    $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
-    $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);   
-    
-    //Login/Logout
-    $r->addRoute('GET',  '/login',  [\App\Controllers\LoginController::class, 'index']);
-    $r->addRoute('POST', '/login',  [\App\Controllers\LoginController::class, 'login']);
-    $r->addRoute('POST', '/logout', [\App\Controllers\LoginController::class, 'logout']);
-    $r->addRoute('GET', '/logout', [\App\Controllers\LoginController::class, 'logout']);
-    
-    //home CMS
-    $r->addRoute('GET',  '/cms/home',              [\App\Controllers\Cms\Home\HomeCmsController::class, 'index']);
-    $r->addRoute('POST', '/cms/home/save-content', [\App\Controllers\Cms\Home\HomeCmsController::class, 'saveContent']);
-    $r->addRoute('POST', '/cms/home/save-event',   [\App\Controllers\Cms\Home\HomeCmsController::class, 'saveEvent']);
-    $r->addRoute('POST', '/cms/home/delete-event', [\App\Controllers\Cms\Home\HomeCmsController::class, 'deleteEvent']);
-
-    // Password Reset
-    $r->addRoute('GET', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'index']);
-    $r->addRoute('POST', '/password-reset-request', [\App\Controllers\PasswordResetController::class, 'requestPasswordReset']);
-    $r->addRoute('GET', '/password-reset-start', [\App\Controllers\PasswordResetController::class, 'passwordResetVerifyEmail']);
-    $r->addRoute('POST', '/password-reset-confirm', [\App\Controllers\PasswordResetController::class, 'startPasswordReset']);
-    $r->addRoute('POST', '/password-reset', [\App\Controllers\PasswordResetController::class, 'resetPassword']);
-    
-    // Profile (Manage account)
-    $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);
-    $r->addRoute('POST', '/profile/update', [\App\Controllers\ProfileController::class, 'update']);
-    
-    // Cart
-    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
-    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
-    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
-    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
-    
-    // Jazz 
-    $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
-    $r->addRoute('GET', '/jazz/schedule', [\App\Controllers\JazzController::class, 'schedule']);
-    $r->addRoute('GET', '/jazz/tickets', [\App\Controllers\JazzController::class, 'tickets']);
-    $r->addRoute('GET', '/jazz/performer', [\App\Controllers\JazzController::class, 'performer']);
-
-    
-    // CMS - MAIN Dashboard
-    $r->addRoute('GET', '/cms', [\App\Controllers\Cms\CmsDashboardController::class, 'index']);
-    // Jazz CMS
-    $r->addRoute('GET',  '/cms/jazz/home', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'index']);
-    // jazz CMS - Hero
-    $r->addRoute('GET',  '/cms/jazz/hero', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'hero']);
-    $r->addRoute('POST', '/cms/jazz/hero/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateHero']);
-    //jazz CMS - Intro
-    $r->addRoute('GET',  '/cms/jazz/intro', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'intro']);
-    $r->addRoute('POST', '/cms/jazz/intro/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateIntro']);
-    //  jazz CMS -Experiences
-    $r->addRoute('GET',  '/cms/jazz/experiences', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'experiences']);
-    $r->addRoute('GET',  '/cms/jazz/experiences/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createExperience']);
-    $r->addRoute('GET',  '/cms/jazz/experiences/edit', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editExperience']);
-    $r->addRoute('POST', '/cms/jazz/experiences/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeExperience']);
-    $r->addRoute('POST', '/cms/jazz/experiences/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateExperience']);
-    $r->addRoute('GET',  '/cms/jazz/experiences/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteExperience']);
-    // jazz CMS - Performers
-    $r->addRoute('GET',  '/cms/jazz/performers', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'performers']);
-    $r->addRoute('GET',  '/cms/jazz/performers/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createPerformer']);
-    $r->addRoute('GET',  '/cms/jazz/performers/edit', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editPerformer']);
-    $r->addRoute('POST', '/cms/jazz/performers/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storePerformer']);
-    $r->addRoute('POST', '/cms/jazz/performers/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updatePerformer']);
-    $r->addRoute('GET',  '/cms/jazz/performers/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deletePerformer']);
-    // jazz CMS - Recommendations
-    $r->addRoute('GET',  '/cms/jazz/recommendations', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'recommendations']);
-    $r->addRoute('GET',  '/cms/jazz/recommendations/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createRecommendation']);
-    $r->addRoute('GET',  '/cms/jazz/recommendations/edit', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editRecommendation']);
-    $r->addRoute('POST', '/cms/jazz/recommendations/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeRecommendation']);
-    $r->addRoute('POST', '/cms/jazz/recommendations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateRecommendation']);
-    $r->addRoute('GET',  '/cms/jazz/recommendations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteRecommendation']);
-    // jazz CMS - Locations
-    $r->addRoute('GET',  '/cms/jazz/locations', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'locations']);
-    $r->addRoute('GET',  '/cms/jazz/locations/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createLocation']);
-    $r->addRoute('GET',  '/cms/jazz/locations/edit', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editLocation']);
-    $r->addRoute('POST', '/cms/jazz/locations/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeLocation']);
-    $r->addRoute('POST', '/cms/jazz/locations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateLocation']);
-    $r->addRoute('GET',  '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
-    // History
-    $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
-    $r->addRoute('GET', '/history/booking',  [\App\Controllers\HistoryController::class, 'booking']);
-    $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
-
-    // History CMS
-    $r->addRoute('GET',  '/cms/history',             [\App\Controllers\Cms\History\HistoryCmsController::class, 'index']);
-    $r->addRoute('GET',  '/cms/history/detail/{id}', [\App\Controllers\Cms\History\HistoryCmsController::class, 'detail']);
-    $r->addRoute('POST', '/cms/history/action',      [\App\Controllers\Cms\History\HistoryCmsController::class, 'action']);
-    // Yummy
-    $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
-    $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
-    $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
-    $r->addRoute('GET', '/yummy/book', [\App\Controllers\YummyController::class, 'bookingPage']);
-    $r->addRoute('POST', '/yummy/book', [\App\Controllers\YummyController::class, 'book']);
-    // Yummy - CMS
-    $r->addRoute('GET', '/cms/yummy',                          [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
-    $r->addRoute('POST', '/cms/yummy/home',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editHome']);
-    $r->addRoute('GET', '/cms/yummy/list',                      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'list']);
-    $r->addRoute('POST', '/cms/yummy/list',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editList']);
-    $r->addRoute('GET', '/cms/yummy/restaurant-list',           [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurantList']);
-    $r->addRoute('GET', '/cms/yummy/restaurant',                [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
-    $r->addRoute('POST', '/cms/yummy/restaurant',               [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
-    $r->addRoute('POST', '/cms/yummy/restaurant/image',         [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
-    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']);
-    
-    // Tickets — main landing & per-event-type sub-pages
-    $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);
-    $r->addRoute('GET', '/tickets/jazz',    [\App\Controllers\TicketsController::class, 'jazz']);
-    $r->addRoute('GET', '/tickets/dance',   [\App\Controllers\TicketsController::class, 'dance']);
-    $r->addRoute('GET', '/tickets/history', [\App\Controllers\TicketsController::class, 'history']);
-    $r->addRoute('GET', '/tickets/yummy',   [\App\Controllers\TicketsController::class, 'yummy']);
-    $r->addRoute('GET', '/tickets/stories', [\App\Controllers\TicketsController::class, 'stories']);
-
-    // Stories in Haarlem — public pages
-    $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);
-    $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}',      [\App\Controllers\StoriesController::class, 'show']);
-    $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}/book', [\App\Controllers\StoriesController::class, 'book']);
-    
-    // CMS — Stories events
-    $r->addRoute('GET',  '/cms/stories',        [\App\Controllers\CmsStoriesController::class, 'index']);
-    $r->addRoute('GET',  '/cms/stories/edit',   [\App\Controllers\CmsStoriesController::class, 'edit']);
-    $r->addRoute('POST', '/cms/stories/save',   [\App\Controllers\CmsStoriesController::class, 'save']);
-    $r->addRoute('POST', '/cms/stories/delete', [\App\Controllers\CmsStoriesController::class, 'delete']);
-
-    // CMS — Stories Homepage content
-    $r->addRoute('GET',  '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'edit']);
-    $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
-    
-    // Payment
-    $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);
-    $r->addRoute('POST', '/checkout/process',      [\App\Controllers\PaymentController::class, 'process']);
-    $r->addRoute('GET',  '/checkout/confirmation', [\App\Controllers\PaymentController::class, 'confirmation']);
-});
-
-// Fetch method and URI from Server
-$httpMethod = $_SERVER['REQUEST_METHOD'];
-$uri = $_SERVER['REQUEST_URI'];
-
-// Strip query string (?foo=bar) and decode URI
-if (false !== $pos = strpos($uri, '?')) {
-    $uri = substr($uri, 0, $pos);
-}
-$uri = rawurldecode($uri);
-
-$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
-
-switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        http_response_code(404);
-        echo '404 - Page Not Found';
-        break;
-    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-        $allowedMethods = $routeInfo[1];
-        http_response_code(405);
-        echo '405 - Method Not Allowed';
-        break;
-    case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars    = $routeInfo[2];
-
-        [$class, $method] = $handler;
-
-        // IoC — wire dependencies via constructor injection
-        if ($class === \App\Controllers\StoriesController::class) {
-            $storiesRepo     = new \App\Repositories\StoriesRepository();
-            $storiesService  = new \App\Services\StoriesService($storiesRepo);
-            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
-            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
-            $controller = new $class($storiesService, $homepageService);
-
-        } elseif ($class === \App\Controllers\RegisterController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $captchaService = new \App\Services\CaptchaService();
-            $controller = new $class($userService, $captchaService);
-
-        } elseif ($class === \App\Controllers\LoginController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $controller = new $class($userService, $cartService);
-
-        } elseif ($class === \App\Controllers\ProfileController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $controller = new $class($userService);
-
-        } elseif ($class === \App\Controllers\CartController::class) {
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $controller = new $class($cartService);
-
-        } elseif ($class === \App\Controllers\CmsStoriesController::class) {
-            $storiesRepo    = new \App\Repositories\StoriesRepository();
-            $storiesService = new \App\Services\StoriesService($storiesRepo);
-            $controller = new $class($storiesService);
-
-        } elseif ($class === \App\Controllers\TicketsController::class) {
-            $storiesRepo = new \App\Repositories\StoriesRepository();
-            $storiesService = new \App\Services\StoriesService($storiesRepo);
-            $nonStoriesRepo = new \App\Repositories\NonStoriesTicketsRepository();
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $nonStoriesService = new \App\Services\NonStoriesTicketsService($nonStoriesRepo, $cartService);
-            $controller = new $class($storiesService, $nonStoriesService);
-
-        } elseif ($class === \App\Controllers\CmsStoriesHomepageController::class) {
-            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
-            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
-            $controller = new $class($homepageService);
-
-        } else {
-            $controller = new $class();
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "c00278fcf3be103fbf4727eab36cc82e",
+    "packages": [
+        {
+            "name": "dompdf/dompdf",
+            "version": "v3.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "f11ead23a8a76d0ff9bbc6c7c8fd7e05ca328496"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/f11ead23a8a76d0ff9bbc6c7c8fd7e05ca328496",
+                "reference": "f11ead23a8a76d0ff9bbc6c7c8fd7e05ca328496",
+                "shasum": ""
+            },
+            "require": {
+                "dompdf/php-font-lib": "^1.0.0",
+                "dompdf/php-svg-lib": "^1.0.0",
+                "ext-dom": "*",
+                "ext-mbstring": "*",
+                "masterminds/html5": "^2.0",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "ext-gd": "*",
+                "ext-json": "*",
+                "ext-zip": "*",
+                "mockery/mockery": "^1.3",
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11",
+                "squizlabs/php_codesniffer": "^3.5",
+                "symfony/process": "^4.4 || ^5.4 || ^6.2 || ^7.0"
+            },
+            "suggest": {
+                "ext-gd": "Needed to process images",
+                "ext-gmagick": "Improves image processing performance",
+                "ext-imagick": "Improves image processing performance",
+                "ext-zlib": "Needed for pdf stream compression"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "The Dompdf Community",
+                    "homepage": "https://github.com/dompdf/dompdf/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "support": {
+                "issues": "https://github.com/dompdf/dompdf/issues",
+                "source": "https://github.com/dompdf/dompdf/tree/v3.1.5"
+            },
+            "time": "2026-03-03T13:54:37+00:00"
+        },
+        {
+            "name": "chillerlan/php-qrcode",
+            "version": "6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chillerlan/php-qrcode.git",
+                "reference": "320e5990312295926a8707a0203bf238062b4331"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chillerlan/php-qrcode/zipball/320e5990312295926a8707a0203bf238062b4331",
+                "reference": "320e5990312295926a8707a0203bf238062b4331",
+                "shasum": ""
+            },
+            "require": {
+                "chillerlan/php-settings-container": "^3.2.1",
+                "ext-mbstring": "*",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "chillerlan/php-authenticator": "^5.3",
+                "ext-fileinfo": "*",
+                "intervention/image": "^3.11",
+                "phan/phan": "^6.0.1",
+                "phpbench/phpbench": "^1.4",
+                "phpmd/phpmd": "^2.15",
+                "phpstan/phpstan": "^2.1.40",
+                "phpstan/phpstan-deprecation-rules": "^2.0.4",
+                "phpunit/phpunit": "^11.5",
+                "setasign/fpdf": "^1.8.6",
+                "slevomat/coding-standard": "^8.28",
+                "squizlabs/php_codesniffer": "^4.0"
+            },
+            "suggest": {
+                "chillerlan/php-authenticator": "Yet another Google authenticator! Also creates URIs for mobile apps.",
+                "intervention/image": "More advanced GD and ImageMagick output.",
+                "setasign/fpdf": "Required to use the QR FPDF output.",
+                "simple-icons/simple-icons": "SVG icons that you can use to embed as logos in the QR Code"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "chillerlan\\QRCode\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Kazuhiko Arase",
+                    "homepage": "https://github.com/kazuhikoarase/qrcode-generator"
+                },
+                {
+                    "name": "ZXing Authors",
+                    "homepage": "https://github.com/zxing/zxing"
+                },
+                {
+                    "name": "Ashot Khanamiryan",
+                    "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder"
+                },
+                {
+                    "name": "Smiley",
+                    "email": "smiley@chillerlan.net",
+                    "homepage": "https://github.com/codemasher"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/chillerlan/php-qrcode/graphs/contributors"
+                }
+            ],
+            "description": "A QR Code generator and reader with a user-friendly API. PHP 8.2+",
+            "homepage": "https://github.com/chillerlan/php-qrcode",
+            "keywords": [
+                "phpqrcode",
+                "qr",
+                "qr code",
+                "qr-reader",
+                "qrcode",
+                "qrcode-generator",
+                "qrcode-reader"
+            ],
+            "support": {
+                "docs": "https://php-qrcode.readthedocs.io",
+                "issues": "https://github.com/chillerlan/php-qrcode/issues",
+                "source": "https://github.com/chillerlan/php-qrcode"
+            },
+            "funding": [
+                {
+                    "url": "https://ko-fi.com/codemasher",
+                    "type": "Ko-Fi"
+                }
+            ],
+            "time": "2026-03-14T17:16:36+00:00"
+        },
+        {
+            "name": "dompdf/php-font-lib",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-font-lib.git",
+                "reference": "a6e9a688a2a80016ac080b97be73d3e10c444c9a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-font-lib/zipball/a6e9a688a2a80016ac080b97be73d3e10c444c9a",
+                "reference": "a6e9a688a2a80016ac080b97be73d3e10c444c9a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11 || ^12"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FontLib\\": "src/FontLib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The FontLib Community",
+                    "homepage": "https://github.com/dompdf/php-font-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/dompdf/php-font-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-font-lib/issues",
+                "source": "https://github.com/dompdf/php-font-lib/tree/1.0.2"
+            },
+            "time": "2026-01-20T14:10:26+00:00"
+        },
+        {
+            "name": "dompdf/php-svg-lib",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/php-svg-lib.git",
+                "reference": "8259ffb930817e72b1ff1caef5d226501f3dfeb1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/php-svg-lib/zipball/8259ffb930817e72b1ff1caef5d226501f3dfeb1",
+                "reference": "8259ffb930817e72b1ff1caef5d226501f3dfeb1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1 || ^8.0",
+                "sabberworm/php-css-parser": "^8.4 || ^9.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.5 || ^8 || ^9 || ^10 || ^11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Svg\\": "src/Svg"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "The SvgLib Community",
+                    "homepage": "https://github.com/dompdf/php-svg-lib/blob/master/AUTHORS.md"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/dompdf/php-svg-lib",
+            "support": {
+                "issues": "https://github.com/dompdf/php-svg-lib/issues",
+                "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.2"
+            },
+            "time": "2026-01-02T16:01:13+00:00"
+        },
+        {
+            "name": "chillerlan/php-settings-container",
+            "version": "3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/chillerlan/php-settings-container.git",
+                "reference": "a0a487cbf5344f721eb504bf0f59bada40c381b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/chillerlan/php-settings-container/zipball/a0a487cbf5344f721eb504bf0f59bada40c381b7",
+                "reference": "a0a487cbf5344f721eb504bf0f59bada40c381b7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "phan/phan": "^5.5.2",
+                "phpmd/phpmd": "^2.15",
+                "phpstan/phpstan": "^2.1.31",
+                "phpstan/phpstan-deprecation-rules": "^2.0.3",
+                "phpunit/phpunit": "^10.5",
+                "slevomat/coding-standard": "^8.22",
+                "squizlabs/php_codesniffer": "^4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "chillerlan\\Settings\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Smiley",
+                    "email": "smiley@chillerlan.net",
+                    "homepage": "https://github.com/codemasher"
+                }
+            ],
+            "description": "A container class for immutable settings objects. Not a DI container.",
+            "homepage": "https://github.com/chillerlan/php-settings-container",
+            "keywords": [
+                "Settings",
+                "configuration",
+                "container",
+                "helper",
+                "property hook"
+            ],
+            "support": {
+                "issues": "https://github.com/chillerlan/php-settings-container/issues",
+                "source": "https://github.com/chillerlan/php-settings-container"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/donate?hosted_button_id=WLYUNAT9ZTJZ4",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://ko-fi.com/codemasher",
+                    "type": "ko_fi"
+                }
+            ],
+            "time": "2026-03-20T21:10:52+00:00"
+        },
+        {
+            "name": "masterminds/html5",
+            "version": "2.10.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/fcf91eb64359852f00d921887b219479b4f21251",
+                "reference": "fcf91eb64359852f00d921887b219479b4f21251",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8 || ^9"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "support": {
+                "issues": "https://github.com/Masterminds/html5-php/issues",
+                "source": "https://github.com/Masterminds/html5-php/tree/2.10.0"
+            },
+            "time": "2025-07-25T09:04:22+00:00"
+        },
+        {
+            "name": "nikic/fast-route",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/FastRoute.git",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/181d480e08d9476e61381e04a71b34dc0432e812",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "FastRoute\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov",
+                    "email": "nikic@php.net"
+                }
+            ],
+            "description": "Fast request router for PHP",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
+            "time": "2018-02-13T20:26:39+00:00"
+        },
+        {
+            "name": "phpmailer/phpmailer",
+            "version": "v7.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHPMailer/PHPMailer.git",
+                "reference": "ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088",
+                "reference": "ebf1655bd5b99b3f97e1a3ec0a69e5f4cd7ea088",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ctype": "*",
+                "ext-filter": "*",
+                "ext-hash": "*",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+                "doctrine/annotations": "^1.2.6 || ^1.13.3",
+                "php-parallel-lint/php-console-highlighter": "^1.0.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3.2",
+                "phpcompatibility/php-compatibility": "^10.0.0@dev",
+                "squizlabs/php_codesniffer": "^3.13.5",
+                "yoast/phpunit-polyfills": "^1.0.4"
+            },
+            "suggest": {
+                "decomplexity/SendOauth2": "Adapter for using XOAUTH2 authentication",
+                "directorytree/imapengine": "For uploading sent messages via IMAP, see gmail example",
+                "ext-imap": "Needed to support advanced email address parsing according to RFC822",
+                "ext-mbstring": "Needed to send email in multibyte encoding charset or decode encoded addresses",
+                "ext-openssl": "Needed for secure SMTP sending and DKIM signing",
+                "greew/oauth2-azure-provider": "Needed for Microsoft Azure XOAUTH2 authentication",
+                "hayageek/oauth2-yahoo": "Needed for Yahoo XOAUTH2 authentication",
+                "league/oauth2-google": "Needed for Google XOAUTH2 authentication",
+                "psr/log": "For optional PSR-3 debug logging",
+                "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
+                "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PHPMailer\\PHPMailer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1-only"
+            ],
+            "authors": [
+                {
+                    "name": "Marcus Bointon",
+                    "email": "phpmailer@synchromedia.co.uk"
+                },
+                {
+                    "name": "Jim Jagielski",
+                    "email": "jimjag@gmail.com"
+                },
+                {
+                    "name": "Andy Prevost",
+                    "email": "codeworxtech@users.sourceforge.net"
+                },
+                {
+                    "name": "Brent R. Matzelle"
+                }
+            ],
+            "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+            "support": {
+                "issues": "https://github.com/PHPMailer/PHPMailer/issues",
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v7.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Synchro",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-01-09T18:02:33+00:00"
+        },
+        {
+            "name": "sabberworm/php-css-parser",
+            "version": "v9.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MyIntervals/PHP-CSS-Parser.git",
+                "reference": "88dbd0f7f91abbfe4402d0a3071e9ff4d81ed949"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MyIntervals/PHP-CSS-Parser/zipball/88dbd0f7f91abbfe4402d0a3071e9ff4d81ed949",
+                "reference": "88dbd0f7f91abbfe4402d0a3071e9ff4d81ed949",
+                "shasum": ""
+            },
+            "require": {
+                "ext-iconv": "*",
+                "php": "^7.2.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0",
+                "thecodingmachine/safe": "^1.3 || ^2.5 || ^3.4"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "1.4.0",
+                "phpstan/extension-installer": "1.4.3",
+                "phpstan/phpstan": "1.12.32 || 2.1.32",
+                "phpstan/phpstan-phpunit": "1.4.2 || 2.0.8",
+                "phpstan/phpstan-strict-rules": "1.6.2 || 2.0.7",
+                "phpunit/phpunit": "8.5.52",
+                "rawr/phpunit-data-provider": "3.3.1",
+                "rector/rector": "1.2.10 || 2.2.8",
+                "rector/type-perfect": "1.0.0 || 2.1.0",
+                "squizlabs/php_codesniffer": "4.0.1",
+                "thecodingmachine/phpstan-safe-rule": "1.2.0 || 1.4.1"
+            },
+            "suggest": {
+                "ext-mbstring": "for parsing UTF-8 CSS"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "9.4.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/Rule/Rule.php",
+                    "src/RuleSet/RuleContainer.php"
+                ],
+                "psr-4": {
+                    "Sabberworm\\CSS\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Raphael Schweikert"
+                },
+                {
+                    "name": "Oliver Klee",
+                    "email": "github@oliverklee.de"
+                },
+                {
+                    "name": "Jake Hotson",
+                    "email": "jake.github@qzdesign.co.uk"
+                }
+            ],
+            "description": "Parser for CSS Files written in PHP",
+            "homepage": "https://www.sabberworm.com/blog/2010/6/10/php-css-parser",
+            "keywords": [
+                "css",
+                "parser",
+                "stylesheet"
+            ],
+            "support": {
+                "issues": "https://github.com/MyIntervals/PHP-CSS-Parser/issues",
+                "source": "https://github.com/MyIntervals/PHP-CSS-Parser/tree/v9.3.0"
+            },
+            "time": "2026-03-03T17:31:43+00:00"
+        },
+        {
+            "name": "thecodingmachine/safe",
+            "version": "v3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thecodingmachine/safe.git",
+                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thecodingmachine/safe/zipball/705683a25bacf0d4860c7dea4d7947bfd09eea19",
+                "reference": "705683a25bacf0d4860c7dea4d7947bfd09eea19",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpstan/phpstan": "^2",
+                "phpunit/phpunit": "^10",
+                "squizlabs/php_codesniffer": "^3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "lib/special_cases.php",
+                    "generated/apache.php",
+                    "generated/apcu.php",
+                    "generated/array.php",
+                    "generated/bzip2.php",
+                    "generated/calendar.php",
+                    "generated/classobj.php",
+                    "generated/com.php",
+                    "generated/cubrid.php",
+                    "generated/curl.php",
+                    "generated/datetime.php",
+                    "generated/dir.php",
+                    "generated/eio.php",
+                    "generated/errorfunc.php",
+                    "generated/exec.php",
+                    "generated/fileinfo.php",
+                    "generated/filesystem.php",
+                    "generated/filter.php",
+                    "generated/fpm.php",
+                    "generated/ftp.php",
+                    "generated/funchand.php",
+                    "generated/gettext.php",
+                    "generated/gmp.php",
+                    "generated/gnupg.php",
+                    "generated/hash.php",
+                    "generated/ibase.php",
+                    "generated/ibmDb2.php",
+                    "generated/iconv.php",
+                    "generated/image.php",
+                    "generated/imap.php",
+                    "generated/info.php",
+                    "generated/inotify.php",
+                    "generated/json.php",
+                    "generated/ldap.php",
+                    "generated/libxml.php",
+                    "generated/lzf.php",
+                    "generated/mailparse.php",
+                    "generated/mbstring.php",
+                    "generated/misc.php",
+                    "generated/mysql.php",
+                    "generated/mysqli.php",
+                    "generated/network.php",
+                    "generated/oci8.php",
+                    "generated/opcache.php",
+                    "generated/openssl.php",
+                    "generated/outcontrol.php",
+                    "generated/pcntl.php",
+                    "generated/pcre.php",
+                    "generated/pgsql.php",
+                    "generated/posix.php",
+                    "generated/ps.php",
+                    "generated/pspell.php",
+                    "generated/readline.php",
+                    "generated/rnp.php",
+                    "generated/rpminfo.php",
+                    "generated/rrd.php",
+                    "generated/sem.php",
+                    "generated/session.php",
+                    "generated/shmop.php",
+                    "generated/sockets.php",
+                    "generated/sodium.php",
+                    "generated/solr.php",
+                    "generated/spl.php",
+                    "generated/sqlsrv.php",
+                    "generated/ssdeep.php",
+                    "generated/ssh2.php",
+                    "generated/stream.php",
+                    "generated/strings.php",
+                    "generated/swoole.php",
+                    "generated/uodbc.php",
+                    "generated/uopz.php",
+                    "generated/url.php",
+                    "generated/var.php",
+                    "generated/xdiff.php",
+                    "generated/xml.php",
+                    "generated/xmlrpc.php",
+                    "generated/yaml.php",
+                    "generated/yaz.php",
+                    "generated/zip.php",
+                    "generated/zlib.php"
+                ],
+                "classmap": [
+                    "lib/DateTime.php",
+                    "lib/DateTimeImmutable.php",
+                    "lib/Exceptions/",
+                    "generated/Exceptions/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP core functions that throw exceptions instead of returning FALSE on error",
+            "support": {
+                "issues": "https://github.com/thecodingmachine/safe/issues",
+                "source": "https://github.com/thecodingmachine/safe/tree/v3.4.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/OskarStark",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/shish",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/silasjoisten",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/staabm",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-04T18:08:13+00:00"
         }
-
-        $controller->$method($vars);
-        break;
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {},
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
