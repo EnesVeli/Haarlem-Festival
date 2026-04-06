@@ -94,6 +94,11 @@ class StoriesController extends BaseController
      */
     public function book(array $vars): void
     {
+        if (!isset($_SESSION['user_id'])) {
+            $this->redirect('/login');
+            return;
+        }
+
         $slug = trim((string) ($vars['slug'] ?? ''));
         if (!preg_match('/^[a-z0-9\-]+$/i', $slug)) {
             $this->notFound();

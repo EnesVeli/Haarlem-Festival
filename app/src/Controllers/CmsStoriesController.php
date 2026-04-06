@@ -46,9 +46,11 @@ class CmsStoriesController extends BaseController
         $event = $id ? $this->service->getEventById($id) : null;
 
         $this->render('cms/stories/edit', [
-            'event' => $event,
+            'event'       => $event,
             'ticketTypes' => $event ? $this->service->getTicketTypesForCms($event->event_id) : [],
+            'cms_error'   => $_SESSION['cms_error'] ?? null,
         ]);
+        unset($_SESSION['cms_error']);
     }
 
     /**
@@ -173,29 +175,29 @@ class CmsStoriesController extends BaseController
             $endTime === '' ||
             (string) $venueIdRaw === ''
         ) {
-            http_response_code(422);
-            echo 'Name, slug, description, start time, end time and venue are required.';
-            return null;
+            $_SESSION['cms_error'] = 'Name, slug, description, start time, end time and venue are required.';
+            $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
+            exit;
         }
 
         $isValidTime = strtotime($startTime) !== false && strtotime($endTime) !== false;
         if (!$isValidTime) {
-            http_response_code(422);
-            echo 'Invalid start or end time.';
-            return null;
+            $_SESSION['cms_error'] = 'Invalid start or end time.';
+            $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
+            exit;
         }
 
         if (!is_numeric((string) $venueIdRaw) || (int) $venueIdRaw < 1) {
-            http_response_code(422);
-            echo 'Venue ID must be a valid positive number.';
-            return null;
+            $_SESSION['cms_error'] = 'Venue ID must be a valid positive number.';
+            $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
+            exit;
         }
 
         $maxTicketsRaw = $post['max_tickets'] ?? 0;
         if (!is_numeric((string) $maxTicketsRaw) || (int) $maxTicketsRaw < 0) {
-            http_response_code(422);
-            echo 'Max tickets must be a valid number.';
-            return null;
+            $_SESSION['cms_error'] = 'Max tickets must be a valid number.';
+            $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
+            exit;
         }
 
         return [
@@ -235,31 +237,31 @@ class CmsStoriesController extends BaseController
         }
 
         if ((int) $imageFile['error'] !== UPLOAD_ERR_OK) {
-            http_response_code(422);
-            echo 'Image upload failed.';
-            return null;
+            $_SESSION['cms_error'] = 'Image upload failed.';
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/cms/stories');
+            exit;
         }
 
         if (!isset($imageFile['size']) || (int) $imageFile['size'] > self::MAX_IMAGE_SIZE_BYTES) {
-            http_response_code(422);
-            echo 'Image exceeds maximum size of 5 MB.';
-            return null;
+            $_SESSION['cms_error'] = 'Image exceeds maximum size of 5 MB.';
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/cms/stories');
+            exit;
         }
 
         $originalName = (string) ($imageFile['name'] ?? '');
         $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         if (!in_array($extension, self::ALLOWED_IMAGE_EXTENSIONS, true)) {
-            http_response_code(422);
-            echo 'Invalid image extension. Allowed: jpg, jpeg, png, webp.';
-            return null;
+            $_SESSION['cms_error'] = 'Invalid image extension. Allowed: jpg, jpeg, png, webp.';
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/cms/stories');
+            exit;
         }
 
         $tmpPath = (string) ($imageFile['tmp_name'] ?? '');
         $mimeType = mime_content_type($tmpPath) ?: '';
         if (!in_array($mimeType, self::ALLOWED_IMAGE_MIME_TYPES, true)) {
-            http_response_code(422);
-            echo 'Invalid image MIME type.';
-            return null;
+            $_SESSION['cms_error'] = 'Invalid image MIME type.';
+            $this->redirect($_SERVER['HTTP_REFERER'] ?? '/cms/stories');
+            exit;
         }
 
         $uploadDir = '/assets/images/stories/';

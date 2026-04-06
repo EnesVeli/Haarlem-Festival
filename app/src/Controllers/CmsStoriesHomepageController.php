@@ -1,7 +1,6 @@
 <?php
 namespace App\Controllers;
 
-use App\Framework\Session;
 use App\Interfaces\IStoriesHomepageService;
 use App\ViewModels\CmsStoriesHomepageViewModel;
 
@@ -24,40 +23,29 @@ class CmsStoriesHomepageController extends BaseController
      */
     public function __construct(IStoriesHomepageService $homepageService)
     {
-        // Guard — admin only
-        if (!Session::isLoggedIn()) {
-            header('Location: /login');
-            exit;
-        }
-        if (!Session::isAdmin()) {
-            http_response_code(403);
-            echo '403 - Admin only';
-            exit;
-        }
-
         $this->homepageService = $homepageService;
     }
 
     /**
      * GET /cms/stories/homepage — render the edit form.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters 
      * @return void
      */
     public function edit(array $vars = []): void
     {
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
+$this->mustBeAdmin();
+    $this->ensureCsrfToken();
 
-        $content = $this->homepageService->getStoriesContent();
+    $content = $this->homepageService->getStoriesContent();
 
-        $viewModel = new CmsStoriesHomepageViewModel(
-            $content,
-            $_SESSION['csrf_token'],
-            Session::flash('cms_success'),
-            Session::flash('cms_error')
-        );
+    $viewModel = new CmsStoriesHomepageViewModel(
+        $content,
+        $_SESSION['csrf_token'],
+        $_SESSION['cms_success'] ?? null,
+        $_SESSION['cms_error'] ?? null
+    );
+    unset($_SESSION['cms_success'], $_SESSION['cms_error']);
 
         $this->render('cms/stories/homepage', [
             'viewModel' => $viewModel,
@@ -73,6 +61,9 @@ class CmsStoriesHomepageController extends BaseController
      */
     public function update(array $vars = []): void
     {
+        $this->mustBeAdmin();
+
+        // Verify CSRF token
         $sessionToken = $_SESSION['csrf_token'] ?? '';
         $postedToken = $_POST['csrf_token'] ?? '';
         if (
