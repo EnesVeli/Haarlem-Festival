@@ -33,7 +33,7 @@ class LoginController
                 throw new Exception("Email and password are required.");
             }
 
-            $user = (new UserService())->authenticate($email, $password);
+            $user = $this->userService->authenticate($email, $password);
             Session::login($user);
             
             if (Session::isAdmin()) {
