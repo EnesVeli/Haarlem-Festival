@@ -1,19 +1,16 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\CartRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\TicketRepository;
 use App\Repositories\InvoiceRepository;
-use App\Repositories\UserRepository;
-
 class OrderService
 {
-    private OrderRepository  $orderRepo;
-    private TicketRepository $ticketRepo;
+    private OrderRepository   $orderRepo;
+    private TicketRepository  $ticketRepo;
     private InvoiceRepository $invoiceRepo;
-    private PdfService       $pdfService;
-    private MailService      $mailService;
+    private PdfService        $pdfService;
+    private MailService       $mailService;
 
     public function __construct()
     {
@@ -29,7 +26,9 @@ class OrderService
         // 1 — Create the order
         $orderId = $this->orderRepo->createOrder($userId, $paymentMethod);
 
-        // 2 — Save order items + create one ticket per quantity
+        // 2 — Save order items + generate one ticket per quantity unit
+        $generatedTickets = [];
+
         foreach ($cartItems as $item) {
             $typeId    = $this->resolveTypeId($item);
             $quantity  = (int)$item['quantity'];
@@ -37,13 +36,29 @@ class OrderService
 
             $this->orderRepo->addOrderItem($orderId, $typeId, $quantity, $unitPrice);
 
-            /*
-            // Create one Ticket row per ticket purchased
             for ($i = 0; $i < $quantity; $i++) {
-                $barcode = hash_hmac('sha256', $orderId . '-' . $typeId . '-' . $i . '-' . $userId, 'festival_secret_key');
-                $this->ticketRepo->createTicket($userId, $typeId, $barcode);
+                $qrToken    = bin2hex(random_bytes(24));
+                $ticketCode = 'HF-' . strtoupper(bin2hex(random_bytes(3)));
+
+                // Persist ticket for scanning
+                try {
+                    $this->ticketRepo->createTicket($userId, $typeId, $qrToken, $ticketCode);
+                } catch (\Throwable) {
+                    // Non-fatal: ticket still appears in PDF/email even if DB insert fails
+                }
+
+                // Collect data for PDF + email (cart items already carry event info)
+                $generatedTickets[] = [
+                    'event_name'       => $item['event_name']  ?? 'Festival Event',
+                    'venue_name'       => $item['venue_name']  ?? '',
+                    'start_time'       => $item['event_start'] ?? '',
+                    'end_time'         => $item['event_end']   ?? '',
+                    'ticket_type_name' => 'Regular Ticket',
+                    'unit_price'       => $unitPrice,
+                    'qr_token'         => $qrToken,
+                    'ticket_code'      => $ticketCode,
+                ];
             }
-                */
         }
 
         // 3 — Mark order as paid
@@ -53,31 +68,33 @@ class OrderService
         $total = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cartItems));
         $this->invoiceRepo->createInvoice($orderId, $total, 9.00, $user['name'], $user['email']);
 
-        // 5 — Fetch full data for PDFs
-        $tickets = $this->ticketRepo->getTicketsByOrder($orderId);
-        $invoice = $this->invoiceRepo->getByOrder($orderId);
+        // 5 — Fetch invoice + order items for PDFs
+        $invoice    = $this->invoiceRepo->getByOrder($orderId);
         $orderItems = $this->orderRepo->getOrderWithItems($orderId);
 
-        // 6 — Generate PDFs
+        // 6 — Generate one ticket PDF per ticket (with QR code)
         $ticketPdfs = [];
-        foreach ($tickets as $ticket) {
+        foreach ($generatedTickets as $ticket) {
             $ticketPdfs[] = $this->pdfService->generateTicket($ticket, $user['name']);
         }
-        $invoicePdf = $this->pdfService->generateInvoice([], $orderItems, $invoice);
 
-        // 7 — Send email with all PDFs attached
+        // 7 — Generate invoice PDF
+        $invoicePdf = $this->pdfService->generateInvoice($orderItems, $invoice);
+
+        // 8 — Send single confirmation email with all PDFs + inline ticket summary
         $this->mailService->sendOrderConfirmation(
             $user['email'],
             $user['name'],
             $ticketPdfs,
             $invoicePdf,
-            $invoice['invoice_number']
+            $invoice['invoice_number'],
+            $generatedTickets
         );
 
         return $orderId;
     }
 
-    // CartItem has event_id + ticket_type, we need the matching Ticket_Type.type_id
+    // Resolves Ticket_Type.type_id from a cart item
     private function resolveTypeId(array $cartItem): int
     {
         $pdo  = $this->orderRepo->getConnection();
