@@ -210,7 +210,7 @@ class YummyService
 
         if($slot->booked + $adult_count + $child_count > $slot->capacity) throw new OverBookingException();   
         
-        // This part of code is bullshit. All of this to add item to cart. If I had enough time, I would have rewritten payment at its entirety.
+        // 
         $restaurant = $this->restaurant_repository->getRestaurantById($slot->restaurant_id);
         if($restaurant == null) throw new DBAccessException();
 

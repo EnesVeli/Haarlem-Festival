@@ -14,13 +14,11 @@
 <section class="tickets-page" aria-labelledby="tickets-heading">
     <div class="tickets-container">
 
-        <!-- ── Page heading ─────────────────────────────────────────── -->
         <header class="tickets-header">
             <h1 id="tickets-heading">Festival Program</h1>
             <p class="tickets-subtitle">Select a category to explore events and book your tickets.</p>
         </header>
 
-        <!-- ── Event-type tabs ──────────────────────────────────────── -->
         <nav class="tickets-tabs" aria-label="Event categories">
             <a href="/tickets/jazz" class="tickets-tab" aria-label="Haarlem Jazz tickets">Haarlem Jazz</a>
             <a href="/tickets/dance" class="tickets-tab" aria-label="Dance tickets">Dance!</a>
@@ -29,7 +27,6 @@
             <a href="/tickets/stories" class="tickets-tab tickets-tab--active" aria-label="Stories tickets">Stories</a>
         </nav>
 
-        <!-- ── Stories ticket listing ───────────────────────────────── -->
         <div class="tickets-content">
             <h2 class="tickets-content__title">Stories Tickets</h2>
 

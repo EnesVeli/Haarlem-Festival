@@ -37,7 +37,7 @@ class TicketsController extends BaseController
      * or shows a brief overview; visitors click a tab to see that event
      * type's ticket listing.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters
      *
      * @return void
      */
@@ -56,7 +56,7 @@ class TicketsController extends BaseController
      * TicketsStoriesViewModel (which groups them by day), and renders
      * the tickets/stories view with add-to-cart POST forms.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters
      *
      * @return void
      */
@@ -75,7 +75,7 @@ class TicketsController extends BaseController
     /**
      * Renders Jazz ticket category page.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters 
      */
     public function jazz(array $vars = []): void
     {
@@ -85,7 +85,7 @@ class TicketsController extends BaseController
     /**
      * Renders Dance ticket category page.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters 
      */
     public function dance(array $vars = []): void
     {
@@ -95,7 +95,7 @@ class TicketsController extends BaseController
     /**
      * Renders History ticket category page.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters
      */
     public function history(array $vars = []): void
     {
@@ -105,7 +105,7 @@ class TicketsController extends BaseController
     /**
      * Renders Yummy ticket category page.
      *
-     * @param array $vars Route parameters (unused)
+     * @param array $vars Route parameters 
      */
     public function yummy(array $vars = []): void
     {

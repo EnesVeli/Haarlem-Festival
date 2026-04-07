@@ -29,8 +29,7 @@ class NonStoriesTicketsService implements INonStoriesTicketsService
     /**
      * Returns grouped events for one category key.
      *
-     * Note: availability is resolved per event inside the loop (N+1 pattern),
-     * which is acceptable for current dataset size.
+     * availability is resolved per event inside the loop (N+1 pattern),
      *
      * @return array<string, array<int, array<string, mixed>>>
      */
