@@ -6,7 +6,7 @@
 
 <main class="book-main">
     <div class="card-body p-4">
-        <div class="alert alert-success">Your have successfully booked a reservation.</div>
+        <div class="alert alert-success">Booking was successfully added to your cart.</div>
         <a class="btn btn-primary" href="/cart">View booking in cart</a>
         <a class="btn btn-primary" href="/yummy/list">Continue browsing restaurants</a>
     </div>

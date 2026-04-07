@@ -9,6 +9,7 @@ use App\Models\Restaurant;
 use App\Models\RestaurantBooking;
 use App\Models\RestaurantImage;
 use App\Models\RestaurantTimeSlot;
+use DateTime;
 use PDO;
 
 enum RestaurantSortingOption : int{
@@ -187,14 +188,13 @@ class YummyRestaurantsRepository extends Repository
      * @param int $restaurant_id id of searched restaurant.
      * @return ?array returns array of restaurant images, returns null, if nothing were found.
      */
-    public function getRestaurantImages(int $restaurant_id) : ?array {
+    public function getRestaurantImages(int $restaurant_id) {
         $stmt = $this->connection->prepare("SELECT `image_id`, `restaurant_id`, `path` FROM `YummyRestaurantImages` WHERE `restaurant_id` = :restaurant_id LIMIT 11");
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, RestaurantImage::class);
-        $res = $stmt->fetchAll(); 
 
-        return $res == false ? null : $res;
+        return $stmt->fetchAll(); 
     }
 
     /**
@@ -584,5 +584,55 @@ class YummyRestaurantsRepository extends Repository
         $res = $stmt->fetch(PDO::FETCH_BOTH);
 
         return $res == false ? null : $res[0];
+    }
+
+    public function createRestaurant(string $main_img_path, string $name, string $mini_text, float $rating, int $cost_rating, int $active, string $text,
+        string $address_text, string $address_uri, string $website_link) : ?int 
+    {
+        $stmt = $this->connection->prepare("INSERT INTO `YummyRestaurants`(`main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`,
+            `address_uri`, `website_link`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+
+        $stmt->bindValue(1, $main_img_path, PDO::PARAM_STR);
+        $stmt->bindValue(2, $name, PDO::PARAM_STR);
+        $stmt->bindValue(3, $mini_text, PDO::PARAM_STR);
+        $stmt->bindValue(4, $rating, PDO::PARAM_STR);
+        $stmt->bindValue(5, $cost_rating, PDO::PARAM_INT);
+        $stmt->bindValue(6, $active, PDO::PARAM_INT);
+        $stmt->bindValue(7, $text, PDO::PARAM_STR);
+        $stmt->bindValue(8, $address_text, PDO::PARAM_STR);
+        $stmt->bindValue(9, $address_uri, PDO::PARAM_STR);
+        $stmt->bindValue(10, $website_link, PDO::PARAM_STR);
+
+        $res = $stmt->execute();
+
+        if($res == false) return null;
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function createOpeninghours(int $restaurant_id, string $monday, string $tuesday, string $wednesday, string $thursday, string $friday,
+        string $saturday, string $sunday) : ?int 
+    {
+        $stmt = $this->connection->prepare("INSERT INTO `YummyOpeningHours`(`restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) 
+            VALUES (:restaurant_id, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday);");
+
+        $res = $stmt->execute(['restaurant_id' => $restaurant_id, 'monday' => $monday, 'tuesday' => $tuesday, 'wednesday' => $wednesday, 'thursday' => $thursday,
+            'friday' => $friday, 'saturday' => $saturday, 'sunday' => $sunday]);
+
+        if($res == false) return null;
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function createTimeSlot(int $restaurant_id, DateTime $time, int $capacity, int $duration) : ?int 
+    {
+        $stmt = $this->connection->prepare("INSERT INTO `YummyRestaurantTimeSlots`(`restaurant_id`, `time`, `capacity`, `duration`) 
+            VALUES (:restaurant_id, :time, :capacity, :duration);");
+
+        $res = $stmt->execute(['restaurant_id' => $restaurant_id, 'time' => $time->format('H:i:s'), 'capacity' => $capacity, 'duration' => $duration]);
+
+        if($res == false) return null;
+
+        return $this->connection->lastInsertId();
     }
 }

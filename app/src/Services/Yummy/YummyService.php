@@ -23,6 +23,7 @@ use App\Repositories\CartRepository;
 use DateInterval;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 use RoundingMode;
 
 class YummyService
@@ -145,7 +146,10 @@ class YummyService
     public function getRestaurantViewModel(string $id) : YummyRestaurantViewModel {
         $view_model = new YummyRestaurantViewModel();
 
-        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id, false);
+        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id);
+
+        if(!$view_model->restaurant->active) throw new InvalidArgumentException();
+
         $view_model->hours = $this->restaurant_repository->getRestaurantOpeningHours((int)$id);
         $view_model->tags = $this->type_repository->getRestaurantTypes((int)$id);
 
@@ -184,7 +188,7 @@ class YummyService
         if($_SESSION['user_id'] == null) throw new UserNotLoggedInException();
         $user_id = $_SESSION['user_id'];
 
-        if($date_offset == null || $date_offset > 12 || $date_offset < 0){
+        if($date_offset == null || $date_offset > 13 || $date_offset < 0){
             throw new FormDataException("Invalid date offset.");
         }
 

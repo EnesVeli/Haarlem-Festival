@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Config;
+use App\Framework\Session;
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
@@ -22,6 +23,9 @@ class YummyController
     {
         $pageTitle = 'Yummy - Haarlem Festival';
 
+        $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
+
         try{
             $view_model = $this->service->getHomeViewModel();
         } 
@@ -35,11 +39,14 @@ class YummyController
     public function list(){
         $pageTitle = 'Yummy - Restaurant List';
 
+        $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
+
         try{
             $view_model = $this->service->getListViewModel($_GET['place_type'] ?? null, $_GET['meal_type'] ?? null, $_GET['food_type'] ?? null, $_GET['cuisine_type'] ?? null, $_GET['sorting'] ?? null, $_GET['page'] ?? null);
         } 
         catch(Exception $ex){
-            $error_message = 'Something went wrong, try again later';
+            Session::set('temp_error', 'Something went wrong, try again later');
         }          
 
         require __DIR__ . '/../Views/yummy/list.php';
@@ -52,12 +59,15 @@ class YummyController
             $view_model = $this->service->getRestaurantViewModel($id);
 
             $pageTitle = 'Yummy - Restaurant List';
+
+            require __DIR__ . '/../Views/yummy/restaurant.php';
+            exit;
         } 
         catch(Exception $ex){
-            $error_message = 'Something went wrong, try again later';
+            Session::set('temp_error', 'Something went wrong, try again later');
         }          
 
-        require __DIR__ . '/../Views/yummy/restaurant.php';
+        header('location: /yummy/list');
     }
 
     public function bookingPage(){
@@ -77,7 +87,7 @@ class YummyController
             $error_message = $_GET['err'] ?? null;
         }
         catch(Exception $ex){
-            $error_message = 'Something went wrong, try again later';
+            Session::set('temp_error', 'Something went wrong, try again later');
         }  
 
         require __DIR__ . '/../Views/yummy/book.php';

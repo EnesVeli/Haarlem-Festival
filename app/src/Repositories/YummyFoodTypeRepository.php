@@ -7,7 +7,7 @@ use PDO;
 
 class YummyFoodTypeRepository extends Repository
 {
-    public function getRestaurantTypes(string $restaurant_id): ?array
+    public function getRestaurantTypes(string $restaurant_id) : ?array
     {
         $stmt = $this->connection->prepare("SELECT `YummyFoodTypes`.`type_id`, `YummyFoodTypes`.`name`, `YummyFoodTypes`.`category` FROM `YummyFoodTypes` INNER JOIN 
         (SELECT * FROM `YummyRestaurantFoodTypes` WHERE `restaurant_id` = :restaurant_id) AS `R` ON `YummyFoodTypes`.`type_id` = `R`.`type_id`");
@@ -15,9 +15,8 @@ class YummyFoodTypeRepository extends Repository
         $stmt->execute(['restaurant_id' => $restaurant_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, FoodType::class);
-        $res = $stmt->fetchAll();
 
-        return $res == false ? null : $res;
+        return $stmt->fetchAll();
     }
 
     public function getAllTypes(): ?array

@@ -2422,6 +2422,16 @@
     margin-bottom: 0;
 }
 
+.cms-image-subsection-container-alone{
+    display: block;
+
+    width: 30%;
+    aspect-ratio: 1 / 1;
+
+    margin-bottom: 0;
+    margin-top: -55px;
+}
+
 .cms-show-image{
     width: 100%;
     height: auto;
@@ -2591,6 +2601,38 @@
 }
 
 /* ========== Restaurant List ========== */
+.cms-list-add-restaurant-button{
+    width: fit-content;
+    height: auto;
+
+    margin-bottom: 12px;
+}
+
+.cms-list-add-restaurant-button a{
+    display: flex;
+
+    padding: 6px 12px;
+
+    background-color: var(--cms-main);
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 17px;
+
+    color: white;
+
+    border: var(--cms-main) 2px solid;
+    border-radius: 12px;
+}
+
+.cms-list-add-restaurant-button a:hover{
+    background-color: var(--cms-main-light);
+
+    border: var(--cms-main-light) 2px solid;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
 .cms-res-list-table-container{
     font-family: Inter;
 
@@ -2760,4 +2802,118 @@
 .cms-res-list-page-button-unsel{
     background: var(--cms-main);
     color: white;
+}
+
+/* ========== Add Restaurant ========== */
+
+.cms-add-button-table-container{
+    display: flex;
+
+    width: auto;
+    height: auto;
+
+    gap: 8px;
+
+    flex-direction: row;
+}
+
+.cms-add-button-add{
+    display: flex;
+
+    padding: 6px 12px;
+
+    background-color: var(--cms-main);
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 17px;
+
+    color: white;
+
+    border: var(--cms-main) 2px solid;
+    border-radius: 12px;
+}
+
+.cms-add-button-add:hover{
+    background-color: var(--cms-main-light);
+
+    border: var(--cms-main-light) 2px solid;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-add-button-add:disabled{
+    background-color: #3b4c3c;
+
+    box-shadow: none;
+
+    border: #4f5e50 2px solid;
+}
+
+.cms-add-button-remove{
+    display: flex;
+
+    padding: 6px 12px;
+
+    background-color: var(--burgundy);
+
+    font-family: Arial;
+    font-weight: 700;
+    font-size: 17px;
+
+    color: white;
+
+    border: var(--burgundy) 2px solid;
+    border-radius: 12px;
+}
+
+.cms-add-button-remove:hover{
+    background-color: var(--burgundy-light);
+    border: var(--burgundy-light) 2px solid;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.cms-add-button-remove:disabled{
+    background-color: #623131;
+
+    box-shadow: none;
+
+    border: #774747 2px solid;
+}
+
+.cms-add-time-slot-table-container{
+    width: min-content;
+
+    font-family: Inter;
+
+    border-style: solid;
+    border-width: 3px;
+    border-color: #d8dbe2;
+
+    border-radius: 18px;
+}
+
+.cms-add-time-slot-table{
+    width: min-content;
+
+    border-collapse: collapse;   
+}
+
+.cms-add-time-slot-table tr{
+    display: flex;
+}
+
+.cms-add-time-slot-table select{
+    margin-right: 4px;
+}   
+
+.cms-add-time-slot-table-top div{
+    margin-top: 2px;
+    margin-left: 6px;
+}
+.cms-add-time-container{
+    display: flex;
+
+    flex-direction: row;
 }
