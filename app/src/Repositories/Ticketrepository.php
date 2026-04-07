@@ -8,8 +8,6 @@ use PDO;
 
 class TicketRepository extends Repository
 {
-    // ── Shared SELECT fragment ────────────────────────────────────────────────
-    // festival_event_ticket_type_id stores Ticket_Type.type_id
     private const SELECT_TICKET = "
         SELECT
             t.festival_event_ticket_id,
@@ -27,8 +25,6 @@ class TicketRepository extends Repository
         JOIN Event        e  ON e.event_id = tt.event_id
         JOIN Venue        v  ON v.venue_id = e.venue_id
     ";
-
-    // ── Finders ───────────────────────────────────────────────────────────────
 
     public function findByTicketCode(string $ticketCode): ?FestivalTicket
     {
@@ -56,8 +52,6 @@ class TicketRepository extends Repository
         $stmt->execute(['ticket_id' => $ticketId]);
         return $this->hydrate($stmt->fetch(PDO::FETCH_ASSOC));
     }
-
-    // ── Create ────────────────────────────────────────────────────────────────
 
     /**
      * @param int    $userId                    User who bought the ticket
@@ -88,8 +82,6 @@ class TicketRepository extends Repository
         return (int) $this->connection->lastInsertId();
     }
 
-    // ── Scan ──────────────────────────────────────────────────────────────────
-
     public function markAsScanned(int $ticketId): void
     {
         $stmt = $this->connection->prepare("
@@ -99,8 +91,6 @@ class TicketRepository extends Repository
         ");
         $stmt->execute(['ticket_id' => $ticketId]);
     }
-
-    // ── Legacy order-based fetch (used by OrderService PDF generation) ────────
 
     public function getTicketsByOrder(int $orderId): array
     {
@@ -116,8 +106,6 @@ class TicketRepository extends Repository
         $stmt->execute([':oid' => $orderId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
-
-    // ── Hydration ─────────────────────────────────────────────────────────────
 
     private function hydrate(array|false $row): ?FestivalTicket
     {
