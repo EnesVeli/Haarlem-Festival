@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Framework\Repository;
 use App\Models\Dish;
+use App\Models\Exceptions\DBAccessException;
 use App\Models\OpeningHours;
 use App\Models\Restaurant;
 use App\Models\RestaurantBooking;
@@ -224,13 +225,58 @@ class YummyRestaurantsRepository extends Repository
         return $res == false ? null : $res;
     }
 
+    public function loadRestaurantTimeSlots(int $restaurant_id, int $date_offset) : ?array {
+        if(!$this->checkReservationSlot($restaurant_id, $date_offset)) throw new DBAccessException();
+
+        return $this->getRestaurantTimeSlots($restaurant_id, $date_offset);
+    }
+
+    public function checkReservationSlot(int $restaurant_id, int $date_offset) : bool {
+        $sql = "SELECT `slot_id`, `restaurant_id`, `time`
+                FROM `YummyRestaurantTimeSlots`
+                WHERE `restaurant_id` = :restaurant_id;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['restaurant_id' => $restaurant_id]);
+
+        $res = $stmt->fetchAll(PDO::FETCH_BOTH); 
+
+        if($res == null) return false;
+
+        foreach($res as $slot){
+            if($this->getReservationSlot($slot['slot_id'], $date_offset) == null){
+                $this->createReservationSlot($slot['slot_id'], $date_offset);
+            }
+        }
+
+        return true;
+    }
+
+    public function getReservationSlot(int $slot_id, int $date_offset) : ?array {
+        $sql = "SELECT `reservation_id`, `slot_id`, `date`, `booked` FROM `YummyReservationSlots` WHERE `slot_id` = :slot_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY LIMIT 1;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute(['slot_id' => $slot_id, 'date_offset' => $date_offset]);
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH); 
+
+        return $res == null ? null : $res;
+    }
+
+    public function createReservationSlot(int $slot_id, int $date_offset) : bool {
+        $sql = "INSERT INTO `YummyReservationSlots`(`slot_id`, `date`, `booked`) VALUES (:slot_id, DATE(NOW()) + INTERVAL +:date_offset DAY, 0);";
+
+        $stmt = $this->connection->prepare($sql);
+        return $stmt->execute(['slot_id' => $slot_id, 'date_offset' => $date_offset]);
+    }
+
     /**
      * @param int $restaurant_id id of searched restaurant.
      * @param int $date_offset offset in day from today.
      * @return ?array returns array of restaurant time slots (joined YummyRestaurantTimeSlots and YummyReservationSlots) in range from today to two weeks from now, returns null, if nothing were found.
      */
     public function getRestaurantTimeSlots(int $restaurant_id, int $date_offset) : ?array {
-        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`
+        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`, `T`.`duration`
                 FROM `YummyRestaurantTimeSlots` AS `T` 
                 INNER JOIN
                     (SELECT * 
@@ -254,7 +300,7 @@ class YummyRestaurantsRepository extends Repository
      * @return ?RestaurantTimeSlot returns a time slot (joined YummyRestaurantTimeSlots and YummyReservationSlots) by slot id and at selected date, returns null, if nothing were found.
      */
     public function getRestaurantTimeSlotById(int $slot_id, int $date_offset) : ?RestaurantTimeSlot {
-        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`
+        $sql = "SELECT `R`.`reservation_id`,`T`.`slot_id`, `T`.`restaurant_id`, `T`.`time` AS `time_`, `R`.`date` AS `date_`, `T`.`capacity`, `R`.`booked`, `T`.`duration`
                 FROM `YummyRestaurantTimeSlots` AS `T` 
                 INNER JOIN
                     (SELECT * 

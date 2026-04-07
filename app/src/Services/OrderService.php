@@ -43,7 +43,7 @@ class OrderService
                 $barcode = hash_hmac('sha256', $orderId . '-' . $typeId . '-' . $i . '-' . $userId, 'festival_secret_key');
                 $this->ticketRepo->createTicket($userId, $typeId, $barcode);
             }
-                */
+            */
         }
 
         // 3 — Mark order as paid

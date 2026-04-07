@@ -6,8 +6,10 @@ use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\DBDataException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\MaxCountExceededException;
+use App\Models\Exceptions\RestaurantAlreadyHasTagException;
 use App\Models\Restaurant;
 use App\Repositories\YummyCmsRepository;
+use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use App\ViewModels\Yummy\Cms\YummyHomeViewModel;
 use App\ViewModels\Yummy\Cms\YummyListViewModel;
@@ -21,10 +23,12 @@ use Uri\InvalidUriException;
 class YummyCmsService {
     private YummyCmsRepository $cms_rep;
     private YummyRestaurantsRepository $restaurant_rep;
+    private YummyFoodTypeRepository $type_rep;
 
     public function __construct(){
         $this->cms_rep = new YummyCmsRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
+        $this->type_rep = new YummyFoodTypeRepository();
     }
 
     public function getHomeViewModel() : YummyHomeViewModel{
@@ -174,6 +178,32 @@ class YummyCmsService {
         if($images == null) throw new DBAccessException();
         $view_model->images = $images;
 
+        $types = $this->type_rep->getRestaurantTypes($res_id);
+        if($types == null) throw new DBAccessException();
+        $view_model->types = $types;
+
+        $all_types = $this->type_rep->getAllTypes();
+        if($all_types == null) throw new DBAccessException();
+        
+        for ($i = 0; $i < count($all_types); $i++){
+            $duplicate = false;
+
+            for ($j = 0; $j < count($types); $j++) { 
+                if($all_types[$i]->type_id == $types[$j]->type_id){
+                    $duplicate = true;
+                    break;
+                }
+            }
+
+            if($duplicate){
+                array_splice($all_types, $i, 1);
+                $i--;
+            }
+        }
+
+        $view_model->all_types = $all_types;
+
+
         // Setup topper
         $view_model->topper = new YummyTopper();
         $view_model->topper->title = "Yummy CMS - Restaurant - " . $res->name;
@@ -205,6 +235,22 @@ class YummyCmsService {
 
     public function removeRestaurantImage(int $image_id) : bool {
         return $this->restaurant_rep->deleteRestaurantImage($image_id);
+    }
+
+    public function addRestaurantType(int $restaurant_id, int $tag_id) : bool {
+        $restaurant_type = $this->type_rep->getRestaurantTypeById($restaurant_id, $tag_id);
+
+        if($restaurant_type != null) throw new RestaurantAlreadyHasTagException();
+
+        $res = $this->type_rep->createRestaurantType($restaurant_id, $tag_id);
+
+        if($res == null) throw new DBAccessException();
+
+        return $res;
+    }
+
+    public function deleteRestaurantTag(int $restaurant_id, int $type_id){
+        return $this->type_rep->deleteRestaurantTypeById($restaurant_id, $type_id);
     }
 
     /**

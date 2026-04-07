@@ -12,6 +12,7 @@ class RestaurantTimeSlot{
     public DateTime $time;
     public int $capacity;
     public int $booked;
+    public int $duration;
 
     function __set($name, $value) {
         if($name == "date_") {

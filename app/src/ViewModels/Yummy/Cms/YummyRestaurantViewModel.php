@@ -10,4 +10,6 @@ class YummyRestaurantViewModel{
     public Restaurant $res;
     public OpeningHours $hours;
     public ?array $images;
+    public ?array $types;
+    public ?array $all_types;
 }

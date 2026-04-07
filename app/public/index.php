@@ -3,6 +3,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
 
+// Show errors for development ONLY!
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 
 use FastRoute\RouteCollector;
@@ -115,7 +120,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/cms/yummy/restaurant',                [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant',               [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant/image',         [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
-    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']); 
+    $r->addRoute('POST', '/cms/yummy/restaurant/tag', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addTag']); 
+    $r->addRoute('POST', '/cms/yummy/restaurant/tag/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteTag']); 
     
     // Tickets — main landing & per-event-type sub-pages
     $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);

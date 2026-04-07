@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Config;
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
@@ -96,19 +97,19 @@ class YummyController
             exit;
         }
         catch(FormDataException $ex){
-            $this->redirectToBook("Something went wrong try again later.");
+            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
             exit;
         } 
         catch(OverBookingException $ex){
-            $this->redirectToBook("You are trying to book more seats than are avaliable.");
+            $this->redirectToBook("You are trying to book more seats than are avaliable." . $ex->getMessage());
             exit;
         } 
         catch(DBAccessException $ex){
-            $this->redirectToBook("Something went wrong try again later.");
+            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
             exit;
         } 
         catch(Exception $ex){
-            $this->redirectToBook("Something went wrong try again later.");
+            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
             exit;
         } 
 
