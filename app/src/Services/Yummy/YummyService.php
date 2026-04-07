@@ -2,11 +2,13 @@
 
 namespace App\Services\Yummy;
 
+use App\Interfaces\ICartService;
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
 use App\Models\Exceptions\UserNotLoggedInException;
 use App\Models\RestaurantBooking;
+use App\Repositories\EventRepository;
 use App\Repositories\RestaurantSortingOption;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyFoodTypeRepository;
@@ -16,9 +18,12 @@ use App\ViewModels\Yummy\YummyBookViewModel;
 use App\ViewModels\Yummy\YummyHomeViewModel;
 use App\ViewModels\Yummy\YummyListViewModel;
 use App\ViewModels\Yummy\YummyRestaurantViewModel;
+use App\Services\CartService;
+use App\Repositories\CartRepository;
 use DateInterval;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 use RoundingMode;
 
 class YummyService
@@ -27,6 +32,8 @@ class YummyService
     private YummyRestaurantsRepository $restaurant_repository;
     private YummyFoodTypeRepository $type_repository;
     private YummyCmsRepository $cms_repository;
+    private EventRepository $event_repository;
+    private ICartService $cart_service;
 
     public function __construct()
     {
@@ -34,6 +41,8 @@ class YummyService
         $this->restaurant_repository = new YummyRestaurantsRepository();
         $this->type_repository = new YummyFoodTypeRepository();
         $this->cms_repository = new YummyCmsRepository();
+        $this->event_repository = new EventRepository();
+        $this->cart_service = new CartService(new CartRepository());
     }
 
     public function getHomeViewModel() : YummyHomeViewModel {
@@ -137,7 +146,10 @@ class YummyService
     public function getRestaurantViewModel(string $id) : YummyRestaurantViewModel {
         $view_model = new YummyRestaurantViewModel();
 
-        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id, false);
+        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id);
+
+        if(!$view_model->restaurant->active) throw new InvalidArgumentException();
+
         $view_model->hours = $this->restaurant_repository->getRestaurantOpeningHours((int)$id);
         $view_model->tags = $this->type_repository->getRestaurantTypes((int)$id);
 
@@ -156,7 +168,7 @@ class YummyService
         $view_model->time_slots = [];
 
         for($i = 0; $i < 14; $i++){
-            array_push($view_model->time_slots, $this->restaurant_repository->getRestaurantTimeSlots($id, $i) ?? []);
+            array_push($view_model->time_slots, $this->restaurant_repository->loadRestaurantTimeSlots($id, $i) ?? []);
         }
 
         $view_model->dates = [];
@@ -176,7 +188,7 @@ class YummyService
         if($_SESSION['user_id'] == null) throw new UserNotLoggedInException();
         $user_id = $_SESSION['user_id'];
 
-        if($date_offset == null || $date_offset > 12 || $date_offset < 0){
+        if($date_offset == null || $date_offset > 13 || $date_offset < 0){
             throw new FormDataException("Invalid date offset.");
         }
 
@@ -198,6 +210,27 @@ class YummyService
 
         if($slot->booked + $adult_count + $child_count > $slot->capacity) throw new OverBookingException();   
         
+        // This part of code is bullshit. All of this to add item to cart. If I had enough time, I would have rewritten payment at its entirety.
+        $restaurant = $this->restaurant_repository->getRestaurantById($slot->restaurant_id);
+        if($restaurant == null) throw new DBAccessException();
+
+        $venue_id = $this->event_repository->createVenue($restaurant->name, $restaurant->address_text);
+        if($venue_id == null) throw new DBAccessException();
+
+        $date_p_time = new DateTime($slot->date->format('Y-m-d') . ' ' . $slot->time->format('H:i:s'));
+        $date_p_time_end = new DateTime($slot->date->format('Y-m-d') . ' ' . $slot->time->format('H:i:s'));
+        $date_p_time_end->add(new DateInterval('PT' . $slot->duration . 'M'));
+
+        $event_id = $this->event_repository->createEvent($venue_id, 4, $restaurant->name . ' booking', bin2hex(openssl_random_pseudo_bytes(32)), 'adults: ' . $adult_count . ' children: ' . $child_count, 
+            $date_p_time, $date_p_time_end, '/assets/uploads/yummy/restaurants/' . $restaurant->main_img_path);
+        if($event_id == null) throw new DBAccessException();
+
+        $type_bs = $this->event_repository->createTicektType($event_id, $restaurant->name . ' booking', ($adult_count + $child_count) * 10, 0, $date_p_time, $date_p_time_end);
+        if($type_bs == null) throw new DBAccessException();
+
+        $this->cart_service->addItemByTicketType($user_id, $event_id, $type_bs, 1, ($adult_count + $child_count) * 10);
+        // End of bs
+
         // Creating new booking and reserving seats at reservation
         $booking = new RestaurantBooking();
 

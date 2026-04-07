@@ -4,10 +4,13 @@ namespace App\Controllers\Cms\Yummy;
 
 use App\Controllers\Cms\BaseCmsController;
 use App\Framework\Session;
+use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\FileToLargeException;
 use App\Models\Exceptions\MaxCountExceededException;
+use App\Models\Exceptions\RestaurantAlreadyHasTagException;
 use App\Services\Yummy\YummyCmsService;
+use DateTime;
 use Exception;
 use Uri\InvalidUriException;
 
@@ -54,6 +57,7 @@ class AdminYummyController extends BaseCmsController {
         $this->requireAdmin();
 
         $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
 
         try{
             $view_model = $this->service->getListViewModel();
@@ -84,6 +88,9 @@ class AdminYummyController extends BaseCmsController {
 
     public function restaurantList(){
         $this->requireAdmin();
+
+        $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
 
         try{
             $view_model = $this->service->getRestaurantListViewModel($_GET['sort'] ?? 0, $_GET['order'] ?? 0, $_GET['page'] ?? 0);
@@ -207,4 +214,102 @@ class AdminYummyController extends BaseCmsController {
             header('location: /cms/yummy/restaurant-list');
         }
     }
+
+    public function addTag(){
+        $this->requireAdmin();
+
+        try{
+            if(!isset($_POST['restaurant_id']) || !isset($_POST['tag_id'])) throw new EmptyFieldException(); 
+
+            if($this->service->addRestaurantType($_POST['restaurant_id'], $_POST['tag_id'])){
+                Session::set('temp_success', "Successfully added tag to restaurant.");
+            } 
+
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+            exit;
+        }
+        catch(RestaurantAlreadyHasTagException $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Restaurant already has selected tag.");
+        }
+        catch(DBAccessException $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Something went wrong try again later.");
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Something went wrong try again later.");
+        }
+
+        if(isset($_POST['restaurant_id'])){
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+        }
+        else{
+            header('location: /cms/yummy/restaurant-list');
+        }
+    }
+
+    public function deleteTag(){
+        $this->requireAdmin();
+
+        try{
+            if(!isset($_POST['restaurant_id']) || !isset($_POST['type_id'])) throw new EmptyFieldException(); 
+
+            if($this->service->deleteRestaurantTag($_POST['restaurant_id'], $_POST['type_id'])){
+                Session::set('temp_success', "Successfully removed tag to restaurant.");
+            } 
+
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+            exit;
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Failed to remove tag from restaurant. Something went wrong try again later.");
+        }
+
+        if(isset($_POST['restaurant_id'])){
+            header('location: /cms/yummy/restaurant?id=' . $_POST['restaurant_id']);
+        }
+        else{
+            header('location: /cms/yummy/restaurant-list');
+        }
+    }
+
+    public function restaurantAdd(){
+        $this->requireAdmin();
+
+        $error_message = Session::pop("temp_error");
+        $success_message = Session::pop("temp_success");
+
+        try{
+            $view_model = $this->service->getAddRestaurantViewModel();
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Something went wrong try again later.");
+        }
+
+        require __DIR__ . '/../../../Views/cms/yummy/restaurant-add.php';
+    }
+
+    public function addRestaurant(){
+        $this->requireAdmin();
+
+        //print_r($_POST); exit;
+
+        try{
+            $this->service->addRestaurant($_POST, $_FILES);
+
+            Session::set('temp_success', "Successfully added new restaurant.");      
+
+            header('location: /cms/yummy/restaurant-list');
+            exit;
+        }
+        catch(RestaurantAlreadyHasTagException $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Restaurant already has selected tag." . $ex->getMessage());
+        }
+        catch(DBAccessException $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Something went wrong try again later." . $ex->getMessage());
+        }
+        catch(Exception $ex){
+            Session::set('temp_error', "Faild to add tag to restaurant. Something went wrong try again later." . $ex->getMessage());
+        }
+
+        header('location: /cms/yummy/restaurant/add');     
+    } 
 }

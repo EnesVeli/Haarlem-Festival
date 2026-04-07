@@ -5,15 +5,21 @@ namespace App\Services\Yummy;
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\DBDataException;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\FileToLargeException;
 use App\Models\Exceptions\MaxCountExceededException;
+use App\Models\Exceptions\RestaurantAlreadyHasTagException;
 use App\Models\Restaurant;
 use App\Repositories\YummyCmsRepository;
+use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use App\ViewModels\Yummy\Cms\YummyAddViewModel;
 use App\ViewModels\Yummy\Cms\YummyHomeViewModel;
 use App\ViewModels\Yummy\Cms\YummyListViewModel;
 use App\ViewModels\Yummy\Cms\YummyRestaurantListViewModel;
 use App\ViewModels\Yummy\Cms\YummyRestaurantViewModel;
 use App\ViewModels\Yummy\Cms\YummyTopper;
+use DateTime;
+use InvalidArgumentException;
 use PDO;
 use RoundingMode;
 use Uri\InvalidUriException;
@@ -21,10 +27,12 @@ use Uri\InvalidUriException;
 class YummyCmsService {
     private YummyCmsRepository $cms_rep;
     private YummyRestaurantsRepository $restaurant_rep;
+    private YummyFoodTypeRepository $type_rep;
 
     public function __construct(){
         $this->cms_rep = new YummyCmsRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
+        $this->type_rep = new YummyFoodTypeRepository();
     }
 
     public function getHomeViewModel() : YummyHomeViewModel{
@@ -170,9 +178,32 @@ class YummyCmsService {
         if($hours == null) throw new DBAccessException();
         $view_model->hours = $hours;
 
-        $images = $this->restaurant_rep->getRestaurantImages($res_id);
-        if($images == null) throw new DBAccessException();
-        $view_model->images = $images;
+        $view_model->images = $this->restaurant_rep->getRestaurantImages($res_id);
+
+        $view_model->types = $this->type_rep->getRestaurantTypes($res_id);
+
+        $all_types = $this->type_rep->getAllTypes();
+        if($all_types == null) throw new DBAccessException();
+        
+        for ($i = 0; $i < count($all_types); $i++){
+            $duplicate = false;
+
+            for ($j = 0; $j < count($view_model->types); $j++) { 
+                if($all_types[$i]->type_id == $view_model->types[$j]->type_id){
+                    $duplicate = true;
+                    break;
+                }
+            }
+
+            if($duplicate){
+                array_splice($all_types, $i, 1);
+                
+                $i--;
+            }
+        }
+
+        $view_model->all_types = $all_types;
+
 
         // Setup topper
         $view_model->topper = new YummyTopper();
@@ -205,6 +236,22 @@ class YummyCmsService {
 
     public function removeRestaurantImage(int $image_id) : bool {
         return $this->restaurant_rep->deleteRestaurantImage($image_id);
+    }
+
+    public function addRestaurantType(int $restaurant_id, int $tag_id) : bool {
+        $restaurant_type = $this->type_rep->getRestaurantTypeById($restaurant_id, $tag_id);
+
+        if($restaurant_type != null) throw new RestaurantAlreadyHasTagException();
+
+        $res = $this->type_rep->createRestaurantType($restaurant_id, $tag_id);
+
+        if($res == null) throw new DBAccessException();
+
+        return $res;
+    }
+
+    public function deleteRestaurantTag(int $restaurant_id, int $type_id){
+        return $this->type_rep->deleteRestaurantTypeById($restaurant_id, $type_id);
     }
 
     /**
@@ -318,6 +365,75 @@ class YummyCmsService {
         array_push($values, $new_value);
         array_push($fields, $field_query);
         array_push($types, $type);
+    }
+
+    public function getAddRestaurantViewModel() : YummyAddViewModel {
+        $view_model = new YummyAddViewModel();
+
+        $view_model->topper = new YummyTopper();
+        $view_model->topper->title = 'Yummy CMS - New Restaurant';
+        $view_model->topper->subtitle = "Create a new yummy restaurant.";
+        $view_model->topper->button_text = "View list";
+        $view_model->topper->button_link = '/cms/yummy/restaurant-list';
+        $view_model->topper->active_tab = 3;
+
+        return $view_model;
+    }
+
+    public function addRestaurant($post, $files){
+        // Verify post and files data
+        if(!isset($files['main_img_path']['name'])) throw new EmptyFieldException();
+
+        if(!isset($files['main_img_path']['tmp_name'])) throw new FileToLargeException();
+
+        if(!$this->requirePost(['name', 'rating', 'cost_rating', 'mini_text', 'text', 'address_text', 'address_uri', 'website_link',
+                'opening_hours_monday', 'opening_hours_tuesday', 'opening_hours_wednesday', 'opening_hours_thursday', 'opening_hours_friday', 'opening_hours_saturday',
+                'opening_hours_sunday', 'slot_number'], $post)) throw new EmptyFieldException(); 
+
+        $slots_number = $post['slot_number'];
+        if($slots_number < 1 || $slots_number > 10) throw new InvalidArgumentException();
+
+        for ($i = 0; $i < $slots_number; $i++) { 
+            if(!isset($post['slot_time_hour_' . $i]) || !isset($post['slot_time_min_' . $i]) || !isset($post['slot_duration_' . $i]) || !isset($post['slot_capacity_' . $i])) throw new EmptyFieldException(); 
+        }
+
+        $rating = $post['rating'];
+        if($rating < 0 || $rating > 5) throw new InvalidArgumentException();
+
+        // Create image
+        $img_path = $this->addImageToDir('yummy/restaurants/', $files['main_img_path']['name'], $files['main_img_path']['tmp_name']); 
+
+        if($img_path == null) throw new DBDataException(); 
+
+        // Create restaurant 
+        $restaurant_id = $this->restaurant_rep->createRestaurant($img_path, $post['name'], $post['mini_text'], $rating, $post['cost_rating'], 0, $post['text'],
+            $post['address_text'],$post['address_uri'],$post['website_link']);
+
+        if($restaurant_id == null) throw new DBAccessException();
+
+        // Create opening hours
+        $opening_hours = $this->restaurant_rep->createOpeninghours($restaurant_id, $post['opening_hours_monday'], $post['opening_hours_tuesday'],
+            $post['opening_hours_wednesday'], $post['opening_hours_thursday'], $post['opening_hours_friday'], $post['opening_hours_saturday'], $post['opening_hours_sunday']);
+
+        if($opening_hours == null) throw new DBAccessException();
+
+        // Create time slots
+        for ($i = 0; $i < $slots_number; $i++) { 
+            $time = new DateTime();
+            $time->setTime((int)$post['slot_time_hour_' . $i], (int)$post['slot_time_min_' . $i], 0, 0);
+
+            $slot = $this->restaurant_rep->createTimeSlot($restaurant_id, $time, (int)$post['slot_capacity_' . $i], (int)$post['slot_duration_' . $i]);
+
+            if($slot == null) throw new DBAccessException();
+        }
+    }
+
+    private function requirePost(array $fields, $post): bool {
+        foreach($fields as $f){
+            if(!isset($post[$f])) return false;
+        }
+
+        return true;
     }
 
     /**

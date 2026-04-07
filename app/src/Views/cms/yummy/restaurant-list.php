@@ -17,6 +17,12 @@
                 </div>
             <?php endif; ?>
 
+            <?php if(!empty($success_message)): ?>
+                <div class="alert alert-success" role="alert">
+                    <?= htmlspecialchars($success_message) ?>
+                </div>
+            <?php endif; ?>
+
             <? if(isset($view_model)): ?>     
                 <div class="cms-res-list-table-container">
                     <table class="cms-res-list-table">

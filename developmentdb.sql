@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 06, 2026 at 04:39 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Apr 07, 2026 at 04:47 AM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -54,7 +54,9 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 (24, 11, 'history', 138, 'single', 1, 0.00, '2026-04-01 14:54:29'),
 (25, 11, 'history', 138, 'single', 1, 17.50, '2026-04-01 15:26:12'),
 (34, 12, 'stories', 3, 'single', 1, 10.00, '2026-04-04 18:07:40'),
-(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52');
+(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52'),
+(47, 2, 'yummy', 188, 'single', 1, 140.00, '2026-04-07 04:32:10'),
+(48, 2, 'yummy', 189, 'single', 1, 50.00, '2026-04-07 04:35:01');
 
 -- --------------------------------------------------------
 
@@ -267,7 +269,15 @@ INSERT INTO `Event` (`event_id`, `venue_id`, `type`, `name`, `slug`, `descriptio
 (174, 18, 4, 'Restaurant Fris Festival Menu', 'yummy-restaurant-fris-festival-menu-20260726-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00', 45, NULL, NULL, NULL, NULL, NULL, NULL),
 (175, 19, 4, 'New Vegas Festival Menu', 'yummy-new-vegas-festival-menu-20260726-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00', 36, NULL, NULL, NULL, NULL, NULL, NULL),
 (176, 20, 4, 'Grand Cafe Brinkmann Festival Menu', 'yummy-grand-cafe-brinkmann-festival-menu-20260726-1630', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00', 100, NULL, NULL, NULL, NULL, NULL, NULL),
-(177, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260726-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL);
+(177, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260726-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL),
+(181, 24, 4, 'Ratatouille booking', '', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-11 21:00:00', '2026-04-11 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(183, 26, 4, 'Ratatouille booking', '0d03e1c3e770f01c6e4ab705bf3e06ba5213da5fb503795342582db06a66d0f0', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-15 21:00:00', '2026-04-15 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(184, 27, 4, 'Ratatouille booking', '614f4b53769ec2c138228d08eb8d03d710dd1048ed8d9b3b9fbfee24626c5e79', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-06 21:00:00', '2026-04-06 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(185, 28, 4, 'Ratatouille booking', 'e6d897077cc396ab91620df2dbf425f7dea5f60a19e4c913ce3cd6370e61b7fd', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-11 17:00:00', '2026-04-11 19:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(186, 29, 4, 'Ratatouille booking', 'a6592ced8663fa07ad0f46e70354b000bf8383f7507ec8b47a410315a6d68066', 'adults: 2 children: 3', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-07 17:00:00', '2026-04-07 19:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(187, 30, 4, 'Ratatouille booking', '2af3bbe9518ddc48b2091d20f961de657969d681e0f95923fd123d2cf9cbf7d6', 'adults: 4 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-06 19:00:00', '2026-04-06 21:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
+(188, 31, 4, 'Name booking', 'd31636bf44dec28eb09199b462db8d751e98d18b33eab37431622ccd030e6f5d', 'adults: 6 children: 8', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-19 16:30:00', '2026-04-19 18:00:00', 20, '/assets/uploads/yummy/restaurants/7f64939f72d9d68a9673f35544833a1e.png', NULL, NULL, NULL, NULL, NULL),
+(189, 32, 4, 'Ratatouille booking', '3cb83ac6644ff2cf9a9647c4bb4289cabd70a68ade8107dd921a5f39e6616d4b', 'adults: 2 children: 3', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-20 21:00:00', '2026-04-20 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -654,11 +664,8 @@ INSERT INTO `Invoice` (`invoice_id`, `order_id`, `invoice_number`, `invoice_date
 (1, 2, 'INV-2026-000002', '2026-04-04 13:07:44', 15.00, 9.00, 'Enes Veli Yigit', 'ENESVELIYIGIT@GMAIL.COM'),
 (2, 3, 'INV-2026-000003', '2026-04-04 14:43:24', 92.00, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
 (3, 4, 'INV-2026-000004', '2026-04-05 13:05:43', 80.38, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
-(4, 9, 'INV-2026-000009', '2026-04-06 15:48:27', 75.00, 9.00, 'achraf derouich', 'achraf@admin.com'),
-(5, 10, 'INV-2026-000010', '2026-04-06 15:50:39', 75.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
-(6, 11, 'INV-2026-000011', '2026-04-06 15:52:11', 30.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
-(7, 12, 'INV-2026-000012', '2026-04-06 16:06:50', 65.00, 9.00, 'Said', 'saidraghoua@gmail.com'),
-(8, 14, 'INV-2026-000014', '2026-04-06 16:35:57', 67.50, 9.00, 'Said', 'saidraghoua@gmail.com');
+(4, 10, 'INV-2026-000010', '2026-04-06 23:57:52', 50.00, 9.00, 'achraf derouich', 'achraf@admin.com'),
+(5, 11, 'INV-2026-000011', '2026-04-06 23:59:26', 60.00, 9.00, 'Timofii Sadko', 'tim.sadko@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -940,12 +947,9 @@ INSERT INTO `Order` (`order_id`, `user_id`, `order_date`, `status`, `payment_met
 (6, 2, '2026-04-06 11:51:49', 'pending', 'credit_card'),
 (7, 2, '2026-04-06 11:56:24', 'pending', 'credit_card'),
 (8, 2, '2026-04-06 11:57:51', 'pending', 'credit_card'),
-(9, 2, '2026-04-06 15:48:27', 'paid', 'credit_card'),
-(10, 15, '2026-04-06 15:50:39', 'paid', 'credit_card'),
-(11, 15, '2026-04-06 15:52:11', 'paid', 'credit_card'),
-(12, 15, '2026-04-06 16:06:50', 'paid', 'credit_card'),
-(13, 15, '2026-04-06 16:32:46', 'pending', 'credit_card'),
-(14, 15, '2026-04-06 16:35:57', 'paid', 'credit_card');
+(9, 2, '2026-04-06 23:43:02', 'pending', 'credit_card'),
+(10, 2, '2026-04-06 23:57:52', 'paid', 'credit_card'),
+(11, 5, '2026-04-06 23:59:26', 'paid', 'credit_card');
 
 -- --------------------------------------------------------
 
@@ -979,20 +983,8 @@ INSERT INTO `OrderItem` (`item_id`, `type_id`, `order_id`, `quantity`, `unit_pri
 (11, 101, 6, 1, 15.00),
 (12, 101, 7, 1, 15.00),
 (13, 101, 8, 1, 15.00),
-(14, 107, 9, 2, 15.00),
-(15, 151, 9, 1, 45.00),
-(16, 152, 10, 1, 45.00),
-(17, 129, 10, 1, 0.00),
-(18, 104, 10, 3, 10.00),
-(19, 129, 11, 3, 0.00),
-(20, 104, 11, 3, 10.00),
-(21, 125, 12, 3, 0.00),
-(22, 138, 12, 2, 17.50),
-(23, 101, 12, 2, 15.00),
-(24, 139, 13, 1, 17.50),
-(25, 139, 14, 1, 17.50),
-(26, 104, 14, 2, 10.00),
-(27, 101, 14, 2, 15.00);
+(15, 178, 10, 1, 50.00),
+(16, 179, 11, 1, 60.00);
 
 -- --------------------------------------------------------
 
@@ -1163,7 +1155,11 @@ INSERT INTO `Ticket_Type` (`type_id`, `event_id`, `name`, `price`, `is_pay_as_yo
 (174, 174, 'Regular Ticket', 45.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00'),
 (175, 175, 'Regular Ticket', 35.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00'),
 (176, 176, 'Regular Ticket', 35.00, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00'),
-(177, 177, 'Regular Ticket', 35.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00');
+(177, 177, 'Regular Ticket', 35.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00'),
+(178, 186, 'Ratatouille booking', 50.00, 0, '2026-04-07 17:00:00', '2026-04-07 19:00:00'),
+(179, 187, 'Ratatouille booking', 60.00, 0, '2026-04-06 19:00:00', '2026-04-06 21:00:00'),
+(180, 188, 'Name booking', 140.00, 0, '2026-04-19 16:30:00', '2026-04-19 18:00:00'),
+(181, 189, 'Ratatouille booking', 50.00, 0, '2026-04-20 21:00:00', '2026-04-20 23:00:00');
 
 -- --------------------------------------------------------
 
@@ -1238,7 +1234,16 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 (18, 'Restaurant Fris', 'Twijnderslaan 7, 2012 BG Haarlem'),
 (19, 'New Vegas', 'Koningstraat 5, 2011 TB Haarlem'),
 (20, 'Grand Cafe Brinkmann', 'Grote Markt 13, 2011 RC Haarlem'),
-(21, 'Urban Frenchy Bistro Toujours', 'Oude Groenmarkt 10-12, 2011 HL Haarlem');
+(21, 'Urban Frenchy Bistro Toujours', 'Oude Groenmarkt 10-12, 2011 HL Haarlem'),
+(24, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(25, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(26, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(27, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(28, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(29, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(30, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem'),
+(31, 'Name', 'Spaarne 96, 2011 CL Haarlem'),
+(32, 'Ratatouille', 'Spaarne 96, 2011 CL Haarlem');
 
 -- --------------------------------------------------------
 
@@ -1255,14 +1260,6 @@ CREATE TABLE `YummyBookings` (
   `child_number` tinyint(3) UNSIGNED NOT NULL,
   `comment` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `YummyBookings`
---
-
-INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
-(1, 10, 5, '2026-03-21', 5, 4, 'My comment.'),
-(2, 10, 5, '2026-03-21', 5, 5, 'Some IMPORTANT comment.');
 
 -- --------------------------------------------------------
 
@@ -1393,7 +1390,14 @@ CREATE TABLE `YummyOpeningHours` (
 --
 
 INSERT INTO `YummyOpeningHours` (`id`, `restaurant_id`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`) VALUES
-(1, 1, 'Closed', 'Closed', '18:00-21:30', '18:00-21:30', '18:30-21:30', '18:30-21:30', '18:30-21:30');
+(1, 1, 'Closed', 'Closed', '18:00-21:30', '18:00-21:30', '18:30-21:30', '18:30-21:30', '18:30-21:30'),
+(7, 2, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(8, 4, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(9, 5, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(10, 6, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(11, 7, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(12, 8, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00'),
+(13, 9, '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00', '17:30-23:00');
 
 -- --------------------------------------------------------
 
@@ -1407,36 +1411,6 @@ CREATE TABLE `YummyReservationSlots` (
   `date` date NOT NULL,
   `booked` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `YummyReservationSlots`
---
-
-INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booked`) VALUES
-(1, 1, '2026-03-19', 0),
-(2, 2, '2026-03-19', 0),
-(3, 3, '2026-03-19', 0),
-(7, 1, '2026-03-20', 1),
-(8, 2, '2026-03-20', 0),
-(9, 3, '2026-03-20', 0),
-(10, 1, '2026-03-21', 19),
-(11, 2, '2026-03-21', 0),
-(12, 3, '2026-03-21', 0),
-(13, 1, '2026-03-22', 0),
-(14, 2, '2026-03-22', 0),
-(15, 3, '2026-03-22', 0),
-(16, 1, '2026-03-23', 0),
-(17, 2, '2026-03-23', 0),
-(18, 3, '2026-03-23', 0),
-(19, 1, '2026-03-24', 0),
-(20, 2, '2026-03-24', 0),
-(21, 3, '2026-03-24', 0),
-(22, 1, '2026-03-25', 0),
-(23, 2, '2026-03-25', 0),
-(24, 3, '2026-03-25', 0),
-(25, 1, '2026-03-26', 0),
-(26, 2, '2026-03-26', 0),
-(27, 3, '2026-03-26', 0);
 
 -- --------------------------------------------------------
 
@@ -1553,13 +1527,13 @@ CREATE TABLE `YummyRestaurants` (
 
 INSERT INTO `YummyRestaurants` (`restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link`) VALUES
 (1, 'b3d3e9891fc40495c3eadd6cace50138.png', 'Ratatouille', 'Elegant fine-dining restaurant with a refined French cuisine in a historic riverside building. Perfect for special occasions and memorable dinner experiences. ', 4.6, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', 'Spaarne 96, 2011 CL Haarlem', 'Ratatouille+Food+%26+Wine', 'http://www.ratatouillefoodandwine.nl/'),
-(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', '', '', '', NULL),
-(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', '', '', '', NULL),
-(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', '', '', '', NULL),
-(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', '', '', '', NULL),
-(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', '', '', '', NULL),
-(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', '', '', '', NULL),
-(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', '', '', '', NULL);
+(2, 'trft.png', 'Restaurant Fris', 'Contemporary restaurant known for modern, creative dishes in a welcoming setting, combining innovative flavors with relaxed dining.', 4, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(4, '4ecb8fc1f9639bc4fd8c85c461a90507d25987c6.png', 'New Vegas', 'A lively restaurant and bar offering a relaxed atmosphere, comfort food, and drinks — great for casual meetups, meals with friends, or an easy night out. ', 3.4, b'0010', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(5, '84ebc9c296006b843e884811ba26ba5c0f48e87a.png', 'Grand Cafe Brinkman', 'Classic Haarlem café-restaurant perfect for lunch, dinner, drinks, or people-watching in the city centre with a warm, inviting vibe. ', 3.8, b'0010', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(6, 'c1f770e71ad26341a02236bdbfaa8764d78382e7.png', 'Koper', 'Elegant dining with refined dishes rooted in classic European cuisine, ideal for a memorable dinner night out or special occasion in beautifully styled surroundings. ', 5, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(7, 'a96586c89bdcf8bd35ca11c1fa519a7f35b3451b.png', 'Café de Roemer', 'Cozy cafe serving light bites, drinks and casual fare in a historic Haarlem spot ideal for coffee breaks or relaxed socializing. ', 4.1, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(8, 'eccbb8f0cb382e19ddd12930d34f2c1bb32a6fd0.png', 'Restaurant ML', 'A charming café/restaurant blending relaxed dining with a casual menu and friendly service great for informal meals or coffee.', 4.5, b'0011', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL),
+(9, '84703904c0b0b04ff368246f347530bbcb94c1bf.png', 'Urban Frenchy Bistro Toujours', 'A lively Mediterranean-inspired spot on Haarlem’s Grote Markt, perfect for sharing flavourful cocktails, and relaxed meals with friends or family.', 3.2, b'0001', b'1', 'Ratatouille is one of Haarlem’s standouts fine dining destinations, blending modern French cuisine with creative contemporary flair. Set in a beautifully restored historic building along the Spaarne river, this Michelin-starred restaurant offers an elegant yet welcoming atmosphere perfect for special occasions, intimate dinners, or memorable culinary experiences. \r\n\r\nUnder the guidance of chef Jozua Jaring, the menu showcases meticulously crafted dishes that balance bold flavors, refined techniques, and seasonal ingredients. Guests can enjoy a range of tasting menus from four to six courses that highlight inventive interpretations of classic French foundations, luxurious seafood, and artfully prepared vegetarian options. \r\n\r\nAttention to detail extends beyond the plate; the restaurant’s wine program is curated to enhance every course, with expert pairings designed to elevate the full dining journey. Whether you’re seated inside amid stylish interiors or on the charming waterside terrace during warmer months, Ratatouille delivers an exceptional gourmet experience that celebrates both tradition and innovation in every bite. \r\n', '', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -1571,17 +1545,18 @@ CREATE TABLE `YummyRestaurantTimeSlots` (
   `slot_id` int(16) NOT NULL,
   `restaurant_id` int(16) NOT NULL,
   `time` time NOT NULL,
-  `capacity` smallint(6) NOT NULL
+  `capacity` smallint(6) NOT NULL,
+  `duration` int(16) NOT NULL DEFAULT 120
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `YummyRestaurantTimeSlots`
 --
 
-INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`) VALUES
-(1, 1, '17:00:00', 30),
-(2, 1, '19:00:00', 30),
-(3, 1, '21:00:00', 30);
+INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`, `duration`) VALUES
+(1, 1, '17:00:00', 30, 120),
+(2, 1, '19:00:00', 30, 120),
+(3, 1, '21:00:00', 30, 120);
 
 --
 -- Indexes for dumped tables
@@ -1925,7 +1900,7 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 -- AUTO_INCREMENT for table `CartItem`
 --
 ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `cms_content`
@@ -1943,7 +1918,7 @@ ALTER TABLE `CMS_Content`
 -- AUTO_INCREMENT for table `Event`
 --
 ALTER TABLE `Event`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT for table `festival_events`
@@ -2027,7 +2002,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `Invoice`
 --
 ALTER TABLE `Invoice`
-  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -2093,13 +2068,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `Order`
 --
 ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `OrderItem`
 --
 ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -2117,7 +2092,7 @@ ALTER TABLE `Ticket`
 -- AUTO_INCREMENT for table `Ticket_Type`
 --
 ALTER TABLE `Ticket_Type`
-  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=178;
+  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
 
 --
 -- AUTO_INCREMENT for table `User`
@@ -2129,7 +2104,13 @@ ALTER TABLE `User`
 -- AUTO_INCREMENT for table `Venue`
 --
 ALTER TABLE `Venue`
-  MODIFY `venue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `venue_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `YummyBookings`
+--
+ALTER TABLE `YummyBookings`
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -2147,19 +2128,19 @@ ALTER TABLE `YummyGuides`
 -- AUTO_INCREMENT for table `YummyOpeningHours`
 --
 ALTER TABLE `YummyOpeningHours`
-  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
 --
 ALTER TABLE `YummyRestaurantFoodTypes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantImages`
@@ -2171,13 +2152,13 @@ ALTER TABLE `YummyRestaurantImages`
 -- AUTO_INCREMENT for table `YummyRestaurants`
 --
 ALTER TABLE `YummyRestaurants`
-  MODIFY `restaurant_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `restaurant_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantTimeSlots`
 --
 ALTER TABLE `YummyRestaurantTimeSlots`
-  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables

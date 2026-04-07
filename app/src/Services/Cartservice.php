@@ -45,15 +45,11 @@ class CartService implements ICartService
         $isPayAsYouLike = (bool)$ticketType['is_pay_as_you_like'];
         $unitPrice = (float)$ticketType['price'];
 
-        if ($isPayAsYouLike) {
-            if ($customPrice !== null) {
-                if ($customPrice < 0) {
-                    throw new Exception('Price cannot be negative.');
-                }
-                $unitPrice = $customPrice;
+        if ($customPrice !== null) {
+            if ($customPrice < 0) {
+                throw new Exception('Price cannot be negative.');
             }
-        } elseif ($customPrice !== null) {
-            throw new Exception('Custom price is only allowed for pay-as-you-like tickets.');
+            $unitPrice = $customPrice;
         }
 
         if ($unitPrice < 0) {

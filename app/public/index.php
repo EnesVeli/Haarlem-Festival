@@ -2,9 +2,12 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
+
+// Show errors for development ONLY!
 // ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
+
 session_start();
 
 use FastRoute\RouteCollector;
@@ -56,14 +59,18 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     
     // CMS - MAIN Dashboard
     $r->addRoute('GET', '/cms', [\App\Controllers\Cms\CmsDashboardController::class, 'index']);
+
     // Jazz CMS
     $r->addRoute('GET',  '/cms/jazz/home', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'index']);
+
     // jazz CMS - Hero
     $r->addRoute('GET',  '/cms/jazz/hero', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'hero']);
     $r->addRoute('POST', '/cms/jazz/hero/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateHero']);
+
     //jazz CMS - Intro
     $r->addRoute('GET',  '/cms/jazz/intro', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'intro']);
     $r->addRoute('POST', '/cms/jazz/intro/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateIntro']);
+
     //  jazz CMS -Experiences
     $r->addRoute('GET',  '/cms/jazz/experiences', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'experiences']);
     $r->addRoute('GET',  '/cms/jazz/experiences/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createExperience']);
@@ -71,6 +78,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/experiences/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeExperience']);
     $r->addRoute('POST', '/cms/jazz/experiences/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateExperience']);
     $r->addRoute('GET',  '/cms/jazz/experiences/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteExperience']);
+
     // jazz CMS - Performers
     $r->addRoute('GET',  '/cms/jazz/performers', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'performers']);
     $r->addRoute('GET',  '/cms/jazz/performers/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createPerformer']);
@@ -78,6 +86,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/performers/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storePerformer']);
     $r->addRoute('POST', '/cms/jazz/performers/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updatePerformer']);
     $r->addRoute('GET',  '/cms/jazz/performers/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deletePerformer']);
+
     // jazz CMS - Recommendations
     $r->addRoute('GET',  '/cms/jazz/recommendations', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'recommendations']);
     $r->addRoute('GET',  '/cms/jazz/recommendations/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createRecommendation']);
@@ -85,6 +94,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/recommendations/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeRecommendation']);
     $r->addRoute('POST', '/cms/jazz/recommendations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateRecommendation']);
     $r->addRoute('GET',  '/cms/jazz/recommendations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteRecommendation']);
+
     // jazz CMS - Locations
     $r->addRoute('GET',  '/cms/jazz/locations', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'locations']);
     $r->addRoute('GET',  '/cms/jazz/locations/create', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'createLocation']);
@@ -92,6 +102,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/jazz/locations/store', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeLocation']);
     $r->addRoute('POST', '/cms/jazz/locations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateLocation']);
     $r->addRoute('GET',  '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
+
     // History
     $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
     $r->addRoute('GET', '/history/booking',  [\App\Controllers\HistoryController::class, 'booking']);
@@ -101,6 +112,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/history',             [\App\Controllers\Cms\History\HistoryCmsController::class, 'index']);
     $r->addRoute('GET',  '/cms/history/detail/{id}', [\App\Controllers\Cms\History\HistoryCmsController::class, 'detail']);
     $r->addRoute('POST', '/cms/history/action',      [\App\Controllers\Cms\History\HistoryCmsController::class, 'action']);
+
     // Yummy
     $r->addRoute('GET', '/yummy',      [\App\Controllers\YummyController::class, 'index']);
     $r->addRoute('GET', '/yummy/list', [\App\Controllers\YummyController::class, 'list']);
@@ -109,7 +121,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/yummy/book', [\App\Controllers\YummyController::class, 'book']);
   
     // Yummy - CMS
-    $r->addRoute('GET', '/cms/yummy',                          [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
+    $r->addRoute('GET', '/cms/yummy',                           [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'index']);
     $r->addRoute('POST', '/cms/yummy/home',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editHome']);
     $r->addRoute('GET', '/cms/yummy/list',                      [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'list']);
     $r->addRoute('POST', '/cms/yummy/list',                     [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editList']);
@@ -117,7 +129,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/cms/yummy/restaurant',                [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant',               [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'editRestaurant']);
     $r->addRoute('POST', '/cms/yummy/restaurant/image',         [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addImage']);
-    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/images/delete', [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteImage']); 
+    $r->addRoute('POST', '/cms/yummy/restaurant/tag',           [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addTag']); 
+    $r->addRoute('POST', '/cms/yummy/restaurant/tag/delete',    [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'deleteTag']); 
+    $r->addRoute('GET', '/cms/yummy/restaurant/add',            [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'restaurantAdd']);
+    $r->addRoute('POST', '/cms/yummy/restaurant/add',           [\App\Controllers\Cms\Yummy\AdminYummyController::class, 'addRestaurant']);
     
     // Tickets — main landing & per-event-type sub-pages
     $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);
