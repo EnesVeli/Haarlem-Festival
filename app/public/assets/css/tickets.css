@@ -241,6 +241,66 @@
 
 .tickets-event__form {
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Quantity stepper */
+.tickets-qty-stepper {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid #d8d1c7;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.tickets-qty-btn {
+    width: 34px;
+    height: 36px;
+    background: #f5f3ef;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1b3a5c;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.tickets-qty-btn:hover:not(:disabled) {
+    background: #e8e4de;
+}
+
+.tickets-qty-btn:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.tickets-qty-input {
+    width: 44px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-left: 1.5px solid #d8d1c7;
+    border-right: 1.5px solid #d8d1c7;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+    background: #fff;
+    -moz-appearance: textfield;
+}
+
+.tickets-qty-input::-webkit-outer-spin-button,
+.tickets-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 /* Responsive*/

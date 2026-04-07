@@ -354,7 +354,12 @@ INSERT INTO `festival_event_tickets` (`festival_event_ticket_id`, `user_id`, `fe
 (10, 1, 1, 'a1b2c3d4e5f60718293a4b5c6d7e8f90', 1, '2026-04-05 20:46:24', '2026-04-05 20:44:41', 'HF-NEW1'),
 (11, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4e', 1, '2026-04-05 21:24:22', '2026-04-05 21:22:36', 'HF-NEW2'),
 (12, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3e5t', 1, '2026-04-05 21:25:45', '2026-04-05 21:25:15', 'HF-NEW3'),
-(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6');
+(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6'),
+(36, 15, 139, '0c5008a761f8499ba7f5dbcfa2ed423adf310327e1a8964e', 1, '2026-04-06 16:36:21', '2026-04-06 16:35:57', 'HF-D172DA'),
+(37, 15, 104, '848489e60dcf2f389330f11d822bac093b8145fcc8b1ad00', 0, NULL, '2026-04-06 16:35:57', 'HF-EB9AC6'),
+(38, 15, 104, 'a9aa17d563d1ad0b4011d2daf547a7e804a4e60df1887970', 0, NULL, '2026-04-06 16:35:57', 'HF-71F4D6'),
+(39, 15, 101, 'a0f7276493002e4a8144e8e1595fca589b9c87195ae19706', 0, NULL, '2026-04-06 16:35:57', 'HF-8A5E23'),
+(40, 15, 101, '1ab3cc5bdbc336dc7bd6a6e6d792fcd527068e4f946b790c', 0, NULL, '2026-04-06 16:35:57', 'HF-815AB8');
 
 -- --------------------------------------------------------
 
@@ -1188,7 +1193,9 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
-(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
+(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09'),
+(14, 'employee@employee.com', '$2y$12$0dv.PkporKCvCDhcNPZnDu64yyr8Ar34Gbixnhsq8zq3yWFtWQFKu', 'Employee', 'employee', NULL, '2026-04-06 13:17:11'),
+(15, 'saidraghoua@gmail.com', '$2y$12$FcpFaTHQ5P9XKHdjW1UU..X3o.HPI6S7NbBWOdiflwlDPWHcxBCjW', 'Said', 'customer', NULL, '2026-04-06 15:49:47');
 
 -- --------------------------------------------------------
 
@@ -1923,7 +1930,7 @@ ALTER TABLE `festival_events`
 -- AUTO_INCREMENT for table `festival_event_tickets`
 --
 ALTER TABLE `festival_event_tickets`
-  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `festival_event_ticket_types`
@@ -2091,7 +2098,7 @@ ALTER TABLE `Ticket_Type`
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `Venue`
@@ -2173,8 +2180,7 @@ ALTER TABLE `Event`
 -- Constraints for table `festival_event_tickets`
 --
 ALTER TABLE `festival_event_tickets`
-  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `festival_event_tickets_ibfk_2` FOREIGN KEY (`festival_event_ticket_type_id`) REFERENCES `festival_event_ticket_types` (`festival_event_ticket_type_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `festival_event_ticket_types`
@@ -2281,31 +2287,6 @@ ALTER TABLE `YummyBookings`
 --
 ALTER TABLE `YummyDishes`
   ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyOpeningHours`
---
-ALTER TABLE `YummyOpeningHours`
-  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyReservationSlots`
---
-ALTER TABLE `YummyReservationSlots`
-  ADD CONSTRAINT `YummyReservationSlots_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
-
---
--- Constraints for table `YummyRestaurantFoodTypes`
---
-ALTER TABLE `YummyRestaurantFoodTypes`
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyRestaurantImages`
---
-ALTER TABLE `YummyRestaurantImages`
-  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

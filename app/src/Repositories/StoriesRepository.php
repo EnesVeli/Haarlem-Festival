@@ -70,17 +70,18 @@ class StoriesRepository extends Repository
 
     public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
     {
-        $sql = "INSERT INTO Ticket_Type (event_id, name, price, is_pay_as_you_like)
-                VALUES
-                (:event_id, 'Regular Ticket', 0.00, :is_pay_as_you_like),
-                (:event_id2, 'HaarlemPas (25% off)', 0.00, 0)";
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
+        $sql1 = "INSERT INTO Ticket_Type (event_id, name, price, is_pay_as_you_like)
+                 VALUES (:event_id, 'Regular Ticket', 0.00, :is_pay_as_you_like)";
+        $stmt1 = $this->connection->prepare($sql1);
+        $stmt1->execute([
             ':event_id' => $eventId,
-            ':event_id2' => $eventId,
             ':is_pay_as_you_like' => $isPayAsYouLike ? 1 : 0,
         ]);
+
+        $sql2 = "INSERT INTO Ticket_Type (event_id, name, price, is_pay_as_you_like)
+                 VALUES (:event_id, 'HaarlemPas (25% off)', 0.00, 0)";
+        $stmt2 = $this->connection->prepare($sql2);
+        $stmt2->execute([':event_id' => $eventId]);
     }
 
     public function update(int $id, array $data): bool
@@ -127,6 +128,9 @@ class StoriesRepository extends Repository
     }
 
     /** Fetches CMS homepage content for stories */
+    /**
+     * @deprecated Use StoriesHomepageRepository::getBySlug() instead.
+     */
     public function getHomepageContent(): ?array
     {
         $sql = "SELECT title, body_html, image_path FROM CMS_Content WHERE slug = 'stories' LIMIT 1";

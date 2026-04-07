@@ -7,6 +7,9 @@
 ?>
 <main class="cms-container container mt-4 mb-5">
     <h2><?= $event ? 'Edit' : 'Create' ?> Story Event</h2>
+    <?php if (!empty($cms_error)): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($cms_error) ?></div>
+    <?php endif; ?>
 
     <form action="/cms/stories/save" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">

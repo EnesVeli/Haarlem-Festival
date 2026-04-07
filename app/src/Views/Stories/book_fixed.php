@@ -51,7 +51,7 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
                 <span class="stories-booking-selected-time__label">SELECTED TIME</span>
                 <span class="stories-booking-selected-time__value"><?= $startTime ?> - <?= $endTime ?></span>
                 <span class="stories-booking-selected-time__lang">
-                    <?= htmlspecialchars($event->language === 'ENG' ? 'English' : 'Dutch') ?>
+                    <?= htmlspecialchars($event->language === 'EN' ? 'English' : 'Dutch') ?>
                 </span>
             </div>
         </div>
@@ -71,9 +71,12 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
                 </div>
                 <div class="stories-booking-ticket-controls">
                     <span class="stories-booking-price">&euro;<?= number_format($regularTicketPrice, 2) ?></span>
-                    <button type="button" class="stories-qty-btn" id="qtyMinus" aria-label="Decrease ticket quantity">&minus;</button>
-                    <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="20" readonly aria-label="Number of tickets">
-                    <button type="button" class="stories-qty-btn" id="qtyPlus" aria-label="Increase ticket quantity">+</button>
+                    <button type="button" class="stories-qty-btn" id="qtyMinus"
+                        aria-label="Decrease ticket quantity">&minus;</button>
+                    <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="20" readonly
+                        aria-label="Number of tickets">
+                    <button type="button" class="stories-qty-btn" id="qtyPlus"
+                        aria-label="Increase ticket quantity">+</button>
                 </div>
             </div>
 
@@ -85,23 +88,27 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
                 </label>
                 <div class="stories-booking-haarlempas-code" id="haarlemPasCode" style="display:none;">
                     <label for="haarlemPasInput">Enter your 10 digit code</label>
-                    <input type="text" id="haarlemPasInput" name="haarlempas_code" placeholder="1234 5678 90" maxlength="13">
+                    <input type="text" id="haarlemPasInput" name="haarlempas_code" placeholder="1234 5678 90"
+                        maxlength="13">
                 </div>
             </div>
 
             <div class="stories-booking-summary">
                 <span id="summaryText">
-                    1 Ticket &times; &euro;<?= number_format($regularTicketPrice, 2) ?> (<?= htmlspecialchars($event->name) ?>)
+                    1 Ticket &times; &euro;<?= number_format($regularTicketPrice, 2) ?>
+                    (<?= htmlspecialchars($event->name) ?>)
                 </span>
                 <span class="stories-booking-total">
                     <strong>TOTAL</strong>
-                    <span class="stories-booking-total__amount" id="totalAmount">&euro;<?= number_format($regularTicketPrice, 2) ?></span>
+                    <span class="stories-booking-total__amount"
+                        id="totalAmount">&euro;<?= number_format($regularTicketPrice, 2) ?></span>
                 </span>
             </div>
 
             <div class="stories-booking-actions">
                 <a href="/stories/<?= htmlspecialchars($event->slug) ?>" class="stories-booking-cancel">Cancel</a>
-                <button type="submit" class="stories-booking-submit" aria-label="Add <?= htmlspecialchars($event->name) ?> tickets to your program">
+                <button type="submit" class="stories-booking-submit"
+                    aria-label="Add <?= htmlspecialchars($event->name) ?> tickets to your program">
                     Add to Program
                 </button>
             </div>
