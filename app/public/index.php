@@ -1,23 +1,22 @@
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
 
 // Show errors for development ONLY!
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 session_start();
 
 use FastRoute\RouteCollector;
-use App\Controllers\HomeController;
-use PHPMailer\PHPMailer\PHPMailer;
 
 // Define the Routes
 $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // The Homepage
-    $r->addRoute('GET', '/', [HomeController::class, 'index']);
+    $r->addRoute('GET', '/', [\App\Controllers\HomeController::class, 'index']);
     $r->addRoute('GET', '/register', [\App\Controllers\RegisterController::class, 'index']);
     $r->addRoute('POST', '/register', [\App\Controllers\RegisterController::class, 'register']);   
     
@@ -43,12 +42,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Profile (Manage account)
     $r->addRoute('GET',  '/profile',        [\App\Controllers\ProfileController::class, 'index']);
     $r->addRoute('POST', '/profile/update', [\App\Controllers\ProfileController::class, 'update']);
-    
-    // Cart
-    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
-    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
-    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
-    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
     
     // Jazz 
     $r->addRoute('GET', '/jazz', [\App\Controllers\JazzController::class, 'index']);
@@ -163,6 +156,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'edit']);
     $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
     
+    // Cart
+    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
+    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
+    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
+    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
+
     // Payment
     $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);
     $r->addRoute('POST', '/checkout/process',      [\App\Controllers\PaymentController::class, 'process']);
@@ -197,62 +196,7 @@ switch ($routeInfo[0]) {
 
         [$class, $method] = $handler;
 
-        // IoC — wire dependencies via constructor injection
-        if ($class === \App\Controllers\StoriesController::class) {
-            $storiesRepo     = new \App\Repositories\StoriesRepository();
-            $storiesService  = new \App\Services\StoriesService($storiesRepo);
-            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
-            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
-            $controller = new $class($storiesService, $homepageService);
-
-        } elseif ($class === \App\Controllers\RegisterController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $captchaService = new \App\Services\CaptchaService();
-            $controller = new $class($userService, $captchaService);
-
-        } elseif ($class === \App\Controllers\LoginController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $controller = new $class($userService, $cartService);
-
-        } elseif ($class === \App\Controllers\ProfileController::class) {
-            $userRepository = new \App\Repositories\UserRepository();
-            $verificationService = new \App\Services\VerificationService();
-            $userService = new \App\Services\UserService($userRepository, $verificationService);
-            $controller = new $class($userService);
-
-        } elseif ($class === \App\Controllers\CartController::class) {
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $controller = new $class($cartService);
-
-        } elseif ($class === \App\Controllers\CmsStoriesController::class) {
-            $storiesRepo    = new \App\Repositories\StoriesRepository();
-            $storiesService = new \App\Services\StoriesService($storiesRepo);
-            $controller = new $class($storiesService);
-
-        } elseif ($class === \App\Controllers\TicketsController::class) {
-            $storiesRepo = new \App\Repositories\StoriesRepository();
-            $storiesService = new \App\Services\StoriesService($storiesRepo);
-            $nonStoriesRepo = new \App\Repositories\NonStoriesTicketsRepository();
-            $cartRepository = new \App\Repositories\CartRepository();
-            $cartService = new \App\Services\CartService($cartRepository);
-            $nonStoriesService = new \App\Services\NonStoriesTicketsService($nonStoriesRepo, $cartService);
-            $controller = new $class($storiesService, $nonStoriesService);
-
-        } elseif ($class === \App\Controllers\CmsStoriesHomepageController::class) {
-            $homepageRepo    = new \App\Repositories\StoriesHomepageRepository();
-            $homepageService = new \App\Services\StoriesHomepageService($homepageRepo);
-            $controller = new $class($homepageService);
-
-        } else {
-            $controller = new $class();
-        }
+        $controller = new $class();  
 
         $controller->$method($vars);
         break;

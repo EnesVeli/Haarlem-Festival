@@ -4,6 +4,9 @@ namespace App\Framework;
 
 class Session
 {
+    public static string $temp_error_session_name = "temp_error";
+    public static string $temp_success_session_name = "temp_success";
+
     public static function get(string $key, $default = null)
     {
         return $_SESSION[$key] ?? $default;
@@ -19,18 +22,27 @@ class Session
         unset($_SESSION[$key]);
     }
 
-    public static function flash(string $key, $default = null)
+    public static function pop(string $key, $default = null)
     {
         $value = $_SESSION[$key] ?? $default;
         unset($_SESSION[$key]);
         return $value;
     }
 
-    public static function pop(string $key, $default = null)
-    {
-        $value = $_SESSION[$key] ?? $default;
-        unset($_SESSION[$key]);
-        return $value;
+    public static function setTempError(string $error_message){
+        Session::set(Session::$temp_error_session_name, $error_message);
+    }
+
+    public static function popTempError() : ?string{
+        return Session::pop(Session::$temp_error_session_name);
+    }
+
+    public static function setTempSuccess(string $success_message){
+        Session::set(Session::$temp_success_session_name, $success_message);
+    }
+
+    public static function popTempSuccess() : ?string{
+        return Session::pop(Session::$temp_success_session_name);
     }
 
     public static function login(array $user): void
@@ -66,20 +78,20 @@ class Session
         ];
     }
     public static function role(): ?string
-{
-    return $_SESSION['role'] ?? null;
-}
-
-public static function isAdmin(): bool
-{
-    $user = self::user();
-    if (!$user) {
-        return false;
+    {
+        return $_SESSION['role'] ?? null;
     }
 
-    $role = $user['role'] ?? null;
+    public static function isAdmin(): bool
+    {
+        $user = self::user();
+        if (!$user) {
+            return false;
+        }
 
-    // supports both formats: 'admin' OR 1
-    return $role === 'admin' || (int)$role === 1;
-}
+        $role = $user['role'] ?? null;
+
+        // supports both formats: 'admin' OR 1
+        return $role === 'admin' || (int)$role === 1;
+    }
 }

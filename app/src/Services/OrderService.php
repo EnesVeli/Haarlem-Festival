@@ -1,26 +1,127 @@
 <?php
 namespace App\Services;
 
+use App\Enums\BookingType;
+use App\Enums\OrderStatus;
+use App\Models\Exceptions\QueryExecutionException;
+use App\Models\IBooking;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\YummyBooking;
 use App\Repositories\OrderRepository;
-use App\Repositories\TicketRepository;
-use App\Repositories\InvoiceRepository;
+use App\Repositories\YummyRestaurantsRepository;
 class OrderService
 {
-    private OrderRepository   $orderRepo;
-    private TicketRepository  $ticketRepo;
-    private InvoiceRepository $invoiceRepo;
-    private PdfService        $pdfService;
-    private MailService       $mailService;
+    public static int $VAT_RATE = 900;
+
+    private OrderRepository $order_rep;
+    private YummyRestaurantsRepository $restaurant_rep;
+    private PdfService $pdf_service;
+    private MailService $mail_service;
 
     public function __construct()
     {
-        $this->orderRepo   = new OrderRepository();
-        $this->ticketRepo  = new TicketRepository();
-        $this->invoiceRepo = new InvoiceRepository();
-        $this->pdfService  = new PdfService();
-        $this->mailService = new MailService();
+        $this->order_rep = new OrderRepository();
+        $this->restaurant_rep = new YummyRestaurantsRepository();
+        $this->pdf_service = new PdfService();
+        $this->mail_service = new MailService();
     }
 
+    /**
+     * Addes booking to users cart
+     * @param int $user_id id of user
+     * @param IBooking $booking booking to add
+     * @throws QueryExecutionException if there where errors during with db.
+     * @return void
+     */
+    public function AddBookingToCart(int $user_id, IBooking $booking){
+        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart); // get cart order
+
+        if($order == null){ // if there are no cart order for the user
+            $order_id = $this->order_rep->createCartOrder($user_id); // create order cart order for the user
+
+            if($order_id == null) throw new QueryExecutionException("Failed to create cart order.");       
+        }
+        else // if the cart order exist
+        {
+            $order_id = $order->order_id; // take its id
+        }
+
+        $item = new OrderItem();
+        $item->order_id = $order_id;
+        $item->booking_id = $booking->getBookingId();
+        $item->booking_type = $booking->getBookingType();
+        $item->price = $this->calcBookingPrice($booking);
+
+        // add order item to db
+        if($this->order_rep->createOrderItem($item) == null) throw new QueryExecutionException("Failed to create order item.");  
+    }
+
+    /**
+     * Calculates price of a booking depending on its type.
+     * @param IBooking $booking from which to calculate price
+     * @return int returns calculated price.
+     */
+    public function calcBookingPrice(IBooking $booking) : int{
+        switch($booking->getBookingType()){
+            case BookingType::Yummy:
+                $booking = (fn($booking):YummyBooking=>$booking)($booking);
+                return ($booking->adult_number + $booking->child_number) * 1000;
+        }
+
+        return 0;
+    }
+
+    public function getOrderWithOrderItemsByUserId(int $user_id) : ?Order{
+        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart); // get cart order
+
+        if($order != null){
+            $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
+            if($order_items == null) throw new QueryExecutionException("Failed to get order items.");  
+            
+            foreach($order_items as $item){
+                $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
+
+                if($booking == null) throw new QueryExecutionException("Failed to get booking.");  
+
+                $item->booking = $booking;
+            }
+
+            $order->order_items = $order_items;
+        }
+
+        return $order;
+    }
+
+    public function getBookingByIdAndType(int $booking_id, BookingType $booking_type) : ?IBooking{
+        switch($booking_type){
+            case BookingType::Yummy:
+                $book = $this->order_rep->getYummyBookingById($booking_id);
+
+                if($book != null){
+                    $book->reservation_time_slot = $this->restaurant_rep->getRestaurantTimeSlotById($book->reservation_id);
+
+                    if($book->reservation_time_slot == null) throw new QueryExecutionException("Failed to get reservation time slot for yummy booking.");  
+
+                    $book->restaurant = $this->restaurant_rep->getRestaurantById($book->reservation_time_slot->restaurant_id);
+                }
+                return $book;
+        }
+
+        return null;
+    }
+
+    public function calcOrderSubtotalPrice(Order $order) : int{
+        $subtotal = 0;
+
+        foreach($order->order_items as $item){
+            $subtotal += $item->price;
+        }
+
+        return $subtotal;
+    }
+
+    /*
     public function completeOrder(int $userId, array $cartItems, string $paymentMethod, array $user): int
     {
         // 1 — Create the order
@@ -104,4 +205,5 @@ class OrderService
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $row ? (int)$row['type_id'] : 0;
     }
+        */
 }

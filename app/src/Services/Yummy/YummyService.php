@@ -2,27 +2,25 @@
 
 namespace App\Services\Yummy;
 
-use App\Interfaces\ICartService;
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
+use App\Models\Exceptions\QueryExecutionException;
 use App\Models\Exceptions\UserNotLoggedInException;
-use App\Models\RestaurantBooking;
-use App\Repositories\EventRepository;
+use App\Models\YummyBooking;
+use App\Repositories\OrderRepository;
 use App\Repositories\RestaurantSortingOption;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyFoodTypeRepository;
 use App\Repositories\YummyGuidesRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use App\Services\OrderService;
 use App\ViewModels\Yummy\YummyBookViewModel;
 use App\ViewModels\Yummy\YummyHomeViewModel;
 use App\ViewModels\Yummy\YummyListViewModel;
 use App\ViewModels\Yummy\YummyRestaurantViewModel;
-use App\Services\CartService;
-use App\Repositories\CartRepository;
 use DateInterval;
 use DateTime;
-use Exception;
 use InvalidArgumentException;
 use RoundingMode;
 
@@ -30,19 +28,20 @@ class YummyService
 {
     private YummyGuidesRepository $guide_repository;
     private YummyRestaurantsRepository $restaurant_repository;
+    private OrderRepository $order_repository;
     private YummyFoodTypeRepository $type_repository;
     private YummyCmsRepository $cms_repository;
-    private EventRepository $event_repository;
-    private ICartService $cart_service;
+    private OrderService $order_service;
+
 
     public function __construct()
     {
         $this->guide_repository = new YummyGuidesRepository();
         $this->restaurant_repository = new YummyRestaurantsRepository();
+        $this->order_repository = new OrderRepository();
         $this->type_repository = new YummyFoodTypeRepository();
         $this->cms_repository = new YummyCmsRepository();
-        $this->event_repository = new EventRepository();
-        $this->cart_service = new CartService(new CartRepository());
+        $this->order_service = new OrderService();
     }
 
     public function getHomeViewModel() : YummyHomeViewModel {
@@ -204,35 +203,15 @@ class YummyService
             throw new FormDataException("Invalid slot id.");
         }
 
-        $slot = $this->restaurant_repository->getRestaurantTimeSlotById($slot_id, $date_offset);
+        $slot = $this->restaurant_repository->getRestaurantTimeSlotByDateOffset($slot_id, $date_offset);
 
         if($slot == null) throw new FormDataException("Could not find time slot with the slot_id and date_offset.");
 
         if($slot->booked + $adult_count + $child_count > $slot->capacity) throw new OverBookingException();   
-        
-        // 
-        $restaurant = $this->restaurant_repository->getRestaurantById($slot->restaurant_id);
-        if($restaurant == null) throw new DBAccessException();
 
-        $venue_id = $this->event_repository->createVenue($restaurant->name, $restaurant->address_text);
-        if($venue_id == null) throw new DBAccessException();
 
-        $date_p_time = new DateTime($slot->date->format('Y-m-d') . ' ' . $slot->time->format('H:i:s'));
-        $date_p_time_end = new DateTime($slot->date->format('Y-m-d') . ' ' . $slot->time->format('H:i:s'));
-        $date_p_time_end->add(new DateInterval('PT' . $slot->duration . 'M'));
-
-        $event_id = $this->event_repository->createEvent($venue_id, 4, $restaurant->name . ' booking', bin2hex(openssl_random_pseudo_bytes(32)), 'adults: ' . $adult_count . ' children: ' . $child_count, 
-            $date_p_time, $date_p_time_end, '/assets/uploads/yummy/restaurants/' . $restaurant->main_img_path);
-        if($event_id == null) throw new DBAccessException();
-
-        $type_bs = $this->event_repository->createTicektType($event_id, $restaurant->name . ' booking', ($adult_count + $child_count) * 10, 0, $date_p_time, $date_p_time_end);
-        if($type_bs == null) throw new DBAccessException();
-
-        $this->cart_service->addItemByTicketType($user_id, $event_id, $type_bs, 1, ($adult_count + $child_count) * 10);
-        // End of bs
-
-        // Creating new booking and reserving seats at reservation
-        $booking = new RestaurantBooking();
+        // Creating new booking
+        $booking = new YummyBooking();
 
         $booking->reservation_id = $slot->reservation_id;
         $booking->user_id = $user_id;
@@ -240,16 +219,13 @@ class YummyService
         $booking->child_number = $child_count;
         $booking->comment = $comment;
 
-        if(!$this->restaurant_repository->bookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count)) throw new DBAccessException("Could not add bookings number to reservation slot.");
+        //if(!$this->restaurant_repository->bookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count)) throw new DBAccessException("Could not add bookings number to reservation slot.");
 
-        // If creation failed revert increasing booking number.
-        try{
-            if(!$this->restaurant_repository->createBookingWithOffest($booking, $date_offset)) throw new DBAccessException("Could not create a new restaurant booking.");
-        }
-        catch(Exception $ex){
-            $this->restaurant_repository->unbookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count);
+        $booking_id = $this->order_repository->createBookingWithOffest($booking, $date_offset);
+        if($booking_id == null) throw new QueryExecutionException("Failed to create new restaurant booking.");   
 
-            throw $ex;
-        }    
+        $booking->booking_id = $booking_id;
+
+        $this->order_service->AddBookingToCart($user_id, $booking);
     }
 }

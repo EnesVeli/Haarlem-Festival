@@ -19,7 +19,7 @@ class LoginController
 
     public function index()
     {
-        $error = Session::flash('login_error');
+        $error = Session::pop('login_error');
         require __DIR__ . '/../Views/login.php';
     }
 
