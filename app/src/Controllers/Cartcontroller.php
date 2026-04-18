@@ -1,7 +1,10 @@
 <?php
 namespace App\Controllers;
 
+use App\Enums\OrderStatus;
 use App\Framework\Session;
+use App\Models\Exceptions\EmptyCartException;
+use App\Models\Exceptions\EmptyPostException;
 use App\Services\OrderService;
 use App\ViewModels\Cart\CartViewModel;
 use DateInterval;
@@ -16,13 +19,15 @@ class CartController extends BaseController
         $this->order_service = new OrderService();
     }
 
-    public function index(): void
+    public function index() : void
     {
         if(!$this->isLoggedIn())
         {
             Session::setTempError("Log in, in order to view your cart.");
             header("Location: /login");
         }
+
+        $error_message = Session::popTempError();
 
         try{
             $order = $this->order_service->getOrderWithOrderItemsByUserId(Session::user()['user_id']);
@@ -64,5 +69,26 @@ class CartController extends BaseController
         }
 
         require __DIR__ . '/../Views/cart/index.php';
+    }
+
+    public function remove(){
+        if(!$this->isLoggedIn())
+        {
+            Session::setTempError("Your session has expired. Log in, in order to modify your cart.");
+            header("Location: /login");
+        }
+
+        try{
+            $user_id = Session::user()['user_id'];
+
+            if($user_id == null || $_POST['order_id'] == null || $_POST['item_id'] == null) throw new EmptyPostException();        
+
+            $this->order_service->removeOrderItemFromCart($_POST['order_id'], $_POST['item_id'], $user_id);
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to remove cart item. Something went wrong, try again later." . $ex->getMessage());
+        }
+
+        header("location: /cart");
     }
 }

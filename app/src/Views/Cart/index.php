@@ -29,11 +29,11 @@ $pageTitle = 'My Cart - The Festival Haarlem';
             <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
         <?php endif; ?>
 
-        <?php if ($view_model == null): ?>
+        <?php if (!isset($view_model)): ?>
             <div style="text-align:center; padding:3rem 0;">
                 <i class="bi bi-calendar-event" style="font-size:3rem; color:#ccc;"></i>
                 <p style="margin:1rem 0 0.5rem; color:#888;">Your cart is empty.</p>
-                <a href="/tickets" class="stories-primary-button">Browse Events</a>
+                <a href="/" class="stories-primary-button">Browse Events</a>
             </div>
         <?php else: ?>
             <div class="program-layout">

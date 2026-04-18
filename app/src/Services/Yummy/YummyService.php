@@ -221,7 +221,7 @@ class YummyService
 
         //if(!$this->restaurant_repository->bookRestaurantTimeSlot($slot_id, $date_offset, $adult_count + $child_count)) throw new DBAccessException("Could not add bookings number to reservation slot.");
 
-        $booking_id = $this->order_repository->createBookingWithOffest($booking, $date_offset);
+        $booking_id = $this->order_repository->createYummyBookingWithOffest($booking, $date_offset);
         if($booking_id == null) throw new QueryExecutionException("Failed to create new restaurant booking.");   
 
         $booking->booking_id = $booking_id;

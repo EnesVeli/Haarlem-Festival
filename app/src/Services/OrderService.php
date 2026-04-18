@@ -3,6 +3,10 @@ namespace App\Services;
 
 use App\Enums\BookingType;
 use App\Enums\OrderStatus;
+use App\Framework\Session;
+use App\Models\Exceptions\EmptyCartException;
+use App\Models\Exceptions\EmptyPostException;
+use App\Models\Exceptions\PostMismatchException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Models\IBooking;
 use App\Models\Order;
@@ -10,6 +14,7 @@ use App\Models\OrderItem;
 use App\Models\YummyBooking;
 use App\Repositories\OrderRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use Exception;
 class OrderService
 {
     public static int $VAT_RATE = 900;
@@ -55,6 +60,8 @@ class OrderService
 
         // add order item to db
         if($this->order_rep->createOrderItem($item) == null) throw new QueryExecutionException("Failed to create order item.");  
+
+        Session::setCartItemsCount(Session::getCartItemsCount() + 1);
     }
 
     /**
@@ -77,7 +84,7 @@ class OrderService
 
         if($order != null){
             $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
-            if($order_items == null) throw new QueryExecutionException("Failed to get order items.");  
+            if($order_items == null) return null;
             
             foreach($order_items as $item){
                 $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
@@ -119,6 +126,45 @@ class OrderService
         }
 
         return $subtotal;
+    }
+
+    public function getOrderByUserIdAndStatus(int $user_id, OrderStatus $status) : ?Order{
+        return $this->order_rep->getOrderByUserIdAndStatus($user_id, $status);
+    }
+
+    /**
+     * Check if order item is in cart, and if $order_id matches the id in $order_item. If both conditions are met, removes the order item.
+     * @param int $order_id id of an order the order item is a part of.
+     * @param int $item_id id of order item.
+     * @param int $user_id id of the logged in user.
+     * @throws EmptyCartException if no order with id can be found.
+     * @throws Exception when the id of order in order item do not match provided $order_id.
+     */
+    public function removeOrderItemFromCart(int $order_id, int $item_id, int $user_id) : void {
+        $order = $this->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart);
+        if($order == null) throw new EmptyCartException("Cart is empty.");
+        if($order->order_id != $_POST['order_id']) throw new PostMismatchException("Order cart id and provided order id do not match.");
+
+        $item = $this->order_rep->getOrderItemById($item_id);
+        if($item == null) throw new EmptyPostException("No order item found with provided id.");
+        if($item->order_id != $order_id) throw new PostMismatchException("");
+        
+        $remove = $this->order_rep->removeOrderItemFromCartOrder($order_id, $item_id);
+        if(!$remove) throw new QueryExecutionException("Failed to remove order item.");
+
+        $book_remove = $this->removeBookingById($item->booking_id, $item->booking_type);
+        if(!$book_remove) throw new QueryExecutionException("Failed to remove booking.");
+
+        Session::setCartItemsCount(Session::getCartItemsCount() - 1);
+    }
+
+    private function removeBookingById(int $booking_id, BookingType $booking_type) : bool{
+        switch($booking_type){
+            case BookingType::Yummy:
+                return $this->order_rep->removeYummyBooking($booking_id);
+        }
+
+        return false;
     }
 
     /*

@@ -14,7 +14,7 @@ class OrderRepository extends Repository
      * Gets order by user_id and status form db.
      * @param int $user_id 
      * @param OrderStatus $status
-     * @return ?Order returns if order was found returns it, otherwise, returns null.
+     * @return ?Order returns if order was found returns it, otherwise, returns null. 
      */
     public function getOrderByUserIdAndStatus(int $user_id, OrderStatus $status) : ?Order {
         $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `status` = :status AND `user_id` = :user_id;");
@@ -101,7 +101,7 @@ class OrderRepository extends Repository
      * @param YummyBooking $booking booking you want to create
      * @return bool returns true if operation was successfull, otherwise false.
      */
-    public function createBooking(YummyBooking $booking) : ?int {
+    public function createYummyBooking(YummyBooking $booking) : ?int {
         $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) 
                 VALUES (:reservation_id, :user_id, :date, :adult_number , :child_number, :comment);";
 
@@ -125,7 +125,7 @@ class OrderRepository extends Repository
      * @param int $date_offset offset in days from today (i. e. today + offset(number of days) will be put in date, instead of $booking date value).
      * @return bool returns new booking id, if operation was successfull. Otherwise null.
      */
-    public function createBookingWithOffest(YummyBooking $booking, int $date_offset) : ?int {
+    public function createYummyBookingWithOffest(YummyBooking $booking, int $date_offset) : ?int {
         $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `date`, `adult_number`, `child_number`, `comment`) 
                 VALUES (:reservation_id, DATE(NOW()) + INTERVAL +:date_offset DAY, :adult_number , :child_number, :comment);";
 
@@ -140,5 +140,33 @@ class OrderRepository extends Repository
         if($res == false) return null; 
 
         return $this->connection->lastInsertId();
+    }
+
+    public function removeYummyBooking(int $booking_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `YummyBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function removeOrderItemFromCartOrder(int $order_id, int $item_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+        $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function getOrderItemById(int $item_id) : ?OrderItem{
+        $stmt = $this->connection->prepare("SELECT `item_id`, `order_id`, `booking_id`, `booking_type` AS `booking_type_`, `price` FROM `OrderItems` WHERE `item_id` = :item_id;");
+
+        $stmt->execute(['item_id' => $item_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
     }
 }

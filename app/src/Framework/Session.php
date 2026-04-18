@@ -6,6 +6,7 @@ class Session
 {
     public static string $temp_error_session_name = "temp_error";
     public static string $temp_success_session_name = "temp_success";
+    public static string $cart_count_name = "cart_count";
 
     public static function get(string $key, $default = null)
     {
@@ -30,19 +31,19 @@ class Session
     }
 
     public static function setTempError(string $error_message){
-        Session::set(Session::$temp_error_session_name, $error_message);
+        self::set(self::$temp_error_session_name, $error_message);
     }
 
     public static function popTempError() : ?string{
-        return Session::pop(Session::$temp_error_session_name);
+        return self::pop(self::$temp_error_session_name);
     }
 
     public static function setTempSuccess(string $success_message){
-        Session::set(Session::$temp_success_session_name, $success_message);
+        self::set(self::$temp_success_session_name, $success_message);
     }
 
     public static function popTempSuccess() : ?string{
-        return Session::pop(Session::$temp_success_session_name);
+        return self::pop(self::$temp_success_session_name);
     }
 
     public static function login(array $user): void
@@ -93,5 +94,13 @@ class Session
 
         // supports both formats: 'admin' OR 1
         return $role === 'admin' || (int)$role === 1;
+    }
+
+    public static function getCartItemsCount() : ?int{
+        return self::get(self::$cart_count_name);
+    }
+
+    public static function setCartItemsCount(int $new_count) : void{
+        self::set(self::$cart_count_name, $new_count);
     }
 }

@@ -19,12 +19,7 @@
         <p class="program-card__subtotal">&euro;<?= $item->price_string ?></p>
     </div>
 
-    <form method="post" action="/cart/remove" class="program-card__remove">
-        <input type="hidden" name="order_item_id" value="<?= $item->item_id ?>">
-        <button type="submit" class="program-card__remove-btn" title="Remove">
-            <i class="bi bi-trash"></i> Remove
-        </button>
-    </form>
+    <? require '/app/src/Views/cart/partials/remove-button.php'; ?>
 </div>
 
 <?
