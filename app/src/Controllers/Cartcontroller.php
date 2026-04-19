@@ -1,10 +1,12 @@
 <?php
 namespace App\Controllers;
 
+use App\Enums\BookingType;
 use App\Enums\OrderStatus;
 use App\Framework\Session;
 use App\Models\Exceptions\EmptyCartException;
 use App\Models\Exceptions\EmptyPostException;
+use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\ViewModels\Cart\CartViewModel;
 use DateInterval;
@@ -45,16 +47,7 @@ class CartController extends BaseController
                 $view_model->vat_persent = number_format(OrderService::$VAT_RATE / 100, 2);
 
                 foreach($order->order_items as $item){
-                    // format date
-                    $item->date_string = $item->booking->reservation_time_slot->date->format('D, M j');
-                
-                    // format time
-                    $time_start = $item->booking->reservation_time_slot->time;
-
-                    $time_end = clone $item->booking->reservation_time_slot->time;
-                    $time_end->add(new DateInterval('PT' . $item->booking->reservation_time_slot->duration . 'M'));
-
-                    $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
+                    $this->formatOrderItem($item);
 
                     // format price
                     $item->price_string = number_format(((float)$item->price) / 100, 2);
@@ -69,6 +62,35 @@ class CartController extends BaseController
         }
 
         require __DIR__ . '/../Views/cart/index.php';
+    }
+
+    private function formatOrderItem(OrderItem $item){
+        switch($item->booking_type){
+            case BookingType::Yummy:
+                // format date
+                $item->date_string = $item->booking->reservation_time_slot->date->format('D, M j');
+            
+                // format time
+                $time_start = $item->booking->reservation_time_slot->time;
+
+                $time_end = clone $time_start;
+                $time_end->add(new DateInterval('PT' . $item->booking->reservation_time_slot->duration . 'M'));
+
+                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
+                break;
+            case BookingType::History:
+                // format date
+                $item->date_string = $item->booking->date->format('D, M j');
+            
+                // format time
+                $time_start = $item->booking->date;
+
+                $time_end = clone $time_start;
+                $time_end->add(new DateInterval('PT' . OrderService::$HISTORY_ROUTE_DURATION . 'M'));
+
+                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
+                break;
+        }
     }
 
     public function remove(){

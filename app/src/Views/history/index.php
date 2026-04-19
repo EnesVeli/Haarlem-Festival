@@ -1,5 +1,7 @@
 <?php
 /** @var \App\ViewModels\HistoryIndexViewModel $viewModel */
+/** @var ?string $error_message */
+
 $pageTitle = "History - Haarlem Festival";
 $pageCSS = "history.css"; 
 require __DIR__ . '/../partials/header.php';
@@ -18,6 +20,10 @@ require __DIR__ . '/../partials/header.php';
 <!-- THE GOLDEN CITY OF THE NORTH -->
 <section class="section-padding">
     <div class="container">
+        <?php if (!empty($error_message)): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
+        <?php endif; ?>
+
         <div class="golden-city-grid">
             <div class="golden-city-text">
                 <h2 class="section-title-burgundy"><?= htmlspecialchars($viewModel->introTitle()) ?></h2>
@@ -126,48 +132,61 @@ require __DIR__ . '/../partials/header.php';
                     <div class="ticket-selector">
                         <label><strong>Select a Date:</strong></label>
                         <select class="date-select" onchange="updateDayLabel(this.value)">
-                            <option>Select</option>
-                            <option>Thursday</option>
-                            <option>Friday</option>
-                            <option>Saturday</option>
-                            <option>Sunday</option>
+                            <option value="-1" disabled selected>Select</option>
+                            <? for($i = 0; $i < $viewModel->max_date_offset; $i++):?>
+                                <?
+                                    $date = new DateTime();
+                                    $date->add(new DateInterval('P' . $i .'D'));
+                                ?>
+                                <option value="<?= $i ?>"><?= $date->format('d.m.Y l') ?></option>
+                            <? endfor; ?>
                         </select>
                         
                         <div class="available-slots-label" id="slots-day-label">Available Time Slots (Thursday)</div>
                     </div>
                     
                     <div class="tickets-list">
-                        <?php foreach ($viewModel->tickets as $ticket): ?>
-                            <div class="ticket-row" style="cursor:pointer"
-                                 onclick="selectTicket(<?= $ticket['id'] ?>, '<?= htmlspecialchars($ticket['time_slot']) ?>')">
-                                <div class="ticket-time"><?= htmlspecialchars($ticket['time_slot']) ?></div>
-                                <div class="ticket-spots"><?= htmlspecialchars($ticket['available_spots']) ?> spots left</div>
+                        <?php foreach ($viewModel->time_slots as $time_slot): ?>
+                            <div id="<?= 'time_slot_' . $time_slot->slot_id ?>" class="ticket-row" style="cursor:pointer" onclick="selectTicket(<?= $time_slot->slot_id ?>)">
+                                <div class="ticket-time"><?= $time_slot->time->format('H:i') ?></div>
+                                <!-- <div class="ticket-spots"> spots left</div> -->
                             </div>
                         <?php endforeach; ?>
                     </div>
                     
-                    <button class="btn-book" onclick="goToBooking()">Book</button>
+                    <form id="book_form" method="post" action="\history\booking">
+                        <input id="sel_time_slot" type="hidden" name="slot_id" value="-1">
+                        <input id="sel_date_offset" type="hidden" name="date_offset" value="-1">     
+                    </form>
+                    
+                    <button type="button" class="btn-book" onclick="onBookButtonClick()">Book</button>
 
                     <script>
-                    let selectedTicketId = null;
-                    let selectedTime = '';
-                    function updateDayLabel(day) {
-                        const label = document.getElementById('slots-day-label');
-                        label.textContent = day === 'Select'
-                            ? 'Available Time Slots'
-                            : 'Available Time Slots (' + day + ')';
-                    }
-                    function selectTicket(id, time) {
-                        selectedTicketId = id;
-                        selectedTime = time;
-                        document.querySelectorAll('.ticket-row').forEach(r => r.style.background = '');
-                        event.currentTarget.style.background = 'rgba(255,255,255,0.15)';
-                    }
-                    function goToBooking() {
-                        const date = document.querySelector('.date-select').value;
-                        if (!selectedTicketId) { alert('Please select a time slot first.'); return; }
-                        window.location.href = `/history/booking?ticket_id=${selectedTicketId}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(selectedTime)}`;
-                    }
+                        let selectedTicketId = null;
+                        let selectedTime = '';
+                        function updateDayLabel(date_offset) {
+                            document.getElementById('sel_date_offset').value = date_offset;
+                        }
+                        function selectTicket(id) {
+                            document.getElementById('sel_time_slot').value = id;
+
+                            document.querySelectorAll('.ticket-row').forEach(r => r.style.background = '');
+                            document.getElementById('time_slot_' + id).style.background = 'rgba(255,255,255,0.15)';
+                        }
+                        function onBookButtonClick() {
+                            if (document.getElementById('sel_time_slot').value == -1) 
+                            {
+                                alert('Please select a time slot first.');
+                                return;
+                            }
+                            if (document.getElementById('sel_date_offset').value == -1)
+                            { 
+                                alert('Please select a date first.'); 
+                                return;
+                            }
+
+                            document.getElementById('book_form').submit();
+                        }
                     </script>
                 </div>
             </div>

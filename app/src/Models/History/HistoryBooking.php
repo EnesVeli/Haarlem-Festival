@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\History;
 
 use App\Enums\BookingType;
+use App\Models\IBooking;
 use DateTime;
 
 include '/app/src/Models/Interfaces/IBooking.php';
 
-class YummyBooking implements IBooking {
+class HistoryBooking implements IBooking{
     public int $booking_id;
     public int $reservation_id;
     public DateTime $date;
-    public int $adult_number;
-    public int $child_number;
-    public string $comment;
+    public string $language;
+    public int $individual_count;
+    public int $family_count;
 
-    public ?RestaurantTimeSlot $reservation_time_slot;
-    public ?Restaurant $restaurant;
+    public ?HistoryReservationSlot $reservation;
+    public ?HistoryTimeSlot $time_slot;
 
     public function setBookingId(int $booking_id) : void{
         $this->booking_id = $booking_id;
@@ -25,12 +26,12 @@ class YummyBooking implements IBooking {
         return isset($this->booking_id) ? $this->booking_id : null;
     }
     public function getBookingType() : BookingType{
-        return BookingType::Yummy;
+        return BookingType::History;
     }
 
     function __set($name, $value) {
         if($name == "date_") {
-            $this->date = new DateTime($value);
+            $this->date = $value == null ? null : new DateTime($value);
         }
     }
 }

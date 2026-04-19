@@ -1,11 +1,10 @@
 <?php
+/** @var \App\ViewModels\History\HistoryBookViewModel $view_model */
+/** @var ?string $error_message */
 
 $pageTitle = "Book Your Guided Tour - Haarlem Festival";
 $pageCSS   = "booking.css";
-require __DIR__ . '/../partials/header.php';
-
-$individualPrice = (float)($individualTicket['price'] ?? 17.50);
-$familyPrice     = (float)($familyTicket['price']     ?? 60.00);
+require __DIR__ . '/../partials/header.php';;
 ?>
 
 <div class="booking-back">
@@ -16,6 +15,10 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
 
 <div class="booking-wrapper">
   <div class="container">
+    <?php if (!empty($error_message)): ?>
+      <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
+    <?php endif; ?>
+
     <div class="booking-card">
       <h1 class="booking-title">Book Your Guided Tour</h1>
       <p class="booking-subtitle">Starting point: Bavo Church</p>
@@ -27,11 +30,11 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
           <div class="tour-info-box">
             <div class="tour-info-row">
               <span class="tour-info-label">Date:</span>
-              <span class="tour-info-value"><?= htmlspecialchars($selectedDate) ?></span>
+              <span class="tour-info-value"><?= htmlspecialchars($view_model->date) ?></span>
             </div>
             <div class="tour-info-row">
               <span class="tour-info-label">Time:</span>
-              <span class="tour-info-value"><?= htmlspecialchars($selectedTime) ?></span>
+              <span class="tour-info-value"><?= htmlspecialchars($view_model->time) ?></span>
             </div>
             <div class="tour-info-row">
               <span class="tour-info-label">Meeting Point:</span>
@@ -84,7 +87,7 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
             </div>
             <div class="d-flex align-items-center">
               <span class="ticket-price" id="price-individual">
-                €<?= number_format($individualPrice, 2) ?>
+                €<?= number_format($view_model->individual_cost / 100, 2) ?>
               </span>
               <div class="qty-control">
                 <button type="button" class="qty-btn" onclick="changeQty('individual', -1)">−</button>
@@ -102,7 +105,7 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
             </div>
             <div class="d-flex align-items-center">
               <span class="ticket-price" id="price-family">
-                €<?= number_format($familyPrice, 2) ?>
+                €<?= number_format($view_model->family_cost / 100, 2) ?>
               </span>
               <div class="qty-control">
                 <button type="button" class="qty-btn" onclick="changeQty('family', -1)">−</button>
@@ -117,7 +120,7 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
           <div id="summary-lines"></div>
           <div class="summary-total">
             <span>Total</span>
-            <span id="total-price">€<?= number_format($individualPrice, 2) ?></span>
+            <span id="total-price">€<?= number_format($view_model->individual_cost / 100, 2) ?></span>
           </div>
 
           <div class="d-flex mt-4">
@@ -132,75 +135,74 @@ $familyPrice     = (float)($familyTicket['price']     ?? 60.00);
 </div>
 
 <script>
-const prices = {
-    individual: <?= json_encode($individualPrice) ?>,
-    family:     <?= json_encode($familyPrice) ?>
-};
-const qty = { individual: 1, family: 0 };
+  const prices = {
+      individual: <?= json_encode($view_model->individual_cost) ?>,
+      family:     <?= json_encode($view_model->family_cost) ?>
+  };
+  const qty = { individual: 1, family: 0 };
 
-function changeQty(type, delta) {
-    qty[type] = Math.max(0, qty[type] + delta);
-    document.getElementById('qty-' + type).textContent = qty[type];
-    updateSummary();
-}
+  function changeQty(type, delta) {
+      qty[type] = Math.max(0, qty[type] + delta);
+      document.getElementById('qty-' + type).textContent = qty[type];
+      updateSummary();
+  }
 
-function updateSummary() {
-    let lines = '';
-    let total = 0;
+  function updateSummary() {
+      let lines = '';
+      let total = 0;
 
-    if (qty.individual > 0) {
-        const sub = qty.individual * prices.individual;
-        total += sub;
-        lines += `<div class="summary-line">
-            <span>${qty.individual} Individual Ticket${qty.individual > 1 ? 's' : ''} \u00d7 \u20ac${prices.individual.toFixed(2)}</span>
-            <span>\u20ac${sub.toFixed(2)}</span>
-        </div>`;
-    }
-    if (qty.family > 0) {
-        const sub = qty.family * prices.family;
-        total += sub;
-        lines += `<div class="summary-line">
-            <span>${qty.family} Family Ticket${qty.family > 1 ? 's' : ''} \u00d7 \u20ac${prices.family.toFixed(2)}</span>
-            <span>\u20ac${sub.toFixed(2)}</span>
-        </div>`;
-    }
+      if (qty.individual > 0) {
+          const sub = qty.individual * prices.individual / 100;
+          total += sub;
+          lines += `<div class="summary-line">
+              <span>${qty.individual} Individual Ticket${qty.individual > 1 ? 's' : ''} \u00d7 \u20ac${(prices.individual / 100).toFixed(2)}</span>
+              <span>\u20ac${sub.toFixed(2)}</span>
+          </div>`;
+      }
+      if (qty.family > 0) {
+          const sub = qty.family * prices.family / 100;
+          total += sub;
+          lines += `<div class="summary-line">
+              <span>${qty.family} Family Ticket${qty.family > 1 ? 's' : ''} \u00d7 \u20ac${(prices.family / 100).toFixed(2)}</span>
+              <span>\u20ac${sub.toFixed(2)}</span>
+          </div>`;
+      }
 
-    document.getElementById('summary-lines').innerHTML = lines;
-    document.getElementById('total-price').textContent = '\u20ac' + total.toFixed(2);
-}
+      document.getElementById('summary-lines').innerHTML = lines;
+      document.getElementById('total-price').textContent = '\u20ac' + total.toFixed(2);
+  }
 
-function updateLanguage(el) {
-    document.querySelectorAll('.language-option').forEach(o => o.classList.remove('selected'));
-    el.closest('.language-option').classList.add('selected');
-}
+  function updateLanguage(el) {
+      document.querySelectorAll('.language-option').forEach(o => o.classList.remove('selected'));
+      el.closest('.language-option').classList.add('selected');
+  }
 
-function addToCart() {
-    if (qty.individual === 0 && qty.family === 0) {
-        alert('Please select at least one ticket.');
-        return;
-    }
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '/cart/add';
-    const fields = {
-        csrf_token:     '<?= htmlspecialchars($csrfToken) ?>',
-        event_id:       '<?= (int)$eventId ?>',
-        ticket_type_id: '<?= (int)$typeId ?>',
-        quantity:       qty.individual + qty.family,
-        redirect_back:  '/cart'
-    };
-    for (const [k, v] of Object.entries(fields)) {
-        const input = document.createElement('input');
-        input.type  = 'hidden';
-        input.name  = k;
-        input.value = v;
-        form.appendChild(input);
-    }
-    document.body.appendChild(form);
-    form.submit();
-}
+  function addToCart() {
+      if (qty.individual === 0 && qty.family === 0) {
+          alert('Please select at least one ticket.');
+          return;
+      }
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/history/book';
+      const fields = {
+          individual_count: qty.individual,
+          family_count:     qty.family,
+          reservation_id:   <?= $view_model->reservation_id ?>,
+          language:         document.querySelector('input[name="language"]:checked').value
+      };
+      for (const [k, v] of Object.entries(fields)) {
+          const input = document.createElement('input');
+          input.type  = 'hidden';
+          input.name  = k;
+          input.value = v;
+          form.appendChild(input);
+      }
+      document.body.appendChild(form);
+      form.submit();
+  }
 
-updateSummary();
+  updateSummary();
 </script>
 
 <?php require __DIR__ . '/../partials/footer.php'; ?>

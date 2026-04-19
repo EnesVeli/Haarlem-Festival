@@ -3,6 +3,7 @@ namespace App\Repositories;
 
 use App\Enums\OrderStatus;
 use App\Framework\Repository;
+use App\Models\History\HistoryBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\YummyBooking;
@@ -99,17 +100,16 @@ class OrderRepository extends Repository
      /**
      * Creates a restaurant booking in the db.
      * @param YummyBooking $booking booking you want to create
-     * @return bool returns true if operation was successfull, otherwise false.
+     * @return ?int returns id of new booking if operation was successfull, otherwise null.
      */
     public function createYummyBooking(YummyBooking $booking) : ?int {
-        $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `user_id`, `date`, `adult_number`, `child_number`, `comment`) 
-                VALUES (:reservation_id, :user_id, :date, :adult_number , :child_number, :comment);";
+        $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `date`, `adult_number`, `child_number`, `comment`) 
+                VALUES (:reservation_id, :date, :adult_number , :child_number, :comment);";
 
         $stmt = $this->connection->prepare($sql);
 
         $res = $stmt->execute(['reservation_id' => $booking->reservation_id,
-                               'user_id' => $booking->user_id,
-                               'date' => $booking->date,
+                               'date' => $booking->date->format('Y-m-d H:i:s'),
                                'adult_number' => $booking->adult_number,
                                'child_number' => $booking->child_number,
                                'comment' => $booking->comment]);
@@ -123,7 +123,7 @@ class OrderRepository extends Repository
      * Creates a restaurant booking in the db.
      * @param YummyBooking $booking booking you want to create
      * @param int $date_offset offset in days from today (i. e. today + offset(number of days) will be put in date, instead of $booking date value).
-     * @return bool returns new booking id, if operation was successfull. Otherwise null.
+     * @return ?int returns id of new booking if operation was successfull, otherwise null.
      */
     public function createYummyBookingWithOffest(YummyBooking $booking, int $date_offset) : ?int {
         $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `date`, `adult_number`, `child_number`, `comment`) 
@@ -168,5 +168,47 @@ class OrderRepository extends Repository
         $res = $stmt->fetch();
 
         return $res == false ? null : $res;
+    }
+
+    public function getHistoryBookingById(int $booking_id) : ?HistoryBooking {
+        $stmt = $this->connection->prepare("SELECT `booking_id`, `reservation_id`, `date` AS `date_`, `language`, `individual_count`, `family_count`
+                FROM `HistoryBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->execute(['booking_id' => $booking_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, HistoryBooking::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+     /**
+     * Creates a history booking in the db.
+     * @param HistoryBooking $booking booking you want to create
+     * @return ?int returns id of new booking if operation was successfull, otherwise null.
+     */
+    public function createHistoryBooking(HistoryBooking $booking) : ?int {
+        $sql = "INSERT INTO `HistoryBookings`(`reservation_id`, `date`, `language`, `individual_count`, `family_count`) 
+                    VALUES (:reservation_id, :date, :language, :individual_count, :family_count);";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $res = $stmt->execute(['reservation_id' => $booking->reservation_id,
+                               'date' => $booking->date->format('Y-m-d H:i:s'),
+                               'language' => $booking->language,
+                               'individual_count' => $booking->individual_count,
+                               'family_count' => $booking->family_count]);
+
+        if($res == false) return null; 
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function removeHistoryBooking(int $booking_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `HistoryBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 }

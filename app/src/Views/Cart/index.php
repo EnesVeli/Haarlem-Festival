@@ -24,7 +24,6 @@ $pageTitle = 'My Cart - The Festival Haarlem';
             Your curated list of events for The Festival. Review your selections and proceed to payment.
         </p>
 
-
         <?php if (!empty($error_message)): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
         <?php endif; ?>
@@ -42,6 +41,9 @@ $pageTitle = 'My Cart - The Festival Haarlem';
                         <? switch($item->booking_type){
                             case BookingType::Yummy:
                                 require '/app/src/Views/cart/partials/yummy-booking.php';
+                                break;
+                            case BookingType::History:
+                                require '/app/src/Views/cart/partials/history-booking.php';
                                 break;
                            }
                         ?>               

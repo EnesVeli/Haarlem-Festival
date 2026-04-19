@@ -96,8 +96,8 @@ class Session
         return $role === 'admin' || (int)$role === 1;
     }
 
-    public static function getCartItemsCount() : ?int{
-        return self::get(self::$cart_count_name);
+    public static function getCartItemsCount() : int{
+        return self::get(self::$cart_count_name) ?? 0;
     }
 
     public static function setCartItemsCount(int $new_count) : void{

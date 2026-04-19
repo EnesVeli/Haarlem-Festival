@@ -226,6 +226,6 @@ class YummyService
 
         $booking->booking_id = $booking_id;
 
-        $this->order_service->AddBookingToCart($user_id, $booking);
+        $this->order_service->addBookingToCart($user_id, $booking);
     }
 }

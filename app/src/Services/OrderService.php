@@ -8,19 +8,26 @@ use App\Models\Exceptions\EmptyCartException;
 use App\Models\Exceptions\EmptyPostException;
 use App\Models\Exceptions\PostMismatchException;
 use App\Models\Exceptions\QueryExecutionException;
+use App\Models\History\HistoryBooking;
 use App\Models\IBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\YummyBooking;
+use App\Repositories\HistoryRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use Exception;
 class OrderService
 {
     public static int $VAT_RATE = 900;
+    public static int $YUMMY_COST_PER_SEAT = 1000;
+    public static int $HISTORY_ROUTE_DURATION = 180; // In munutes
+    public static int $HISTORY_INDIVIDUAL_COST = 1250;
+    public static int $HISTORY_FAMILY_COST = 4500;
 
     private OrderRepository $order_rep;
     private YummyRestaurantsRepository $restaurant_rep;
+    private HistoryRepository $history_rep;
     private PdfService $pdf_service;
     private MailService $mail_service;
 
@@ -28,8 +35,25 @@ class OrderService
     {
         $this->order_rep = new OrderRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
+        $this->history_rep = new HistoryRepository();
         $this->pdf_service = new PdfService();
         $this->mail_service = new MailService();
+    }
+
+    /**
+     * Creates booking in db. And addes it to user cart.
+     * @param int $user_id id of user
+     * @param IBooking $booking booking to add
+     * @throws QueryExecutionException if there where errors during with db.
+     * @return void
+     */
+    public function createAndAddBookingToCart(int $user_id, IBooking $booking){
+        $booking_id = $this->addBooking($booking);
+        if($booking_id == null) throw new QueryExecutionException("Failed to create booking.");   
+
+        $booking->setBookingId($booking_id);
+
+        $this->addBookingToCart($user_id, $booking);
     }
 
     /**
@@ -39,7 +63,7 @@ class OrderService
      * @throws QueryExecutionException if there where errors during with db.
      * @return void
      */
-    public function AddBookingToCart(int $user_id, IBooking $booking){
+    public function addBookingToCart(int $user_id, IBooking $booking){     
         $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart); // get cart order
 
         if($order == null){ // if there are no cart order for the user
@@ -47,11 +71,12 @@ class OrderService
 
             if($order_id == null) throw new QueryExecutionException("Failed to create cart order.");       
         }
-        else // if the cart order exist
+        else // if the cart order already exist
         {
             $order_id = $order->order_id; // take its id
         }
 
+        // create order ite
         $item = new OrderItem();
         $item->order_id = $order_id;
         $item->booking_id = $booking->getBookingId();
@@ -64,6 +89,17 @@ class OrderService
         Session::setCartItemsCount(Session::getCartItemsCount() + 1);
     }
 
+    public function addBooking(IBooking $booking) : ?int{
+        switch($booking->getBookingType()){
+            case BookingType::Yummy:
+                return $this->order_rep->createYummyBooking($booking);
+            case BookingType::History:
+                return $this->order_rep->createHistoryBooking($booking);
+        }
+
+        return null;
+    }
+
     /**
      * Calculates price of a booking depending on its type.
      * @param IBooking $booking from which to calculate price
@@ -73,7 +109,10 @@ class OrderService
         switch($booking->getBookingType()){
             case BookingType::Yummy:
                 $booking = (fn($booking):YummyBooking=>$booking)($booking);
-                return ($booking->adult_number + $booking->child_number) * 1000;
+                return ($booking->adult_number + $booking->child_number) * self::$YUMMY_COST_PER_SEAT;
+            case BookingType::History:
+                $booking = (fn($booking):HistoryBooking=>$booking)($booking);
+                return $booking->individual_count * self::$HISTORY_INDIVIDUAL_COST + $booking->family_count * self::$HISTORY_FAMILY_COST;
         }
 
         return 0;
@@ -107,10 +146,21 @@ class OrderService
 
                 if($book != null){
                     $book->reservation_time_slot = $this->restaurant_rep->getRestaurantTimeSlotById($book->reservation_id);
-
                     if($book->reservation_time_slot == null) throw new QueryExecutionException("Failed to get reservation time slot for yummy booking.");  
 
                     $book->restaurant = $this->restaurant_rep->getRestaurantById($book->reservation_time_slot->restaurant_id);
+                    if($book->restaurant == null) throw new QueryExecutionException("Failed to get restaurant for yummy booking.");  
+                }
+                return $book;
+            case BookingType::History:
+                $book = $this->order_rep->getHistoryBookingById($booking_id);
+
+                if($book != null){
+                    $book->reservation = $this->history_rep->getHistoryReservationSlotById($book->reservation_id);
+                    if($book->reservation == null) throw new QueryExecutionException("Failed to get reservation for history booking.");  
+
+                    $book->time_slot = $this->history_rep->getHistoryTimeSlotById($book->reservation->slot_id);
+                    if($book->reservation == null) throw new QueryExecutionException("Failed to get time slot for history booking.");  
                 }
                 return $book;
         }
@@ -141,17 +191,21 @@ class OrderService
      * @throws Exception when the id of order in order item do not match provided $order_id.
      */
     public function removeOrderItemFromCart(int $order_id, int $item_id, int $user_id) : void {
+        // Get user cart
         $order = $this->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart);
         if($order == null) throw new EmptyCartException("Cart is empty.");
         if($order->order_id != $_POST['order_id']) throw new PostMismatchException("Order cart id and provided order id do not match.");
 
+        // Get order item
         $item = $this->order_rep->getOrderItemById($item_id);
         if($item == null) throw new EmptyPostException("No order item found with provided id.");
         if($item->order_id != $order_id) throw new PostMismatchException("");
         
+        // Remove order item from the cart
         $remove = $this->order_rep->removeOrderItemFromCartOrder($order_id, $item_id);
         if(!$remove) throw new QueryExecutionException("Failed to remove order item.");
 
+        // Remove booking
         $book_remove = $this->removeBookingById($item->booking_id, $item->booking_type);
         if(!$book_remove) throw new QueryExecutionException("Failed to remove booking.");
 
@@ -162,6 +216,8 @@ class OrderService
         switch($booking_type){
             case BookingType::Yummy:
                 return $this->order_rep->removeYummyBooking($booking_id);
+            case BookingType::History:
+                return $this->order_rep->removeHistoryBooking($booking_id);   
         }
 
         return false;
