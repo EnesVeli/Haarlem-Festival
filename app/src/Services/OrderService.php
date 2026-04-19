@@ -12,9 +12,11 @@ use App\Models\History\HistoryBooking;
 use App\Models\IBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\StoryBooking;
 use App\Models\YummyBooking;
 use App\Repositories\HistoryRepository;
 use App\Repositories\OrderRepository;
+use App\Repositories\StoriesRepository;
 use App\Repositories\YummyRestaurantsRepository;
 use Exception;
 class OrderService
@@ -27,6 +29,7 @@ class OrderService
 
     private OrderRepository $order_rep;
     private YummyRestaurantsRepository $restaurant_rep;
+    private StoriesRepository $story_rep;
     private HistoryRepository $history_rep;
     private PdfService $pdf_service;
     private MailService $mail_service;
@@ -35,6 +38,7 @@ class OrderService
     {
         $this->order_rep = new OrderRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
+        $this->story_rep = new StoriesRepository();
         $this->history_rep = new HistoryRepository();
         $this->pdf_service = new PdfService();
         $this->mail_service = new MailService();
@@ -95,6 +99,8 @@ class OrderService
                 return $this->order_rep->createYummyBooking($booking);
             case BookingType::History:
                 return $this->order_rep->createHistoryBooking($booking);
+            case BookingType::Stories:
+                return $this->order_rep->createStoryBooking($booking);
         }
 
         return null;
@@ -113,6 +119,13 @@ class OrderService
             case BookingType::History:
                 $booking = (fn($booking):HistoryBooking=>$booking)($booking);
                 return $booking->individual_count * self::$HISTORY_INDIVIDUAL_COST + $booking->family_count * self::$HISTORY_FAMILY_COST;
+            case BookingType::Stories:
+                $booking = (fn($booking):StoryBooking=>$booking)($booking);
+
+                $event = $this->story_rep->getById($booking->event_id);
+                if($event == null) throw new QueryExecutionException("Failed to get story event.");
+
+                return $booking->quantity * $event->price;
         }
 
         return 0;
@@ -161,6 +174,14 @@ class OrderService
 
                     $book->time_slot = $this->history_rep->getHistoryTimeSlotById($book->reservation->slot_id);
                     if($book->reservation == null) throw new QueryExecutionException("Failed to get time slot for history booking.");  
+                }
+                return $book;
+            case BookingType::Stories:
+                $book = $this->order_rep->getStoryBookingById($booking_id);
+
+                if($book != null){
+                    $book->event = $this->story_rep->getById($book->event_id);
+                    if($book->event == null) throw new QueryExecutionException("Failed to get story even for story booking.");   
                 }
                 return $book;
         }
@@ -218,6 +239,8 @@ class OrderService
                 return $this->order_rep->removeYummyBooking($booking_id);
             case BookingType::History:
                 return $this->order_rep->removeHistoryBooking($booking_id);   
+            case BookingType::Stories:
+                return $this->order_rep->removeStoryBooking($booking_id);   
         }
 
         return false;

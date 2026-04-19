@@ -9,7 +9,7 @@ class StoriesRepository extends Repository
 {
     public function getAll(): array
     {
-        $sql = "SELECT `event_id`, `name`, `slug`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
+        $sql = "SELECT `event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
             `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`,
             `gallery_image_2` FROM `StoryEvents` ORDER BY `start_time` ASC;";
 
@@ -20,7 +20,7 @@ class StoriesRepository extends Repository
     }
     public function getBySlug(string $slug): ?StoryEvent
     {
-        $sql = "SELECT `event_id`, `name`, `slug`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
+        $sql = "SELECT `event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
             `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`,
             `gallery_image_2` FROM `StoryEvents` WHERE `slug` = :slug LIMIT 1;";
 
@@ -33,7 +33,7 @@ class StoriesRepository extends Repository
     }
     public function getById(int $event_id): ?StoryEvent
     {
-        $sql = "SELECT `event_id`, `name`, `slug`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
+        $sql = "SELECT `event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,
             `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`,
             `gallery_image_2` FROM `StoryEvents` WHERE `event_id` = :event_id LIMIT 1;";
 
@@ -46,16 +46,17 @@ class StoriesRepository extends Repository
     }
     public function insert(StoryEvent $event): int
     {
-        $sql = "INSERT INTO `StoryEvents`(`name`, `slug`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`,
+        $sql = "INSERT INTO `StoryEvents`(`name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`,
             `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`,
             `gallery_image_2`) VALUES (
-                    :name, :slug, :address_name, :address_text, :description, :performer_name, :performer_bio, :language, :age_group, :story_type,
+                    :name, :slug, :price, :address_name, :address_text, :description, :performer_name, :performer_bio, :language, :age_group, :story_type,
                     :is_pay_as_you_like, :start_time, :end_time, :max_tickets, :image_path, :gallery_image_1, :gallery_image_2);";
         
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindParam('name', $event->name, PDO::PARAM_INT);
         $stmt->bindParam('slug', $event->slug, PDO::PARAM_STR);
+        $stmt->bindParam('price', $event->price, PDO::PARAM_INT);
         $stmt->bindParam('address_name', $event->address_name, PDO::PARAM_STR);
         $stmt->bindParam('address_text', $event->address_text, PDO::PARAM_STR);
         $stmt->bindParam('description', $event->description, PDO::PARAM_STR);

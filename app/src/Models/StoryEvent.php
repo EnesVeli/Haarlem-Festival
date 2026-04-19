@@ -15,7 +15,7 @@ class StoryEvent
     public string $start_time;
     public string $end_time;
     public int    $max_tickets;
-    public int|string|null $price = 100;
+    public int|string|null $price;
 
     public string $image_path;
 

@@ -1,9 +1,14 @@
 <?php
 namespace App\Controllers;
 
+use App\Framework\Session;
 use App\Interfaces\IStoriesHomepageService;
+use App\Models\Exceptions\EmptyPostException;
+use App\Models\Exceptions\PostMismatchException;
+use App\Models\StoryBooking;
 use App\Services\StoriesHomepageService;
 use App\Services\StoriesService;
+use Exception;
 
 /**
  * StoriesController — public-facing Stories pages.
@@ -111,10 +116,44 @@ class StoriesController extends BaseController
             'pageCSS'     => 'stories.css',
             'event'       => $event,
             'csrfToken'   => $this->ensureCsrfToken(),
+            'slug' => $slug
         ]);
     }
 
-    public function bookAdd(){
-        
+    public function bookAdd() : void {
+        if(!$this->isLoggedIn()){
+            Session::setTempError("Login first, in order to book a ticket.");
+            header("loaction: /login");
+            exit;
+        }
+
+        try{
+            if(!isset($_POST['event_id']) || !isset($_POST['quantity']) || !isset($_POST['haarlem_pas'])) throw new EmptyPostException();
+
+            if($_POST['haarlem_pas'] == 1 && !isset($_POST['haarlempas_code'])) throw new EmptyPostException();
+
+            if($_POST['haarlem_pas'] == 1 && strlen($_POST['haarlempas_code']) != 10) throw new PostMismatchException();
+
+            $booking = new StoryBooking();
+            $booking->event_id = $_POST['event_id'];
+            $booking->quantity = $_POST['quantity'];
+            $booking->haarlem_pass = $_POST['haarlem_pas'] == 1;
+            $booking->haarlem_pass_code = $_POST['haarlempas_code'] ?? null;
+
+            $this->service->createBooking(Session::user()['user_id'], $booking);
+
+            header("location: /cart");
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError("Somethong went wrong. Try again later.");
+        }
+
+        if(isset($_POST['slug'])){
+            header("loaction: /stories/" . $_POST['slug'] . '/book');
+        }
+        else{
+            header("loaction: /stories");
+        }
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Services;
 
+use App\Models\Exceptions\QueryExecutionException;
+use App\Models\StoryBooking;
 use App\Repositories\StoriesRepository;
 use App\Models\StoryEvent;
 
@@ -11,14 +13,16 @@ use App\Models\StoryEvent;
 class StoriesService
 {
     private StoriesRepository $repository;
+    private OrderService $order_service;
 
     public function __construct()
     {
         $this->repository = new StoriesRepository();
+        $this->order_service = new OrderService();
     }
 
     /** @return StoryEvent[] */
-    public function getAllEvents(): array
+    public function getAllEvents() : array
     {
         return $this->repository->getAll();
     }
@@ -45,11 +49,6 @@ class StoriesService
         return $eventId;
     }
 
-    public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
-    {
-        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
-    }
-
     /** Updates an existing story event. */
     public function updateEvent(int $id, array $data): bool
     {
@@ -62,11 +61,6 @@ class StoriesService
         return $this->repository->delete($id);
     }
 
-    /** Returns CMS homepage content for stories page. */
-    public function getHomepageContent(): ?array
-    {
-        return $this->repository->getHomepageContent();
-    }
      /** Returns all schedule sessions that share the same event name */
     public function getScheduleForEvent(string $name): array
     {
@@ -81,5 +75,12 @@ class StoriesService
     public function updateTicketTypePrice(int $typeId, float $price): void
     {
         $this->repository->updateTicketTypePrice($typeId, $price);
+    }
+
+    public function createBooking(int $user_id, StoryBooking $booking){
+        $event = $this->repository->getById($booking->event_id);
+        if($event == null) throw new QueryExecutionException();
+
+        $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
 }

@@ -141,7 +141,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/stories',                        [\App\Controllers\StoriesController::class, 'index']);
     $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}',      [\App\Controllers\StoriesController::class, 'show']);
     $r->addRoute('GET', '/stories/{slug:[a-z0-9-]+}/book', [\App\Controllers\StoriesController::class, 'book']);
-    $r->addRoute('GET', '/stories/book/add', [\App\Controllers\StoriesController::class, 'bookAdd']);
+    $r->addRoute('POST', '/stories/book/add', [\App\Controllers\StoriesController::class, 'bookAdd']);
     
     // CMS — Stories events
     $r->addRoute('GET',  '/cms/stories',        [\App\Controllers\CmsStoriesController::class, 'index']);

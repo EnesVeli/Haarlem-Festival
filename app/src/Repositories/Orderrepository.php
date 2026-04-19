@@ -6,6 +6,7 @@ use App\Framework\Repository;
 use App\Models\History\HistoryBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\StoryBooking;
 use App\Models\YummyBooking;
 use PDO;
 
@@ -206,6 +207,49 @@ class OrderRepository extends Repository
 
     public function removeHistoryBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `HistoryBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function getStoryBookingById(int $booking_id) : ?StoryBooking {
+        $stmt = $this->connection->prepare("SELECT `booking_id`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code` 
+                FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->execute(['booking_id' => $booking_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, StoryBooking::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+     /**
+     * Creates a history booking in the db.
+     * @param StoryBooking $booking booking you want to create
+     * @return ?int returns id of new booking if operation was successfull, otherwise null.
+     */
+    public function createStoryBooking(StoryBooking $booking) : ?int {
+        $sql = "INSERT INTO `StoryBookings`(`event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) 
+                VALUES (:event_id, :quantity, :haarlem_pass, :haarlem_pass_code);";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('event_id', $booking->event_id, PDO::PARAM_INT);
+        $stmt->bindValue('quantity', $booking->quantity, PDO::PARAM_INT);
+        $stmt->bindValue('haarlem_pass', (int)$booking->haarlem_pass, PDO::PARAM_INT);
+        $stmt->bindValue('haarlem_pass_code', $booking->haarlem_pass_code, PDO::PARAM_STR);
+
+        $res = $stmt->execute();
+
+        if($res == false) return null; 
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function removeStoryBooking(int $booking_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
 
         $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
 

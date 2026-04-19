@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 19, 2026 at 03:21 PM
+-- Generation Time: Apr 19, 2026 at 08:33 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -690,6 +690,13 @@ CREATE TABLE `OrderItems` (
   `price` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `OrderItems`
+--
+
+INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
+(6, 5, 1, b'001', 600);
+
 -- --------------------------------------------------------
 
 --
@@ -728,6 +735,27 @@ CREATE TABLE `PasswordResetToken` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `StoryBookings`
+--
+
+CREATE TABLE `StoryBookings` (
+  `booking_id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `haarlem_pass` bit(1) NOT NULL,
+  `haarlem_pass_code` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `StoryBookings`
+--
+
+INSERT INTO `StoryBookings` (`booking_id`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
+(1, 1, 1, b'0', '');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `StoryEvents`
 --
 
@@ -735,6 +763,7 @@ CREATE TABLE `StoryEvents` (
   `event_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL COMMENT 'URL: /stories/mister-anansi',
+  `price` int(11) NOT NULL,
   `address_name` varchar(128) NOT NULL,
   `address_text` varchar(256) NOT NULL,
   `description` text DEFAULT NULL,
@@ -756,22 +785,22 @@ CREATE TABLE `StoryEvents` (
 -- Dumping data for table `StoryEvents`
 --
 
-INSERT INTO `StoryEvents` (`event_id`, `name`, `slug`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`, `gallery_image_2`) VALUES
-(1, 'Winnie de Poeh', 'winnie-de-poeh', 'Verhalenhuis Haarlem', 'Van Egmondstraat 7, Haarlem-Noord', 'Join us for a magical storytelling session based on the beloved tales of Winnie the Pooh. Brought to life by an experienced family storyteller, this performance uses puppets, songs, and audience participation to enchant young listeners. Perfect for the youngest members of the family.', 'Marieke van der Werf', NULL, 'NL', '4+', 'stories for the whole family', 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00', 50, '/assets/images/stories/ccd64b520f09f160ebcaa5ded87d27ae.jpeg', '', ''),
-(2, 'Omdenken Podcast', 'omdenken-podcast', 'De Schuur', 'Lange Begijnestraat 9, 2011 HH Haarlem', 'Experience a live podcast recording with a studio audience. Omdenken — the Dutch art of \"flipping\" problems into opportunities — comes to the stage in an interactive session full of surprising perspectives and real audience participation. A unique chance to be part of a live recording.', NULL, NULL, 'NL', '16+', 'recording podcast with audience', 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00', 40, '/assets/images/stories/2ba08353e7c37fc0acdd1b5401b5068b.jpeg', NULL, NULL),
-(3, 'The Story of Buurderij Haarlem', 'story-of-buurderij-haarlem', 'Kweekcafé', 'Kleverlaan 9, 2023 JC Haarlem', 'How does your food travel from the soil to your plate? In this inspiring session, we dive into the world of short food supply chains. The \"Buurderij\" is not just a market; it\'s a movement connecting neighbors directly with local farmers. Learn how this circular approach is reshaping Haarlem\'s economy and reducing our carbon footprint.', 'Marieke van der Werf', 'Presented by Marieke van der Werf, founder of the Haarlem Green Collective. Marieke was awarded the \"Sustainable Entrepreneur of the Year 2024\" for her work in reducing food waste in North Holland. She has successfully launched three community farming initiatives and consults for the municipality on circular city planning.', 'EN', '16+', 'stories with impact', 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00', 25, '/assets/images/stories/756822a1ee7b7f7085fed9468aa803c2.jpeg', '/assets/images/stories/0be260ee2117fa99f6f951ab2ed9dd32.jpeg', '/assets/images/stories/d3c08e71ce525a48370c9c8168d37134.jpeg'),
-(4, 'Corrie voor kinderen', 'corrie-voor-kinderen', 'Corrie ten Boom huis', 'Barteljorisstraat 19, Haarlem', 'An age-appropriate retelling of the remarkable true story of Corrie ten Boom and her family, who hid Jewish people in their Haarlem home during World War II. Presented at the actual Ten Boom house, this experience brings history to life for children in a meaningful and accessible way.', NULL, NULL, 'NL', '10+', 'stories for the whole family', 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00', 35, '/assets/images/stories/fce213146d5fcaae1b32e2728e051f6f.jpeg', NULL, NULL),
-(5, 'Winnaars van verhalenvertel wedstrijd', 'winnaars-verhalenvertel-wedstrijd', 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'NL', '12+', 'best of', 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00', 30, '/assets/images/stories/cb2205716106bbb349b267af663971ab.jpeg', NULL, NULL),
-(6, 'Het verhaal van de Oeserzwammerij', 'verhaal-oeserzwammerij', 'Patronaat', 'Zijlvest 21, 2011 VB Haarlem', 'Discover the fascinating story of urban mushroom farming in Haarlem. This talk explores how a small circular business is transforming food waste into gourmet oyster mushrooms, contributing to a more sustainable local food system. Inspiring, quirky, and eye-opening.', NULL, NULL, 'NL', '16+', 'stories with impact', 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00', 25, '/assets/images/stories/442407af2369c471bb792666df2503e7.jpeg', NULL, NULL),
-(7, 'Flip Thinking Podcast', 'flip-thinking-podcast', 'Grote Markt', 'Grote Markt, Haarlem', 'A live English-language podcast recording exploring \"flip thinking\" — the concept of turning obstacles into opportunities. Join host and author Berthold Gunster as he challenges guests and audience members to reframe their biggest problems. Recorded live for international distribution.', NULL, NULL, 'EN', '16+', 'recording podcast with audience', 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00', 40, '/assets/images/stories/997004ba39a660e70d04636a8ed0f922.jpeg', NULL, NULL),
-(8, 'Meneer Anansi', 'meneer-anansi-sat-morning', 'Lichtfabriek', 'Minckelersweg 2, 2031 EM Haarlem', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00', 50, '/assets/images/stories/aae44f3940f6bb32db98ace7cc3e0754.jpeg', NULL, NULL),
-(9, 'Mister Anansi', 'mister-anansi-sat-afternoon', 'Slachthuis', 'Rockplein 6, 2033 KK Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00', 50, '/assets/images/stories/2143ce48ae8cca82613f3e0c80d71d92.jpeg', '/assets/images/stories/c49ab911d8adf050fef3d480581f359e.jpeg', '/assets/images/stories/2d348ee9a103a8f7248c53a7e1829db4.jpeg'),
-(10, 'Podcastlast Haarlem Special', 'podcastlast-haarlem-special', 'Jopenkerk', 'Gedempte Voldersgracht 2, 2011 WD Haarlem', 'Podcastlast records a special Haarlem-themed episode live in front of an audience at De Schuur. Featuring local guests, audience questions, and a unique behind-the-scenes look at what makes this city tick. A must for podcast enthusiasts and Haarlem locals alike.', NULL, NULL, 'NL', '12+', 'recording podcast with audience', 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00', 40, '/assets/images/stories/f2eb35fdf14d684e02c6ee5a94f0f0ba.jpeg', NULL, NULL),
-(11, 'De geschiedenis van familie ten Boom', 'geschiedenis-familie-ten-boom', 'XO the Club', 'Grote Markt 8, 2011 RD Haarlem', 'A deeply moving account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented in Dutch for a mature audience. A reservation is required to guarantee entry.', NULL, NULL, 'NL', '12+', 'stories with impact', 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00', 35, '/assets/images/stories/fb563928c1dc5042675fd095c28b6aa1.jpeg', NULL, NULL),
-(12, 'Mister Anansi', 'mister-anansi-sun-morning', 'Puncher Comedy Club', 'Grote Markt 10, 2011 RD Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00', 50, '/assets/images/stories/997b979719d6f659c6680a3a4b0375db.jpeg', '/assets/images/stories/db96e84149734b8bb38867e87a78a1f1.jpeg', '/assets/images/stories/9d8c2d227ddd0370b95ff096c788018b.jpeg'),
-(13, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 'Caprera Openluchttheater', 'Hoge Duin en Daalseweg 2, 2061 AG Bloemendaal', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, '/assets/images/stories/ab76b6f7b8e4570906764fd7b0712072.jpeg', NULL, NULL),
-(14, 'The History of the Ten Boom Family', 'history-ten-boom-family', 'Bavokerk', 'Grote Markt 22, 2011 RD Haarlem', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'EN', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, '/assets/images/stories/8b1cede5daae032ab8b70d8c2ceb7287.jpeg', NULL, NULL),
-(15, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 'Cafe de Roemer', 'Botermarkt 17, 2011 XL Haarlem', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'EN', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, '/assets/images/stories/62eb5096ef38305169f70c4ff3fa0be0.jpeg', NULL, NULL);
+INSERT INTO `StoryEvents` (`event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`, `gallery_image_2`) VALUES
+(1, 'Winnie de Poeh', 'winnie-de-poeh', 600, 'Verhalenhuis Haarlem', 'Van Egmondstraat 7, Haarlem-Noord', 'Join us for a magical storytelling session based on the beloved tales of Winnie the Pooh. Brought to life by an experienced family storyteller, this performance uses puppets, songs, and audience participation to enchant young listeners. Perfect for the youngest members of the family.', 'Marieke van der Werf', NULL, 'NL', '4+', 'stories for the whole family', 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00', 50, '/assets/images/stories/ccd64b520f09f160ebcaa5ded87d27ae.jpeg', '', ''),
+(2, 'Omdenken Podcast', 'omdenken-podcast', 1250, 'De Schuur', 'Lange Begijnestraat 9, 2011 HH Haarlem', 'Experience a live podcast recording with a studio audience. Omdenken — the Dutch art of \"flipping\" problems into opportunities — comes to the stage in an interactive session full of surprising perspectives and real audience participation. A unique chance to be part of a live recording.', NULL, NULL, 'NL', '16+', 'recording podcast with audience', 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00', 40, '/assets/images/stories/2ba08353e7c37fc0acdd1b5401b5068b.jpeg', NULL, NULL),
+(3, 'The Story of Buurderij Haarlem', 'story-of-buurderij-haarlem', 0, 'Kweekcafé', 'Kleverlaan 9, 2023 JC Haarlem', 'How does your food travel from the soil to your plate? In this inspiring session, we dive into the world of short food supply chains. The \"Buurderij\" is not just a market; it\'s a movement connecting neighbors directly with local farmers. Learn how this circular approach is reshaping Haarlem\'s economy and reducing our carbon footprint.', 'Marieke van der Werf', 'Presented by Marieke van der Werf, founder of the Haarlem Green Collective. Marieke was awarded the \"Sustainable Entrepreneur of the Year 2024\" for her work in reducing food waste in North Holland. She has successfully launched three community farming initiatives and consults for the municipality on circular city planning.', 'EN', '16+', 'stories with impact', 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00', 25, '/assets/images/stories/756822a1ee7b7f7085fed9468aa803c2.jpeg', '/assets/images/stories/0be260ee2117fa99f6f951ab2ed9dd32.jpeg', '/assets/images/stories/d3c08e71ce525a48370c9c8168d37134.jpeg'),
+(4, 'Corrie voor kinderen', 'corrie-voor-kinderen', 0, 'Corrie ten Boom huis', 'Barteljorisstraat 19, Haarlem', 'An age-appropriate retelling of the remarkable true story of Corrie ten Boom and her family, who hid Jewish people in their Haarlem home during World War II. Presented at the actual Ten Boom house, this experience brings history to life for children in a meaningful and accessible way.', NULL, NULL, 'NL', '10+', 'stories for the whole family', 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00', 35, '/assets/images/stories/fce213146d5fcaae1b32e2728e051f6f.jpeg', NULL, NULL),
+(5, 'Winnaars van verhalenvertel wedstrijd', 'winnaars-verhalenvertel-wedstrijd', 1000, 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'NL', '12+', 'best of', 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00', 30, '/assets/images/stories/cb2205716106bbb349b267af663971ab.jpeg', NULL, NULL),
+(6, 'Het verhaal van de Oeserzwammerij', 'verhaal-oeserzwammerij', 0, 'Patronaat', 'Zijlvest 21, 2011 VB Haarlem', 'Discover the fascinating story of urban mushroom farming in Haarlem. This talk explores how a small circular business is transforming food waste into gourmet oyster mushrooms, contributing to a more sustainable local food system. Inspiring, quirky, and eye-opening.', NULL, NULL, 'NL', '16+', 'stories with impact', 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00', 25, '/assets/images/stories/442407af2369c471bb792666df2503e7.jpeg', NULL, NULL),
+(7, 'Flip Thinking Podcast', 'flip-thinking-podcast', 1000, 'Grote Markt', 'Grote Markt, Haarlem', 'A live English-language podcast recording exploring \"flip thinking\" — the concept of turning obstacles into opportunities. Join host and author Berthold Gunster as he challenges guests and audience members to reframe their biggest problems. Recorded live for international distribution.', NULL, NULL, 'EN', '16+', 'recording podcast with audience', 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00', 40, '/assets/images/stories/997004ba39a660e70d04636a8ed0f922.jpeg', NULL, NULL),
+(8, 'Meneer Anansi', 'meneer-anansi-sat-morning', 1000, 'Lichtfabriek', 'Minckelersweg 2, 2031 EM Haarlem', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00', 50, '/assets/images/stories/aae44f3940f6bb32db98ace7cc3e0754.jpeg', NULL, NULL),
+(9, 'Mister Anansi', 'mister-anansi-sat-afternoon', 1000, 'Slachthuis', 'Rockplein 6, 2033 KK Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00', 50, '/assets/images/stories/2143ce48ae8cca82613f3e0c80d71d92.jpeg', '/assets/images/stories/c49ab911d8adf050fef3d480581f359e.jpeg', '/assets/images/stories/2d348ee9a103a8f7248c53a7e1829db4.jpeg'),
+(10, 'Podcastlast Haarlem Special', 'podcastlast-haarlem-special', 1000, 'Jopenkerk', 'Gedempte Voldersgracht 2, 2011 WD Haarlem', 'Podcastlast records a special Haarlem-themed episode live in front of an audience at De Schuur. Featuring local guests, audience questions, and a unique behind-the-scenes look at what makes this city tick. A must for podcast enthusiasts and Haarlem locals alike.', NULL, NULL, 'NL', '12+', 'recording podcast with audience', 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00', 40, '/assets/images/stories/f2eb35fdf14d684e02c6ee5a94f0f0ba.jpeg', NULL, NULL),
+(11, 'De geschiedenis van familie ten Boom', 'geschiedenis-familie-ten-boom', 0, 'XO the Club', 'Grote Markt 8, 2011 RD Haarlem', 'A deeply moving account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented in Dutch for a mature audience. A reservation is required to guarantee entry.', NULL, NULL, 'NL', '12+', 'stories with impact', 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00', 35, '/assets/images/stories/fb563928c1dc5042675fd095c28b6aa1.jpeg', NULL, NULL),
+(12, 'Mister Anansi', 'mister-anansi-sun-morning', 1000, 'Puncher Comedy Club', 'Grote Markt 10, 2011 RD Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00', 50, '/assets/images/stories/997b979719d6f659c6680a3a4b0375db.jpeg', '/assets/images/stories/db96e84149734b8bb38867e87a78a1f1.jpeg', '/assets/images/stories/9d8c2d227ddd0370b95ff096c788018b.jpeg'),
+(13, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 1000, 'Caprera Openluchttheater', 'Hoge Duin en Daalseweg 2, 2061 AG Bloemendaal', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, '/assets/images/stories/ab76b6f7b8e4570906764fd7b0712072.jpeg', NULL, NULL),
+(14, 'The History of the Ten Boom Family', 'history-ten-boom-family', 0, 'Bavokerk', 'Grote Markt 22, 2011 RD Haarlem', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'EN', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, '/assets/images/stories/8b1cede5daae032ab8b70d8c2ceb7287.jpeg', NULL, NULL),
+(15, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 1250, 'Cafe de Roemer', 'Botermarkt 17, 2011 XL Haarlem', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'EN', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, '/assets/images/stories/62eb5096ef38305169f70c4ff3fa0be0.jpeg', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1412,6 +1441,13 @@ ALTER TABLE `PasswordResetToken`
   ADD UNIQUE KEY `key` (`key`);
 
 --
+-- Indexes for table `StoryBookings`
+--
+ALTER TABLE `StoryBookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `event_id` (`event_id`);
+
+--
 -- Indexes for table `StoryEvents`
 --
 ALTER TABLE `StoryEvents`
@@ -1658,7 +1694,7 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `Orders`
@@ -1671,6 +1707,12 @@ ALTER TABLE `Orders`
 --
 ALTER TABLE `PasswordResetToken`
   MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `StoryBookings`
+--
+ALTER TABLE `StoryBookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `StoryEvents`
@@ -1832,6 +1874,12 @@ ALTER TABLE `Orders`
 --
 ALTER TABLE `PasswordResetToken`
   ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `StoryBookings`
+--
+ALTER TABLE `StoryBookings`
+  ADD CONSTRAINT `1` FOREIGN KEY (`event_id`) REFERENCES `StoryEvents` (`event_id`);
 
 --
 -- Constraints for table `YummyBookings`

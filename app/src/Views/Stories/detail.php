@@ -9,7 +9,7 @@ $imagePath     = $event->image_path ?: '/assets/images/stories/venue-placeholder
 $formattedDate = date('l, F jS', strtotime($event->start_time));
 $startTime     = date('H:i', strtotime($event->start_time));
 $endTime       = date('H:i', strtotime($event->end_time));
-$ticketPrice   = number_format((float) $event->price, 2);
+$ticketPrice   = number_format($event->price / 100, 2);
 
 // Collect gallery images (main + up to 2 extras)
 $gallery = [$imagePath];
