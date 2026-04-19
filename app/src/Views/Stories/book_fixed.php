@@ -3,32 +3,10 @@
  * Booking page for Fixed-Price Story Events.
  *
  * @var \App\Models\StoryEvent $event
- * @var array $ticketTypes
  */
 $formattedDate = date('l, F jS', strtotime($event->start_time));
 $startTime = date('H:i', strtotime($event->start_time));
 $endTime = date('H:i', strtotime($event->end_time));
-
-$regularTicket = null;
-$haarlempasTicket = null;
-foreach ($ticketTypes as $tt) {
-    $isPayAsYouLike = (bool)($tt['is_pay_as_you_like'] ?? 0);
-    $isHaarlemPas = stripos((string)($tt['name'] ?? ''), 'HaarlemPas') !== false;
-
-    if (!$isPayAsYouLike && !$isHaarlemPas && $regularTicket === null) {
-        $regularTicket = $tt;
-        continue;
-    }
-
-    if (!$isPayAsYouLike && $isHaarlemPas && $haarlempasTicket === null) {
-        $haarlempasTicket = $tt;
-    }
-}
-
-$regularTicketId = isset($regularTicket['type_id']) ? (int)$regularTicket['type_id'] : 0;
-$regularTicketPrice = isset($regularTicket['price']) ? (float)$regularTicket['price'] : 0.0;
-$haarlempasTicketId = isset($haarlempasTicket['type_id']) ? (int)$haarlempasTicket['type_id'] : 0;
-$haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasTicket['price'] : ($regularTicketPrice * 0.75);
 ?>
 
 <div class="stories-booking-page">
@@ -44,7 +22,7 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
             <div>
                 <h3 class="stories-booking-event-name"><?= htmlspecialchars($event->name) ?></h3>
                 <p class="stories-booking-event-meta">
-                    <?= $formattedDate ?> &nbsp; <?= htmlspecialchars($event->venue_name) ?>
+                    <?= $formattedDate ?> &nbsp; <?= htmlspecialchars($event->address_name) ?>
                 </p>
             </div>
             <div class="stories-booking-selected-time">
@@ -58,19 +36,18 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
 
         <h3 class="stories-booking-section-title">Choose Your Ticket</h3>
 
-        <form action="/cart/add" method="POST" id="bookingForm" aria-label="Ticket booking form">
+        <form action="/stories/book/add" method="POST" id="bookingForm" aria-label="Ticket booking form">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <input type="hidden" name="event_id" value="<?= (int)$event->event_id ?>">
-            <input type="hidden" name="ticket_type_id" id="ticketTypeIdField" value="<?= $regularTicketId ?>">
             <input type="hidden" name="redirect_back" value="/cart">
 
             <div class="stories-booking-ticket-card">
                 <div class="stories-booking-ticket-info">
-                    <strong>Regular Ticket</strong>
+                <strong>Regular Ticket</strong>
                     <small>Per person &bull; <?= htmlspecialchars($event->age_group) ?> and above</small>
                 </div>
                 <div class="stories-booking-ticket-controls">
-                    <span class="stories-booking-price">&euro;<?= number_format($regularTicketPrice, 2) ?></span>
+                    <span class="stories-booking-price">&euro;<?= number_format($event->price, 2) ?></span>
                     <button type="button" class="stories-qty-btn" id="qtyMinus"
                         aria-label="Decrease ticket quantity">&minus;</button>
                     <input type="number" name="quantity" id="qtyInput" value="1" min="1" max="20" readonly
@@ -82,7 +59,7 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
 
             <div class="stories-booking-haarlempas-card">
                 <label class="stories-booking-haarlempas-label">
-                    <input type="checkbox" id="haarlemPasCheck" name="has_haarlempas" value="1">
+                    <input type="checkbox" id="haarlemPasCheck" name="haarlem_pas" value="0">
                     <strong>I have a HaarlemPas</strong>
                     <small>Discount will be applied at checkout.</small>
                 </label>
@@ -95,13 +72,13 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
 
             <div class="stories-booking-summary">
                 <span id="summaryText">
-                    1 Ticket &times; &euro;<?= number_format($regularTicketPrice, 2) ?>
+                    1 Ticket &times; &euro;<?= number_format($event->price, 2) ?>
                     (<?= htmlspecialchars($event->name) ?>)
                 </span>
                 <span class="stories-booking-total">
                     <strong>TOTAL</strong>
                     <span class="stories-booking-total__amount"
-                        id="totalAmount">&euro;<?= number_format($regularTicketPrice, 2) ?></span>
+                        id="totalAmount">&euro;<?= number_format($event->price, 2) ?></span>
                 </span>
             </div>
 
@@ -117,7 +94,6 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
 </div>
 
 <script>
-(function() {
     var qtyInput = document.getElementById('qtyInput');
     var ticketTypeField = document.getElementById('ticketTypeIdField');
     var summaryText = document.getElementById('summaryText');
@@ -125,24 +101,19 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
     var haarlemCheck = document.getElementById('haarlemPasCheck');
     var haarlemCode = document.getElementById('haarlemPasCode');
 
-    var regularTicketId = <?= $regularTicketId ?>;
-    var regularPrice = <?= $regularTicketPrice ?>;
-    var haarlemTicketId = <?= $haarlempasTicketId ?>;
-    var haarlemPrice = <?= $haarlempasTicketPrice ?>;
+    var price = <?= $event->price ?>;
+
     var eventName = <?= json_encode($event->name) ?>;
 
     function updateTotal() {
         var qty = parseInt(qtyInput.value, 10) || 1;
-        var selectedTicketTypeId = regularTicketId;
-        var unitPrice = regularPrice;
+        var unitPrice = price;
 
-        if (haarlemCheck.checked && haarlemTicketId > 0) {
-            selectedTicketTypeId = haarlemTicketId;
-            unitPrice = haarlemPrice;
+        if (haarlemCheck.checked) {
+            unitPrice = price * 0.75;
         }
 
         var total = qty * unitPrice;
-        ticketTypeField.value = String(selectedTicketTypeId);
         summaryText.textContent = qty + ' Ticket × €' + unitPrice.toFixed(2) + ' (' + eventName + ')';
         totalAmount.textContent = '€' + total.toFixed(2);
     }
@@ -169,5 +140,4 @@ $haarlempasTicketPrice = isset($haarlempasTicket['price']) ? (float)$haarlempasT
     });
 
     updateTotal();
-})();
 </script>

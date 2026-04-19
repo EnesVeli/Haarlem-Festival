@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Interfaces\IStoriesHomepageService;
+use App\Services\StoriesHomepageService;
 use App\Services\StoriesService;
 
 /**
@@ -18,14 +19,10 @@ class StoriesController extends BaseController
     /** @var IStoriesHomepageService */
     private IStoriesHomepageService $homepageService;
 
-    /**
-     * @param StoriesService          $service         Event service
-     * @param IStoriesHomepageService $homepageService CMS homepage content service
-     */
-    public function __construct(StoriesService $service, IStoriesHomepageService $homepageService)
+    public function __construct()
     {
-        $this->service         = $service;
-        $this->homepageService = $homepageService;
+        $this->service         = new StoriesService();
+        $this->homepageService = new StoriesHomepageService();
     }
 
     /**
@@ -37,7 +34,7 @@ class StoriesController extends BaseController
     {
         $cms = $this->homepageService->getStoriesContent();
 
-        $this->render('Stories/home', [
+        $this->render('stories/home', [
             'pageCSS'          => 'stories.css',
             'pageTitle'        => $cms->title ?? 'Stories in Haarlem',
             'pageDescription'  => strip_tags($cms->body_html ?? 'During the last weekend of July, the streets of Haarlem transform into a living library...'),
@@ -75,11 +72,7 @@ class StoriesController extends BaseController
         // Fetch all sessions sharing this event's name for the schedule sidebar
         $schedule = $this->service->getScheduleForEvent($event->name);
 
-        $viewTemplate = $event->is_pay_as_you_like
-            ? 'Stories/detail_pay_as_you_like'
-            : 'Stories/detail_fixed';
-
-        $this->render($viewTemplate, [
+        $this->render('stories/detail', [
             'pageCSS'  => 'stories.css',
             'event'    => $event,
             'schedule' => $schedule,
@@ -112,14 +105,16 @@ class StoriesController extends BaseController
             return;
         }
 
-        $ticketTypes = $this->service->getTicketTypesForEvent($event->event_id);
-        $viewTemplate = $event->is_pay_as_you_like ? 'Stories/book_pay_as_you_like' : 'Stories/book_fixed';
+        $viewTemplate = $event->is_pay_as_you_like ? 'stories/book_pay_as_you_like' : 'stories/book_fixed';
 
         $this->render($viewTemplate, [
             'pageCSS'     => 'stories.css',
             'event'       => $event,
-            'ticketTypes' => $ticketTypes,
             'csrfToken'   => $this->ensureCsrfToken(),
         ]);
+    }
+
+    public function bookAdd(){
+        
     }
 }

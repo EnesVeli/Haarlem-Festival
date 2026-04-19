@@ -12,9 +12,9 @@ class StoriesService
 {
     private StoriesRepository $repository;
 
-    public function __construct(StoriesRepository $repository)
+    public function __construct()
     {
-        $this->repository = $repository;
+        $this->repository = new StoriesRepository();
     }
 
     /** @return StoryEvent[] */
@@ -60,12 +60,6 @@ class StoriesService
     public function deleteEvent(int $id): bool
     {
         return $this->repository->delete($id);
-    }
-
-    /** Returns all ticket types for a given event. */
-    public function getTicketTypesForEvent(int $eventId): array
-    {
-        return $this->repository->getTicketTypesForEvent($eventId);
     }
 
     /** Returns CMS homepage content for stories page. */

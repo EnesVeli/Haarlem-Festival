@@ -1,6 +1,6 @@
 <?php
 /**
- * Detail view for Pay-As-You-Like Story Events.
+ * Detail view for Fixed-Price Story Events.
  * Layout: contained hero, subtitle, badges, photo gallery, audio player, sidebar, "You might also like".
  *
  * @var \App\Models\StoryEvent $event
@@ -9,6 +9,7 @@ $imagePath     = $event->image_path ?: '/assets/images/stories/venue-placeholder
 $formattedDate = date('l, F jS', strtotime($event->start_time));
 $startTime     = date('H:i', strtotime($event->start_time));
 $endTime       = date('H:i', strtotime($event->end_time));
+$ticketPrice   = number_format((float) $event->price, 2);
 
 // Collect gallery images (main + up to 2 extras)
 $gallery = [$imagePath];
@@ -56,7 +57,7 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
 
         <!-- Two-Column Grid -->
         <article class="stories-detail-grid">
-            <!-- LEFT: Content -->
+            <!-- Content -->
             <section class="stories-detail-content">
                 <!-- Photo Gallery -->
                 <div class="stories-gallery">
@@ -77,26 +78,28 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                 <h2>About the Story</h2>
                 <p><?= nl2br(htmlspecialchars($event->description)) ?></p>
 
-                <?php if ($event->performer_name): ?>
-                <h2>Career Highlights</h2>
-                <p><?= nl2br(htmlspecialchars($event->performer_bio)) ?></p>
+                <?php if ($event->performer_bio != null): ?>
+                    <h2>Career Highlights</h2>
+                    <p><?= nl2br(htmlspecialchars($event->performer_bio)) ?></p>
                 <?php endif; ?>
 
                 <!-- Audio Preview -->
-                <?php include __DIR__ . '/../partials/audio_player.php'; ?>
+                <!-- <?php // include __DIR__ . '/../partials/audio_player.php'; ?> Not Working. -->
             </section>
 
-            <!-- RIGHT: Sidebar -->
+            <!-- Sidebar -->
             <aside class="stories-detail-sidebar">
-                <!-- Pay As You Like Info -->
-                <div class="stories-sidebar-card stories-sidebar-card--pay">
-                    <h3>Pay As you like</h3>
-                    <p>Some activities are priced <strong>Pay as you like</strong>.
-                        We aim to keep these events as accessible as possible so that everyone has the
-                        opportunity to participate. We encourage visitors to donate based on how they valued
-                        the experience.</p>
-                    <p><em>A reservation is required to guarantee entry.</em></p>
-                </div>
+                <? if($event->is_pay_as_you_like == 1): ?>
+                    <!-- Pay As You Like Info -->
+                    <div class="stories-sidebar-card stories-sidebar-card--pay">
+                        <h3>Pay As you like</h3>
+                        <p>Some activities are priced <strong>Pay as you like</strong>.
+                            We aim to keep these events as accessible as possible so that everyone has the
+                            opportunity to participate. We encourage visitors to donate based on how they valued
+                            the experience.</p>
+                        <p><em>A reservation is required to guarantee entry.</em></p>
+                    </div>
+                <? endif; ?>
 
                 <!-- Event Details -->
                 <div class="stories-sidebar-card">
@@ -112,11 +115,11 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                     </div>
 
                     <p class="stories-sidebar-venue">
-                        <strong><?= htmlspecialchars($event->venue_name) ?></strong><br>
-                        <?php if ($event->venue_address): ?>
-                        <small><?= htmlspecialchars($event->venue_address) ?></small><br>
+                        <strong><?= htmlspecialchars($event->address_name) ?></strong><br>
+                        <?php if ($event->address_text): ?>
+                        <small><?= htmlspecialchars($event->address_text) ?></small><br>
                         <?php endif; ?>
-                        <a href="https://www.google.com/maps/search/<?= urlencode($event->venue_name . ' Haarlem') ?>"
+                        <a href="https://www.google.com/maps/search/<?= urlencode($event->address_name . ' Haarlem') ?>"
                             target="_blank" rel="noopener">
                             View on map
                         </a>
@@ -124,8 +127,15 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
 
                     <div class="stories-sidebar-price">
                         <span class="stories-sidebar-price__label">TICKET PRICE</span>
-                        <span class="stories-sidebar-price__value">Pay as you like</span>
+                        <span class="stories-sidebar-price__value"><?= $event->is_pay_as_you_like == 1 ? 'Pay as you like' : '&euro;' . $ticketPrice ?></span>
                     </div>
+
+                    <? if($event->is_pay_as_you_like != 1): ?>
+                        <div class="stories-sidebar-haarlempas">
+                            <strong>Haarlempas?</strong>
+                            <p>Yes, receive a special 25% on your tickets!</p>
+                        </div>
+                    <? endif; ?>
 
                     <a href="/stories/<?= htmlspecialchars($event->slug) ?>/book"
                         class="stories-reserve-button">Reserve</a>
@@ -163,7 +173,6 @@ if (!empty($event->gallery_image_2)) $gallery[] = $event->gallery_image_2;
                 </div>
             </aside>
         </article>
-
         <?php require __DIR__ . '/../partials/you_might_also_like.php'; ?>
     </div>
 </div>
