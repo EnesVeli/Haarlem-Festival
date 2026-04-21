@@ -51,8 +51,9 @@ class OrderService
      * @throws QueryExecutionException if there where errors during with db.
      * @return void
      */
-    public function createAndAddBookingToCart(int $user_id, IBooking $booking){
-        $booking_id = $this->addBooking($booking);
+    public function createAndAddBookingToCart(int $user_id, IBooking $booking){   
+        $booking_id = $this->addBooking($booking);      
+        
         if($booking_id == null) throw new QueryExecutionException("Failed to create booking.");   
 
         $booking->setBookingId($booking_id);
@@ -124,6 +125,10 @@ class OrderService
 
                 $event = $this->story_rep->getById($booking->event_id);
                 if($event == null) throw new QueryExecutionException("Failed to get story event.");
+
+                if($booking->pay_as_you_like != null) return $booking->pay_as_you_like;
+
+                if($booking->haarlem_pass) return $booking->quantity * $event->price * 75 / 100;
 
                 return $booking->quantity * $event->price;
         }

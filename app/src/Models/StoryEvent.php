@@ -11,7 +11,7 @@ class StoryEvent
     public string $language;
     public string $age_group;
     public ?string $story_type;
-    public int|bool $is_pay_as_you_like;
+    public bool $is_pay_as_you_like;
     public string $start_time;
     public string $end_time;
     public int    $max_tickets;

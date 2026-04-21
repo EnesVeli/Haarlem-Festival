@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 19, 2026 at 08:33 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Apr 21, 2026 at 07:59 AM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -690,13 +690,6 @@ CREATE TABLE `OrderItems` (
   `price` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
---
--- Dumping data for table `OrderItems`
---
-
-INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
-(6, 5, 1, b'001', 600);
-
 -- --------------------------------------------------------
 
 --
@@ -716,7 +709,7 @@ CREATE TABLE `Orders` (
 --
 
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`) VALUES
-(5, 2, NULL, b'000', NULL);
+(6, 10, NULL, b'000', NULL);
 
 -- --------------------------------------------------------
 
@@ -741,17 +734,11 @@ CREATE TABLE `PasswordResetToken` (
 CREATE TABLE `StoryBookings` (
   `booking_id` int(11) NOT NULL,
   `event_id` int(11) NOT NULL,
+  `pay_as_you_like` int(11) DEFAULT NULL,
   `quantity` int(11) NOT NULL,
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `StoryBookings`
---
-
-INSERT INTO `StoryBookings` (`booking_id`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
-(1, 1, 1, b'0', '');
 
 -- --------------------------------------------------------
 
@@ -1694,13 +1681,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1712,7 +1699,7 @@ ALTER TABLE `PasswordResetToken`
 -- AUTO_INCREMENT for table `StoryBookings`
 --
 ALTER TABLE `StoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `StoryEvents`
@@ -1861,13 +1848,13 @@ ALTER TABLE `jazz_performer_tracks`
 -- Constraints for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  ADD CONSTRAINT `1` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`order_id`);
+  ADD CONSTRAINT `fk_OrderItems_1` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`order_id`);
 
 --
 -- Constraints for table `Orders`
 --
 ALTER TABLE `Orders`
-  ADD CONSTRAINT `1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
+  ADD CONSTRAINT `fk_Order_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
 
 --
 -- Constraints for table `PasswordResetToken`
@@ -1879,13 +1866,13 @@ ALTER TABLE `PasswordResetToken`
 -- Constraints for table `StoryBookings`
 --
 ALTER TABLE `StoryBookings`
-  ADD CONSTRAINT `1` FOREIGN KEY (`event_id`) REFERENCES `StoryEvents` (`event_id`);
+  ADD CONSTRAINT `fk_StoryBookings_1` FOREIGN KEY (`event_id`) REFERENCES `StoryEvents` (`event_id`);
 
 --
 -- Constraints for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `YummyReservationSlots` (`reservation_id`);
+  ADD CONSTRAINT `fk_YummyBookings_1` FOREIGN KEY (`reservation_id`) REFERENCES `YummyReservationSlots` (`reservation_id`);
 
 --
 -- Constraints for table `YummyDishes`
@@ -1897,7 +1884,7 @@ ALTER TABLE `YummyDishes`
 -- Constraints for table `YummyOpeningHours`
 --
 ALTER TABLE `YummyOpeningHours`
-  ADD CONSTRAINT `1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_YummyOpeningHours_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `YummyReservationSlots`

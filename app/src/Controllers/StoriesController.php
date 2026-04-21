@@ -18,11 +18,9 @@ use Exception;
  */
 class StoriesController extends BaseController
 {
-    /** @var StoriesService */
     private StoriesService $service;
 
-    /** @var IStoriesHomepageService */
-    private IStoriesHomepageService $homepageService;
+    private StoriesHomepageService $homepageService;
 
     public function __construct()
     {
@@ -110,9 +108,7 @@ class StoriesController extends BaseController
             return;
         }
 
-        $viewTemplate = $event->is_pay_as_you_like ? 'stories/book_pay_as_you_like' : 'stories/book_fixed';
-
-        $this->render($viewTemplate, [
+        $this->render('stories/book' , [
             'pageCSS'     => 'stories.css',
             'event'       => $event,
             'csrfToken'   => $this->ensureCsrfToken(),
@@ -127,30 +123,52 @@ class StoriesController extends BaseController
             exit;
         }
 
-        try{
-            if(!isset($_POST['event_id']) || !isset($_POST['quantity']) || !isset($_POST['haarlem_pas'])) throw new EmptyPostException();
-
-            if($_POST['haarlem_pas'] == 1 && !isset($_POST['haarlempas_code'])) throw new EmptyPostException();
-
-            if($_POST['haarlem_pas'] == 1 && strlen($_POST['haarlempas_code']) != 10) throw new PostMismatchException();
+        // try{
+            if(!isset($_POST['event_id']) || !isset($_POST['quantity']) || !isset($_POST['pay_as_you_like'])) throw new EmptyPostException();
 
             $booking = new StoryBooking();
             $booking->event_id = $_POST['event_id'];
-            $booking->quantity = $_POST['quantity'];
-            $booking->haarlem_pass = $_POST['haarlem_pas'] == 1;
-            $booking->haarlem_pass_code = $_POST['haarlempas_code'] ?? null;
+            $booking->quantity = $_POST['quantity'];        
+
+            if($_POST['pay_as_you_like'] == 0){                
+                if(!isset($_POST['haarlem_pas'])) throw new EmptyPostException();
+
+                if($_POST['haarlem_pas'] == 1 && !isset($_POST['haarlempas_code'])) throw new EmptyPostException();
+
+                if($_POST['haarlem_pas'] == 1 && strlen($_POST['haarlempas_code']) != 10) throw new PostMismatchException("haarlempas_code length is inappropriate.");
+
+                $booking->haarlem_pass = $_POST['haarlem_pas'] == 1;
+                $booking->haarlem_pass_code = $_POST['haarlempas_code'] ?? null;
+                $booking->pay_as_you_like = null;
+            }
+            else{
+                if(!isset($_POST['pay_as_you_like_amount'])) throw new EmptyPostException();
+                
+                $pay_amount = (int)($_POST['pay_as_you_like_amount'] * 100);    
+                
+                if($pay_amount > 100000 || $pay_amount < 0) throw new PostMismatchException("pay_as_you_like_amount is inappropriate.");            
+
+                $booking->haarlem_pass = false;
+                $booking->haarlem_pass_code = null;
+                $booking->pay_as_you_like = $pay_amount;
+            }            
 
             $this->service->createBooking(Session::user()['user_id'], $booking);
 
             header("location: /cart");
             exit;
+            /*
+        }
+        catch(PostMismatchException $ex){
+            Session::setTempError("Somethong went wrong. Try again later." . $ex->getMessage());
         }
         catch(Exception $ex){
-            Session::setTempError("Somethong went wrong. Try again later.");
+            Session::setTempError("Somethong went wrong. Try again later." . $ex->getMessage());
         }
+            */
 
         if(isset($_POST['slug'])){
-            header("loaction: /stories/" . $_POST['slug'] . '/book');
+            header('loaction: /stories/' . $_POST['slug'] . '/book');
         }
         else{
             header("loaction: /stories");

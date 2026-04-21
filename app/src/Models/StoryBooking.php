@@ -12,6 +12,7 @@ class StoryBooking implements IBooking {
     public int $quantity;
     public bool $haarlem_pass;
     public ?string $haarlem_pass_code;
+    public ?int $pay_as_you_like;
 
     public ?StoryEvent $event;
 

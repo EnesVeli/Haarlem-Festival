@@ -10,6 +10,7 @@ use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\ViewModels\Cart\CartViewModel;
 use DateInterval;
+use DateTime;
 use Exception;
 
 class CartController extends BaseController
@@ -87,6 +88,17 @@ class CartController extends BaseController
 
                 $time_end = clone $time_start;
                 $time_end->add(new DateInterval('PT' . OrderService::$HISTORY_ROUTE_DURATION . 'M'));
+
+                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
+                break;
+            case BookingType::Stories:
+                // format date
+                $item->date_string = (new DateTime($item->booking->event->start_time))->format('D, M j');
+            
+                // format time
+                $time_start = new DateTime($item->booking->event->start_time);
+
+                $time_end = new DateTime($item->booking->event->end_time);
 
                 $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
                 break;

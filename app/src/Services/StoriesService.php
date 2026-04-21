@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Exceptions\PostMismatchException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Models\StoryBooking;
 use App\Repositories\StoriesRepository;
@@ -42,11 +43,11 @@ class StoriesService
     /** Inserts a new story event. */
     public function createEvent(array $data): int
     {
-        $eventId = $this->repository->insert($data);
-        $isPayAsYouLike = !empty($data['is_pay_as_you_like']);
-        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+        //$eventId = $this->repository->insert($data);
+        //$isPayAsYouLike = !empty($data['is_pay_as_you_like']);
+        //$this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
 
-        return $eventId;
+        return 0;
     }
 
     /** Updates an existing story event. */
@@ -80,6 +81,10 @@ class StoriesService
     public function createBooking(int $user_id, StoryBooking $booking){
         $event = $this->repository->getById($booking->event_id);
         if($event == null) throw new QueryExecutionException();
+
+        if($booking->pay_as_you_like !== null && $event->is_pay_as_you_like == false) throw new PostMismatchException("Event is not pay as you like, but booking is.");
+
+        if($booking->pay_as_you_like === null && $event->is_pay_as_you_like == true) throw new PostMismatchException("Event is pay as you like, but booking is not.");
 
         $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }

@@ -214,7 +214,7 @@ class OrderRepository extends Repository
     }
 
     public function getStoryBookingById(int $booking_id) : ?StoryBooking {
-        $stmt = $this->connection->prepare("SELECT `booking_id`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code` 
+        $stmt = $this->connection->prepare("SELECT `booking_id`, `event_id`, `pay_as_you_like`, `quantity`, `haarlem_pass`, `haarlem_pass_code` 
                 FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
 
         $stmt->execute(['booking_id' => $booking_id]);
@@ -231,17 +231,18 @@ class OrderRepository extends Repository
      * @return ?int returns id of new booking if operation was successfull, otherwise null.
      */
     public function createStoryBooking(StoryBooking $booking) : ?int {
-        $sql = "INSERT INTO `StoryBookings`(`event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) 
-                VALUES (:event_id, :quantity, :haarlem_pass, :haarlem_pass_code);";
+        $sql = "INSERT INTO `StoryBookings`(`event_id`, `pay_as_you_like`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) 
+                VALUES (:event_id, :pay_as_you_like, :quantity, :haarlem_pass, :haarlem_pass_code);";     
 
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue('event_id', $booking->event_id, PDO::PARAM_INT);
+        $stmt->bindValue('pay_as_you_like', $booking->pay_as_you_like, PDO::PARAM_INT);
         $stmt->bindValue('quantity', $booking->quantity, PDO::PARAM_INT);
         $stmt->bindValue('haarlem_pass', (int)$booking->haarlem_pass, PDO::PARAM_INT);
         $stmt->bindValue('haarlem_pass_code', $booking->haarlem_pass_code, PDO::PARAM_STR);
 
-        $res = $stmt->execute();
+        $res = $stmt->execute();     
 
         if($res == false) return null; 
 
