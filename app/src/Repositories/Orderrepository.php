@@ -4,6 +4,7 @@ namespace App\Repositories;
 use App\Enums\OrderStatus;
 use App\Framework\Repository;
 use App\Models\History\HistoryBooking;
+use App\Models\Jazz\JazzBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
@@ -251,6 +252,45 @@ class OrderRepository extends Repository
 
     public function removeStoryBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    public function getJazzBookingById(int $booking_id) : ?JazzBooking {
+        $stmt = $this->connection->prepare("SELECT `booking_id`, `performer_id`, `amount` FROM `JazzBookings` WHERE `booking_id` = :booking_id;");
+
+        $stmt->execute(['booking_id' => $booking_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzBooking::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+     /**
+     * Creates a jazz booking in the db.
+     * @param JazzBooking $booking booking you want to create
+     * @return ?int returns id of new booking if operation was successfull, otherwise null.
+     */
+    public function createJazzBooking(JazzBooking $booking) : ?int {
+        $sql = "INSERT INTO `JazzBookings`(`performer_id`, `amount`) VALUES (:performer_id, :amount);";     
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('performer_id', $booking->performer_id, PDO::PARAM_INT);
+        $stmt->bindValue('amount', $booking->amount, PDO::PARAM_INT);
+
+        $res = $stmt->execute();     
+
+        if($res == false) return null; 
+
+        return $this->connection->lastInsertId();
+    }
+
+    public function removeJazzBooking(int $booking_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `JazzBookings` WHERE `booking_id` = :booking_id;");
 
         $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
 

@@ -208,7 +208,8 @@ class JazzRepository extends Repository implements IJazzRepository
 
     public function getAllPerformers(bool $onlyActive = true): array
     {
-        $sql = "SELECT * FROM jazz_performers";
+        $sql = "SELECT `id`, `name`, `price`, `bio`, `date` AS `date_`, `start_time` AS `start_time_`, `end_time` AS `end_time_`, `sort_order`, `is_active`,
+            `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path` FROM jazz_performers";
 
         if ($onlyActive) {
             $sql .= " WHERE is_active = 1";
@@ -219,60 +220,23 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $performers = [];
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
+        $res = $stmt->fetchAll();
 
-        foreach ($rows as $row) {
-            $performers[] = new JazzPerformer(
-                (int) $row['id'],
-                $row['name'] ?? '',
-                $row['price'] ?? 0,
-                $row['bio'] ?? '',
-                $row['performance_style'] ?? null,
-                $row['event_date_text'] ?? null,
-                $row['event_time_text'] ?? null,
-                $row['venue_name'] ?? null,
-                $row['venue_address'] ?? null,
-                $row['note_text'] ?? null,
-                $row['audio_url'] ?? null,
-                $row['image_path'] ?? null,
-                $row['hero_image_path'] ?? null,
-                (int) $row['sort_order'],
-                (int) $row['is_active']
-            );
-        }
-
-        return $performers;
+        return $res == false ? null : $res; 
     }
 
     public function getPerformerById(int $id): ?JazzPerformer
     {
-        $stmt = $this->connection->prepare("SELECT * FROM jazz_performers WHERE id = :id LIMIT 1");
+        $stmt = $this->connection->prepare("SELECT `id`, `name`, `price`, `bio`, `date` AS `date_`, `start_time` AS `start_time_`, `end_time` AS `end_time_`, `sort_order`,
+                `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`
+                FROM jazz_performers WHERE id = :id LIMIT 1");
         $stmt->execute([':id' => $id]);
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
+        $res = $stmt->fetch();
 
-        if (!$row) {
-            return null;
-        }
-
-        return new JazzPerformer(
-            (int) $row['id'],
-            $row['name'] ?? '',
-            $row['price'] ?? 0,
-            $row['bio'] ?? '',
-            $row['performance_style'] ?? null,
-            $row['event_date_text'] ?? null,
-            $row['event_time_text'] ?? null,
-            $row['venue_name'] ?? null,
-            $row['venue_address'] ?? null,
-            $row['note_text'] ?? null,
-            $row['audio_url'] ?? null,
-            $row['image_path'] ?? null,
-            $row['hero_image_path'] ?? null,
-            (int) $row['sort_order'],
-            (int) $row['is_active']
-        );
+        return $res == false ? null : $res; 
     }
 
     public function storePerformer(array $data): void

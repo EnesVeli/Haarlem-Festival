@@ -3,7 +3,7 @@
 ?>
 
 <div class="program-card">
-    <div class="program-card__image" style="background-image: url(/assets/uploads/history/bavo-church.jpg);">
+    <div class="program-card__image" style="background-image: url(<?= $item->booking->performer->image_path?>);">
         <div class="program-card__date-overlay">
             <span class="program-card__date"><?= $item->date_string ?></span>
             <span class="program-card__time"><?= $item->time_string ?></span>
@@ -11,10 +11,10 @@
     </div>
 
     <div class="program-card__info">
-        <h3 class="program-card__name">Guided Tour Haarlem</h3>
-        <p class="program-card__venue"><i class="bi bi-geo-alt"></i>St. Bavo Church</p>
+        <h3 class="program-card__name">Tickets <?= $item->booking->performer->name ?></h3>
+        <p class="program-card__venue"><i class="bi bi-geo-alt"></i><?= $item->booking->performer->venue_name ?></p>
         <p class="program-card__ticket">
-            <?= "individual tickets: " . $item->booking->individual_count . "; family tickets: " . $item->booking->family_count . "; language: " . $item->booking->language ?>
+            <?= "tickets: " . $item->booking->amount ?>
         </p>
         <p class="program-card__subtotal">&euro;<?= $item->price_string ?></p>
     </div>

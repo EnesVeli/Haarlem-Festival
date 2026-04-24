@@ -3,9 +3,11 @@
 namespace App\Controllers;
 
 use App\Framework\Session;
+use App\Models\Exceptions\EmptyPostException;
 use App\Services\Jazz\JazzService;
 use App\ViewModels\Jazz\JazzHomeViewModel;
 use App\ViewModels\Jazz\JazzPerformerViewModel;
+use Exception;
 use Throwable;
 
 class JazzController extends BaseController
@@ -34,6 +36,7 @@ class JazzController extends BaseController
 
             $this->render('jazz/home', [
                 'vm' => $vm,
+                'error_message' => Session::popTempError(),
                 'pageTitle' => 'Haarlem Jazz',
                 'pageCSS' => 'jazz.css',
                 'mainClass' => 'jazz-main',
@@ -96,24 +99,60 @@ class JazzController extends BaseController
     
             $this->render('jazz/performer', [
                 'vm' => $vm,
+                'error_message' => Session::popTempError(),
                 'pageTitle' => 'Jazz Performer',
                 'pageCSS' => 'jazz.css',
                 'mainClass' => 'jazz-main',
                 'user' => Session::user()
             ]);
         } catch (Throwable $error) {
-            http_response_code(500);
-            echo $error->getMessage();
+            Session::setTempError("Something went wrong. Try again later.");
         }
     }
 
     public function booking(){
+        if(!$this->isLoggedIn()){
+            Session::setTempError("Login first, in order to book a ticket.");
+            header("loaction: /login");
+            exit;
+        }
+
         $this->render('jazz/book', [
             'perf' => $this->service->getPerformerById($_GET['perf']),
+            'error_message' => Session::popTempError(),
             'pageTitle' => 'Jazz Performer',
             'pageCSS' => 'jazz.css',
             'mainClass' => 'jazz-main',
             'user' => Session::user()
         ]);
+    }
+
+    public function book(){
+        if(!$this->isLoggedIn()){
+            Session::setTempError("Login first, in order to book a ticket.");
+            header("loaction: /login");
+            exit;
+        }
+
+        $error_message = Session::popTempError();
+
+        try{
+            if(!isset($_POST['performer_id']) || !isset($_POST['quantity'])) throw new EmptyPostException();
+
+            $this->service->bookTickets($_POST['performer_id'], $_POST['quantity'], Session::user()['user_id']);
+
+            header("location: /cart");
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to book. Try again later.");
+        }
+
+        if($_POST['performer_id'] != null){
+            header("location: /jazz/book?perf=" . $_POST['performer_id']);
+        }
+        else{
+            header("location: /jazz");
+        }
     }
 }

@@ -86,9 +86,9 @@ $locations = $vm->locations;
         <a class="artist-link" href="<?= $performer->id > 0 ? "/jazz/performer?id={$performer->id}" : "#" ?>">
           <div class="card-soft">
 
-            <?php if (!empty($performer->imagePath)): ?>
+            <?php if (!empty($performer->image_path)): ?>
               <img
-                src="<?= htmlspecialchars($performer->imagePath) ?>"
+                src="<?= htmlspecialchars($performer->image_path) ?>"
                 alt="<?= htmlspecialchars($performer->name) ?>"
                 class="img-placeholder artist"
               >

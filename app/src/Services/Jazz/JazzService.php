@@ -3,8 +3,11 @@
 namespace App\Services\Jazz;
 use App\Interfaces\Repositories\IJazzRepository;
 use App\Interfaces\Services\IJazzService;
+use App\Models\Exceptions\QueryExecutionException;
+use App\Models\Jazz\JazzBooking;
 use App\Models\Jazz\JazzPerformer;
 use App\Repositories\JazzRepository;
+use App\Services\OrderService;
 use RuntimeException;
 use Throwable;
 
@@ -12,9 +15,13 @@ class JazzService implements IJazzService
 {
     private IJazzRepository $jazzRepo;
 
+    private OrderService $order_service;
+
     public function __construct(?IJazzRepository $jazzRepo = null)
     {
         $this->jazzRepo = $jazzRepo ?? new JazzRepository();
+
+        $this->order_service = new OrderService();
     }
 
     public function getHomePageData(): array
@@ -57,5 +64,16 @@ class JazzService implements IJazzService
     
     public function getPerformerById(int $id) : ?JazzPerformer {
         return $this->jazzRepo->getPerformerById($id);
+    }
+
+    public function bookTickets(int $performer_id, int $quantity, int $user_id){
+        $perf = $this->jazzRepo->getPerformerById($performer_id);
+        if($perf == null) throw new QueryExecutionException("Failed to get performer by its id");
+
+        $booking = new JazzBooking();
+        $booking->performer_id = $performer_id;
+        $booking->amount = $quantity;
+
+        $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
 }

@@ -102,6 +102,17 @@ class CartController extends BaseController
 
                 $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
                 break;
+            case BookingType::Jazz:
+                // format date
+                $item->date_string = $item->booking->performer->date->format('D, M j');
+            
+                // format time
+                $time_start = $item->booking->performer->start_time;
+
+                $time_end = $item->booking->performer->end_time;
+
+                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
+                break;
         }
     }
 

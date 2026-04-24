@@ -48,6 +48,9 @@ $pageTitle = 'My Cart - The Festival Haarlem';
                             case BookingType::Stories:
                                 require '/app/src/Views/cart/partials/story-booking.php';
                                 break;
+                            case BookingType::Jazz:
+                                require '/app/src/Views/cart/partials/jazz-booking.php';
+                                break;
                            }
                         ?>               
                     <? endforeach; ?>

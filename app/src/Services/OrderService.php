@@ -10,11 +10,13 @@ use App\Models\Exceptions\PostMismatchException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Models\History\HistoryBooking;
 use App\Models\IBooking;
+use App\Models\Jazz\JazzBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\YummyBooking;
 use App\Repositories\HistoryRepository;
+use App\Repositories\JazzRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\StoriesRepository;
 use App\Repositories\YummyRestaurantsRepository;
@@ -31,6 +33,7 @@ class OrderService
     private YummyRestaurantsRepository $restaurant_rep;
     private StoriesRepository $story_rep;
     private HistoryRepository $history_rep;
+    private JazzRepository $jazz_rep;
     private PdfService $pdf_service;
     private MailService $mail_service;
 
@@ -40,6 +43,7 @@ class OrderService
         $this->restaurant_rep = new YummyRestaurantsRepository();
         $this->story_rep = new StoriesRepository();
         $this->history_rep = new HistoryRepository();
+        $this->jazz_rep = new JazzRepository();
         $this->pdf_service = new PdfService();
         $this->mail_service = new MailService();
     }
@@ -102,6 +106,8 @@ class OrderService
                 return $this->order_rep->createHistoryBooking($booking);
             case BookingType::Stories:
                 return $this->order_rep->createStoryBooking($booking);
+            case BookingType::Jazz:
+                return $this->order_rep->createJazzBooking($booking);
         }
 
         return null;
@@ -131,6 +137,13 @@ class OrderService
                 if($booking->haarlem_pass) return $booking->quantity * $event->price * 75 / 100;
 
                 return $booking->quantity * $event->price;
+            case BookingType::Jazz:
+                $booking = (fn($booking):JazzBooking=>$booking)($booking);
+
+                $perf = $this->jazz_rep->getPerformerById($booking->booking_id);
+                if($perf == null) throw new QueryExecutionException("Failed to get jazz performer.");
+
+                return $booking->amount * $perf->price;
         }
 
         return 0;
@@ -188,6 +201,14 @@ class OrderService
                     $book->event = $this->story_rep->getById($book->event_id);
                     if($book->event == null) throw new QueryExecutionException("Failed to get story even for story booking.");   
                 }
+
+                return $book;
+            case BookingType::Jazz:
+                $book = $this->order_rep->getJazzBookingById($booking_id);
+
+                $book->performer = $this->jazz_rep->getPerformerById($book->performer_id);
+                if($book->performer == null) throw new QueryExecutionException("Failed to get jazz performer.");
+
                 return $book;
         }
 
@@ -246,6 +267,8 @@ class OrderService
                 return $this->order_rep->removeHistoryBooking($booking_id);   
             case BookingType::Stories:
                 return $this->order_rep->removeStoryBooking($booking_id);   
+            case BookingType::Jazz:
+                return $this->order_rep->removeJazzBooking($booking_id);   
         }
 
         return false;

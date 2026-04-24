@@ -6,6 +6,12 @@
 ?>
 
 <main>
+    <?php if(!empty($error_message)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error_message) ?>
+        </div>
+    <?php endif; ?>
+    
     <form method="POST" action="/jazz/book">
         <input type="hidden" name="performer_id" value="<?= $perf->id ?>">
         <div class="perf-details-card">
