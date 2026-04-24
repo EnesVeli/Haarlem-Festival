@@ -226,13 +226,13 @@ class JazzRepository extends Repository implements IJazzRepository
             $performers[] = new JazzPerformer(
                 (int) $row['id'],
                 $row['name'] ?? '',
+                $row['price'] ?? 0,
                 $row['bio'] ?? '',
                 $row['performance_style'] ?? null,
                 $row['event_date_text'] ?? null,
                 $row['event_time_text'] ?? null,
                 $row['venue_name'] ?? null,
                 $row['venue_address'] ?? null,
-                $row['price_text'] ?? null,
                 $row['note_text'] ?? null,
                 $row['audio_url'] ?? null,
                 $row['image_path'] ?? null,
@@ -259,13 +259,13 @@ class JazzRepository extends Repository implements IJazzRepository
         return new JazzPerformer(
             (int) $row['id'],
             $row['name'] ?? '',
+            $row['price'] ?? 0,
             $row['bio'] ?? '',
             $row['performance_style'] ?? null,
             $row['event_date_text'] ?? null,
             $row['event_time_text'] ?? null,
             $row['venue_name'] ?? null,
             $row['venue_address'] ?? null,
-            $row['price_text'] ?? null,
             $row['note_text'] ?? null,
             $row['audio_url'] ?? null,
             $row['image_path'] ?? null,
@@ -280,13 +280,13 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare("
             INSERT INTO jazz_performers (
                 name,
+                price,
                 bio,
                 performance_style,
                 event_date_text,
                 event_time_text,
                 venue_name,
                 venue_address,
-                price_text,
                 note_text,
                 audio_url,
                 image_path,
@@ -296,13 +296,13 @@ class JazzRepository extends Repository implements IJazzRepository
             )
             VALUES (
                 :name,
+                :price,
                 :bio,
                 :performance_style,
                 :event_date_text,
                 :event_time_text,
                 :venue_name,
                 :venue_address,
-                :price_text,
                 :note_text,
                 :audio_url,
                 :image_path,
@@ -314,6 +314,7 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
+            ':price' => $data['price'],
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
             ':event_date_text' => $data['event_date_text'],
@@ -335,6 +336,7 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare("
             UPDATE jazz_performers
             SET name = :name,
+                price = :price,
                 bio = :bio,
                 performance_style = :performance_style,
                 event_date_text = :event_date_text,
@@ -353,13 +355,13 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
+            ':price' => $data['price'],
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
             ':event_date_text' => $data['event_date_text'],
             ':event_time_text' => $data['event_time_text'],
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
-            ':price_text' => $data['price_text'],
             ':note_text' => $data['note_text'],
             ':audio_url' => $data['audio_url'],
             ':sort_order' => $data['sort_order'],

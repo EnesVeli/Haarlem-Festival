@@ -3,6 +3,7 @@
 namespace App\Services\Jazz;
 use App\Interfaces\Repositories\IJazzRepository;
 use App\Interfaces\Services\IJazzService;
+use App\Models\Jazz\JazzPerformer;
 use App\Repositories\JazzRepository;
 use RuntimeException;
 use Throwable;
@@ -54,4 +55,7 @@ class JazzService implements IJazzService
         }
     }
     
+    public function getPerformerById(int $id) : ?JazzPerformer {
+        return $this->jazzRepo->getPerformerById($id);
+    }
 }

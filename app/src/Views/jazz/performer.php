@@ -127,7 +127,7 @@ $heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
                     <?= htmlspecialchars($noteText ?: 'Also available for FREE on Sunday at Grote Markt.') ?>
                 </div>
 
-                <a href="/tickets/jazz" class="perf-reserve-button">Reserve</a>
+                <a href="<?= '/jazz/book?perf=' . $performer->id ?>" class="perf-reserve-button">Reserve</a>
             </aside>
 
         </div>

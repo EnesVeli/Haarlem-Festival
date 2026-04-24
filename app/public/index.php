@@ -48,6 +48,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/jazz/schedule',  [\App\Controllers\JazzController::class, 'schedule']);
     $r->addRoute('GET', '/jazz/tickets',   [\App\Controllers\JazzController::class, 'tickets']);
     $r->addRoute('GET', '/jazz/performer', [\App\Controllers\JazzController::class, 'performer']);
+    $r->addRoute('GET', '/jazz/book', [\App\Controllers\JazzController::class, 'booking']);
 
     
     // CMS - MAIN Dashboard

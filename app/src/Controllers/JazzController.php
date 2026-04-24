@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Framework\Session;
-use App\Interfaces\Services\IJazzService;
 use App\Services\Jazz\JazzService;
 use App\ViewModels\Jazz\JazzHomeViewModel;
 use App\ViewModels\Jazz\JazzPerformerViewModel;
@@ -11,9 +10,9 @@ use Throwable;
 
 class JazzController extends BaseController
 {
-    private IJazzService $service;
+    private JazzService $service;
 
-    public function __construct(?IJazzService $service = null)
+    public function __construct(?JazzService $service = null)
     {
         $this->service = $service ?? new JazzService();
     }
@@ -106,5 +105,15 @@ class JazzController extends BaseController
             http_response_code(500);
             echo $error->getMessage();
         }
+    }
+
+    public function booking(){
+        $this->render('jazz/book', [
+            'perf' => $this->service->getPerformerById($_GET['perf']),
+            'pageTitle' => 'Jazz Performer',
+            'pageCSS' => 'jazz.css',
+            'mainClass' => 'jazz-main',
+            'user' => Session::user()
+        ]);
     }
 }
