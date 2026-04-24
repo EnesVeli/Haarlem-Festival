@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 21, 2026 at 07:59 AM
+-- Generation Time: Apr 24, 2026 at 11:10 AM
 -- Server version: 12.0.2-MariaDB-ubu2404
 -- PHP Version: 8.3.27
 
@@ -65,6 +65,36 @@ INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ti
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cms_content`
 --
 
@@ -116,36 +146,6 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -520,6 +520,7 @@ INSERT INTO `jazz_locations` (`id`, `name`, `address`, `google_maps_embed_url`, 
 CREATE TABLE `jazz_performers` (
   `id` int(11) NOT NULL,
   `name` varchar(120) NOT NULL,
+  `price` int(11) NOT NULL,
   `bio` text DEFAULT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
@@ -529,7 +530,6 @@ CREATE TABLE `jazz_performers` (
   `event_time_text` varchar(100) DEFAULT NULL,
   `venue_name` varchar(150) DEFAULT NULL,
   `venue_address` varchar(255) DEFAULT NULL,
-  `price_text` varchar(50) DEFAULT NULL,
   `note_text` varchar(255) DEFAULT NULL,
   `audio_url` varchar(255) DEFAULT NULL,
   `hero_image_path` varchar(255) DEFAULT NULL
@@ -539,20 +539,20 @@ CREATE TABLE `jazz_performers` (
 -- Dumping data for table `jazz_performers`
 --
 
-INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
-(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
-(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1775427024_Screenshot 2026-04-06 at 00.10.13.png', 'Smooth, expressive', '', '', '', '', '', '', '', NULL),
-(3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
-(4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
-(5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
-(6, 'Jonna Frazer', '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', '', NULL),
-(7, 'Chris Allen', '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', '', NULL),
-(8, 'Lilith Merlot', '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', '', NULL),
-(9, 'Myles Sanko', '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', '', NULL),
-(13, 'Soul Six', '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', '', NULL),
-(14, 'The Family XL', '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', '', NULL),
-(15, 'The Nordanians', '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', '', NULL),
-(17, 'Uncle Sue', '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', '', NULL);
+INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`) VALUES
+(1, 'Evolve', 1590, 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
+(2, 'Fox & The Mayors', 1590, '', 2, 1, '/assets/uploads/jazz/performers/1775427024_Screenshot 2026-04-06 at 00.10.13.png', 'Smooth, expressive', '', '', '', '', '', '', NULL),
+(3, 'Gare du Nord', 1590, 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
+(4, 'Gumbo Kings', 1590, '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', 1590, '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', NULL),
+(6, 'Jonna Frazer', 1590, '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', NULL),
+(7, 'Chris Allen', 1590, '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', NULL),
+(8, 'Lilith Merlot', 1590, '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', NULL),
+(9, 'Myles Sanko', 1590, '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', NULL),
+(13, 'Soul Six', 1590, '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', NULL),
+(14, 'The Family XL', 1590, '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', NULL),
+(15, 'The Nordanians', 1590, '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', NULL),
+(17, 'Uncle Sue', 1590, '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -733,8 +733,8 @@ CREATE TABLE `PasswordResetToken` (
 
 CREATE TABLE `StoryBookings` (
   `booking_id` int(11) NOT NULL,
-  `event_id` int(11) NOT NULL,
   `pay_as_you_like` int(11) DEFAULT NULL,
+  `event_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL,
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
@@ -1249,6 +1249,14 @@ ALTER TABLE `CartItem`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
+
+--
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1257,14 +1265,6 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
-
---
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `HistoryBookings`
@@ -1540,16 +1540,16 @@ ALTER TABLE `CartItem`
   MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
--- AUTO_INCREMENT for table `cms_content`
---
-ALTER TABLE `cms_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
-
---
 -- AUTO_INCREMENT for table `CMS_Content`
 --
 ALTER TABLE `CMS_Content`
   MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `HistoryBookings`
@@ -1790,12 +1790,6 @@ ALTER TABLE `HistoryBookings`
   ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `HistoryReservationSlots` (`reservation_id`);
 
 --
--- Constraints for table `HistoryReservationSlots`
---
-ALTER TABLE `HistoryReservationSlots`
-  ADD CONSTRAINT `1` FOREIGN KEY (`slot_id`) REFERENCES `HistoryTimeSlot` (`slot_id`);
-
---
 -- Constraints for table `history_details`
 --
 ALTER TABLE `history_details`
@@ -1843,67 +1837,6 @@ ALTER TABLE `jazz_performer_locations`
 --
 ALTER TABLE `jazz_performer_tracks`
   ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `OrderItems`
---
-ALTER TABLE `OrderItems`
-  ADD CONSTRAINT `fk_OrderItems_1` FOREIGN KEY (`order_id`) REFERENCES `Orders` (`order_id`);
-
---
--- Constraints for table `Orders`
---
-ALTER TABLE `Orders`
-  ADD CONSTRAINT `fk_Order_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
-
---
--- Constraints for table `PasswordResetToken`
---
-ALTER TABLE `PasswordResetToken`
-  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `StoryBookings`
---
-ALTER TABLE `StoryBookings`
-  ADD CONSTRAINT `fk_StoryBookings_1` FOREIGN KEY (`event_id`) REFERENCES `StoryEvents` (`event_id`);
-
---
--- Constraints for table `YummyBookings`
---
-ALTER TABLE `YummyBookings`
-  ADD CONSTRAINT `fk_YummyBookings_1` FOREIGN KEY (`reservation_id`) REFERENCES `YummyReservationSlots` (`reservation_id`);
-
---
--- Constraints for table `YummyDishes`
---
-ALTER TABLE `YummyDishes`
-  ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyOpeningHours`
---
-ALTER TABLE `YummyOpeningHours`
-  ADD CONSTRAINT `fk_YummyOpeningHours_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyReservationSlots`
---
-ALTER TABLE `YummyReservationSlots`
-  ADD CONSTRAINT `YummyReservationSlots_ibfk_1` FOREIGN KEY (`slot_id`) REFERENCES `YummyRestaurantTimeSlots` (`slot_id`);
-
---
--- Constraints for table `YummyRestaurantFoodTypes`
---
-ALTER TABLE `YummyRestaurantFoodTypes`
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `YummyRestaurantFoodTypes_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `YummyFoodTypes` (`type_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyRestaurantImages`
---
-ALTER TABLE `YummyRestaurantImages`
-  ADD CONSTRAINT `YummyRestaurantImages_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
