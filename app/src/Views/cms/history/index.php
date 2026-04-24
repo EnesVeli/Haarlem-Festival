@@ -107,15 +107,15 @@ function imgPreview(string $filename, string $field): string {
               <small class="text-white-50 d-block">Per person &middot; Ages 12 and above</small>
             </div>
             <div class="card-body">
-              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($ticketPrices['individual']['price'] ?? 0, 2) ?></strong></p>
+              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($individual_price / 100, 2) ?></strong></p>
               <form method="POST" action="/cms/history/action">
                 <input type="hidden" name="_action" value="save_ticket_price">
-                <input type="hidden" name="ticket_type" value="individual">
+                <input type="hidden" name="type" value="0">
                 <div class="input-group">
                   <span class="input-group-text">€</span>
                   <input type="number" name="price" class="form-control"
                          step="0.01" min="0"
-                         value="<?= number_format($ticketPrices['individual']['price'] ?? 0, 2) ?>"
+                         value="<?= number_format($individual_price / 100, 2) ?>"
                          required>
                   <button class="btn btn-dark" type="submit">Save</button>
                 </div>
@@ -132,15 +132,15 @@ function imgPreview(string $filename, string $field): string {
               <small class="text-white-50 d-block">Up to 4 people</small>
             </div>
             <div class="card-body">
-              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($ticketPrices['family']['price'] ?? 0, 2) ?></strong></p>
+              <p class="text-muted mb-3">Current price: <strong>€<?= number_format($family_price / 100, 2) ?></strong></p>
               <form method="POST" action="/cms/history/action">
                 <input type="hidden" name="_action" value="save_ticket_price">
-                <input type="hidden" name="ticket_type" value="family">
+                <input type="hidden" name="type" value="1">
                 <div class="input-group">
                   <span class="input-group-text">€</span>
                   <input type="number" name="price" class="form-control"
                          step="0.01" min="0"
-                         value="<?= number_format($ticketPrices['family']['price'] ?? 0, 2) ?>"
+                         value="<?= number_format($family_price / 100, 2) ?>"
                          required>
                   <button class="btn btn-dark" type="submit">Save</button>
                 </div>
@@ -152,6 +152,7 @@ function imgPreview(string $filename, string $field): string {
       </div>
 
       <!-- Time Slots (read-only info) -->
+      <!-- 
       <div class="card shadow-sm mt-4">
         <div class="card-header bg-secondary text-white">
           <strong>🕐 Available Time Slots</strong>
@@ -163,17 +164,18 @@ function imgPreview(string $filename, string $field): string {
               <tr><th>Time Slot</th><th>Spots Available</th></tr>
             </thead>
             <tbody>
-              <?php foreach ($tickets as $t): ?>
+              <php foreach ($tickets as $t): ?>
               <tr>
-                <td><?= htmlspecialchars($t['time_slot']) ?></td>
-                <td><?= (int)$t['available_spots'] ?></td>
+                <td><= htmlspecialchars($t['time_slot']) ?></td>
+                <td><= (int)$t['available_spots'] ?></td>
               </tr>
-              <?php endforeach; ?>
+              <php endforeach; ?>
             </tbody>
           </table>
         </div>
       </div>
-    </div>
+    </div> 
+    -->
 
     <!-- ════════════════════════════════════════════════════
          TAB 3 – PAGE CONTENT

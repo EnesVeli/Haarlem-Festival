@@ -133,4 +133,12 @@ class HistoryService
         // Create booking in db, and add it to cart
         $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
+
+    public function getIndividualPrice() : int {
+        return $this->order_service->getHistoryIndividualPrice();
+    }
+
+    public function getFamilyPrice() : int {
+        return $this->order_service->getHistoryFamilyPrice();
+    }
 }

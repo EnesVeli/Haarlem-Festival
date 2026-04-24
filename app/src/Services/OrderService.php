@@ -15,6 +15,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\YummyBooking;
+use App\Repositories\HistoryCmsRepository;
 use App\Repositories\HistoryRepository;
 use App\Repositories\JazzRepository;
 use App\Repositories\OrderRepository;
@@ -26,10 +27,9 @@ class OrderService
     public static int $VAT_RATE = 900;
     public static int $YUMMY_COST_PER_SEAT = 1000;
     public static int $HISTORY_ROUTE_DURATION = 180; // In munutes
-    public static int $HISTORY_INDIVIDUAL_COST = 1250;
-    public static int $HISTORY_FAMILY_COST = 4500;
 
     private OrderRepository $order_rep;
+    private HistoryCmsRepository $history_cms_rep;
     private YummyRestaurantsRepository $restaurant_rep;
     private StoriesRepository $story_rep;
     private HistoryRepository $history_rep;
@@ -40,6 +40,7 @@ class OrderService
     public function __construct()
     {
         $this->order_rep = new OrderRepository();
+        $this->history_cms_rep = new HistoryCmsRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
         $this->story_rep = new StoriesRepository();
         $this->history_rep = new HistoryRepository();
@@ -113,6 +114,14 @@ class OrderService
         return null;
     }
 
+    public function getHistoryIndividualPrice() : int {
+        return $this->history_cms_rep->getIndividualPrice();
+    }
+
+    public function getHistoryFamilyPrice() : int {
+        return $this->history_cms_rep->getFamilyPrice();
+    }
+
     /**
      * Calculates price of a booking depending on its type.
      * @param IBooking $booking from which to calculate price
@@ -125,7 +134,7 @@ class OrderService
                 return ($booking->adult_number + $booking->child_number) * self::$YUMMY_COST_PER_SEAT;
             case BookingType::History:
                 $booking = (fn($booking):HistoryBooking=>$booking)($booking);
-                return $booking->individual_count * self::$HISTORY_INDIVIDUAL_COST + $booking->family_count * self::$HISTORY_FAMILY_COST;
+                return $booking->individual_count * $this->getHistoryIndividualPrice() + $booking->family_count * $this->getHistoryFamilyPrice();
             case BookingType::Stories:
                 $booking = (fn($booking):StoryBooking=>$booking)($booking);
 

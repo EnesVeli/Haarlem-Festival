@@ -56,6 +56,11 @@
                     <option value="NL" <?= ($event->language ?? '') === 'NL' ? 'selected' : '' ?>>Dutch</option>
                 </select>
             </div>
+            <div class="col-md-4 mb-3">
+                <label for="age_group">Price</label>
+                <input type="number" min="0.01" max="1000" step="0.01" class="form-control" id="price" name="price"
+                    value="<?= htmlspecialchars(!isset($event->price) ? '' : number_format($event->price / 100, 2)) ?>">
+            </div>
         </div>
 
         <div class="mb-3 form-check">
@@ -84,10 +89,18 @@
                 <input type="number" class="form-control" id="max_tickets" name="max_tickets"
                     value="<?= (int) ($event->max_tickets ?? 0) ?>" min="0" required>
             </div>
+        </div>
+
+        <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="venue_id">Venue ID</label>
-                <input type="number" class="form-control" id="venue_id" name="venue_id"
-                    value="<?= (int) ($event->venue_id ?? 1) ?>" min="1" required>
+                <label for="venue_id">Address Name</label>
+                <input type="text" class="form-control" id="address_name" name="address_name"
+                    value="<?= ($event->address_name ?? "") ?>" min="1" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="venue_id">Full Address</label>
+                <input type="text" class="form-control" id="address_text" name="address_text"
+                    value="<?= ($event->address_text ?? "") ?>" min="1" required>
             </div>
         </div>
 
@@ -102,20 +115,6 @@
             <textarea class="form-control" id="performer_bio" name="performer_bio"
                 rows="4"><?= htmlspecialchars($event->performer_bio ?? '') ?></textarea>
         </div>
-
-        <h5 class="mt-4">Ticket Prices</h5>
-        <?php foreach ($ticketTypes as $tt): ?>
-        <div class="mb-3">
-            <label class="form-label"><?= htmlspecialchars($tt['name']) ?></label>
-            <?php if ($tt['is_pay_as_you_like']): ?>
-            <span class="d-block text-muted">Pay as you like &mdash; no fixed price</span>
-            <?php else: ?>
-            <input type="number" step="0.01" min="0" class="form-control"
-                name="ticket_prices[<?= (int)$tt['type_id'] ?>]"
-                value="<?= number_format((float)$tt['price'], 2, '.', '') ?>">
-            <?php endif; ?>
-        </div>
-        <?php endforeach; ?>
 
         <div class="mb-3">
             <label class="form-label" for="image">Image Upload</label>
@@ -141,19 +140,19 @@
             <?php endif; ?>
         </div>
 
-
-
+        <!--
         <div class="mb-3">
             <label class="form-label" for="audio_title">Audio Title</label>
             <input type="text" class="form-control" id="audio_title" name="audio_title"
-                value="<?= htmlspecialchars($event->audio_title ?? '') ?>">
+                value="<= htmlspecialchars($event->audio_title ?? '') ?>">
         </div>
 
         <div class="mb-3">
             <label class="form-label" for="audio_transcript">Audio Transcript</label>
             <textarea class="form-control" id="audio_transcript" name="audio_transcript"
-                rows="4"><?= htmlspecialchars($event->audio_transcript ?? '') ?></textarea>
+                rows="4"><= htmlspecialchars($event->audio_transcript ?? '') ?></textarea>
         </div>
+        -->
 
         <button type="submit" class="btn btn-primary">Save Event</button>
         <a href="/cms/stories" class="btn btn-secondary">Cancel</a>

@@ -97,8 +97,8 @@ class HistoryController extends BaseController
             $view_model->reservation_id = $reservation->reservation_id;
             $view_model->date = $reservation->date->format("d.m.Y - F j");
             $view_model->time = $time_slot->time->format("H:i");
-            $view_model->individual_cost = OrderService::$HISTORY_INDIVIDUAL_COST;
-            $view_model->family_cost = OrderService::$HISTORY_FAMILY_COST;
+            $view_model->individual_cost = $this->service->getIndividualPrice();
+            $view_model->family_cost = $this->service->getFamilyPrice();
 
             require __DIR__ . '/../Views/history/booking.php';
             exit;

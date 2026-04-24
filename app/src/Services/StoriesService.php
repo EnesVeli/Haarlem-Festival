@@ -41,19 +41,17 @@ class StoriesService
     }
 
     /** Inserts a new story event. */
-    public function createEvent(array $data): int
+    public function createEvent(StoryEvent $event): int
     {
-        //$eventId = $this->repository->insert($data);
-        //$isPayAsYouLike = !empty($data['is_pay_as_you_like']);
-        //$this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+        $this->repository->insert($event);
 
         return 0;
     }
 
     /** Updates an existing story event. */
-    public function updateEvent(int $id, array $data): bool
+    public function updateEvent(StoryEvent $event): bool
     {
-        return $this->repository->update($id, $data);
+        return $this->repository->update($event);
     }
 
     /** Deletes a story event by ID. */
@@ -66,16 +64,6 @@ class StoriesService
     public function getScheduleForEvent(string $name): array
     {
         return $this->repository->getScheduleByName($name);
-    }
-
-    public function getTicketTypesForCms(int $eventId): array
-    {
-        return $this->repository->getTicketTypesByEventId($eventId);
-    }
-
-    public function updateTicketTypePrice(int $typeId, float $price): void
-    {
-        $this->repository->updateTicketTypePrice($typeId, $price);
     }
 
     public function createBooking(int $user_id, StoryBooking $booking){

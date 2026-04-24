@@ -54,7 +54,7 @@ class StoriesRepository extends Repository
         
         $stmt = $this->connection->prepare($sql);
 
-        $stmt->bindParam('name', $event->name, PDO::PARAM_INT);
+        $stmt->bindParam('name', $event->name, PDO::PARAM_STR);
         $stmt->bindParam('slug', $event->slug, PDO::PARAM_STR);
         $stmt->bindParam('price', $event->price, PDO::PARAM_INT);
         $stmt->bindParam('address_name', $event->address_name, PDO::PARAM_STR);
@@ -78,21 +78,37 @@ class StoriesRepository extends Repository
         return (int) $this->connection->lastInsertId();
     }
 
-    public function update(int $id, array $data): bool
+    public function update(StoryEvent $event): bool
     {
-        $sql = "UPDATE Event SET 
-                name = :name, slug = :slug, description = :description, language = :language, 
-                age_group = :age_group, story_type = :story_type, is_pay_as_you_like = :is_pay_as_you_like, 
-                start_time = :start_time, end_time = :end_time, max_tickets = :max_tickets, 
-                performer_name = :performer_name, performer_bio = :performer_bio, image_path = :image_path,
-                gallery_image_1 = :gallery_image_1, gallery_image_2 = :gallery_image_2,
-                audio_preview_path = :audio_preview_path, audio_title = :audio_title, audio_transcript = :audio_transcript,
-                venue_id = :venue_id
-                WHERE event_id = :id AND type = :type";
+        $sql = "UPDATE `StoryEvents` SET `name`=:name,`slug`=:slug,`price`=:price,`address_name`=:address_name,`address_text`=:address_text,`description`=:description,
+            `performer_name`=:performer_name,`performer_bio`=:performer_bio,`language`=:language,`age_group`=:age_group,`story_type`=:story_type,
+            `is_pay_as_you_like`=:is_pay_as_you_like,`start_time`=:start_time,`end_time`=:end_time,`max_tickets`=:max_tickets,`image_path`=:image_path,
+            `gallery_image_1`=:gallery_image_1,`gallery_image_2`=:gallery_image_2 
+            WHERE `event_id` = :event_id;";
 
-        $data['id'] = $id;
         $stmt = $this->connection->prepare($sql);
-        return $stmt->execute($data);
+
+        $stmt->bindParam('event_id', $event->event_id, PDO::PARAM_INT);
+        $stmt->bindParam('name', $event->name, PDO::PARAM_STR);
+        $stmt->bindParam('slug', $event->slug, PDO::PARAM_STR);
+        $stmt->bindParam('price', $event->price, PDO::PARAM_INT);
+        $stmt->bindParam('address_name', $event->address_name, PDO::PARAM_STR);
+        $stmt->bindParam('address_text', $event->address_text, PDO::PARAM_STR);
+        $stmt->bindParam('description', $event->description, PDO::PARAM_STR);
+        $stmt->bindParam('performer_name', $event->performer_name, PDO::PARAM_STR);
+        $stmt->bindParam('performer_bio', $event->performer_bio, PDO::PARAM_STR);
+        $stmt->bindParam('language', $event->language, PDO::PARAM_STR);
+        $stmt->bindParam('age_group', $event->age_group, PDO::PARAM_STR);
+        $stmt->bindParam('story_type', $event->story_type, PDO::PARAM_STR);
+        $stmt->bindParam('is_pay_as_you_like', $event->is_pay_as_you_like, PDO::PARAM_INT);
+        $stmt->bindParam('start_time', $event->start_time, PDO::PARAM_STR);
+        $stmt->bindParam('end_time', $event->end_time, PDO::PARAM_STR);
+        $stmt->bindParam('max_tickets', $event->max_tickets, PDO::PARAM_INT);
+        $stmt->bindParam('image_path', $event->image_path, PDO::PARAM_STR);
+        $stmt->bindParam('gallery_image_1', $event->gallery_image_1, PDO::PARAM_STR);
+        $stmt->bindParam('gallery_image_2', $event->gallery_image_2, PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     /**
@@ -131,31 +147,5 @@ class StoriesRepository extends Repository
         $stmt->execute([':name' => $name]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getTicketTypesByEventId(int $eventId): array
-    {
-        $sql = "SELECT type_id, name, price, is_pay_as_you_like
-                FROM Ticket_Type
-                WHERE event_id = :event_id
-                ORDER BY type_id";
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([':event_id' => $eventId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function updateTicketTypePrice(int $typeId, float $price): void
-    {
-        $sql = "UPDATE Ticket_Type
-                SET price = :price
-                WHERE type_id = :type_id";
-
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute([
-            ':price' => $price,
-            ':type_id' => $typeId,
-        ]);
-    }
-    
+    } 
 }

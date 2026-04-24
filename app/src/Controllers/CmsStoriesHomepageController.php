@@ -2,6 +2,7 @@
 namespace App\Controllers;
 
 use App\Interfaces\IStoriesHomepageService;
+use App\Services\StoriesHomepageService;
 use App\ViewModels\CmsStoriesHomepageViewModel;
 
 /**
@@ -18,12 +19,9 @@ class CmsStoriesHomepageController extends BaseController
     /** @var IStoriesHomepageService */
     private IStoriesHomepageService $homepageService;
 
-    /**
-     * @param IStoriesHomepageService $homepageService
-     */
-    public function __construct(IStoriesHomepageService $homepageService)
+    public function __construct()
     {
-        $this->homepageService = $homepageService;
+        $this->homepageService = new StoriesHomepageService();
     }
 
     /**

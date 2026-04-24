@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\StoryEvent;
 use App\Services\StoriesService;
 
 /**
@@ -14,12 +15,9 @@ class CmsStoriesController extends BaseController
 
     private StoriesService $service;
 
-    /**
-     * @param StoriesService $service Stories service
-     */
-    public function __construct(StoriesService $service)
+    public function __construct()
     {
-        $this->service = $service;
+        $this->service = new StoriesService();
     }
 
     /**
@@ -47,7 +45,6 @@ class CmsStoriesController extends BaseController
 
         $this->render('cms/stories/edit', [
             'event'       => $event,
-            'ticketTypes' => $event ? $this->service->getTicketTypesForCms($event->event_id) : [],
             'cms_error'   => $_SESSION['cms_error'] ?? null,
         ]);
         unset($_SESSION['cms_error']);
@@ -73,53 +70,33 @@ class CmsStoriesController extends BaseController
             return;
         }
 
-        $data = $this->validateAndBuildData($_POST);
-        if ($data === null) {
+        $event = $this->validateAndBuildData($_POST);
+        if ($event === null) {
             return;
         }
 
-        $imagePath = $this->processImageUpload($_FILES['image'] ?? null, $data['image_path']);
+        $imagePath = $this->processImageUpload($_FILES['image'] ?? null, $event->image_path);
         if ($imagePath === null) {
             return;
         }
-        $data['image_path'] = $imagePath;
+        $event->image_path = $imagePath;
 
-        $gallery1 = $this->processImageUpload($_FILES['gallery_image_1'] ?? null, $data['gallery_image_1']);
-        $gallery2 = $this->processImageUpload($_FILES['gallery_image_2'] ?? null, $data['gallery_image_2']);
+        $gallery1 = $this->processImageUpload($_FILES['gallery_image_1'] ?? null, $event->gallery_image_1);
+        $gallery2 = $this->processImageUpload($_FILES['gallery_image_2'] ?? null, $event->gallery_image_2);
         if ($gallery1 === null || $gallery2 === null) {
             return;
         }
-        $data['gallery_image_1'] = $gallery1;
-        $data['gallery_image_2'] = $gallery2;
+        $event->gallery_image_1 = $gallery1;
+        $event->gallery_image_2 = $gallery2;
 
         if (!empty($_POST['event_id']) && is_numeric($_POST['event_id'])) {
-            $this->service->updateEvent((int) $_POST['event_id'], $data);
+            $event->event_id = (int) $_POST['event_id'];
+
+            $this->service->updateEvent($event);
         } else {
-            $newEventId = $this->service->createEvent($data);
+            $newEventId = $this->service->createEvent($event);
             $this->redirect('/cms/stories/edit?id=' . $newEventId);
             return;
-        }
-
-        if (isset($_POST['ticket_prices']) && is_array($_POST['ticket_prices']) && !empty($_POST['event_id']) && is_numeric($_POST['event_id'])) {
-            $ticketTypes = $this->service->getTicketTypesForCms((int) $_POST['event_id']);
-            $payAsYouLikeTypeIds = [];
-            foreach ($ticketTypes as $ticketType) {
-                if (!empty($ticketType['is_pay_as_you_like'])) {
-                    $payAsYouLikeTypeIds[] = (int) $ticketType['type_id'];
-                }
-            }
-
-            foreach ($_POST['ticket_prices'] as $typeId => $price) {
-                $typeId = (int) $typeId;
-                $price = (float) $price;
-                if ($price < 0) {
-                    continue;
-                }
-                if (in_array($typeId, $payAsYouLikeTypeIds, true)) {
-                    continue;
-                }
-                $this->service->updateTicketTypePrice($typeId, $price);
-            }
         }
 
         $this->redirect('/cms/stories');
@@ -156,24 +133,22 @@ class CmsStoriesController extends BaseController
      * Validates and normalizes POST payload for stories event.
      *
      * @param array<string, mixed> $post
-     * @return array<string, mixed>|null
+     * @return ?StoryEvent
      */
-    private function validateAndBuildData(array $post): ?array
+    private function validateAndBuildData(array $post): ?StoryEvent
     {
         $name = trim((string) ($post['name'] ?? ''));
         $slug = trim((string) ($post['slug'] ?? ''));
         $description = trim((string) ($post['description'] ?? ''));
         $startTime = trim((string) ($post['start_time'] ?? ''));
         $endTime = trim((string) ($post['end_time'] ?? ''));
-        $venueIdRaw = $post['venue_id'] ?? '';
 
         if (
             $name === '' ||
             $slug === '' ||
             $description === '' ||
             $startTime === '' ||
-            $endTime === '' ||
-            (string) $venueIdRaw === ''
+            $endTime === ''
         ) {
             $_SESSION['cms_error'] = 'Name, slug, description, start time, end time and venue are required.';
             $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
@@ -187,12 +162,6 @@ class CmsStoriesController extends BaseController
             exit;
         }
 
-        if (!is_numeric((string) $venueIdRaw) || (int) $venueIdRaw < 1) {
-            $_SESSION['cms_error'] = 'Venue ID must be a valid positive number.';
-            $this->redirect('/cms/stories/edit' . (!empty($post['event_id']) ? '?id=' . (int) $post['event_id'] : ''));
-            exit;
-        }
-
         $maxTicketsRaw = $post['max_tickets'] ?? 0;
         if (!is_numeric((string) $maxTicketsRaw) || (int) $maxTicketsRaw < 0) {
             $_SESSION['cms_error'] = 'Max tickets must be a valid number.';
@@ -200,27 +169,31 @@ class CmsStoriesController extends BaseController
             exit;
         }
 
-        return [
-            'name' => $name,
-            'slug' => $slug,
-            'description' => $description,
-            'language' => trim((string) ($post['language'] ?? 'EN')),
-            'age_group' => trim((string) ($post['age_group'] ?? 'All Ages')),
-            'story_type' => trim((string) ($post['story_type'] ?? '')),
-            'is_pay_as_you_like' => isset($post['is_pay_as_you_like']) ? 1 : 0,
-            'start_time' => $startTime,
-            'end_time' => $endTime,
-            'max_tickets' => (int) $maxTicketsRaw,
-            'performer_name' => trim((string) ($post['performer_name'] ?? '')) ?: null,
-            'performer_bio' => trim((string) ($post['performer_bio'] ?? '')) ?: null,
-            'venue_id' => (int) $venueIdRaw,
-            'image_path' => trim((string) ($post['existing_image'] ?? '')),
-            'gallery_image_1' => trim((string) ($post['existing_gallery_1'] ?? '')),
-            'gallery_image_2' => trim((string) ($post['existing_gallery_2'] ?? '')),
-            'audio_preview_path' => trim((string) ($post['existing_audio'] ?? '')),
-            'audio_title' => trim((string) ($post['audio_title'] ?? '')) ?: null,
-            'audio_transcript' => trim((string) ($post['audio_transcript'] ?? '')) ?: null,
-        ];
+        $is_pay_as_you_like = isset($post['is_pay_as_you_like']) ? 1 : 0;
+        $price = $is_pay_as_you_like == 1 ? 0 : $post['price'] * 100;
+
+        $event = new StoryEvent();
+
+        $event->name = $name;
+        $event->slug = $slug;
+        $event->description = $description;
+        $event->language = trim((string) ($post['language'] ?? 'EN'));
+        $event->age_group = trim((string) ($post['age_group'] ?? 'All Ages'));
+        $event->story_type = trim((string) ($post['story_type'] ?? ''));
+        $event->is_pay_as_you_like = $is_pay_as_you_like;
+        $event->price = $price;
+        $event->start_time = $startTime;
+        $event->end_time = $endTime;
+        $event->max_tickets = (int)$maxTicketsRaw;
+        $event->address_name = trim((string) ($post['address_name'] ?? '')) ?: "";
+        $event->address_text = trim((string) ($post['address_text'] ?? '')) ?: "";
+        $event->performer_name = trim((string) ($post['performer_name'] ?? '')) ?: null;
+        $event->performer_bio = trim((string) ($post['performer_bio'] ?? '')) ?: null;
+        $event->image_path = trim((string) ($post['existing_image'] ?? ''));
+        $event->gallery_image_1 = trim((string) ($post['existing_gallery_1'] ?? ''));
+        $event->gallery_image_2 = trim((string) ($post['existing_gallery_2'] ?? ''));     
+
+        return $event;
     }
 
     /**

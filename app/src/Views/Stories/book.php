@@ -68,7 +68,7 @@ $price = number_format($event->price / 100, 2);
                         <strong>I have a HaarlemPas</strong>
                         <small>Discount will be applied at checkout.</small>
                     </label>
-                    <div class="stories-booking-haarlempas-code" id="haarlemPasCode" style="display:none;">
+                    <div id="haarlempas_code_div" class="stories-booking-haarlempas-code" id="haarlemPasCode" style="display:none;">
                         <label for="haarlemPasInput">Enter your 10 digit code</label>
                         <input type="text" id="haarlemPasInput" name="haarlempas_code" placeholder="1234 5678 90" minlength="10" maxlength="10">
                     </div>
@@ -127,39 +127,45 @@ $price = number_format($event->price / 100, 2);
     var haarlemCheck = document.getElementById('haarlemPasCheck');
     var haarlemCode = document.getElementById('haarlemPasCode');
 
-    var pay_as_you_like = <?= $event->is_pay_as_you_like ?>;
+    var pay_as_you_like = <?= (int)$event->is_pay_as_you_like ?>;
     var custom_pay_amount = false;
     var sel_btn = document.getElementById("amount_sel_def");
 
     var price = <?= $event->price ?>;
+    var qnt = 1;
 
     var eventName = <?= json_encode($event->name) ?>;
 
     function updateTotal() {
-        if(pay_as_you_like){
+        if(pay_as_you_like == 1){
             totalAmount.textContent = '€' + (document.getElementById('custom_pay_input').value).toFixed(2);
             return; 
         }
 
-        var qty = parseInt(qtyInput.value, 10) || 1;
         var unitPrice = price;
 
         if (haarlemCheck.checked) {
             unitPrice = price * 0.75;
         }
 
-        var total = qty * unitPrice / 100;
-        summaryText.textContent = qty + ' Ticket × €' + (unitPrice / 100).toFixed(2) + ' (' + eventName + ')';
+        var total = qnt * unitPrice / 100;
+        summaryText.textContent = qnt + ' Ticket × €' + (unitPrice / 100).toFixed(2) + ' (' + eventName + ')';
         totalAmount.textContent = '€' + total.toFixed(2);
     }
 
     function OnCheckBoxClick(checkbox){
         if(checkbox.checked == true){
             document.getElementById('haarlem_pas_input').value = 1;
+
+            document.getElementById('haarlempas_code_div').style = "display: flex;";
         }
         else{
             document.getElementById('haarlem_pas_input').value = 0;
+
+            document.getElementById('haarlempas_code_div').style = "display: none;";
         }
+
+        updateTotal();
     }
 
     function onPayYouLikeChanged(pay_input){
@@ -200,17 +206,17 @@ $price = number_format($event->price / 100, 2);
     }
 
     document.getElementById('qtyMinus').addEventListener('click', function() {
-        var current = parseInt(qtyInput.value, 10) || 1;
-        if (current > 1) {
-            qtyInput.value = current - 1;
+        if (qnt > 1) {
+            qnt--;
+            qtyInput.value = qnt;
             updateTotal();
         }
     });
 
     document.getElementById('qtyPlus').addEventListener('click', function() {
-        var current = parseInt(qtyInput.value, 10) || 1;
-        if (current < 20) {
-            qtyInput.value = current + 1;
+        if (qnt < 20) {
+            qnt++;
+            qtyInput.value = qnt;
             updateTotal();
         }
     });
