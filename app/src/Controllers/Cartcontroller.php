@@ -46,13 +46,6 @@ class CartController extends BaseController
                 $view_model->total = number_format($total, 2);
                 $view_model->vat_cost = number_format($total - $subtotal, 2);
                 $view_model->vat_persent = number_format(OrderService::$VAT_RATE / 100, 2);
-
-                foreach($order->order_items as $item){
-                    $this->formatOrderItem($item);
-
-                    // format price
-                    $item->price_string = number_format(((float)$item->price) / 100, 2);
-                }
             }
             else{
                 $view_model = null;
@@ -63,57 +56,6 @@ class CartController extends BaseController
         }
 
         require __DIR__ . '/../Views/cart/index.php';
-    }
-
-    private function formatOrderItem(OrderItem $item){
-        switch($item->booking_type){
-            case BookingType::Yummy:
-                // format date
-                $item->date_string = $item->booking->reservation_time_slot->date->format('D, M j');
-            
-                // format time
-                $time_start = $item->booking->reservation_time_slot->time;
-
-                $time_end = clone $time_start;
-                $time_end->add(new DateInterval('PT' . $item->booking->reservation_time_slot->duration . 'M'));
-
-                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
-                break;
-            case BookingType::History:
-                // format date
-                $item->date_string = $item->booking->date->format('D, M j');
-            
-                // format time
-                $time_start = $item->booking->date;
-
-                $time_end = clone $time_start;
-                $time_end->add(new DateInterval('PT' . OrderService::$HISTORY_ROUTE_DURATION . 'M'));
-
-                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
-                break;
-            case BookingType::Stories:
-                // format date
-                $item->date_string = (new DateTime($item->booking->event->start_time))->format('D, M j');
-            
-                // format time
-                $time_start = new DateTime($item->booking->event->start_time);
-
-                $time_end = new DateTime($item->booking->event->end_time);
-
-                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
-                break;
-            case BookingType::Jazz:
-                // format date
-                $item->date_string = $item->booking->performer->date->format('D, M j');
-            
-                // format time
-                $time_start = $item->booking->performer->start_time;
-
-                $time_end = $item->booking->performer->end_time;
-
-                $item->time_string = $time_start->format('H:i') . ' - ' . $time_end->format('H:i'); 
-                break;
-        }
     }
 
     public function remove(){
@@ -135,5 +77,24 @@ class CartController extends BaseController
         }
 
         header("location: /cart");
+    }
+
+    public function complete(){
+        if(!$this->isLoggedIn())
+        {
+            Session::setTempError("Your session has expired. Log in, in order to modify your cart.");
+            header("Location: /login");
+        }
+
+        $this->order_service->completeOrder(Session::user()['user_id']);
+        
+        try{
+            
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to complete order." . $ex->getMessage());
+        }
+
+        header("Location: /cart");
     }
 }

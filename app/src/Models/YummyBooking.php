@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use App\Enums\BookingType;
+use DateInterval;
 use DateTime;
-
-include '/app/src/Models/Interfaces/IBooking.php';
 
 class YummyBooking implements IBooking {
     public int $booking_id;
@@ -32,5 +31,29 @@ class YummyBooking implements IBooking {
         if($name == "date_") {
             $this->date = new DateTime($value);
         }
+    }
+
+    public function getBookingStartDate() : ?DateTime{
+        return clone $this->date;
+    }
+    public function getBookingEndDate() : ?DateTime{
+        if(!isset($this->reservation_time_slot)) return null;
+
+        $end = clone $this->date;
+        $end->add(new DateInterval('PT' . $this->reservation_time_slot->duration . 'M')); 
+        return $end;
+    }
+    public function getAddressFull() : ?string{
+        if(!isset($this->restaurant)) return null;
+
+        return $this->restaurant->address_text;
+    }
+    public function getEventName() : ?string{
+        if(!isset($this->restaurant)) return null;
+
+        return $this->restaurant->name . " Booking";
+    }
+    public function getQuantityString() : ?string{
+        return 'adults: ' . $this->adult_number . '; children: ' . $this->child_number;
     }
 }

@@ -4,6 +4,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 define('VIEW_PATH', __DIR__ . '/../src/Views');
 define('PARTIALS_PATH', VIEW_PATH . '/partials');
 
+require_once __DIR__ . '/../src/Models/Interfaces/IBooking.php';
+
 // Show errors for development ONLY!
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -165,6 +167,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
     $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
     $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
+    $r->addRoute('GET', '/cart/checkout', [\App\Controllers\CartController::class, 'complete']);
 
     // Payment
     $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);

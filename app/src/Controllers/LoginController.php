@@ -9,12 +9,10 @@ use Exception;
 class LoginController
 {
     private UserService $userService;
-    private ICartService $cartService;
 
-    public function __construct(UserService $userService, ICartService $cartService)
+    public function __construct()
     {
-        $this->userService = $userService;
-        $this->cartService = $cartService;
+        $this->userService = new UserService();
     }
 
     public function index()

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BookingType;
+use DateTime;
 
 class OrderItem{
     public int $item_id;
@@ -12,10 +13,6 @@ class OrderItem{
     public int $price;
 
     public ?IBooking $booking;
-
-    public ?string $date_string;
-    public ?string $time_string;
-    public ?string $price_string;
 
     function __set($name, $value) {
         if($name == "booking_type_") {

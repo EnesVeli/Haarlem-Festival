@@ -3,127 +3,70 @@
 namespace App\Repositories;
 
 use App\Framework\Repository;
-use App\Models\FestivalTicket;
+use App\Models\Ticket;
 use PDO;
 
 class TicketRepository extends Repository
 {
-    private const SELECT_TICKET = "
-        SELECT
-            t.festival_event_ticket_id,
-            t.qr_token,
-            t.ticket_code,
-            t.is_scanned,
-            t.scanned_at,
-            e.name        AS title,
-            tt.name       AS category,
-            DATE(e.start_time) AS event_date,
-            e.start_time  AS start_time,
-            v.name        AS location
-        FROM festival_event_tickets t
-        JOIN Ticket_Type tt ON tt.type_id  = t.festival_event_ticket_type_id
-        JOIN Event        e  ON e.event_id = tt.event_id
-        JOIN Venue        v  ON v.venue_id = e.venue_id
-    ";
-
-    public function findByTicketCode(string $ticketCode): ?FestivalTicket
+    public function findByTicketCode(string $code): ?Ticket
     {
-        $stmt = $this->connection->prepare(
-            self::SELECT_TICKET . " WHERE t.ticket_code = :ticket_code LIMIT 1"
-        );
-        $stmt->execute(['ticket_code' => $ticketCode]);
-        return $this->hydrate($stmt->fetch(PDO::FETCH_ASSOC));
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `code` = :code LIMIT 1;");
+        $stmt->bindValue('code', $code, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Ticket::class);
+        $res = $stmt->fetch();
+
+        return $res === false ? null : $res;
     }
 
-    public function findByQrToken(string $qrToken): ?FestivalTicket
+    public function findByQrToken(string $qr_token): ?Ticket
     {
-        $stmt = $this->connection->prepare(
-            self::SELECT_TICKET . " WHERE t.qr_token = :qr_token LIMIT 1"
-        );
-        $stmt->execute(['qr_token' => $qrToken]);
-        return $this->hydrate($stmt->fetch(PDO::FETCH_ASSOC));
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `qr_token` = :qr_token LIMIT 1;");
+        $stmt->bindValue('qr_token', $qr_token, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Ticket::class);
+        $res = $stmt->fetch();
+
+        return $res === false ? null : $res;
     }
 
-    public function findById(int $ticketId): ?FestivalTicket
+    public function findById(int $ticket_id): ?Ticket
     {
-        $stmt = $this->connection->prepare(
-            self::SELECT_TICKET . " WHERE t.festival_event_ticket_id = :ticket_id LIMIT 1"
-        );
-        $stmt->execute(['ticket_id' => $ticketId]);
-        return $this->hydrate($stmt->fetch(PDO::FETCH_ASSOC));
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `ticket_id` = :ticket_id LIMIT 1;");
+        $stmt->bindValue('ticket_id', $ticket_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Ticket::class);
+        $res = $stmt->fetch();
+
+        return $res === false ? null : $res;
     }
 
-    /**
-     * @param int    $userId                    User who bought the ticket
-     * @param int    $festivalEventTicketTypeId  Ticket_Type.type_id
-     * @param string $qrToken                   Secure token for QR scanning
-     * @param string $ticketCode                Human-readable code (e.g. HF-A1B2C3)
-     */
-    public function createTicket(
-        int    $userId,
-        int    $festivalEventTicketTypeId,
-        string $qrToken,
-        string $ticketCode
-    ): int {
-        $stmt = $this->connection->prepare("
-            INSERT INTO festival_event_tickets
-                (user_id, festival_event_ticket_type_id, qr_token, ticket_code, is_scanned)
-            VALUES
-                (:user_id, :type_id, :qr_token, :ticket_code, 0)
-        ");
+    public function createTicket(Ticket $ticket): ?int {
+        $stmt = $this->connection->prepare("INSERT INTO `Tickets`(`item_id`, `qr_token`, `code`, `scanned_at`) VALUES (:item_id, :qr_token, :code, NULL);");
 
-        $stmt->execute([
-            'user_id'   => $userId,
-            'type_id'   => $festivalEventTicketTypeId,
-            'qr_token'  => $qrToken,
-            'ticket_code' => $ticketCode,
-        ]);
+        $stmt->bindValue('item_id', $ticket->item_id, PDO::PARAM_INT);
+        $stmt->bindValue('qr_token', $ticket->qr_token, PDO::PARAM_STR);
+        $stmt->bindValue('code', $ticket->code, PDO::PARAM_STR);
 
-        return (int) $this->connection->lastInsertId();
+        $res = $stmt->execute();
+
+        if($res === false) return null;
+
+        return $this->connection->lastInsertId();
     }
 
-    public function markAsScanned(int $ticketId): void
+    public function markAsScanned(int $ticket_id) : bool
     {
-        $stmt = $this->connection->prepare("
-            UPDATE festival_event_tickets
-            SET    is_scanned = 1, scanned_at = NOW()
-            WHERE  festival_event_ticket_id = :ticket_id
-        ");
-        $stmt->execute(['ticket_id' => $ticketId]);
-    }
+        $stmt = $this->connection->prepare("UPDATE `Tickets` SET `scanned_at`=NOW() WHERE `ticket_id` = :ticket_id;");
 
-    public function getTicketsByOrder(int $orderId): array
-    {
-        $stmt = $this->connection->prepare("
-            SELECT t.*, e.name AS event_name, e.start_time, e.end_time,
-                   v.name AS venue_name, tt.name AS ticket_type_name
-            FROM   Ticket t
-            JOIN   Ticket_Type tt ON tt.type_id  = t.type_id
-            JOIN   Event        e  ON e.event_id  = tt.event_id
-            JOIN   Venue        v  ON v.venue_id  = e.venue_id
-            WHERE  t.order_id = :oid
-        ");
-        $stmt->execute([':oid' => $orderId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-    }
+        $stmt->bindValue('ticket_id', $ticket_id, PDO::PARAM_INT);
 
-    private function hydrate(array|false $row): ?FestivalTicket
-    {
-        if (!$row) {
-            return null;
-        }
-
-        return new FestivalTicket(
-            (int)  $row['festival_event_ticket_id'],
-                   $row['qr_token'],
-                   $row['ticket_code'],
-            (int)  $row['is_scanned'],
-                   $row['scanned_at'] ?? null,
-                   $row['title'],
-                   $row['category'],
-                   $row['event_date'],
-                   $row['start_time'],
-                   $row['location']
-        );
+        return $stmt->execute();
     }
 }

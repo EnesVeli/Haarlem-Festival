@@ -11,10 +11,10 @@ class UserService
     private UserRepository $userRepository;
     private VerificationService $verification_service;
 
-    public function __construct(UserRepository $userRepository, VerificationService $verification_service)
+    public function __construct()
     {
-        $this->userRepository = $userRepository;
-        $this->verification_service = $verification_service;
+        $this->userRepository = new UserRepository();
+        $this->verification_service = new VerificationService();
     }
 
     public function registerUser(string $name, string $email, string $password, string $password_confirm): void

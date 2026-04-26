@@ -28,7 +28,7 @@ $pageTitle = 'My Cart - The Festival Haarlem';
             <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
         <?php endif; ?>
 
-        <?php if (!isset($view_model)): ?>
+        <?php if (!isset($view_model) || count($view_model->order->order_items) <= 0): ?>
             <div style="text-align:center; padding:3rem 0;">
                 <i class="bi bi-calendar-event" style="font-size:3rem; color:#ccc;"></i>
                 <p style="margin:1rem 0 0.5rem; color:#888;">Your cart is empty.</p>
@@ -76,7 +76,7 @@ $pageTitle = 'My Cart - The Festival Haarlem';
                             <strong style="color:#8b1e1e; font-size:1.3rem;">&euro;<?= $view_model->total ?></strong>
                         </div>
 
-                        <a href="/checkout" class="stories-booking-submit"
+                        <a href="/cart/checkout" class="stories-booking-submit"
                             style="width:100%; text-align:center; margin-top:1rem; display:block;">
                             Proceed to Payment &rarr;
                         </a>

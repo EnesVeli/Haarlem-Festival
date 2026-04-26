@@ -14,13 +14,18 @@ use App\Models\Jazz\JazzBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
+use App\Models\Ticket;
 use App\Models\YummyBooking;
 use App\Repositories\HistoryCmsRepository;
 use App\Repositories\HistoryRepository;
 use App\Repositories\JazzRepository;
 use App\Repositories\OrderRepository;
 use App\Repositories\StoriesRepository;
+use App\Repositories\TicketRepository;
+use App\Repositories\UserRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use DateInterval;
+use DateTime;
 use Exception;
 class OrderService
 {
@@ -28,7 +33,9 @@ class OrderService
     public static int $YUMMY_COST_PER_SEAT = 1000;
     public static int $HISTORY_ROUTE_DURATION = 180; // In munutes
 
+    private UserRepository $user_rep;
     private OrderRepository $order_rep;
+    private TicketRepository $ticket_rep;
     private HistoryCmsRepository $history_cms_rep;
     private YummyRestaurantsRepository $restaurant_rep;
     private StoriesRepository $story_rep;
@@ -39,7 +46,9 @@ class OrderService
 
     public function __construct()
     {
+        $this->user_rep = new UserRepository();
         $this->order_rep = new OrderRepository();
+        $this->ticket_rep = new TicketRepository();
         $this->history_cms_rep = new HistoryCmsRepository();
         $this->restaurant_rep = new YummyRestaurantsRepository();
         $this->story_rep = new StoriesRepository();
@@ -99,6 +108,11 @@ class OrderService
         Session::setCartItemsCount(Session::getCartItemsCount() + 1);
     }
 
+    /**
+     * Addes booking (uses different methods depending on booking type)
+     * @param IBooking $booking booking to add.
+     * @return ?int returns id of the new booking if operation was successfull, otherwise, returns null. Also returns null if booking type is unknown. 
+     */
     public function addBooking(IBooking $booking) : ?int{
         switch($booking->getBookingType()){
             case BookingType::Yummy:
@@ -158,16 +172,23 @@ class OrderService
         return 0;
     }
 
-    public function getOrderWithOrderItemsByUserId(int $user_id) : ?Order{
-        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, OrderStatus::InCart); // get cart order
+    /**
+     * Get users cart order with order items (and bookings inside) filled in.
+     * @param int $user_id id of the user.
+     * @throws QueryExecutionException if errors during query execution.
+     * @return Order|null If no order found, returns null. Otherwise, returns order.
+     */
+    public function getOrderWithOrderItemsByUserId(int $user_id, OrderStatus $status = OrderStatus::InCart) : ?Order{
+        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, $status); // Get order
 
         if($order != null){
             $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
-            if($order_items == null) return null;
+            if($order_items === false) throw new QueryExecutionException("Failed to get order order_items.");  
+
+            if($order_items === null) $order_items = [];
             
             foreach($order_items as $item){
                 $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
-
                 if($booking == null) throw new QueryExecutionException("Failed to get booking.");  
 
                 $item->booking = $booking;
@@ -179,6 +200,13 @@ class OrderService
         return $order;
     }
 
+    /**
+     * Gets booking by id and fills it with needed data depending on the type.
+     * @param int $booking_id id of the booking.
+     * @param BookingType $booking_type type of the booking.
+     * @throws QueryExecutionException if any errors during query execution.
+     * @return HistoryBooking|JazzBooking|StoryBooking|YummyBooking|null If booking type is not listed, returns null. Otherwise, returns booking.
+     */
     public function getBookingByIdAndType(int $booking_id, BookingType $booking_type) : ?IBooking{
         switch($booking_type){
             case BookingType::Yummy:
@@ -224,6 +252,11 @@ class OrderService
         return null;
     }
 
+    /**
+     * Calculates order subtotal (before Vat).
+     * @param Order $order order with filled in order_items.
+     * @return int returns subtotal as int.
+     */
     public function calcOrderSubtotalPrice(Order $order) : int{
         $subtotal = 0;
 
@@ -234,6 +267,12 @@ class OrderService
         return $subtotal;
     }
 
+    /**
+     * Returns order by user id and status.
+     * @param int $user_id id of the user.
+     * @param OrderStatus $status status of the order.
+     * @return Order|null if any errors during execution, returns null. Otherwise, returns order.
+     */
     public function getOrderByUserIdAndStatus(int $user_id, OrderStatus $status) : ?Order{
         return $this->order_rep->getOrderByUserIdAndStatus($user_id, $status);
     }
@@ -268,6 +307,12 @@ class OrderService
         Session::setCartItemsCount(Session::getCartItemsCount() - 1);
     }
 
+    /**
+     * Removes booking (uses different methods depending on booking type)
+     * @param int $booking_id id of the booking
+     * @param BookingType $booking_type type of the booking
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
     private function removeBookingById(int $booking_id, BookingType $booking_type) : bool{
         switch($booking_type){
             case BookingType::Yummy:
@@ -281,6 +326,80 @@ class OrderService
         }
 
         return false;
+    }
+
+    public function completeOrder(int $user_id) : void
+    {
+        // Get user
+        $user = $this->user_rep->findById($user_id);
+        if($user == null) throw new QueryExecutionException("Failed to get user with id.");
+
+        // Get order 
+        $order = $this->getOrderWithOrderItemsByUserId($user_id);
+        if($order == null) throw new QueryExecutionException("Failed to get order with id.");
+
+        // Update order status
+        $subtotal_price = $this->calcOrderSubtotalPrice($order);
+        $total_price = (int)(($subtotal_price * (self::$VAT_RATE + 10000)) / 10000);
+        $order_date_time = new DateTime();
+
+        $order_update = $this->order_rep->updateOrderToPaid($order->order_id, $order_date_time, $total_price);
+        if(!$order_update) throw new QueryExecutionException("Failed to change order status.");
+
+        $order->status = OrderStatus::Paid;
+        $order->date = $order_date_time;
+        $order->total_price = $total_price;
+        
+        // Generate tickets
+        $tickets = [];
+
+        foreach ($order->order_items as $item) {
+            // Create Ticket object
+            $ticket = new Ticket(); 
+            $ticket->item_id = $item->item_id;
+            $ticket->qr_token = bin2hex(random_bytes(24));
+            $ticket->code = 'HF-' . strtoupper(bin2hex(random_bytes(12)));
+            $ticket->order_item = $item;
+
+            // Create ticket in db
+            $t_id = $this->ticket_rep->createTicket($ticket);
+            if($t_id == null) throw new QueryExecutionException("Failed to create ticket.");
+            $ticket->ticket_id = $t_id;
+
+            array_push($tickets, $ticket);
+        }
+
+        $this->sendTicketsAndInvoice($order, $tickets, $user);   
+    }
+
+    /**
+     * Sends tickets and invoice by mail.
+     * @param Order $order filled in order.
+     * @param Ticket[] $tickets list of order tickets.
+     * @param array $user asc array representing user.
+     */
+    private function sendTicketsAndInvoice(Order $order, array $tickets, array $user){
+        $ticket_pdfs = [];
+
+        // Get ticket pdfs
+        foreach ($tickets as $ticket) {
+            $qr_token = $ticket->qr_token;
+            $quantity = $ticket->order_item->booking->getQuantityString();
+            $event_name = $ticket->order_item->booking->getEventName();
+            $address = $ticket->order_item->booking->getAddressFull();
+            $date_string = $ticket->order_item->booking->getBookingStartDate()->format('d.m.Y H:i') . ' - ' . $ticket->order_item->booking->getBookingEndDate()->format('H:i');
+            $ticket_code = $ticket->code;
+
+            $pdf_ticket = $this->pdf_service->generateTicket($qr_token, $quantity, $event_name, $address, $date_string, $ticket_code);
+
+            array_push($ticket_pdfs, $pdf_ticket);
+        }
+
+        // Get invoice pdf
+        $invoice_pdf = $this->pdf_service->generateInvoice($order, $user);
+
+        // Send emails
+        $this->mail_service->sendOrderConfirmation($user['email'], $user['name'], $ticket_pdfs, $invoice_pdf, $tickets);
     }
 
     /*

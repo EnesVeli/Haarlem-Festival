@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 24, 2026 at 02:16 PM
+-- Generation Time: Apr 26, 2026 at 07:09 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -20,47 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CartItem`
---
-
-CREATE TABLE `CartItem` (
-  `cart_item_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `event_type` varchar(50) NOT NULL,
-  `event_id` int(11) NOT NULL,
-  `ticket_type` enum('single','daypass','allaccess') NOT NULL DEFAULT 'single',
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `price` decimal(10,2) NOT NULL,
-  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `CartItem`
---
-
-INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ticket_type`, `quantity`, `price`, `added_at`) VALUES
-(1, 4, 'story', 8, 'single', 1, 0.00, '2026-03-14 16:29:24'),
-(14, 11, 'stories', 12, 'single', 1, 7.50, '2026-04-01 10:39:24'),
-(15, 11, 'stories', 3, 'single', 1, 14.00, '2026-04-01 10:40:20'),
-(16, 11, 'stories', 3, 'single', 1, 10.00, '2026-04-01 10:40:45'),
-(17, 11, 'stories', 12, 'single', 1, 10.00, '2026-04-01 10:40:59'),
-(18, 11, 'stories', 12, 'single', 1, 10.00, '2026-04-01 10:42:48'),
-(20, 11, 'stories', 3, 'single', 1, 10.00, '2026-04-01 10:44:16'),
-(23, 11, 'yummy', 154, 'single', 1, 35.00, '2026-04-01 13:08:21'),
-(24, 11, 'history', 138, 'single', 1, 0.00, '2026-04-01 14:54:29'),
-(25, 11, 'history', 138, 'single', 1, 17.50, '2026-04-01 15:26:12'),
-(34, 12, 'stories', 3, 'single', 1, 10.00, '2026-04-04 18:07:40'),
-(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52'),
-(47, 2, 'yummy', 188, 'single', 1, 140.00, '2026-04-07 04:32:10'),
-(48, 2, 'yummy', 189, 'single', 1, 50.00, '2026-04-07 04:35:01'),
-(49, 2, 'dance', 125, 'single', 1, 0.00, '2026-04-16 12:10:39'),
-(50, 2, 'history', 138, 'single', 4, 17.50, '2026-04-16 12:11:17'),
-(51, 2, 'yummy', 155, 'single', 1, 35.00, '2026-04-16 12:11:30'),
-(52, 2, 'jazz', 101, 'single', 2, 15.00, '2026-04-16 12:12:07');
 
 -- --------------------------------------------------------
 
@@ -162,6 +121,32 @@ CREATE TABLE `HistoryBookings` (
   `family_count` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `HistoryBookings`
+--
+
+INSERT INTO `HistoryBookings` (`booking_id`, `reservation_id`, `date`, `language`, `individual_count`, `family_count`) VALUES
+(5, 8, '2026-04-27 10:00:00', 'nl', 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `HistoryCMS`
+--
+
+CREATE TABLE `HistoryCMS` (
+  `id` int(11) NOT NULL,
+  `individual_price` int(11) NOT NULL,
+  `family_price` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `HistoryCMS`
+--
+
+INSERT INTO `HistoryCMS` (`id`, `individual_price`, `family_price`) VALUES
+(1, 1178, 4550);
+
 -- --------------------------------------------------------
 
 --
@@ -185,7 +170,9 @@ INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `boo
 (3, 2, '2026-04-26', 0),
 (4, 3, '2026-04-24', 0),
 (5, 3, '2026-04-21', 0),
-(6, 1, '2026-04-30', 0);
+(6, 1, '2026-04-30', 0),
+(7, 1, '2026-04-25', 0),
+(8, 1, '2026-04-27', 0);
 
 -- --------------------------------------------------------
 
@@ -434,6 +421,13 @@ CREATE TABLE `JazzBookings` (
   `performer_id` int(11) NOT NULL,
   `amount` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `JazzBookings`
+--
+
+INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
+(7, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -703,6 +697,16 @@ CREATE TABLE `OrderItems` (
   `price` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `OrderItems`
+--
+
+INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
+(26, 8, 20, b'010', 5000),
+(28, 8, 5, b'000', 8084),
+(29, 8, 14, b'001', 1800),
+(30, 8, 7, b'011', 6360);
+
 -- --------------------------------------------------------
 
 --
@@ -723,7 +727,8 @@ CREATE TABLE `Orders` (
 
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`) VALUES
 (6, 10, NULL, b'000', NULL),
-(7, 2, NULL, b'000', NULL);
+(7, 2, NULL, b'000', NULL),
+(8, 5, NULL, b'000', NULL);
 
 -- --------------------------------------------------------
 
@@ -753,6 +758,13 @@ CREATE TABLE `StoryBookings` (
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `StoryBookings`
+--
+
+INSERT INTO `StoryBookings` (`booking_id`, `pay_as_you_like`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
+(14, NULL, 1, 4, b'1', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -802,6 +814,20 @@ INSERT INTO `StoryEvents` (`event_id`, `name`, `slug`, `price`, `address_name`, 
 (13, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 1000, 'Caprera Openluchttheater', 'Hoge Duin en Daalseweg 2, 2061 AG Bloemendaal', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, '/assets/images/stories/ab76b6f7b8e4570906764fd7b0712072.jpeg', NULL, NULL),
 (14, 'The History of the Ten Boom Family', 'history-ten-boom-family', 0, 'Bavokerk', 'Grote Markt 22, 2011 RD Haarlem', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'EN', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, '/assets/images/stories/8b1cede5daae032ab8b70d8c2ceb7287.jpeg', NULL, NULL),
 (15, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 1250, 'Cafe de Roemer', 'Botermarkt 17, 2011 XL Haarlem', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'EN', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, '/assets/images/stories/62eb5096ef38305169f70c4ff3fa0be0.jpeg', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Tickets`
+--
+
+CREATE TABLE `Tickets` (
+  `ticket_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `qr_token` varchar(256) NOT NULL,
+  `code` varchar(32) NOT NULL,
+  `scanned_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -894,11 +920,18 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 CREATE TABLE `YummyBookings` (
   `booking_id` int(16) NOT NULL,
   `reservation_id` int(16) NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   `adult_number` tinyint(3) UNSIGNED NOT NULL,
   `child_number` tinyint(3) UNSIGNED NOT NULL,
   `comment` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyBookings`
+--
+
+INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
+(20, 166, '2026-04-27', 2, 3, 'Some comment.');
 
 -- --------------------------------------------------------
 
@@ -1103,7 +1136,31 @@ INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booke
 (176, 3, '2026-04-30', 0),
 (177, 1, '2026-05-01', 0),
 (178, 2, '2026-05-01', 0),
-(179, 3, '2026-05-01', 0);
+(179, 3, '2026-05-01', 0),
+(180, 1, '2026-05-02', 0),
+(181, 2, '2026-05-02', 0),
+(182, 3, '2026-05-02', 0),
+(183, 1, '2026-05-03', 0),
+(184, 2, '2026-05-03', 0),
+(185, 3, '2026-05-03', 0),
+(186, 1, '2026-05-04', 0),
+(187, 2, '2026-05-04', 0),
+(188, 3, '2026-05-04', 0),
+(189, 1, '2026-05-05', 0),
+(190, 2, '2026-05-05', 0),
+(191, 3, '2026-05-05', 0),
+(192, 1, '2026-05-06', 0),
+(193, 2, '2026-05-06', 0),
+(194, 3, '2026-05-06', 0),
+(195, 1, '2026-05-07', 0),
+(196, 2, '2026-05-07', 0),
+(197, 3, '2026-05-07', 0),
+(198, 1, '2026-05-08', 0),
+(199, 2, '2026-05-08', 0),
+(200, 3, '2026-05-08', 0),
+(201, 1, '2026-05-09', 0),
+(202, 2, '2026-05-09', 0),
+(203, 3, '2026-05-09', 0);
 
 -- --------------------------------------------------------
 
@@ -1256,13 +1313,6 @@ INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `cap
 --
 
 --
--- Indexes for table `CartItem`
---
-ALTER TABLE `CartItem`
-  ADD PRIMARY KEY (`cart_item_id`),
-  ADD KEY `user_id` (`user_id`);
-
---
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1286,6 +1336,12 @@ ALTER TABLE `CMS_Content`
 ALTER TABLE `HistoryBookings`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `reservation_id` (`reservation_id`);
+
+--
+-- Indexes for table `HistoryCMS`
+--
+ALTER TABLE `HistoryCMS`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `HistoryReservationSlots`
@@ -1462,6 +1518,13 @@ ALTER TABLE `StoryEvents`
   ADD PRIMARY KEY (`event_id`);
 
 --
+-- Indexes for table `Tickets`
+--
+ALTER TABLE `Tickets`
+  ADD PRIMARY KEY (`ticket_id`),
+  ADD KEY `item_id` (`item_id`);
+
+--
 -- Indexes for table `User`
 --
 ALTER TABLE `User`
@@ -1555,12 +1618,6 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 
 --
--- AUTO_INCREMENT for table `CartItem`
---
-ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
-
---
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1576,13 +1633,13 @@ ALTER TABLE `CMS_Content`
 -- AUTO_INCREMENT for table `HistoryBookings`
 --
 ALTER TABLE `HistoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
 ALTER TABLE `HistoryReservationSlots`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `HistoryTimeSlot`
@@ -1642,7 +1699,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1708,13 +1765,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1726,13 +1783,19 @@ ALTER TABLE `PasswordResetToken`
 -- AUTO_INCREMENT for table `StoryBookings`
 --
 ALTER TABLE `StoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `StoryEvents`
 --
 ALTER TABLE `StoryEvents`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `Tickets`
+--
+ALTER TABLE `Tickets`
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `User`
@@ -1750,7 +1813,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -1774,7 +1837,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -1803,12 +1866,6 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `CartItem`
---
-ALTER TABLE `CartItem`
-  ADD CONSTRAINT `cartitem_user_fk` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `HistoryBookings`
@@ -1870,6 +1927,12 @@ ALTER TABLE `jazz_performer_locations`
 --
 ALTER TABLE `jazz_performer_tracks`
   ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `Tickets`
+--
+ALTER TABLE `Tickets`
+  ADD CONSTRAINT `1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\YummyBooking;
+use DateTime;
 use PDO;
 
 class OrderRepository extends Repository
@@ -32,6 +33,57 @@ class OrderRepository extends Repository
 
         return $res == false ? null : $res;
     }  
+
+    /**
+     * Gets order by its id form db.
+     * @param int $order_id 
+     * @return ?Order returns if order was found returns it, otherwise, returns null. 
+     */
+    public function getOrderById(int $order_id) : ?Order {
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `order_id` = :order_id;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }  
+
+    /**
+     * Updates status of the order.
+     * @param int $order_id id of the order.
+     * @param OrderStatus $status new status.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
+    public function updateOrderStatus(int $order_id, OrderStatus $status) : bool { 
+        $stmt = $this->connection->prepare("UPDATE `Orders` SET `status`=:status WHERE `order_id` = :order_id;;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+        $stmt->bindValue('status', $status->value, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Updates order to paid (sets its status to Paid, sets its order date to now(), and sets its total price)
+     * @param int $order_id id of the order
+     * @param DateTime $date date of order complition.
+     * @param int $total_price total price of an order (including vat and etc.);
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
+    public function updateOrderToPaid(int $order_id, DateTime $date, int $total_price) : bool { 
+        $stmt = $this->connection->prepare("UPDATE `Orders` SET `date`=:date,`status`=:status,`total_price`=:total_price WHERE `order_id` = :order_id;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+        $stmt->bindValue('status', OrderStatus::Paid->value, PDO::PARAM_INT);
+        $stmt->bindValue('date', $date->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $stmt->bindValue('total_price', $total_price, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
 
     /**
      * Creates an cart order in db.
@@ -74,7 +126,7 @@ class OrderRepository extends Repository
     /**
      * Gets array of order's OrderItems.
      * @param int $order_id
-     * @return ?array returns array of OrderItem on success, null on failure.
+     * @return ?array|bool returns array of OrderItem on success, null if no items found. Returns false if there were errors during execution.
      */
     public function getOrderOrderItems(int $order_id) : ?array
     {
@@ -84,9 +136,45 @@ class OrderRepository extends Repository
         $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
         $res = $stmt->fetchAll();
 
+        return $res;
+    }
+
+        /**
+     * Removes order items only from cart order.
+     * @param int $order_id id of the cart order.
+     * @param int $item_id id of the order item.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
+    public function removeOrderItemFromCartOrder(int $order_id, int $item_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id AND `status` = 0;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+        $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Gets order item by its id.
+     * @param int $item_id id of the order item.
+     * @return ?OrderItem returns order item if it was found, otherwise, returns null. 
+     */
+    public function getOrderItemById(int $item_id) : ?OrderItem{
+        $stmt = $this->connection->prepare("SELECT `item_id`, `order_id`, `booking_id`, `booking_type` AS `booking_type_`, `price` FROM `OrderItems` WHERE `item_id` = :item_id;");
+
+        $stmt->execute(['item_id' => $item_id]);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
+        $res = $stmt->fetch();
+
         return $res == false ? null : $res;
     }
 
+    /**
+     * Gets YummyBooking by id.
+     * @param int $booking_id id of the booking.
+     * @return ?YummyBooking returns booking if it was found, otherwise, returns null. 
+     */
     public function getYummyBookingById(int $booking_id) : ?YummyBooking {
         $stmt = $this->connection->prepare("SELECT `booking_id`, `reservation_id`, `date` AS `date_`, `adult_number`, `child_number`, `comment`
             FROM `YummyBookings` WHERE `booking_id` = :booking_id;");
@@ -122,28 +210,10 @@ class OrderRepository extends Repository
     }
 
     /**
-     * Creates a restaurant booking in the db.
-     * @param YummyBooking $booking booking you want to create
-     * @param int $date_offset offset in days from today (i. e. today + offset(number of days) will be put in date, instead of $booking date value).
-     * @return ?int returns id of new booking if operation was successfull, otherwise null.
+     * Removes YummyBooking by its id.
+     * @param int $booking_id id of the booking.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
      */
-    public function createYummyBookingWithOffest(YummyBooking $booking, int $date_offset) : ?int {
-        $sql = "INSERT INTO `YummyBookings`(`reservation_id`, `date`, `adult_number`, `child_number`, `comment`) 
-                VALUES (:reservation_id, DATE(NOW()) + INTERVAL +:date_offset DAY, :adult_number , :child_number, :comment);";
-
-        $stmt = $this->connection->prepare($sql);
-
-        $res = $stmt->execute(['reservation_id' => $booking->reservation_id,
-                               'date_offset' => $date_offset,
-                               'adult_number' => $booking->adult_number,
-                               'child_number' => $booking->child_number,
-                               'comment' => $booking->comment]);
-
-        if($res == false) return null; 
-
-        return $this->connection->lastInsertId();
-    }
-
     public function removeYummyBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `YummyBookings` WHERE `booking_id` = :booking_id;");
 
@@ -152,26 +222,11 @@ class OrderRepository extends Repository
         return $stmt->execute();
     }
 
-    public function removeOrderItemFromCartOrder(int $order_id, int $item_id) : bool {
-        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id;");
-
-        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
-        $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
-
-        return $stmt->execute();
-    }
-
-    public function getOrderItemById(int $item_id) : ?OrderItem{
-        $stmt = $this->connection->prepare("SELECT `item_id`, `order_id`, `booking_id`, `booking_type` AS `booking_type_`, `price` FROM `OrderItems` WHERE `item_id` = :item_id;");
-
-        $stmt->execute(['item_id' => $item_id]);
-
-        $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
-        $res = $stmt->fetch();
-
-        return $res == false ? null : $res;
-    }
-
+    /**
+     * Gets HistoryBooking by id.
+     * @param int $booking_id id of the booking.
+     * @return ?HistoryBooking returns booking if it was found, otherwise, returns null. 
+     */
     public function getHistoryBookingById(int $booking_id) : ?HistoryBooking {
         $stmt = $this->connection->prepare("SELECT `booking_id`, `reservation_id`, `date` AS `date_`, `language`, `individual_count`, `family_count`
                 FROM `HistoryBookings` WHERE `booking_id` = :booking_id;");
@@ -206,6 +261,11 @@ class OrderRepository extends Repository
         return $this->connection->lastInsertId();
     }
 
+    /**
+     * Removes HistoryBooking by its id.
+     * @param int $booking_id id of the booking.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
     public function removeHistoryBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `HistoryBookings` WHERE `booking_id` = :booking_id;");
 
@@ -214,6 +274,11 @@ class OrderRepository extends Repository
         return $stmt->execute();
     }
 
+    /**
+     * Gets StoryBooking by id.
+     * @param int $booking_id id of the booking.
+     * @return ?StoryBooking returns booking if it was found, otherwise, returns null. 
+     */
     public function getStoryBookingById(int $booking_id) : ?StoryBooking {
         $stmt = $this->connection->prepare("SELECT `booking_id`, `event_id`, `pay_as_you_like`, `quantity`, `haarlem_pass`, `haarlem_pass_code` 
                 FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
@@ -250,6 +315,11 @@ class OrderRepository extends Repository
         return $this->connection->lastInsertId();
     }
 
+    /**
+     * Removes StoryBooking by its id.
+     * @param int $booking_id id of the booking.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
     public function removeStoryBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `StoryBookings` WHERE `booking_id` = :booking_id;");
 
@@ -258,6 +328,11 @@ class OrderRepository extends Repository
         return $stmt->execute();
     }
 
+    /**
+     * Gets JazzBooking by id.
+     * @param int $booking_id id of the booking.
+     * @return ?JazzBooking returns booking if it was found, otherwise, returns null. 
+     */
     public function getJazzBookingById(int $booking_id) : ?JazzBooking {
         $stmt = $this->connection->prepare("SELECT `booking_id`, `performer_id`, `amount` FROM `JazzBookings` WHERE `booking_id` = :booking_id;");
 
@@ -289,6 +364,11 @@ class OrderRepository extends Repository
         return $this->connection->lastInsertId();
     }
 
+    /**
+     * Removes JazzBooking by its id.
+     * @param int $booking_id id of the booking.
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
     public function removeJazzBooking(int $booking_id) : bool {
         $stmt = $this->connection->prepare("DELETE FROM `JazzBookings` WHERE `booking_id` = :booking_id;");
 

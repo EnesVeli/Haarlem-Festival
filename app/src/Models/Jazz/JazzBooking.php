@@ -4,8 +4,7 @@ namespace App\Models\Jazz;
 
 use App\Enums\BookingType;
 use App\Models\IBooking;
-
-include '/app/src/Models/Interfaces/IBooking.php';
+use DateTime;
 
 class JazzBooking implements IBooking {
     public int $booking_id;
@@ -22,5 +21,29 @@ class JazzBooking implements IBooking {
     }
     public function getBookingType() : BookingType{
         return BookingType::Jazz;
+    }
+
+    public function getBookingStartDate() : ?DateTime{
+        if(!isset($this->performer)) return null;
+
+        return new DateTime($this->performer->date->format('Y-m-d') . ' ' . $this->performer->start_time->format('H:i:s'));
+    }
+    public function getBookingEndDate() : ?DateTime{
+        if(!isset($this->performer)) return null;
+
+        return new DateTime($this->performer->date->format('Y-m-d') . ' ' . $this->performer->end_time->format('H:i:s'));
+    }
+    public function getAddressFull() : ?string{
+        if(!isset($this->performer)) return null;
+
+        return $this->performer->venue_address;
+    }
+    public function getEventName() : ?string{
+        if(!isset($this->performer)) return null;
+
+        return "Tickets " . $this->performer->name;
+    }
+    public function getQuantityString() : ?string{
+        return 'tickets: ' . $this->amount;
     }
 }
