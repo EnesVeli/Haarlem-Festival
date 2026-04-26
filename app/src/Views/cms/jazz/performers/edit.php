@@ -54,7 +54,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="performance_style"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->performanceStyle ?? '') ?>"
+        value="<?= htmlspecialchars($performer->performance_style ?? '') ?>"
     >
 </div>
 
@@ -69,7 +69,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="event_date_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->eventDateText ?? '') ?>"
+        value="<?= htmlspecialchars($performer->date->format('d.m.Y') ?? '') ?>"
     >
 </div>
 
@@ -79,7 +79,17 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="event_time_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->eventTimeText ?? '') ?>"
+        value="<?= htmlspecialchars($performer->start_time->format('H:i') ?? '') ?>"
+    >
+</div>
+
+<div class="jazz-cms-form-row">
+    <label class="jazz-cms-label">Event Time</label>
+    <input
+        type="text"
+        name="event_time_text"
+        class="jazz-cms-input"
+        value="<?= htmlspecialchars($performer->end_time->format('H:i') ?? '') ?>"
     >
 </div>
 
@@ -89,7 +99,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="venue_name"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->venueName ?? '') ?>"
+        value="<?= htmlspecialchars($performer->venue_name ?? '') ?>"
     >
 </div>
 
@@ -99,7 +109,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="venue_address"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->venueAddress ?? '') ?>"
+        value="<?= htmlspecialchars($performer->venue_address ?? '') ?>"
     >
 </div>
 
@@ -109,13 +119,13 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="price_text"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->priceText ?? '') ?>"
+        value="<?= htmlspecialchars($performer->price ?? '') ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Note</label>
-    <textarea name="note_text" class="jazz-cms-textarea" rows="3"><?= htmlspecialchars($performer->noteText ?? '') ?></textarea>
+    <textarea name="note_text" class="jazz-cms-textarea" rows="3"><?= htmlspecialchars($performer->note_text ?? '') ?></textarea>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -124,7 +134,7 @@ require __DIR__ . '/../partials/tabs.php';
         type="text"
         name="audio_url"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->audioUrl ?? '') ?>"
+        value="<?= htmlspecialchars($performer->audio_url ?? '') ?>"
     >
 </div>
 
@@ -134,15 +144,15 @@ require __DIR__ . '/../partials/tabs.php';
         type="number"
         name="sort_order"
         class="jazz-cms-input"
-        value="<?= (int)($performer->sortOrder ?? 0) ?>"
+        value="<?= (int)($performer->sort_order ?? 0) ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Active</label>
     <select name="is_active" class="jazz-cms-input">
-        <option value="1" <?= ((int)($performer->isActive ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
-        <option value="0" <?= ((int)($performer->isActive ?? 0) === 0) ? 'selected' : '' ?>>No</option>
+        <option value="1" <?= ((int)($performer->is_active ?? 0) === 1) ? 'selected' : '' ?>>Yes</option>
+        <option value="0" <?= ((int)($performer->is_active ?? 0) === 0) ? 'selected' : '' ?>>No</option>
     </select>
 </div>
 
@@ -172,7 +182,7 @@ require __DIR__ . '/../partials/tabs.php';
         <div class="jazz-cms-image-preview-wrap">
             <p class="jazz-cms-preview-label">Current Performer Image</p>
             <img
-                src="<?= htmlspecialchars($performer->imagePath) ?>"
+                src="<?= htmlspecialchars($performer->image_path) ?>"
                 class="jazz-cms-image-preview"
                 alt="Performer image"
             >
@@ -202,11 +212,11 @@ require __DIR__ . '/../partials/tabs.php';
         Upload path: <code>/assets/uploads/jazz/performers/</code>
     </small>
 
-    <?php if (!empty($performer->heroImagePath)): ?>
+    <?php if (!empty($performer->hero_image_path)): ?>
         <div class="jazz-cms-image-preview-wrap">
             <p class="jazz-cms-preview-label">Current Hero Image</p>
             <img
-                src="<?= htmlspecialchars($performer->heroImagePath) ?>"
+                src="<?= htmlspecialchars($performer->hero_image_path) ?>"
                 class="jazz-cms-image-preview"
                 alt="Hero image"
             >

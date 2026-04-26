@@ -1,5 +1,7 @@
 <?php
 
+/** @var \App\ViewModels\Jazz\JazzPerformerViewModel $vm */
+
 $pageTitle = 'Performers';
 $pageCSS = 'jazz.css';
 $user = $vm->currentUser ?? null;
@@ -73,14 +75,14 @@ Add Performer
 
 <td><?= htmlspecialchars($performer->name ?? '') ?></td>
 
-<td><?= htmlspecialchars($performer->performanceStyle ?? '') ?></td>
+<td><?= htmlspecialchars($performer->performance_style ?? '') ?></td>
 
 <td>
 
-<?php if (!empty($performer->imagePath)): ?>
+<?php if (!empty($performer->image_path)): ?>
 
 <img
-src="<?= htmlspecialchars($performer->imagePath) ?>"
+src="<?= htmlspecialchars($performer->image_path) ?>"
 class="jazz-cms-image-preview"
 style="max-width:80px;"
 >
@@ -93,10 +95,10 @@ style="max-width:80px;"
 
 </td>
 
-<td><?= (int)($performer->sortOrder ?? 0) ?></td>
+<td><?= (int)($performer->sort_order ?? 0) ?></td>
 
 <td>
-<?= ((int)($performer->isActive ?? 0) === 1) ? 'Yes' : 'No' ?>
+<?= ((int)($performer->is_active ?? 0) === 1) ? 'Yes' : 'No' ?>
 </td>
 
 <td class="jazz-cms-actions">

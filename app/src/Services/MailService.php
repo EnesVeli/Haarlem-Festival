@@ -128,8 +128,8 @@ class MailService
     private function buildOrderEmailHtml(string $name, array $tickets): string
     {
         $ticketRows = '';
-        foreach ($tickets as $i => $t) {
-            $qrImage   = (new \chillerlan\QRCode\QRCode())->render($t->ticket_id);
+        foreach ($tickets as $t) {
+            $qrImage   = (new \chillerlan\QRCode\QRCode())->render($t->qr_token);
             $eventName = htmlspecialchars($t->order_item->booking->getEventName());
             $venue     = htmlspecialchars($t->order_item->booking->getAddressFull());
             $start     = $t->order_item->booking->getBookingStartDate()->format('d.m.Y H:i') . ' - ' . $t->order_item->booking->getBookingEndDate()->format('H:i');

@@ -285,7 +285,6 @@ class JazzRepository extends Repository implements IJazzRepository
             ':event_time_text' => $data['event_time_text'],
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
-            ':price_text' => $data['price_text'],
             ':note_text' => $data['note_text'],
             ':audio_url' => $data['audio_url'],
             ':image_path' => $data['image_path'] ?? null,
