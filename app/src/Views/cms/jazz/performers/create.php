@@ -56,12 +56,15 @@ require __DIR__ . '/../partials/tabs.php';
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Event Date</label>
-<input type="text" name="event_date_text" class="jazz-cms-input">
+<input type="date" name="date" class="jazz-cms-input">
 </div>
 
 <div class="jazz-cms-form-row">
-<label class="jazz-cms-label">Event Time</label>
-<input type="text" name="event_time_text" class="jazz-cms-input">
+<label class="jazz-cms-label">Event Start Time</label>
+<input type="time" name="start_time" class="jazz-cms-input">
+
+<label class="jazz-cms-label">Event End Time</label>
+<input type="time" name="end_time" class="jazz-cms-input">
 </div>
 
 <div class="jazz-cms-form-row">
@@ -76,7 +79,7 @@ require __DIR__ . '/../partials/tabs.php';
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Price</label>
-<input type="text" name="price" class="jazz-cms-input">
+<input type="number" name="price" min="0" max="10000" step="0.01" class="jazz-cms-input">
 </div>
 
 <div class="jazz-cms-form-row">

@@ -66,28 +66,26 @@ require __DIR__ . '/../partials/tabs.php';
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Event Date</label>
     <input
-        type="text"
-        name="event_date_text"
+        type="date"
+        name="date"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->date->format('d.m.Y') ?? '') ?>"
+        value="<?= htmlspecialchars($performer->date->format('Y-m-d') ?? '') ?>"
     >
 </div>
 
 <div class="jazz-cms-form-row">
-    <label class="jazz-cms-label">Event Time</label>
+    <label class="jazz-cms-label">Event Start Time</label>
     <input
-        type="text"
-        name="event_time_text"
+        type="time"
+        name="start_time"
         class="jazz-cms-input"
         value="<?= htmlspecialchars($performer->start_time->format('H:i') ?? '') ?>"
     >
-</div>
 
-<div class="jazz-cms-form-row">
-    <label class="jazz-cms-label">Event Time</label>
+    <label class="jazz-cms-label">Event End Time</label>
     <input
-        type="text"
-        name="event_time_text"
+        type="time"
+        name="end_time"
         class="jazz-cms-input"
         value="<?= htmlspecialchars($performer->end_time->format('H:i') ?? '') ?>"
     >
@@ -116,10 +114,13 @@ require __DIR__ . '/../partials/tabs.php';
 <div class="jazz-cms-form-row">
     <label class="jazz-cms-label">Price</label>
     <input
-        type="text"
-        name="price_text"
+        type="number"
+        name="price"
         class="jazz-cms-input"
-        value="<?= htmlspecialchars($performer->price ?? '') ?>"
+        min="0"
+        max="10000"
+        step="0.01"
+        value="<?= htmlspecialchars($performer->price == null ? '' : $performer->price / 100) ?>"
     >
 </div>
 

@@ -13,6 +13,7 @@ use App\Models\Jazz\JazzLocation;
 use App\Models\Jazz\JazzAppearance;
 use App\Models\Jazz\JazzHighlight;
 use App\Models\Jazz\JazzTrack;
+use DateTime;
 use PDO;
 
 class JazzRepository extends Repository implements IJazzRepository
@@ -258,8 +259,9 @@ class JazzRepository extends Repository implements IJazzRepository
                 price,
                 bio,
                 performance_style,
-                event_date_text,
-                event_time_text,
+                date,
+                start_time,
+                end_time,
                 venue_name,
                 venue_address,
                 note_text,
@@ -274,8 +276,9 @@ class JazzRepository extends Repository implements IJazzRepository
                 :price,
                 :bio,
                 :performance_style,
-                :event_date_text,
-                :event_time_text,
+                :date,
+                :start_time,
+                :end_time,
                 :venue_name,
                 :venue_address,
                 :note_text,
@@ -289,11 +292,12 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
-            ':price' => $data['price'],
+            ':price' => $data['price'] * 100,
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
-            ':event_date_text' => $data['event_date_text'],
-            ':event_time_text' => $data['event_time_text'],
+            ':date' => new DateTime($data['date'])->format('Y-m-d H:i:s'),
+            ':start_time' => new DateTime($data['start_time'])->format('Y-m-d H:i:s'),
+            ':end_time' => new DateTime($data['end_time'])->format('Y-m-d H:i:s'),
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
             ':note_text' => $data['note_text'],
@@ -313,11 +317,11 @@ class JazzRepository extends Repository implements IJazzRepository
                 price = :price,
                 bio = :bio,
                 performance_style = :performance_style,
-                event_date_text = :event_date_text,
-                event_time_text = :event_time_text,
+                date = :date,
+                start_time = :start_time,
+                end_time = :end_time,
                 venue_name = :venue_name,
                 venue_address = :venue_address,
-                price_text = :price_text,
                 note_text = :note_text,
                 audio_url = :audio_url,
                 sort_order = :sort_order,
@@ -329,11 +333,12 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
-            ':price' => $data['price'],
+            ':price' => $data['price'] * 100,
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
-            ':event_date_text' => $data['event_date_text'],
-            ':event_time_text' => $data['event_time_text'],
+            ':date' => new DateTime($data['date'])->format('Y-m-d H:i:s'),
+            ':start_time' => new DateTime($data['start_time'])->format('Y-m-d H:i:s'),
+            ':end_time' => new DateTime($data['end_time'])->format('Y-m-d H:i:s'),
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
             ':note_text' => $data['note_text'],

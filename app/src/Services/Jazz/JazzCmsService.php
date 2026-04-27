@@ -186,7 +186,7 @@ class JazzCmsService
                 );
             }
         } catch (\Exception $error) {
-            die('Could not update performer.');
+            die('Could not update performer.' . $error->getMessage());
         }
     }
 
