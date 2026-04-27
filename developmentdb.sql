@@ -1951,7 +1951,8 @@ ALTER TABLE `history_detail_sections`
 -- Constraints for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  ADD CONSTRAINT `1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`);
+  ADD CONSTRAINT `fk_jazzbookings_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`);
+
 
 --
 -- Constraints for table `jazz_performer_appearances`
@@ -1982,7 +1983,7 @@ ALTER TABLE `jazz_performer_tracks`
 -- Constraints for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  ADD CONSTRAINT `1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
+  ADD CONSTRAINT `fk_tickets_orderitem` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
