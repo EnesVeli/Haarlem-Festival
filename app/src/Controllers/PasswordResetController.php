@@ -21,7 +21,7 @@ class PasswordResetController
 
     public function __construct()
     {
-        $this->service = new PasswordResetService();
+        $this->service = PasswordResetService::getInstance();
     }
 
     public function index(){

@@ -27,7 +27,7 @@ if (!isset($user) || !$user) {
     $user = \App\Framework\Session::user();
 }
 
-$cartCount = (int)($cartCount ?? $_SESSION['cart_count'] ?? 0);
+$cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0);
 ?>
 
 <nav class="top-nav">

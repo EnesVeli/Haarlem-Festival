@@ -6,12 +6,11 @@ use App\Repositories\HistoryCmsRepository;
 
 class HistoryCmsController
 {
-    private HistoryCmsRepository $repo;
+    private HistoryCmsRepository $repo; // Direct access to repository layer. Not good. Add service layer.
 
     public function __construct()
     {
-        $this->repo = new HistoryCmsRepository();
-        $this->requireAdmin();
+        $this->repo = HistoryCmsRepository::getInstance();  
     }
 
     // Blocks anyone who isn't logged in as admin
@@ -27,11 +26,13 @@ class HistoryCmsController
     // GET /cms/history — main dashboard with all tabs
     public function index(): void
     {
+        $this->requireAdmin();
+
         $highlights   = $this->repo->getAllHighlights();
-        $tickets      = $this->repo->getAllTickets();
-        $ticketPrices = $this->repo->getTicketPrices();
         $content      = $this->repo->getAllContentKeyed();
         $details      = $this->repo->getAllDetails();
+        $individual_price = $this->repo->getIndividualPrice();
+        $family_price = $this->repo->getFamilyPrice();
 
         require __DIR__ . '/../../../Views/cms/history/index.php';
     }
@@ -39,6 +40,8 @@ class HistoryCmsController
     // GET /cms/history/detail/{id} — edit or create a highlight detail page
     public function detail(array $vars): void
     {
+        $this->requireAdmin();
+
         $id         = (int)($vars['id'] ?? 0);
         $detail     = $id > 0 ? $this->repo->getDetailById($id) : [];
         $highlights = $this->repo->getAllHighlights();
@@ -52,13 +55,13 @@ class HistoryCmsController
     // POST /cms/history/action — single entry point for all CMS form submissions
     public function action(): void
     {
+        $this->requireAdmin();
+
         $action = $_POST['_action'] ?? '';
 
         switch ($action) {
             case 'save_highlight':   $this->saveHighlight();   break;
             case 'delete_highlight': $this->deleteHighlight(); break;
-            case 'save_ticket':        $this->saveTicket();        break;
-            case 'delete_ticket':      $this->deleteTicket();      break;
             case 'save_ticket_price':  $this->saveTicketPrice();  break;
             case 'save_content':     $this->saveContent();     break;
             case 'save_detail':      $this->saveDetail();      break;
@@ -77,6 +80,8 @@ class HistoryCmsController
 
     private function saveHighlight(): void
     {
+        $this->requireAdmin();
+
         if ($_SERVER['CONTENT_LENGTH'] > 0 && empty($_POST) && empty($_FILES)) {
             $this->redirect('/cms/history', 'File too large. Max 8MB.');
         }
@@ -109,35 +114,19 @@ class HistoryCmsController
 
     // ── Tickets ───────────────────────────────────────────────────────────
 
-    private function saveTicket(): void
-    {
-        $id    = (int)($_POST['id'] ?? 0);
-        $slot  = trim($_POST['time_slot'] ?? '');
-        $price = (float)($_POST['price'] ?? 0);
-        $spots = (int)($_POST['available_spots'] ?? 0);
-
-        if ($id > 0) {
-            $this->repo->updateTicket($id, $slot, $price, $spots);
-        } else {
-            $this->repo->createTicket($slot, $price, $spots);
-        }
-
-        $this->redirect('/cms/history#tab-tickets', 'Ticket slot saved.');
-    }
-
-    private function deleteTicket(): void
-    {
-        $this->repo->deleteTicket((int)($_POST['id'] ?? 0));
-        $this->redirect('/cms/history#tab-tickets', 'Ticket deleted.');
-    }
-
     private function saveTicketPrice(): void
     {
-        $type  = $_POST['ticket_type'] ?? '';
-        $price = (float)($_POST['price'] ?? 0);
+        $this->requireAdmin();
 
-        if (in_array($type, ['individual', 'family']) && $price >= 0) {
-            $this->repo->updateTicketPrice($type, $price);
+        if(isset($_POST['type']) && isset($_POST['price']))
+
+        $price = (int)($_POST['price'] * 100);
+
+        if($_POST['type'] == 0){
+            $this->repo->updateIndividualPrice($price);
+        }
+        else {
+            $this->repo->updateFamilyPrice($price);
         }
 
         $this->redirect('/cms/history#tab-tickets', 'Ticket price updated.');
@@ -147,6 +136,8 @@ class HistoryCmsController
 
     private function saveContent(): void
     {
+        $this->requireAdmin();
+
         if ($_SERVER['CONTENT_LENGTH'] > 0 && empty($_POST) && empty($_FILES)) {
             $this->redirect('/cms/history#tab-content', 'File too large. Max 8MB.');
         }
@@ -179,6 +170,8 @@ class HistoryCmsController
 
     private function saveDetail(): void
     {
+        $this->requireAdmin();
+
         $id = (int)($_POST['id'] ?? 0);
 
         $data = [
@@ -210,6 +203,8 @@ class HistoryCmsController
 
     private function deleteDetail(): void
     {
+        $this->requireAdmin();
+
         $this->repo->deleteDetail((int)($_POST['id'] ?? 0));
         $this->redirect('/cms/history#tab-details', 'Detail page deleted.');
     }
@@ -218,6 +213,8 @@ class HistoryCmsController
 
     private function saveSection(): void
     {
+        $this->requireAdmin();
+
         $id       = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
 
@@ -248,6 +245,8 @@ class HistoryCmsController
 
     private function deleteSection(): void
     {
+        $this->requireAdmin();
+
         $detailId = (int)($_POST['detail_id'] ?? 0);
         $this->repo->deleteSection((int)($_POST['id'] ?? 0));
         $this->redirect("/cms/history/detail/{$detailId}", 'Section deleted.');
@@ -257,6 +256,8 @@ class HistoryCmsController
 
     private function addGallery(): void
     {
+        $this->requireAdmin();
+
         $detailId = (int)($_POST['detail_id'] ?? 0);
         $caption  = trim($_POST['caption']    ?? '');
         $order    = (int)($_POST['sort_order'] ?? 0);
@@ -271,6 +272,8 @@ class HistoryCmsController
 
     private function deleteGallery(): void
     {
+        $this->requireAdmin();
+
         $img      = $this->repo->getGalleryImageById((int)($_POST['id'] ?? 0));
         $detailId = $img['detail_id'] ?? 0;
         $this->repo->deleteGalleryImage((int)($_POST['id'] ?? 0));
@@ -281,6 +284,8 @@ class HistoryCmsController
 
     private function saveFact(): void
     {
+        $this->requireAdmin();
+
         $id       = (int)($_POST['id']        ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
 
@@ -303,6 +308,8 @@ class HistoryCmsController
 
     private function deleteFact(): void
     {
+        $this->requireAdmin();
+
         $fact     = $this->repo->getFactById((int)($_POST['id'] ?? 0));
         $detailId = $fact['detail_id'] ?? 0;
         $this->repo->deleteFact((int)($_POST['id'] ?? 0));
@@ -313,7 +320,7 @@ class HistoryCmsController
 
     private function uploadFile(array $file): string
     {
-        $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
+        $dir = __DIR__ . '/../../../../public/assets/uploads/history/';
 
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);

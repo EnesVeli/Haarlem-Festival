@@ -1,6 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Models\Exceptions\PostMismatchException;
+use App\Models\Exceptions\QueryExecutionException;
+use App\Models\StoryBooking;
 use App\Repositories\StoriesRepository;
 use App\Models\StoryEvent;
 
@@ -10,15 +13,25 @@ use App\Models\StoryEvent;
  */
 class StoriesService
 {
-    private StoriesRepository $repository;
+    private static ?StoriesService $_instance = null;
 
-    public function __construct(StoriesRepository $repository)
+    public static function getInstance() : StoriesService {
+        if(self::$_instance === null) self::$_instance = new StoriesService(StoriesRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
+    private StoriesRepository $repository;
+    private OrderService $order_service;
+
+    private function __construct(StoriesRepository $repository, OrderService $order_service)
     {
         $this->repository = $repository;
+        $this->order_service = $order_service;
     }
 
     /** @return StoryEvent[] */
-    public function getAllEvents(): array
+    public function getAllEvents() : array
     {
         return $this->repository->getAll();
     }
@@ -36,24 +49,17 @@ class StoriesService
     }
 
     /** Inserts a new story event. */
-    public function createEvent(array $data): int
+    public function createEvent(StoryEvent $event): int
     {
-        $eventId = $this->repository->insert($data);
-        $isPayAsYouLike = !empty($data['is_pay_as_you_like']);
-        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+        $this->repository->insert($event);
 
-        return $eventId;
-    }
-
-    public function insertDefaultTicketTypes(int $eventId, bool $isPayAsYouLike): void
-    {
-        $this->repository->insertDefaultTicketTypes($eventId, $isPayAsYouLike);
+        return 0;
     }
 
     /** Updates an existing story event. */
-    public function updateEvent(int $id, array $data): bool
+    public function updateEvent(StoryEvent $event): bool
     {
-        return $this->repository->update($id, $data);
+        return $this->repository->update($event);
     }
 
     /** Deletes a story event by ID. */
@@ -62,30 +68,20 @@ class StoriesService
         return $this->repository->delete($id);
     }
 
-    /** Returns all ticket types for a given event. */
-    public function getTicketTypesForEvent(int $eventId): array
-    {
-        return $this->repository->getTicketTypesForEvent($eventId);
-    }
-
-    /** Returns CMS homepage content for stories page. */
-    public function getHomepageContent(): ?array
-    {
-        return $this->repository->getHomepageContent();
-    }
      /** Returns all schedule sessions that share the same event name */
     public function getScheduleForEvent(string $name): array
     {
         return $this->repository->getScheduleByName($name);
     }
 
-    public function getTicketTypesForCms(int $eventId): array
-    {
-        return $this->repository->getTicketTypesByEventId($eventId);
-    }
+    public function createBooking(int $user_id, StoryBooking $booking){
+        $event = $this->repository->getById($booking->event_id);
+        if($event == null) throw new QueryExecutionException();
 
-    public function updateTicketTypePrice(int $typeId, float $price): void
-    {
-        $this->repository->updateTicketTypePrice($typeId, $price);
+        if($booking->pay_as_you_like !== null && $event->is_pay_as_you_like == false) throw new PostMismatchException("Event is not pay as you like, but booking is.");
+
+        if($booking->pay_as_you_like === null && $event->is_pay_as_you_like == true) throw new PostMismatchException("Event is pay as you like, but booking is not.");
+
+        $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
 }

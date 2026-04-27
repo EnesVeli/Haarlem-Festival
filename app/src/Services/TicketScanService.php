@@ -3,38 +3,50 @@
 namespace App\Services;
 
 use App\Exceptions\TicketScanException;
-use App\Models\FestivalTicket;
+use App\Models\Ticket;
 use App\Repositories\TicketRepository;
+use DateTime;
 
 class TicketScanService
 {
-    private TicketRepository $repository;
+    private static ?TicketScanService $_instance = null;
 
-    public function __construct()
-    {
-        $this->repository = new TicketRepository();
+    public static function getInstance() : TicketScanService {
+        if(self::$_instance === null) self::$_instance = new TicketScanService(TicketRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
     }
 
-    public function scanTicket(string $scanValue): FestivalTicket
+    private TicketRepository $repository;
+    private OrderService $order_service;
+
+    private function __construct(TicketRepository $repository, OrderService $order_service)
     {
-        $scanValue = trim($scanValue);
+        $this->repository = $repository;
+        $this->order_service = $order_service;
+    }
 
-        $ticket = $this->repository->findByQrToken($scanValue);
+    public function scanTicket(string $scan_value): Ticket
+    {
+        //$q = $this->repository->findById(25); $q->order_item = $this->order_service->getOrderItemWithBooking($q->item_id); return $q;
 
-        if (!$ticket) {
-            $ticket = $this->repository->findByTicketCode($scanValue);
-        }
+        $scan_value = trim($scan_value);
+
+        $ticket = $this->repository->findByQrToken($scan_value);  
+        //$ticket = $this->repository->findByTicketCode($scan_value);
 
         if (!$ticket) {
             throw new TicketScanException('Ticket not found.');
         }
 
-        if ($ticket->isScanned === 1) {
+        if ($ticket->scanned_at !== null) {
             throw new TicketScanException('This ticket was already scanned.');
         }
 
-        $this->repository->markAsScanned($ticket->festivalEventTicketId);
-        $ticket->isScanned = 1;
+        $this->repository->markAsScanned($ticket->ticket_id);
+        $ticket->scanned_at = new DateTime();
+
+        $ticket->order_item = $this->order_service->getOrderItemWithBooking($ticket->item_id);
 
         return $ticket;
     }

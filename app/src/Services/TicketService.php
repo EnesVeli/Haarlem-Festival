@@ -8,13 +8,21 @@ use chillerlan\QRCode\QRCode;
 
 class TicketService
 {
+    private static ?TicketService $_instance = null;
+
+    public static function getInstance() : TicketService {
+        if(self::$_instance === null) self::$_instance = new TicketService(TicketRepository::getInstance(), MailService::getInstance());
+
+        return self::$_instance;
+    }
+    
     private TicketRepository $repository;
     private MailService $mailService;
 
-    public function __construct()
+    private function __construct(TicketRepository $repository, MailService $mailService)
     {
-        $this->repository = new TicketRepository();
-        $this->mailService = new MailService();
+        $this->repository = $repository;
+        $this->mailService = $mailService;
     }
 
     public function createTicketAndSendEmail(

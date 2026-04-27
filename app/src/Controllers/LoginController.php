@@ -9,17 +9,15 @@ use Exception;
 class LoginController
 {
     private UserService $userService;
-    private ICartService $cartService;
 
-    public function __construct(UserService $userService, ICartService $cartService)
+    public function __construct()
     {
-        $this->userService = $userService;
-        $this->cartService = $cartService;
+        $this->userService = UserService::getInstance();
     }
 
     public function index()
     {
-        $error = Session::flash('login_error');
+        $error = Session::pop('login_error');
         require __DIR__ . '/../Views/login.php';
     }
 

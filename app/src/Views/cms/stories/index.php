@@ -39,7 +39,7 @@
                 <tr>
                     <td><?= $event->event_id ?></td>
                     <td class="fw-bold"><?= htmlspecialchars($event->name) ?></td>
-                    <td><?= htmlspecialchars($event->venue_name ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($event->address_name ?? 'N/A') ?></td>
                     <td>
                         <?= date('M j, Y', strtotime($event->start_time)) ?><br>
                         <small class="text-muted">
@@ -54,7 +54,7 @@
                         <?php if ($event->is_pay_as_you_like): ?>
                         <span class="badge bg-success">Pay As You Like</span>
                         <?php else: ?>
-                        &euro;<?= number_format((float)$event->price, 2) ?>
+                        &euro;<?= number_format($event->price / 100, 2) ?>
                         <?php endif; ?>
                     </td>
                     <td class="text-center">

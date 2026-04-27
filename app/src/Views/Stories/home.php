@@ -92,7 +92,7 @@ foreach ($events as $event) {
                         <select id="filter-lang" class="stories-filter-select">
                             <option value="">Any language</option>
                             <option value="NL">NL</option>
-                            <option value="ENG">ENG</option>
+                            <option value="ENG">EN</option>
                         </select>
                     </div>
                     <div class="stories-filter-group">
@@ -123,9 +123,7 @@ foreach ($events as $event) {
                     <?php foreach ($dayEvents as $event): ?>
                     <?php
                             $typeText  = $typeLabels[$event->story_type] ?? ucfirst($event->story_type);
-                            $imagePath = !empty($event->image_path)
-                                ? $event->image_path
-                                : '/assets/images/stories/venue-placeholder.jpg';
+                            $imagePath = !empty($event->image_path) ? $event->image_path : '/assets/images/stories/venue-placeholder.jpg';
                             ?>
                     <article class="stories-event-card" data-age="<?= htmlspecialchars($event->age_group) ?>"
                         data-lang="<?= htmlspecialchars($event->language) ?>"
@@ -139,7 +137,7 @@ foreach ($events as $event) {
                                 <span class="stories-badge"><?= htmlspecialchars($event->language) ?></span>
                             </div>
                             <p class="stories-event-meta">
-                                <?= htmlspecialchars($event->venue_name) ?>
+                                <?= htmlspecialchars($event->address_name) ?>
                                 <span>|</span>
                                 <?= date('H:i', strtotime($event->start_time)) ?>-<?= date('H:i', strtotime($event->end_time)) ?>
                             </p>

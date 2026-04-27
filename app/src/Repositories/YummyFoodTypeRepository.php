@@ -7,6 +7,19 @@ use PDO;
 
 class YummyFoodTypeRepository extends Repository
 {
+    private static ?YummyFoodTypeRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : YummyFoodTypeRepository {
+        if(self::$_instance === null) self::$_instance = new YummyFoodTypeRepository();
+
+        return self::$_instance;
+    }
+
     public function getRestaurantTypes(string $restaurant_id) : ?array
     {
         $stmt = $this->connection->prepare("SELECT `YummyFoodTypes`.`type_id`, `YummyFoodTypes`.`name`, `YummyFoodTypes`.`category` FROM `YummyFoodTypes` INNER JOIN 

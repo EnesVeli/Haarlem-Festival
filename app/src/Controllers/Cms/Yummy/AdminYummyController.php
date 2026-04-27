@@ -18,7 +18,7 @@ class AdminYummyController extends BaseCmsController {
     private YummyCmsService $service;
 
     public function __construct(){
-        $this->service = new YummyCmsService(); 
+        $this->service = YummyCmsService::getInstance(); 
     }
 
     public function index(){

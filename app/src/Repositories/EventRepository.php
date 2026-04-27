@@ -7,6 +7,19 @@ use DateTime;
 use PDO;
 
 class EventRepository extends Repository {
+    private static ?EventRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : EventRepository {
+        if(self::$_instance === null) self::$_instance = new EventRepository();
+
+        return self::$_instance;
+    }
+
     public function createVenue(string $name, string $address) : ?int {
         $stmt = $this->connection->prepare("INSERT INTO `Venue`(`name`, `address`) VALUES (:name, :address);");
 

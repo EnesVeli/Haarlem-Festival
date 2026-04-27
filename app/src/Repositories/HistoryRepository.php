@@ -2,11 +2,26 @@
 
 namespace App\Repositories;
 
+use App\Models\History\HistoryReservationSlot;
+use App\Models\History\HistoryTimeSlot;
 use PDO;
 use App\Framework\Repository;
 
 class HistoryRepository extends Repository
 {
+    private static ?HistoryRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : HistoryRepository {
+        if(self::$_instance === null) self::$_instance = new HistoryRepository();
+
+        return self::$_instance;
+    }
+
     public function getAllHighlights()
     {
         $sql = "SELECT * FROM history_highlights ORDER BY id ASC";
@@ -140,5 +155,70 @@ class HistoryRepository extends Repository
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getHistoryReservationSlotById(int $reservation_id) : ?HistoryReservationSlot{
+        $stmt = $this->connection->prepare("SELECT `reservation_id`, `slot_id`, `date` AS `date_`, `booked` FROM `HistoryReservationSlots` WHERE `reservation_id` = :reservation_id;");
+
+        $stmt->bindParam('reservation_id', $reservation_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, HistoryReservationSlot::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+    public function getHistoryTimeSlotById(int $slot_id) : ?HistoryTimeSlot{
+        $stmt = $this->connection->prepare("SELECT `slot_id`, `time` AS `time_`, `capacity` FROM `HistoryTimeSlot` WHERE `slot_id` = :slot_id;");
+
+        $stmt->bindParam('slot_id', $slot_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, HistoryTimeSlot::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+    public function getAllTimeSlots() : ?array{
+        $stmt = $this->connection->prepare("SELECT `slot_id`, `time` AS `time_`, `capacity` FROM `HistoryTimeSlot`;");
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, HistoryTimeSlot::class);
+        $res = $stmt->fetchAll();
+
+        return $res == false ? null : $res;
+    }
+
+    public function getHistoryReservationBySlotIdAndDateOffset(int $slot_id, int $date_offset) : ?HistoryReservationSlot {  
+        $stmt = $this->connection->prepare("SELECT `reservation_id`, `slot_id`, `date` AS `date_`, `booked` FROM `HistoryReservationSlots`
+                WHERE `slot_id` = :slot_id AND `date` = DATE(NOW()) + INTERVAL +:date_offset DAY;");
+
+        $stmt->bindParam('slot_id', $slot_id, PDO::PARAM_INT);
+        $stmt->bindParam('date_offset', $date_offset, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, HistoryReservationSlot::class);
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
+    }
+
+    public function addHistoryReservationBySlotIdAndDateOffset(int $slot_id, int $date_offset) : ?int {
+        $stmt = $this->connection->prepare("INSERT INTO `HistoryReservationSlots`(`slot_id`, `date`, `booked`) 
+                VALUES (:slot_id, DATE(NOW()) + INTERVAL +:date_offset DAY, 0);");
+
+        $stmt->bindParam('slot_id', $slot_id, PDO::PARAM_INT);
+        $stmt->bindParam('date_offset', $date_offset, PDO::PARAM_INT);
+
+        $res = $stmt->execute();
+
+        if(!$res) return null;
+
+        return $this->connection->lastInsertId();
     }
 }

@@ -7,6 +7,19 @@ use PDO;
 
 class YummyCmsRepository extends Repository
 {
+    private static ?YummyCmsRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : YummyCmsRepository {
+        if(self::$_instance === null) self::$_instance = new YummyCmsRepository();
+
+        return self::$_instance;
+    }
+
     /**
      * returns array with three elements [0]: home_title, [1]: home_subtitle, [2]: home_image.
      * @return ?array returns array, null if an error occurred.

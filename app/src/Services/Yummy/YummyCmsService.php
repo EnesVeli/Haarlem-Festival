@@ -25,14 +25,22 @@ use RoundingMode;
 use Uri\InvalidUriException;
 
 class YummyCmsService {
+    private static ?YummyCmsService $_instance = null;
+
+    public static function getInstance() : YummyCmsService {
+        if(self::$_instance === null) self::$_instance = new YummyCmsService(YummyCmsRepository::getInstance(), YummyRestaurantsRepository::getInstance(), YummyFoodTypeRepository::getInstance());
+
+        return self::$_instance;
+    }
+
     private YummyCmsRepository $cms_rep;
     private YummyRestaurantsRepository $restaurant_rep;
     private YummyFoodTypeRepository $type_rep;
 
-    public function __construct(){
-        $this->cms_rep = new YummyCmsRepository();
-        $this->restaurant_rep = new YummyRestaurantsRepository();
-        $this->type_rep = new YummyFoodTypeRepository();
+    private function __construct(YummyCmsRepository $cms_rep, YummyRestaurantsRepository $restaurant_rep, YummyFoodTypeRepository $type_rep){
+        $this->cms_rep = $cms_rep;
+        $this->restaurant_rep = $restaurant_rep;
+        $this->type_rep = $type_rep;
     }
 
     public function getHomeViewModel() : YummyHomeViewModel{

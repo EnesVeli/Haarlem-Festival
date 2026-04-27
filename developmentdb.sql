@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 07, 2026 at 04:47 AM
+-- Generation Time: Apr 27, 2026 at 11:42 AM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -24,39 +24,32 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CartItem`
+-- Table structure for table `CMS_Content`
 --
 
-CREATE TABLE `CartItem` (
-  `cart_item_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `event_type` varchar(50) NOT NULL,
-  `event_id` int(11) NOT NULL,
-  `ticket_type` enum('single','daypass','allaccess') NOT NULL DEFAULT 'single',
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `price` decimal(10,2) NOT NULL,
-  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `CartItem`
+-- Dumping data for table `CMS_Content`
 --
 
-INSERT INTO `CartItem` (`cart_item_id`, `user_id`, `event_type`, `event_id`, `ticket_type`, `quantity`, `price`, `added_at`) VALUES
-(1, 4, 'story', 8, 'single', 1, 0.00, '2026-03-14 16:29:24'),
-(14, 11, 'stories', 12, 'single', 1, 7.50, '2026-04-01 10:39:24'),
-(15, 11, 'stories', 3, 'single', 1, 14.00, '2026-04-01 10:40:20'),
-(16, 11, 'stories', 3, 'single', 1, 10.00, '2026-04-01 10:40:45'),
-(17, 11, 'stories', 12, 'single', 1, 10.00, '2026-04-01 10:40:59'),
-(18, 11, 'stories', 12, 'single', 1, 10.00, '2026-04-01 10:42:48'),
-(20, 11, 'stories', 3, 'single', 1, 10.00, '2026-04-01 10:44:16'),
-(23, 11, 'yummy', 154, 'single', 1, 35.00, '2026-04-01 13:08:21'),
-(24, 11, 'history', 138, 'single', 1, 0.00, '2026-04-01 14:54:29'),
-(25, 11, 'history', 138, 'single', 1, 17.50, '2026-04-01 15:26:12'),
-(34, 12, 'stories', 3, 'single', 1, 10.00, '2026-04-04 18:07:40'),
-(35, 12, 'stories', 3, 'single', 1, 15.00, '2026-04-04 18:07:52'),
-(47, 2, 'yummy', 188, 'single', 1, 140.00, '2026-04-07 04:32:10'),
-(48, 2, 'yummy', 189, 'single', 1, 50.00, '2026-04-07 04:35:01');
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -116,271 +109,91 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CMS_Content`
+-- Table structure for table `HistoryBookings`
 --
 
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Event`
---
-
-CREATE TABLE `Event` (
-  `event_id` int(11) NOT NULL,
-  `venue_id` int(11) NOT NULL,
-  `type` int(11) NOT NULL COMMENT '1=Jazz 2=Dance 3=History 4=Yummy 5=Stories',
-  `name` varchar(255) NOT NULL,
-  `slug` varchar(255) NOT NULL COMMENT 'URL: /stories/mister-anansi',
-  `description` text DEFAULT NULL,
-  `performer_name` varchar(255) DEFAULT NULL COMMENT 'Storyteller / presenter name',
-  `performer_bio` text DEFAULT NULL COMMENT 'Bio shown on detail page',
-  `language` varchar(10) NOT NULL DEFAULT 'NL' COMMENT 'NL or ENG',
-  `age_group` varchar(20) NOT NULL DEFAULT 'All ages',
-  `story_type` varchar(100) DEFAULT NULL COMMENT 'stories for the whole family, recording podcast with audience, stories with impact, best of',
-  `is_pay_as_you_like` tinyint(1) DEFAULT 0,
-  `start_time` datetime NOT NULL,
-  `end_time` datetime NOT NULL,
-  `max_tickets` int(11) NOT NULL DEFAULT 30,
-  `image_path` varchar(500) DEFAULT NULL,
-  `gallery_image_1` varchar(500) DEFAULT NULL,
-  `gallery_image_2` varchar(500) DEFAULT NULL,
-  `audio_preview_path` varchar(500) DEFAULT NULL,
-  `audio_title` varchar(255) DEFAULT NULL,
-  `audio_transcript` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `Event`
---
-
-INSERT INTO `Event` (`event_id`, `venue_id`, `type`, `name`, `slug`, `description`, `performer_name`, `performer_bio`, `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`, `gallery_image_2`, `audio_preview_path`, `audio_title`, `audio_transcript`) VALUES
-(1, 1, 5, 'Winnie de Poeh', 'winnie-de-poeh', 'Join us for a magical storytelling session based on the beloved tales of Winnie the Pooh. Brought to life by an experienced family storyteller, this performance uses puppets, songs, and audience participation to enchant young listeners. Perfect for the youngest members of the family.', 'Marieke van der Werf', NULL, 'NL', '4+', 'stories for the whole family', 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00', 50, '/assets/images/stories/ccd64b520f09f160ebcaa5ded87d27ae.jpeg', '', '', '', NULL, NULL),
-(2, 2, 5, 'Omdenken Podcast', 'omdenken-podcast', 'Experience a live podcast recording with a studio audience. Omdenken — the Dutch art of \"flipping\" problems into opportunities — comes to the stage in an interactive session full of surprising perspectives and real audience participation. A unique chance to be part of a live recording.', NULL, NULL, 'NL', '16+', 'recording podcast with audience', 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00', 40, '/assets/images/stories/2ba08353e7c37fc0acdd1b5401b5068b.jpeg', NULL, NULL, NULL, NULL, NULL),
-(3, 3, 5, 'The Story of Buurderij Haarlem', 'story-of-buurderij-haarlem', 'How does your food travel from the soil to your plate? In this inspiring session, we dive into the world of short food supply chains. The \"Buurderij\" is not just a market; it\'s a movement connecting neighbors directly with local farmers. Learn how this circular approach is reshaping Haarlem\'s economy and reducing our carbon footprint.', 'Marieke van der Werf', 'Presented by Marieke van der Werf, founder of the Haarlem Green Collective. Marieke was awarded the \"Sustainable Entrepreneur of the Year 2024\" for her work in reducing food waste in North Holland. She has successfully launched three community farming initiatives and consults for the municipality on circular city planning.', 'EN', '16+', 'stories with impact', 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00', 25, '/assets/images/stories/756822a1ee7b7f7085fed9468aa803c2.jpeg', '/assets/images/stories/0be260ee2117fa99f6f951ab2ed9dd32.jpeg', '/assets/images/stories/d3c08e71ce525a48370c9c8168d37134.jpeg', '/assets/audio/buurderij-preview.mp3', '\"The journey of a local apple\" - Interview Excerpt', 'Interviewer:Marieke, what is the biggest misconception people have about buying local?\r\nMarieke:People think it\'s expensive or complicated. But when you cut out the transport and the supermarkets, the farmer gets a fair price, and you get fresher food. It\'s actually a very simple, honest connection.\r\nInterviewer:And how does the Buurderij facilitate that connection?'),
-(4, 4, 5, 'Corrie voor kinderen', 'corrie-voor-kinderen', 'An age-appropriate retelling of the remarkable true story of Corrie ten Boom and her family, who hid Jewish people in their Haarlem home during World War II. Presented at the actual Ten Boom house, this experience brings history to life for children in a meaningful and accessible way.', NULL, NULL, 'NL', '10+', 'stories for the whole family', 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00', 35, '/assets/images/stories/fce213146d5fcaae1b32e2728e051f6f.jpeg', NULL, NULL, NULL, NULL, NULL),
-(5, 1, 5, 'Winnaars van verhalenvertel wedstrijd', 'winnaars-verhalenvertel-wedstrijd', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'NL', '12+', 'best of', 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00', 30, '/assets/images/stories/cb2205716106bbb349b267af663971ab.jpeg', NULL, NULL, NULL, NULL, NULL),
-(6, 3, 5, 'Het verhaal van de Oeserzwammerij', 'verhaal-oeserzwammerij', 'Discover the fascinating story of urban mushroom farming in Haarlem. This talk explores how a small circular business is transforming food waste into gourmet oyster mushrooms, contributing to a more sustainable local food system. Inspiring, quirky, and eye-opening.', NULL, NULL, 'NL', '16+', 'stories with impact', 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00', 25, '/assets/images/stories/442407af2369c471bb792666df2503e7.jpeg', NULL, NULL, NULL, NULL, NULL),
-(7, 2, 5, 'Flip Thinking Podcast', 'flip-thinking-podcast', 'A live English-language podcast recording exploring \"flip thinking\" — the concept of turning obstacles into opportunities. Join host and author Berthold Gunster as he challenges guests and audience members to reframe their biggest problems. Recorded live for international distribution.', NULL, NULL, 'EN', '16+', 'recording podcast with audience', 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00', 40, '/assets/images/stories/997004ba39a660e70d04636a8ed0f922.jpeg', NULL, NULL, NULL, NULL, NULL),
-(8, 5, 5, 'Meneer Anansi', 'meneer-anansi-sat-morning', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00', 50, '/assets/images/stories/aae44f3940f6bb32db98ace7cc3e0754.jpeg', NULL, NULL, '/assets/audio/anansi-tiger-preview.mp3', '\"Anansi meets the Tiger\" - Live Recording', 'Winston:Come closer, children. Do you see the web in the corner? That is where Anansi lives...\n[Sound Effect]:*Rustling leaves*\nWinston:One day, Anansi decided he wanted all the wisdom in the world for himself. So he put it in a clay pot. But do you know what happened when he tried to climb the tree?'),
-(9, 5, 5, 'Mister Anansi', 'mister-anansi-sat-afternoon', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00', 50, '/assets/images/stories/2143ce48ae8cca82613f3e0c80d71d92.jpeg', '/assets/images/stories/c49ab911d8adf050fef3d480581f359e.jpeg', '/assets/images/stories/2d348ee9a103a8f7248c53a7e1829db4.jpeg', '', '\"Anansi meets the Tiger\" - Live Recording', 'Winston:Come closer, children. Do you see the web in the corner? That is where Anansi lives...\r\n[Sound Effect]:*Rustling leaves*\r\nWinston:One day, Anansi decided he wanted all the wisdom in the world for himself. So he put it in a clay pot. But do you know what happened when he tried to climb the tree?'),
-(10, 2, 5, 'Podcastlast Haarlem Special', 'podcastlast-haarlem-special', 'Podcastlast records a special Haarlem-themed episode live in front of an audience at De Schuur. Featuring local guests, audience questions, and a unique behind-the-scenes look at what makes this city tick. A must for podcast enthusiasts and Haarlem locals alike.', NULL, NULL, 'NL', '12+', 'recording podcast with audience', 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00', 40, '/assets/images/stories/f2eb35fdf14d684e02c6ee5a94f0f0ba.jpeg', NULL, NULL, NULL, NULL, NULL),
-(11, 4, 5, 'De geschiedenis van familie ten Boom', 'geschiedenis-familie-ten-boom', 'A deeply moving account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented in Dutch for a mature audience. A reservation is required to guarantee entry.', NULL, NULL, 'NL', '12+', 'stories with impact', 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00', 35, '/assets/images/stories/fb563928c1dc5042675fd095c28b6aa1.jpeg', NULL, NULL, NULL, NULL, NULL),
-(12, 5, 5, 'Mister Anansi', 'mister-anansi-sun-morning', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00', 50, '/assets/images/stories/997b979719d6f659c6680a3a4b0375db.jpeg', '/assets/images/stories/db96e84149734b8bb38867e87a78a1f1.jpeg', '/assets/images/stories/9d8c2d227ddd0370b95ff096c788018b.jpeg', '', '\"Anansi meets the Tiger\" - Live Recording', 'Winston:Come closer, children. Do you see the web in the corner? That is where Anansi lives...\r\n[Sound Effect]:*Rustling leaves*\r\nWinston:One day, Anansi decided he wanted all the wisdom in the world for himself. So he put it in a clay pot. But do you know what happened when he tried to climb the tree?'),
-(13, 5, 5, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, '/assets/images/stories/ab76b6f7b8e4570906764fd7b0712072.jpeg', NULL, NULL, '/assets/audio/anansi-tiger-preview.mp3', '\"Anansi meets the Tiger\" - Live Recording', 'Winston:Come closer, children. Do you see the web in the corner? That is where Anansi lives...\r\n[Sound Effect]:*Rustling leaves*\r\nWinston:One day, Anansi decided he wanted all the wisdom in the world for himself. So he put it in a clay pot. But do you know what happened when he tried to climb the tree?'),
-(14, 4, 5, 'The History of the Ten Boom Family', 'history-ten-boom-family', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'EN', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, '/assets/images/stories/8b1cede5daae032ab8b70d8c2ceb7287.jpeg', NULL, NULL, NULL, NULL, NULL),
-(15, 1, 5, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'EN', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, '/assets/images/stories/62eb5096ef38305169f70c4ff3fa0be0.jpeg', NULL, NULL, NULL, NULL, NULL),
-(101, 6, 1, 'Gumbo Kings', 'jazz-gumbo-kings-20260723-1800', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(102, 6, 1, 'Evolve', 'jazz-evolve-20260723-1930', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(103, 6, 1, 'Ntjam Rosie', 'jazz-ntjam-rosie-20260723-2100', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(104, 6, 1, 'Wicked Jazz Sounds', 'jazz-wicked-jazz-sounds-20260723-1800', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(105, 6, 1, 'Wouter Hamel', 'jazz-wouter-hamel-20260723-1930', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(106, 6, 1, 'Jonna Frazer', 'jazz-jonna-frazer-20260723-2100', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(107, 6, 1, 'Karsu', 'jazz-karsu-20260724-1800', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(108, 6, 1, 'Uncle Sue', 'jazz-uncle-sue-20260724-1930', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(109, 6, 1, 'Chris Allen', 'jazz-chris-allen-20260724-2100', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(110, 6, 1, 'Myles Sanko', 'jazz-myles-sanko-20260724-1800', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(111, 6, 1, 'Ilse Huizinga', 'jazz-ilse-huizinga-20260724-1930', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(112, 6, 1, 'Eric Vloeimans and Hotspot!', 'jazz-eric-vloeimans-and-hotspot-20260724-2100', 'Second Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(113, 6, 1, 'Gare du Nord', 'jazz-gare-du-nord-20260725-1800', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(114, 6, 1, 'Rilan & The Bombadiers', 'jazz-rilan-the-bombadiers-20260725-1930', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(115, 6, 1, 'Soul Six', 'jazz-soul-six-20260725-2100', 'Main Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(116, 6, 1, 'Han Bennink', 'jazz-han-bennink-20260725-1800', 'Third Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00', 150, NULL, NULL, NULL, NULL, NULL, NULL),
-(117, 6, 1, 'The Nordanians', 'jazz-the-nordanians-20260725-1930', 'Third Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00', 150, NULL, NULL, NULL, NULL, NULL, NULL),
-(118, 6, 1, 'Lilith Merlot', 'jazz-lilith-merlot-20260725-2100', 'Third Hall', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00', 150, NULL, NULL, NULL, NULL, NULL, NULL),
-(119, 7, 1, 'Ruis Soundsystem', 'jazz-ruis-soundsystem-20260726-1500', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(120, 7, 1, 'Wicked Jazz Sounds', 'jazz-wicked-jazz-sounds-20260726-1600', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 16:00:00', '2026-07-26 17:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(121, 7, 1, 'Evolve', 'jazz-evolve-20260726-1700', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:00:00', '2026-07-26 18:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(122, 7, 1, 'The Nordanians', 'jazz-the-nordanians-20260726-1800', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 18:00:00', '2026-07-26 19:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(123, 7, 1, 'Gumbo Kings', 'jazz-gumbo-kings-20260726-1900', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 19:00:00', '2026-07-26 20:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(124, 7, 1, 'Gare du Nord', 'jazz-gare-du-nord-20260726-2000', 'Free show', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 20:00:00', '2026-07-26 21:00:00', 1000, NULL, NULL, NULL, NULL, NULL, NULL),
-(125, 8, 2, 'Nicky Romero / Afrojack', 'dance-nicky-romero-afrojack-20260724-2000', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 20:00:00', '2026-07-24 21:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(126, 9, 2, 'Ti?sto', 'dance-ti-sto-20260724-2200', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(127, 10, 2, 'Hardwell', 'dance-hardwell-20260724-2300', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 23:00:00', '2026-07-24 23:59:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(128, 11, 2, 'Armin van Buuren', 'dance-armin-van-buuren-20260724-2200', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(129, 12, 2, 'Martin Garrix', 'dance-martin-garrix-20260724-2200', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(130, 13, 2, 'Hardwell / Martin Garrix / Armin van Buuren', 'dance-hardwell-martin-garrix-armin-van-buuren-20260725-1400', 'Back2Back session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 14:00:00', '2026-07-25 20:00:00', 2000, NULL, NULL, NULL, NULL, NULL, NULL),
-(131, 10, 2, 'Afrojack', 'dance-afrojack-20260725-2200', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 22:00:00', '2026-07-25 23:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(132, 8, 2, 'Ti?sto', 'dance-ti-sto-20260725-2100', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 21:00:00', '2026-07-25 22:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(133, 9, 2, 'Nicky Romero', 'dance-nicky-romero-20260725-2300', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 23:00:00', '2026-07-25 23:59:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(134, 13, 2, 'Afrojack / Ti?sto / Nicky Romero', 'dance-afrojack-ti-sto-nicky-romero-20260726-1400', 'Back2Back session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 14:00:00', '2026-07-26 20:00:00', 2000, NULL, NULL, NULL, NULL, NULL, NULL),
-(135, 10, 2, 'Armin van Buuren', 'dance-armin-van-buuren-20260726-1900', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 19:00:00', '2026-07-26 20:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(136, 11, 2, 'Hardwell', 'dance-hardwell-20260726-2100', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 21:00:00', '2026-07-26 22:30:00', 200, NULL, NULL, NULL, NULL, NULL, NULL),
-(137, 9, 2, 'Martin Garrix', 'dance-martin-garrix-20260726-1800', 'Club session (price_tbd)', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00', 300, NULL, NULL, NULL, NULL, NULL, NULL),
-(138, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260723-1000', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 10:00:00', '2026-07-23 12:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(139, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260723-1300', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 13:00:00', '2026-07-23 15:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(140, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260723-1600', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 16:00:00', '2026-07-23 18:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(141, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260724-1000', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 10:00:00', '2026-07-24 12:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(142, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260724-1300', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 13:00:00', '2026-07-24 15:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(143, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260724-1600', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 16:00:00', '2026-07-24 18:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(144, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260725-1000', 'Guided walking tou', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 10:00:00', '2026-07-25 12:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(145, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260725-1300', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 13:00:00', '2026-07-25 15:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(146, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260725-1600', 'Guided walking tou', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 16:00:00', '2026-07-25 18:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(147, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260726-1000', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 10:00:00', '2026-07-26 12:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(148, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260726-1300', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 13:00:00', '2026-07-26 15:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(149, 14, 3, 'A Stroll Through History Guided Tour', 'history-a-stroll-through-history-guided-tour-20260726-1600', 'Guided walking tour', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 16:00:00', '2026-07-26 18:30:00', 12, NULL, NULL, NULL, NULL, NULL, NULL),
-(150, 15, 4, 'Cafe de Roemer Festival Menu', 'yummy-cafe-de-roemer-festival-menu-20260723-1800', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 18:00:00', '2026-07-23 19:30:00', 35, NULL, NULL, NULL, NULL, NULL, NULL),
-(151, 16, 4, 'Ratatouille Festival Menu', 'yummy-ratatouille-festival-menu-20260723-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00', 52, NULL, NULL, NULL, NULL, NULL, NULL),
-(152, 17, 4, 'Restaurant ML Festival Menu', 'yummy-restaurant-ml-festival-menu-20260723-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00', 60, NULL, NULL, NULL, NULL, NULL, NULL),
-(153, 18, 4, 'Restaurant Fris Festival Menu', 'yummy-restaurant-fris-festival-menu-20260723-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(154, 19, 4, 'New Vegas Festival Menu', 'yummy-new-vegas-festival-menu-20260723-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 17:00:00', '2026-07-23 18:30:00', 36, NULL, NULL, NULL, NULL, NULL, NULL),
-(155, 20, 4, 'Grand Cafe Brinkmann Festival Menu', 'yummy-grand-cafe-brinkmann-festival-menu-20260723-1630', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 16:30:00', '2026-07-23 18:00:00', 100, NULL, NULL, NULL, NULL, NULL, NULL),
-(156, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260723-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL),
-(157, 15, 4, 'Cafe de Roemer Festival Menu', 'yummy-cafe-de-roemer-festival-menu-20260724-1800', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 18:00:00', '2026-07-24 19:30:00', 35, NULL, NULL, NULL, NULL, NULL, NULL),
-(158, 16, 4, 'Ratatouille Festival Menu', 'yummy-ratatouille-festival-menu-20260724-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00', 52, NULL, NULL, NULL, NULL, NULL, NULL),
-(159, 17, 4, 'Restaurant ML Festival Menu', 'yummy-restaurant-ml-festival-menu-20260724-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00', 60, NULL, NULL, NULL, NULL, NULL, NULL),
-(160, 18, 4, 'Restaurant Fris Festival Menu', 'yummy-restaurant-fris-festival-menu-20260724-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(161, 19, 4, 'New Vegas Festival Menu', 'yummy-new-vegas-festival-menu-20260724-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 17:00:00', '2026-07-24 18:30:00', 36, NULL, NULL, NULL, NULL, NULL, NULL),
-(162, 20, 4, 'Grand Cafe Brinkmann Festival Menu', 'yummy-grand-cafe-brinkmann-festival-menu-20260724-1630', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 16:30:00', '2026-07-24 18:00:00', 100, NULL, NULL, NULL, NULL, NULL, NULL),
-(163, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260724-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL),
-(164, 15, 4, 'Cafe de Roemer Festival Menu', 'yummy-cafe-de-roemer-festival-menu-20260725-1800', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 18:00:00', '2026-07-25 19:30:00', 35, NULL, NULL, NULL, NULL, NULL, NULL),
-(165, 16, 4, 'Ratatouille Festival Menu', 'yummy-ratatouille-festival-menu-20260725-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00', 52, NULL, NULL, NULL, NULL, NULL, NULL),
-(166, 17, 4, 'Restaurant ML Festival Menu', 'yummy-restaurant-ml-festival-menu-20260725-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00', 60, NULL, NULL, NULL, NULL, NULL, NULL),
-(167, 18, 4, 'Restaurant Fris Festival Menu', 'yummy-restaurant-fris-festival-menu-20260725-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(168, 19, 4, 'New Vegas Festival Menu', 'yummy-new-vegas-festival-menu-20260725-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 17:00:00', '2026-07-25 18:30:00', 36, NULL, NULL, NULL, NULL, NULL, NULL),
-(169, 20, 4, 'Grand Cafe Brinkmann Festival Menu', 'yummy-grand-cafe-brinkmann-festival-menu-20260725-1630', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 16:30:00', '2026-07-25 18:00:00', 100, NULL, NULL, NULL, NULL, NULL, NULL),
-(170, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260725-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL),
-(171, 15, 4, 'Cafe de Roemer Festival Menu', 'yummy-cafe-de-roemer-festival-menu-20260726-1800', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00', 35, NULL, NULL, NULL, NULL, NULL, NULL),
-(172, 16, 4, 'Ratatouille Festival Menu', 'yummy-ratatouille-festival-menu-20260726-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00', 52, NULL, NULL, NULL, NULL, NULL, NULL),
-(173, 17, 4, 'Restaurant ML Festival Menu', 'yummy-restaurant-ml-festival-menu-20260726-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00', 60, NULL, NULL, NULL, NULL, NULL, NULL),
-(174, 18, 4, 'Restaurant Fris Festival Menu', 'yummy-restaurant-fris-festival-menu-20260726-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00', 45, NULL, NULL, NULL, NULL, NULL, NULL),
-(175, 19, 4, 'New Vegas Festival Menu', 'yummy-new-vegas-festival-menu-20260726-1700', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00', 36, NULL, NULL, NULL, NULL, NULL, NULL),
-(176, 20, 4, 'Grand Cafe Brinkmann Festival Menu', 'yummy-grand-cafe-brinkmann-festival-menu-20260726-1630', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00', 100, NULL, NULL, NULL, NULL, NULL, NULL),
-(177, 21, 4, 'Urban Frenchy Bistro Toujours Festival Menu', 'yummy-urban-frenchy-bistro-toujours-festival-menu-20260726-1730', 'Festival menu reservation', NULL, NULL, 'EN', 'All ages', NULL, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00', 48, NULL, NULL, NULL, NULL, NULL, NULL),
-(181, 24, 4, 'Ratatouille booking', '', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-11 21:00:00', '2026-04-11 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(183, 26, 4, 'Ratatouille booking', '0d03e1c3e770f01c6e4ab705bf3e06ba5213da5fb503795342582db06a66d0f0', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-15 21:00:00', '2026-04-15 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(184, 27, 4, 'Ratatouille booking', '614f4b53769ec2c138228d08eb8d03d710dd1048ed8d9b3b9fbfee24626c5e79', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-06 21:00:00', '2026-04-06 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(185, 28, 4, 'Ratatouille booking', 'e6d897077cc396ab91620df2dbf425f7dea5f60a19e4c913ce3cd6370e61b7fd', 'adults: 2 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-11 17:00:00', '2026-04-11 19:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(186, 29, 4, 'Ratatouille booking', 'a6592ced8663fa07ad0f46e70354b000bf8383f7507ec8b47a410315a6d68066', 'adults: 2 children: 3', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-07 17:00:00', '2026-04-07 19:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(187, 30, 4, 'Ratatouille booking', '2af3bbe9518ddc48b2091d20f961de657969d681e0f95923fd123d2cf9cbf7d6', 'adults: 4 children: 2', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-06 19:00:00', '2026-04-06 21:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL),
-(188, 31, 4, 'Name booking', 'd31636bf44dec28eb09199b462db8d751e98d18b33eab37431622ccd030e6f5d', 'adults: 6 children: 8', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-19 16:30:00', '2026-04-19 18:00:00', 20, '/assets/uploads/yummy/restaurants/7f64939f72d9d68a9673f35544833a1e.png', NULL, NULL, NULL, NULL, NULL),
-(189, 32, 4, 'Ratatouille booking', '3cb83ac6644ff2cf9a9647c4bb4289cabd70a68ade8107dd921a5f39e6616d4b', 'adults: 2 children: 3', NULL, NULL, 'NL', 'All ages', NULL, 0, '2026-04-20 21:00:00', '2026-04-20 23:00:00', 20, '/assets/uploads/yummy/restaurants/b3d3e9891fc40495c3eadd6cace50138.png', NULL, NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `festival_events`
---
-
-CREATE TABLE `festival_events` (
-  `festival_event_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `category` varchar(50) NOT NULL,
-  `event_date` date DEFAULT NULL,
-  `start_time` time DEFAULT NULL,
-  `end_time` time DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
-  `extra_info` varchar(255) DEFAULT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `capacity` int(11) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp()
+CREATE TABLE `HistoryBookings` (
+  `booking_id` int(11) NOT NULL,
+  `reservation_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `language` varchar(3) NOT NULL,
+  `individual_count` tinyint(4) UNSIGNED NOT NULL,
+  `family_count` tinyint(4) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `festival_events`
+-- Dumping data for table `HistoryBookings`
 --
 
-INSERT INTO `festival_events` (`festival_event_id`, `title`, `category`, `event_date`, `start_time`, `end_time`, `location`, `extra_info`, `price`, `capacity`, `created_at`) VALUES
-(1, 'Gumbo Kings', 'jazz', '2026-07-30', '18:00:00', '19:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(2, 'Evolve', 'jazz', '2026-07-30', '19:30:00', '20:30:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(3, 'Ntjam Rosie', 'jazz', '2026-07-30', '21:00:00', '22:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(4, 'Wicked Jazz Sounds', 'jazz', '2026-07-30', '18:00:00', '19:00:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(5, 'Wouter Hamel', 'jazz', '2026-07-30', '19:30:00', '20:30:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(6, 'Jonna Frazer', 'jazz', '2026-07-30', '21:00:00', '22:00:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(7, 'Karsu', 'jazz', '2026-07-31', '18:00:00', '19:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(8, 'Uncle Sue', 'jazz', '2026-07-31', '19:30:00', '20:30:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(9, 'Chris Allen', 'jazz', '2026-07-31', '21:00:00', '22:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(10, 'Myles Sanko', 'jazz', '2026-07-31', '18:00:00', '19:00:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(11, 'Ilse Huizinga', 'jazz', '2026-07-31', '19:30:00', '20:30:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(12, 'Eric Vloeimans and Hotspot!', 'jazz', '2026-07-31', '21:00:00', '22:00:00', 'Patronaat', 'Second Hall', 10.00, 200, '2026-03-26 14:09:27'),
-(13, 'Gare du Nord', 'jazz', '2026-08-01', '18:00:00', '19:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(14, 'Rilan & The Bombadiers', 'jazz', '2026-08-01', '19:30:00', '20:30:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(15, 'Soul Six', 'jazz', '2026-08-01', '21:00:00', '22:00:00', 'Patronaat', 'Main Hall', 15.00, 300, '2026-03-26 14:09:27'),
-(16, 'Han Bennink', 'jazz', '2026-08-01', '18:00:00', '19:00:00', 'Patronaat', 'Third Hall', 10.00, 150, '2026-03-26 14:09:27'),
-(17, 'The Nordanians', 'jazz', '2026-08-01', '19:30:00', '20:30:00', 'Patronaat', 'Third Hall', 10.00, 150, '2026-03-26 14:09:27'),
-(18, 'Lilith Merlot', 'jazz', '2026-08-01', '21:00:00', '22:00:00', 'Patronaat', 'Third Hall', 10.00, 150, '2026-03-26 14:09:27'),
-(19, 'Ruis Soundsystem', 'jazz', '2026-08-02', '15:00:00', '16:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27'),
-(20, 'Wicked Jazz Sounds', 'jazz', '2026-08-02', '16:00:00', '17:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27'),
-(21, 'Evolve', 'jazz', '2026-08-02', '17:00:00', '18:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27'),
-(22, 'The Nordanians', 'jazz', '2026-08-02', '18:00:00', '19:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27'),
-(23, 'Gumbo Kings', 'jazz', '2026-08-02', '19:00:00', '20:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27'),
-(24, 'Gare du Nord', 'jazz', '2026-08-02', '20:00:00', '21:00:00', 'Grote Markt', 'Free show', 0.00, NULL, '2026-03-26 14:09:27');
+INSERT INTO `HistoryBookings` (`booking_id`, `reservation_id`, `date`, `language`, `individual_count`, `family_count`) VALUES
+(5, 8, '2026-04-27 10:00:00', 'nl', 3, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `festival_event_tickets`
+-- Table structure for table `HistoryCMS`
 --
 
-CREATE TABLE `festival_event_tickets` (
-  `festival_event_ticket_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `festival_event_ticket_type_id` int(11) NOT NULL,
-  `qr_token` varchar(128) NOT NULL,
-  `is_scanned` tinyint(1) NOT NULL DEFAULT 0,
-  `scanned_at` datetime DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT current_timestamp(),
-  `ticket_code` varchar(20) NOT NULL
+CREATE TABLE `HistoryCMS` (
+  `id` int(11) NOT NULL,
+  `individual_price` int(11) NOT NULL,
+  `family_price` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `festival_event_tickets`
+-- Dumping data for table `HistoryCMS`
 --
 
-INSERT INTO `festival_event_tickets` (`festival_event_ticket_id`, `user_id`, `festival_event_ticket_type_id`, `qr_token`, `is_scanned`, `scanned_at`, `created_at`, `ticket_code`) VALUES
-(10, 1, 1, 'a1b2c3d4e5f60718293a4b5c6d7e8f90', 1, '2026-04-05 20:46:24', '2026-04-05 20:44:41', 'HF-NEW1'),
-(11, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4e', 1, '2026-04-05 21:24:22', '2026-04-05 21:22:36', 'HF-NEW2'),
-(12, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3e5t', 1, '2026-04-05 21:25:45', '2026-04-05 21:25:15', 'HF-NEW3'),
-(13, 1, 1, 'b7c4d9e2f1a6835c9d0e4f7a1b2c3d4t', 1, '2026-04-05 21:42:30', '2026-04-05 21:41:41', 'HF-NEW6'),
-(36, 15, 139, '0c5008a761f8499ba7f5dbcfa2ed423adf310327e1a8964e', 1, '2026-04-06 16:36:21', '2026-04-06 16:35:57', 'HF-D172DA'),
-(37, 15, 104, '848489e60dcf2f389330f11d822bac093b8145fcc8b1ad00', 0, NULL, '2026-04-06 16:35:57', 'HF-EB9AC6'),
-(38, 15, 104, 'a9aa17d563d1ad0b4011d2daf547a7e804a4e60df1887970', 0, NULL, '2026-04-06 16:35:57', 'HF-71F4D6'),
-(39, 15, 101, 'a0f7276493002e4a8144e8e1595fca589b9c87195ae19706', 0, NULL, '2026-04-06 16:35:57', 'HF-8A5E23'),
-(40, 15, 101, '1ab3cc5bdbc336dc7bd6a6e6d792fcd527068e4f946b790c', 0, NULL, '2026-04-06 16:35:57', 'HF-815AB8');
+INSERT INTO `HistoryCMS` (`id`, `individual_price`, `family_price`) VALUES
+(1, 1178, 4550);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `festival_event_ticket_types`
+-- Table structure for table `HistoryReservationSlots`
 --
 
-CREATE TABLE `festival_event_ticket_types` (
-  `festival_event_ticket_type_id` int(11) NOT NULL,
-  `festival_event_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `price` decimal(10,2) DEFAULT NULL,
-  `is_pay_as_you_like` tinyint(1) NOT NULL DEFAULT 0
+CREATE TABLE `HistoryReservationSlots` (
+  `reservation_id` int(11) NOT NULL,
+  `slot_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `booked` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `festival_event_ticket_types`
+-- Dumping data for table `HistoryReservationSlots`
 --
 
-INSERT INTO `festival_event_ticket_types` (`festival_event_ticket_type_id`, `festival_event_id`, `name`, `price`, `is_pay_as_you_like`) VALUES
-(1, 1, 'Regular', 20.00, 0);
+INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `booked`) VALUES
+(1, 3, '2026-04-18', 0),
+(2, 2, '2026-04-21', 0),
+(3, 2, '2026-04-26', 0),
+(4, 3, '2026-04-24', 0),
+(5, 3, '2026-04-21', 0),
+(6, 1, '2026-04-30', 0),
+(7, 1, '2026-04-25', 0),
+(8, 1, '2026-04-27', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `HistoryTimeSlot`
+--
+
+CREATE TABLE `HistoryTimeSlot` (
+  `slot_id` int(11) NOT NULL,
+  `time` time NOT NULL,
+  `capacity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `HistoryTimeSlot`
+--
+
+INSERT INTO `HistoryTimeSlot` (`slot_id`, `time`, `capacity`) VALUES
+(1, '10:00:00', 30),
+(2, '13:00:00', 30),
+(3, '16:00:00', 30);
 
 -- --------------------------------------------------------
 
@@ -542,48 +355,6 @@ INSERT INTO `history_highlights` (`id`, `title`, `description`, `image`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `history_tickets`
---
-
-CREATE TABLE `history_tickets` (
-  `id` int(11) NOT NULL,
-  `time_slot` varchar(50) NOT NULL,
-  `price` decimal(6,2) NOT NULL,
-  `available_spots` int(11) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `history_tickets`
---
-
-INSERT INTO `history_tickets` (`id`, `time_slot`, `price`, `available_spots`) VALUES
-(1, '10:00 AM', 5.00, 15),
-(2, '01:00 PM', 12.50, 10),
-(3, '04:00 PM', 60.00, 8);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `history_ticket_prices`
---
-
-CREATE TABLE `history_ticket_prices` (
-  `id` int(11) NOT NULL,
-  `ticket_type` enum('individual','family') NOT NULL,
-  `price` decimal(6,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `history_ticket_prices`
---
-
-INSERT INTO `history_ticket_prices` (`id`, `ticket_type`, `price`) VALUES
-(1, 'individual', 12.50),
-(2, 'family', 60.00);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `home_content`
 --
 
@@ -635,37 +406,29 @@ CREATE TABLE `home_events` (
 INSERT INTO `home_events` (`id`, `title`, `category`, `short_description`, `long_description`, `venues`, `image`, `bg_class`, `icon`, `url`, `button_label`, `sort_order`, `is_active`) VALUES
 (1, 'Haarlem Jazz', 'Music', 'Experience world-class jazz performances across multiple venues. From smooth classics to contemporary fusion.', 'From soft saxophone melodies to energetic jam nights, Haarlem Jazz mixes tradition, modern sound, and warm summer nights...', 'Patronaat Haarlem, Grand Cafe Brinkman, New Vegas', 'Jazz.png', 'jazz-bg', 'bi-music-note-beamed', '/jazz', 'Jazz', 1, 1),
 (2, 'Dance!', 'Music', 'Top DJs bring the energy with electrifying performances. Get ready to move to the best electronic beats.', 'Dance is the electronic music experience of The Festival: three nights filled with house, techno and trance across Haarlem and Bloemendaal.', 'Various venues across Haarlem', 'Dance.png', 'dance-bg', 'bi-disc', '/dance', 'Dance', 2, 1),
-(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/food', 'Yummy', 3, 1),
+(3, 'Yummy!', 'Food', 'Gourmet dining with a twist. Haarlem\'s finest restaurants present exclusive festival menus.', 'From fancy dining to a quick bite in one of the many restaurants, Haarlem has it all. The city is quite famous for its wide range of restaurants and bars, on wide range of themes...', 'Ratatouille, Restaurant ML, Urban Frenchy Bistro, Restaurant Fris', 'Yummy!.jpg', 'food-bg', 'bi-cup-hot', '/yummy', 'Yummy', 3, 1),
 (4, 'A Stroll through History!', 'Culture', 'Walk through centuries of Dutch heritage. Discover Haarlem\'s historic landmarks with expert guides.', 'Discover the city of painters, merchants, and hidden courtyards. Experience 775 years of history in one unforgettable walk.', 'Grote Markt, Corrie ten Boom house', 'bavo-church.jpg', 'history-bg', 'bi-clock-history', '/history', 'History', 4, 1),
 (5, 'Stories in Haarlem', 'Culture', 'Immerse yourself in captivating narratives. From local legends to international storytellers.', 'During the last weekend of July, Stories in Haarlem brings live stories, podcasts and family shows to different locations across the city.', 'Verhalenhuis Haarlem, Elswout Theater, De Schuur, Café de Roemer', 'Story.jpg', 'stories-bg', 'bi-book', '/stories', 'Stories', 5, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Invoice`
+-- Table structure for table `JazzBookings`
 --
 
-CREATE TABLE `Invoice` (
-  `invoice_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `invoice_number` varchar(50) NOT NULL,
-  `invoice_date` datetime DEFAULT current_timestamp(),
-  `total_amount` decimal(10,2) NOT NULL,
-  `vat_percentage` decimal(5,2) NOT NULL DEFAULT 9.00 COMMENT 'Culture events = 9% VAT',
-  `client_name` varchar(255) DEFAULT NULL,
-  `client_address` varchar(500) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `JazzBookings` (
+  `booking_id` int(11) NOT NULL,
+  `performer_id` int(11) NOT NULL,
+  `amount` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `Invoice`
+-- Dumping data for table `JazzBookings`
 --
 
-INSERT INTO `Invoice` (`invoice_id`, `order_id`, `invoice_number`, `invoice_date`, `total_amount`, `vat_percentage`, `client_name`, `client_address`) VALUES
-(1, 2, 'INV-2026-000002', '2026-04-04 13:07:44', 15.00, 9.00, 'Enes Veli Yigit', 'ENESVELIYIGIT@GMAIL.COM'),
-(2, 3, 'INV-2026-000003', '2026-04-04 14:43:24', 92.00, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
-(3, 4, 'INV-2026-000004', '2026-04-05 13:05:43', 80.38, 9.00, 'Enes Veli Yigit', 'enesveliyigit0@gmail.com'),
-(4, 10, 'INV-2026-000010', '2026-04-06 23:57:52', 50.00, 9.00, 'achraf derouich', 'achraf@admin.com'),
-(5, 11, 'INV-2026-000011', '2026-04-06 23:59:26', 60.00, 9.00, 'Timofii Sadko', 'tim.sadko@gmail.com');
+INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
+(7, 3, 4),
+(8, 3, 7);
 
 -- --------------------------------------------------------
 
@@ -764,16 +527,17 @@ INSERT INTO `jazz_locations` (`id`, `name`, `address`, `google_maps_embed_url`, 
 CREATE TABLE `jazz_performers` (
   `id` int(11) NOT NULL,
   `name` varchar(120) NOT NULL,
+  `price` int(11) NOT NULL,
   `bio` text DEFAULT NULL,
+  `date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
   `sort_order` int(11) NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `image_path` varchar(255) DEFAULT NULL,
   `performance_style` varchar(150) DEFAULT NULL,
-  `event_date_text` varchar(100) DEFAULT NULL,
-  `event_time_text` varchar(100) DEFAULT NULL,
   `venue_name` varchar(150) DEFAULT NULL,
   `venue_address` varchar(255) DEFAULT NULL,
-  `price_text` varchar(50) DEFAULT NULL,
   `note_text` varchar(255) DEFAULT NULL,
   `audio_url` varchar(255) DEFAULT NULL,
   `hero_image_path` varchar(255) DEFAULT NULL
@@ -783,20 +547,20 @@ CREATE TABLE `jazz_performers` (
 -- Dumping data for table `jazz_performers`
 --
 
-INSERT INTO `jazz_performers` (`id`, `name`, `bio`, `sort_order`, `is_active`, `image_path`, `performance_style`, `event_date_text`, `event_time_text`, `venue_name`, `venue_address`, `price_text`, `note_text`, `audio_url`, `hero_image_path`) VALUES
-(1, 'Evolve', 'wneqifhskjhdfwe', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Thursday', '20.00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
-(2, 'Fox & The Mayors', '', 2, 1, '/assets/uploads/jazz/performers/1775427024_Screenshot 2026-04-06 at 00.10.13.png', 'Smooth, expressive', '', '', '', '', '', '', '', NULL),
-(3, 'Gare du Nord', 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', '€15,90', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
-(4, 'Gumbo Kings', '', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
-(5, 'Han Bennink', '', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', '', '', '', NULL),
-(6, 'Jonna Frazer', '', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', '', '', '', NULL),
-(7, 'Chris Allen', '', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', '', '', '', NULL),
-(8, 'Lilith Merlot', '', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', '', '', '', NULL),
-(9, 'Myles Sanko', '', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', '', '', '', NULL),
-(13, 'Soul Six', '', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', '', '', '', NULL),
-(14, 'The Family XL', '', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', '', '', '', NULL),
-(15, 'The Nordanians', '', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', '', '', '', NULL),
-(17, 'Uncle Sue', '', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', '', '', '', NULL);
+INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `date`, `start_time`, `end_time`, `sort_order`, `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`) VALUES
+(1, 'Evolve', 1590, 'wneqifhskjhdfwe', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
+(2, 'Fox & The Mayors', 980, '', '2026-04-30', '21:00:00', '23:30:00', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', 'Smooth, expressive', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '', '', NULL),
+(3, 'Gare du Nord', 1590, 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', '2026-04-27', '16:00:00', '19:00:00', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
+(4, 'Gumbo Kings', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', NULL),
+(6, 'Jonna Frazer', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', NULL),
+(7, 'Chris Allen', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', NULL),
+(8, 'Lilith Merlot', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', NULL),
+(9, 'Myles Sanko', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', NULL),
+(13, 'Soul Six', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', NULL),
+(14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
+(15, 'The Nordanians', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', NULL),
+(17, 'Uncle Sue', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', NULL);
 
 -- --------------------------------------------------------
 
@@ -923,68 +687,58 @@ INSERT INTO `jazz_recommendations` (`id`, `title`, `description`, `url`, `image_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Order`
+-- Table structure for table `OrderItems`
 --
 
-CREATE TABLE `Order` (
+CREATE TABLE `OrderItems` (
+  `item_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `order_date` datetime DEFAULT current_timestamp(),
-  `status` enum('pending','paid','cancelled') DEFAULT 'pending',
-  `payment_method` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `booking_id` int(11) NOT NULL,
+  `booking_type` bit(3) NOT NULL,
+  `price` decimal(10,0) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `Order`
+-- Dumping data for table `OrderItems`
 --
 
-INSERT INTO `Order` (`order_id`, `user_id`, `order_date`, `status`, `payment_method`) VALUES
-(1, 8, '2026-04-04 12:30:19', 'paid', 'ideal'),
-(2, 8, '2026-04-04 13:07:44', 'paid', 'credit_card'),
-(3, 8, '2026-04-04 14:43:24', 'paid', 'paypal'),
-(4, 8, '2026-04-05 13:05:43', 'paid', 'credit_card'),
-(5, 2, '2026-04-06 11:49:14', 'pending', 'credit_card'),
-(6, 2, '2026-04-06 11:51:49', 'pending', 'credit_card'),
-(7, 2, '2026-04-06 11:56:24', 'pending', 'credit_card'),
-(8, 2, '2026-04-06 11:57:51', 'pending', 'credit_card'),
-(9, 2, '2026-04-06 23:43:02', 'pending', 'credit_card'),
-(10, 2, '2026-04-06 23:57:52', 'paid', 'credit_card'),
-(11, 5, '2026-04-06 23:59:26', 'paid', 'credit_card');
+INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
+(26, 8, 20, b'010', 5000),
+(28, 8, 5, b'000', 8084),
+(29, 8, 14, b'001', 1800),
+(30, 8, 7, b'011', 6360),
+(31, 9, 21, b'010', 10000),
+(32, 9, 8, b'011', 11130),
+(33, 10, 22, b'010', 5000),
+(34, 11, 23, b'010', 7000),
+(35, 12, 24, b'010', 11000);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `OrderItem`
+-- Table structure for table `Orders`
 --
 
-CREATE TABLE `OrderItem` (
-  `item_id` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
+CREATE TABLE `Orders` (
   `order_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `unit_price` decimal(10,2) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `user_id` int(11) NOT NULL,
+  `date` datetime DEFAULT NULL,
+  `status` bit(3) NOT NULL DEFAULT b'0',
+  `total_price` decimal(10,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `OrderItem`
+-- Dumping data for table `Orders`
 --
 
-INSERT INTO `OrderItem` (`item_id`, `type_id`, `order_id`, `quantity`, `unit_price`) VALUES
-(1, 5, 2, 1, 15.00),
-(2, 5, 3, 1, 77.00),
-(3, 19, 3, 2, 7.50),
-(4, 5, 4, 4, 5.00),
-(5, 6, 4, 1, 10.00),
-(6, 1, 4, 1, 6.00),
-(7, 7, 4, 1, 9.38),
-(8, 143, 4, 1, 17.50),
-(9, 138, 4, 1, 17.50),
-(10, 101, 5, 1, 15.00),
-(11, 101, 6, 1, 15.00),
-(12, 101, 7, 1, 15.00),
-(13, 101, 8, 1, 15.00),
-(15, 178, 10, 1, 50.00),
-(16, 179, 11, 1, 60.00);
+INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`) VALUES
+(6, 10, NULL, b'000', NULL),
+(7, 2, NULL, b'000', NULL),
+(8, 5, '2026-04-26 19:47:29', b'010', 23155),
+(9, 5, '2026-04-26 19:38:03', b'010', 23031),
+(10, 5, '2026-04-26 19:42:36', b'010', 5450),
+(11, 5, '2026-04-26 19:56:23', b'010', 7630),
+(12, 5, '2026-04-27 11:20:48', b'010', 11990);
 
 -- --------------------------------------------------------
 
@@ -1003,163 +757,118 @@ CREATE TABLE `PasswordResetToken` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ticket`
+-- Table structure for table `StoryBookings`
 --
 
-CREATE TABLE `Ticket` (
-  `ticket_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `type_id` int(11) NOT NULL,
-  `barcode` varchar(255) NOT NULL COMMENT 'Secured hash - not a plain ID',
-  `is_scanned` tinyint(1) DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+CREATE TABLE `StoryBookings` (
+  `booking_id` int(11) NOT NULL,
+  `pay_as_you_like` int(11) DEFAULT NULL,
+  `event_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `haarlem_pass` bit(1) NOT NULL,
+  `haarlem_pass_code` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `Ticket`
+-- Dumping data for table `StoryBookings`
 --
 
-INSERT INTO `Ticket` (`ticket_id`, `order_id`, `type_id`, `barcode`, `is_scanned`) VALUES
-(1, 2, 5, '73e5fcc1f892d424d88fee18df23869ba2ab0f40b323795069f7a49d11e2a6c2', 0),
-(2, 3, 5, 'b1422480999148cba3bfbd7507c81584f3d13fc127b4d048f55f06745a28140c', 0),
-(3, 3, 19, '12918c9bc5668131db58b5b5b554995e6110cb4eb525f3c8f02834a8cfd3aaa9', 0),
-(4, 3, 19, '2ecdacf07b04021d978dec65664d54d592429a9db7422e84fdce96e7b1492f23', 0),
-(5, 4, 5, 'ffa3448cccd71381bc224d093efdd8adaf55185b3254f05bd0bb63c943dbb628', 0),
-(6, 4, 5, '715ed56ee9bd426502011f1ba6f6de81004b9aa29711d665605721cf41d7fea1', 0),
-(7, 4, 5, '61fac25d288968973f6966a528f54a6236fbdf2e3810e5509e8c16e5ae18cc0d', 0),
-(8, 4, 5, 'dda05f32e23c0c45f43fe6f6de0bb7ac774d1cc019275a36b861cafa53d339bb', 0),
-(9, 4, 6, 'f78ca9f1e30adcec3df97b466ed689552a12a53938d8260c05a43cd38f29418f', 0),
-(10, 4, 1, '0d97f860c9cf4d36309674b7fdbbf34d01030b464f526e70253bb8227393df74', 0),
-(11, 4, 7, '4429640785122f5e3517520ed3bd635a5fe6e5a0660df87250ea7ee6b9ddfbd4', 0),
-(12, 4, 143, 'f0db781509608d82b86f8c021b4c6018a4b8c85465a3211518cc0289d4e6c11a', 0),
-(13, 4, 138, '34f372ef8864bd482006292673e835a2c02466cc7646120877b68f07f29e5c20', 0);
+INSERT INTO `StoryBookings` (`booking_id`, `pay_as_you_like`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
+(14, NULL, 1, 4, b'1', '1234567890');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Ticket_Type`
+-- Table structure for table `StoryEvents`
 --
 
-CREATE TABLE `Ticket_Type` (
-  `type_id` int(11) NOT NULL,
+CREATE TABLE `StoryEvents` (
   `event_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL COMMENT 'e.g. Regular Ticket, HaarlemPas',
-  `price` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT '0.00 = pay as you like',
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL COMMENT 'URL: /stories/mister-anansi',
+  `price` int(11) NOT NULL,
+  `address_name` varchar(128) NOT NULL,
+  `address_text` varchar(256) NOT NULL,
+  `description` text DEFAULT NULL,
+  `performer_name` varchar(255) DEFAULT NULL COMMENT 'Storyteller / presenter name',
+  `performer_bio` text DEFAULT NULL COMMENT 'Bio shown on detail page',
+  `language` varchar(10) NOT NULL DEFAULT 'NL' COMMENT 'NL or ENG',
+  `age_group` varchar(20) NOT NULL DEFAULT 'All ages',
+  `story_type` varchar(100) DEFAULT NULL COMMENT 'stories for the whole family, recording podcast with audience, stories with impact, best of',
   `is_pay_as_you_like` tinyint(1) DEFAULT 0,
-  `start_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
+  `max_tickets` int(11) NOT NULL DEFAULT 30,
+  `image_path` varchar(500) NOT NULL,
+  `gallery_image_1` varchar(500) DEFAULT NULL,
+  `gallery_image_2` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `Ticket_Type`
+-- Dumping data for table `StoryEvents`
 --
 
-INSERT INTO `Ticket_Type` (`type_id`, `event_id`, `name`, `price`, `is_pay_as_you_like`, `start_time`, `end_time`) VALUES
-(1, 1, 'Regular Ticket', 6.00, 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00'),
-(2, 1, 'HaarlemPas (25% off)', 4.50, 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00'),
-(3, 2, 'Regular Ticket', 12.50, 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00'),
-(4, 2, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00'),
-(5, 3, 'Pay as you like', 0.00, 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00'),
-(6, 4, 'Pay as you like', 0.00, 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00'),
-(7, 5, 'Regular Ticket', 12.50, 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00'),
-(8, 5, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00'),
-(9, 6, 'Pay as you like', 0.00, 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00'),
-(10, 7, 'Regular Ticket', 12.50, 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00'),
-(11, 7, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00'),
-(12, 8, 'Regular Ticket', 10.00, 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00'),
-(13, 8, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00'),
-(14, 9, 'Regular Ticket', 10.00, 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00'),
-(15, 9, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00'),
-(16, 10, 'Regular Ticket', 12.50, 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00'),
-(17, 10, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00'),
-(18, 11, 'Pay as you like', 0.00, 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00'),
-(19, 12, 'Regular Ticket', 10.00, 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00'),
-(20, 12, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00'),
-(21, 13, 'Regular Ticket', 10.00, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
-(22, 13, 'HaarlemPas (25% off)', 7.50, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
-(23, 14, 'Pay as you like', 0.00, 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00'),
-(24, 15, 'Regular Ticket', 12.50, 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00'),
-(25, 15, 'HaarlemPas (25% off)', 9.38, 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00'),
-(101, 101, 'Regular Ticket', 15.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00'),
-(102, 102, 'Regular Ticket', 15.00, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00'),
-(103, 103, 'Regular Ticket', 15.00, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00'),
-(104, 104, 'Regular Ticket', 10.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:00:00'),
-(105, 105, 'Regular Ticket', 10.00, 0, '2026-07-23 19:30:00', '2026-07-23 20:30:00'),
-(106, 106, 'Regular Ticket', 10.00, 0, '2026-07-23 21:00:00', '2026-07-23 22:00:00'),
-(107, 107, 'Regular Ticket', 15.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00'),
-(108, 108, 'Regular Ticket', 15.00, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00'),
-(109, 109, 'Regular Ticket', 15.00, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00'),
-(110, 110, 'Regular Ticket', 10.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:00:00'),
-(111, 111, 'Regular Ticket', 10.00, 0, '2026-07-24 19:30:00', '2026-07-24 20:30:00'),
-(112, 112, 'Regular Ticket', 10.00, 0, '2026-07-24 21:00:00', '2026-07-24 22:00:00'),
-(113, 113, 'Regular Ticket', 15.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00'),
-(114, 114, 'Regular Ticket', 15.00, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00'),
-(115, 115, 'Regular Ticket', 15.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00'),
-(116, 116, 'Regular Ticket', 10.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:00:00'),
-(117, 117, 'Regular Ticket', 10.00, 0, '2026-07-25 19:30:00', '2026-07-25 20:30:00'),
-(118, 118, 'Regular Ticket', 10.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:00:00'),
-(119, 119, 'Regular Ticket', 0.00, 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00'),
-(120, 120, 'Regular Ticket', 0.00, 0, '2026-07-26 16:00:00', '2026-07-26 17:00:00'),
-(121, 121, 'Regular Ticket', 0.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:00:00'),
-(122, 122, 'Regular Ticket', 0.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:00:00'),
-(123, 123, 'Regular Ticket', 0.00, 0, '2026-07-26 19:00:00', '2026-07-26 20:00:00'),
-(124, 124, 'Regular Ticket', 0.00, 0, '2026-07-26 20:00:00', '2026-07-26 21:00:00'),
-(125, 125, 'Regular Ticket', 0.00, 0, '2026-07-24 20:00:00', '2026-07-24 21:30:00'),
-(126, 126, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
-(127, 127, 'Regular Ticket', 0.00, 0, '2026-07-24 23:00:00', '2026-07-24 23:59:00'),
-(128, 128, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
-(129, 129, 'Regular Ticket', 0.00, 0, '2026-07-24 22:00:00', '2026-07-24 23:30:00'),
-(130, 130, 'Regular Ticket', 0.00, 0, '2026-07-25 14:00:00', '2026-07-25 20:00:00'),
-(131, 131, 'Regular Ticket', 0.00, 0, '2026-07-25 22:00:00', '2026-07-25 23:30:00'),
-(132, 132, 'Regular Ticket', 0.00, 0, '2026-07-25 21:00:00', '2026-07-25 22:30:00'),
-(133, 133, 'Regular Ticket', 0.00, 0, '2026-07-25 23:00:00', '2026-07-25 23:59:00'),
-(134, 134, 'Regular Ticket', 0.00, 0, '2026-07-26 14:00:00', '2026-07-26 20:00:00'),
-(135, 135, 'Regular Ticket', 0.00, 0, '2026-07-26 19:00:00', '2026-07-26 20:30:00'),
-(136, 136, 'Regular Ticket', 0.00, 0, '2026-07-26 21:00:00', '2026-07-26 22:30:00'),
-(137, 137, 'Regular Ticket', 0.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00'),
-(138, 138, 'Regular Ticket', 17.50, 0, '2026-07-23 10:00:00', '2026-07-23 12:30:00'),
-(139, 139, 'Regular Ticket', 17.50, 0, '2026-07-23 13:00:00', '2026-07-23 15:30:00'),
-(140, 140, 'Regular Ticket', 17.50, 0, '2026-07-23 16:00:00', '2026-07-23 18:30:00'),
-(141, 141, 'Regular Ticket', 17.50, 0, '2026-07-24 10:00:00', '2026-07-24 12:30:00'),
-(142, 142, 'Regular Ticket', 17.50, 0, '2026-07-24 13:00:00', '2026-07-24 15:30:00'),
-(143, 143, 'Regular Ticket', 17.50, 0, '2026-07-24 16:00:00', '2026-07-24 18:30:00'),
-(144, 144, 'Regular Ticket', 17.50, 0, '2026-07-25 10:00:00', '2026-07-25 12:30:00'),
-(145, 145, 'Regular Ticket', 17.50, 0, '2026-07-25 13:00:00', '2026-07-25 15:30:00'),
-(146, 146, 'Regular Ticket', 17.50, 0, '2026-07-25 16:00:00', '2026-07-25 18:30:00'),
-(147, 147, 'Regular Ticket', 17.50, 0, '2026-07-26 10:00:00', '2026-07-26 12:30:00'),
-(148, 148, 'Regular Ticket', 17.50, 0, '2026-07-26 13:00:00', '2026-07-26 15:30:00'),
-(149, 149, 'Regular Ticket', 17.50, 0, '2026-07-26 16:00:00', '2026-07-26 18:30:00'),
-(150, 150, 'Regular Ticket', 35.00, 0, '2026-07-23 18:00:00', '2026-07-23 19:30:00'),
-(151, 151, 'Regular Ticket', 45.00, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00'),
-(152, 152, 'Regular Ticket', 45.00, 0, '2026-07-23 17:00:00', '2026-07-23 19:00:00'),
-(153, 153, 'Regular Ticket', 45.00, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00'),
-(154, 154, 'Regular Ticket', 35.00, 0, '2026-07-23 17:00:00', '2026-07-23 18:30:00'),
-(155, 155, 'Regular Ticket', 35.00, 0, '2026-07-23 16:30:00', '2026-07-23 18:00:00'),
-(156, 156, 'Regular Ticket', 35.00, 0, '2026-07-23 17:30:00', '2026-07-23 19:00:00'),
-(157, 157, 'Regular Ticket', 35.00, 0, '2026-07-24 18:00:00', '2026-07-24 19:30:00'),
-(158, 158, 'Regular Ticket', 45.00, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00'),
-(159, 159, 'Regular Ticket', 45.00, 0, '2026-07-24 17:00:00', '2026-07-24 19:00:00'),
-(160, 160, 'Regular Ticket', 45.00, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00'),
-(161, 161, 'Regular Ticket', 35.00, 0, '2026-07-24 17:00:00', '2026-07-24 18:30:00'),
-(162, 162, 'Regular Ticket', 35.00, 0, '2026-07-24 16:30:00', '2026-07-24 18:00:00'),
-(163, 163, 'Regular Ticket', 35.00, 0, '2026-07-24 17:30:00', '2026-07-24 19:00:00'),
-(164, 164, 'Regular Ticket', 35.00, 0, '2026-07-25 18:00:00', '2026-07-25 19:30:00'),
-(165, 165, 'Regular Ticket', 45.00, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00'),
-(166, 166, 'Regular Ticket', 45.00, 0, '2026-07-25 17:00:00', '2026-07-25 19:00:00'),
-(167, 167, 'Regular Ticket', 45.00, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00'),
-(168, 168, 'Regular Ticket', 35.00, 0, '2026-07-25 17:00:00', '2026-07-25 18:30:00'),
-(169, 169, 'Regular Ticket', 35.00, 0, '2026-07-25 16:30:00', '2026-07-25 18:00:00'),
-(170, 170, 'Regular Ticket', 35.00, 0, '2026-07-25 17:30:00', '2026-07-25 19:00:00'),
-(171, 171, 'Regular Ticket', 35.00, 0, '2026-07-26 18:00:00', '2026-07-26 19:30:00'),
-(172, 172, 'Regular Ticket', 45.00, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00'),
-(173, 173, 'Regular Ticket', 45.00, 0, '2026-07-26 17:00:00', '2026-07-26 19:00:00'),
-(174, 174, 'Regular Ticket', 45.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00'),
-(175, 175, 'Regular Ticket', 35.00, 0, '2026-07-26 17:00:00', '2026-07-26 18:30:00'),
-(176, 176, 'Regular Ticket', 35.00, 0, '2026-07-26 16:30:00', '2026-07-26 18:00:00'),
-(177, 177, 'Regular Ticket', 35.00, 0, '2026-07-26 17:30:00', '2026-07-26 19:00:00'),
-(178, 186, 'Ratatouille booking', 50.00, 0, '2026-04-07 17:00:00', '2026-04-07 19:00:00'),
-(179, 187, 'Ratatouille booking', 60.00, 0, '2026-04-06 19:00:00', '2026-04-06 21:00:00'),
-(180, 188, 'Name booking', 140.00, 0, '2026-04-19 16:30:00', '2026-04-19 18:00:00'),
-(181, 189, 'Ratatouille booking', 50.00, 0, '2026-04-20 21:00:00', '2026-04-20 23:00:00');
+INSERT INTO `StoryEvents` (`event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`, `age_group`, `story_type`, `is_pay_as_you_like`, `start_time`, `end_time`, `max_tickets`, `image_path`, `gallery_image_1`, `gallery_image_2`) VALUES
+(1, 'Winnie de Poeh', 'winnie-de-poeh', 600, 'Verhalenhuis Haarlem', 'Van Egmondstraat 7, Haarlem-Noord', 'Join us for a magical storytelling session based on the beloved tales of Winnie the Pooh. Brought to life by an experienced family storyteller, this performance uses puppets, songs, and audience participation to enchant young listeners. Perfect for the youngest members of the family.', 'Marieke van der Werf', NULL, 'NL', '4+', 'stories for the whole family', 0, '2026-07-23 16:00:00', '2026-07-23 17:00:00', 50, '/assets/images/stories/ccd64b520f09f160ebcaa5ded87d27ae.jpeg', '', ''),
+(2, 'Omdenken Podcast', 'omdenken-podcast', 1250, 'De Schuur', 'Lange Begijnestraat 9, 2011 HH Haarlem', 'Experience a live podcast recording with a studio audience. Omdenken — the Dutch art of \"flipping\" problems into opportunities — comes to the stage in an interactive session full of surprising perspectives and real audience participation. A unique chance to be part of a live recording.', NULL, NULL, 'NL', '16+', 'recording podcast with audience', 0, '2026-07-23 19:00:00', '2026-07-23 20:15:00', 40, '/assets/images/stories/2ba08353e7c37fc0acdd1b5401b5068b.jpeg', NULL, NULL),
+(3, 'The Story of Buurderij Haarlem', 'story-of-buurderij-haarlem', 0, 'Kweekcafé', 'Kleverlaan 9, 2023 JC Haarlem', 'How does your food travel from the soil to your plate? In this inspiring session, we dive into the world of short food supply chains. The \"Buurderij\" is not just a market; it\'s a movement connecting neighbors directly with local farmers. Learn how this circular approach is reshaping Haarlem\'s economy and reducing our carbon footprint.', 'Marieke van der Werf', 'Presented by Marieke van der Werf, founder of the Haarlem Green Collective. Marieke was awarded the \"Sustainable Entrepreneur of the Year 2024\" for her work in reducing food waste in North Holland. She has successfully launched three community farming initiatives and consults for the municipality on circular city planning.', 'EN', '16+', 'stories with impact', 1, '2026-07-23 20:30:00', '2026-07-23 21:45:00', 25, '/assets/images/stories/756822a1ee7b7f7085fed9468aa803c2.jpeg', '/assets/images/stories/0be260ee2117fa99f6f951ab2ed9dd32.jpeg', '/assets/images/stories/d3c08e71ce525a48370c9c8168d37134.jpeg'),
+(4, 'Corrie voor kinderen', 'corrie-voor-kinderen', 0, 'Corrie ten Boom huis', 'Barteljorisstraat 19, Haarlem', 'An age-appropriate retelling of the remarkable true story of Corrie ten Boom and her family, who hid Jewish people in their Haarlem home during World War II. Presented at the actual Ten Boom house, this experience brings history to life for children in a meaningful and accessible way.', NULL, NULL, 'NL', '10+', 'stories for the whole family', 1, '2026-07-24 16:00:00', '2026-07-24 17:00:00', 35, '/assets/images/stories/fce213146d5fcaae1b32e2728e051f6f.jpeg', NULL, NULL),
+(5, 'Winnaars van verhalenvertel wedstrijd', 'winnaars-verhalenvertel-wedstrijd', 1000, 'Theater Elswout', 'Elswoutslaan 24-a, 2051 AE Overveen', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'NL', '12+', 'best of', 0, '2026-07-24 19:00:00', '2026-07-24 20:30:00', 30, '/assets/images/stories/cb2205716106bbb349b267af663971ab.jpeg', NULL, NULL),
+(6, 'Het verhaal van de Oeserzwammerij', 'verhaal-oeserzwammerij', 0, 'Patronaat', 'Zijlvest 21, 2011 VB Haarlem', 'Discover the fascinating story of urban mushroom farming in Haarlem. This talk explores how a small circular business is transforming food waste into gourmet oyster mushrooms, contributing to a more sustainable local food system. Inspiring, quirky, and eye-opening.', NULL, NULL, 'NL', '16+', 'stories with impact', 1, '2026-07-24 19:00:00', '2026-07-24 20:15:00', 25, '/assets/images/stories/442407af2369c471bb792666df2503e7.jpeg', NULL, NULL),
+(7, 'Flip Thinking Podcast', 'flip-thinking-podcast', 1000, 'Grote Markt', 'Grote Markt, Haarlem', 'A live English-language podcast recording exploring \"flip thinking\" — the concept of turning obstacles into opportunities. Join host and author Berthold Gunster as he challenges guests and audience members to reframe their biggest problems. Recorded live for international distribution.', NULL, NULL, 'EN', '16+', 'recording podcast with audience', 0, '2026-07-24 20:30:00', '2026-07-24 21:45:00', 40, '/assets/images/stories/997004ba39a660e70d04636a8ed0f922.jpeg', NULL, NULL),
+(8, 'Meneer Anansi', 'meneer-anansi-sat-morning', 1000, 'Lichtfabriek', 'Minckelersweg 2, 2031 EM Haarlem', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-25 10:00:00', '2026-07-25 11:00:00', 50, '/assets/images/stories/aae44f3940f6bb32db98ace7cc3e0754.jpeg', NULL, NULL),
+(9, 'Mister Anansi', 'mister-anansi-sat-afternoon', 1000, 'Slachthuis', 'Rockplein 6, 2033 KK Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-25 15:00:00', '2026-07-25 16:00:00', 50, '/assets/images/stories/2143ce48ae8cca82613f3e0c80d71d92.jpeg', '/assets/images/stories/c49ab911d8adf050fef3d480581f359e.jpeg', '/assets/images/stories/2d348ee9a103a8f7248c53a7e1829db4.jpeg'),
+(10, 'Podcastlast Haarlem Special', 'podcastlast-haarlem-special', 1000, 'Jopenkerk', 'Gedempte Voldersgracht 2, 2011 WD Haarlem', 'Podcastlast records a special Haarlem-themed episode live in front of an audience at De Schuur. Featuring local guests, audience questions, and a unique behind-the-scenes look at what makes this city tick. A must for podcast enthusiasts and Haarlem locals alike.', NULL, NULL, 'NL', '12+', 'recording podcast with audience', 0, '2026-07-25 14:00:00', '2026-07-25 15:15:00', 40, '/assets/images/stories/f2eb35fdf14d684e02c6ee5a94f0f0ba.jpeg', NULL, NULL),
+(11, 'De geschiedenis van familie ten Boom', 'geschiedenis-familie-ten-boom', 0, 'XO the Club', 'Grote Markt 8, 2011 RD Haarlem', 'A deeply moving account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented in Dutch for a mature audience. A reservation is required to guarantee entry.', NULL, NULL, 'NL', '12+', 'stories with impact', 1, '2026-07-25 13:00:00', '2026-07-25 14:30:00', 35, '/assets/images/stories/fb563928c1dc5042675fd095c28b6aa1.jpeg', NULL, NULL),
+(12, 'Mister Anansi', 'mister-anansi-sun-morning', 1000, 'Puncher Comedy Club', 'Grote Markt 10, 2011 RD Haarlem', 'Step into a world of magic and mischief with the legendary Mister Anansi. In this interactive English-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'EN', '2-102', 'stories for the whole family', 0, '2026-07-26 10:00:00', '2026-07-26 11:00:00', 50, '/assets/images/stories/997b979719d6f659c6680a3a4b0375db.jpeg', '/assets/images/stories/db96e84149734b8bb38867e87a78a1f1.jpeg', '/assets/images/stories/9d8c2d227ddd0370b95ff096c788018b.jpeg'),
+(13, 'Meneer Anansi', 'meneer-anansi-sun-afternoon', 1000, 'Caprera Openluchttheater', 'Hoge Duin en Daalseweg 2, 2061 AG Bloemendaal', 'Step into a world of magic and mischief with the legendary Meneer Anansi. In this interactive Dutch-language session, children help Anansi the Spider solve riddles, outsmart tigers, and collect all the stories of the world to bring back to Haarlem. A perfect blend of humor, wisdom, and participation that keeps young minds engaged.', 'Winston \"The Weaver\"', 'Our storyteller, Winston \"The Weaver,\" has been performing traditional folklore across Europe for over 15 years. He was voted \"Best Family Act\" at the Edinburgh Fringe (2023) and has featured on BBC Radio\'s \"Stories for Schools.\" His unique ability to switch seamlessly between Dutch and English makes this event accessible for international and local families alike.', 'NL', '2-102', 'stories for the whole family', 0, '2026-07-26 15:00:00', '2026-07-26 16:00:00', 50, '/assets/images/stories/ab76b6f7b8e4570906764fd7b0712072.jpeg', NULL, NULL),
+(14, 'The History of the Ten Boom Family', 'history-ten-boom-family', 0, 'Bavokerk', 'Grote Markt 22, 2011 RD Haarlem', 'A deeply moving English-language account of the Ten Boom family\'s extraordinary courage during the Second World War. Told at the very house where Jewish people were hidden, this story of faith, sacrifice, and humanity is presented for a mature international audience. A reservation is required to guarantee entry.', NULL, NULL, 'EN', '12+', 'stories with impact', 1, '2026-07-26 13:00:00', '2026-07-26 14:30:00', 35, '/assets/images/stories/8b1cede5daae032ab8b70d8c2ceb7287.jpeg', NULL, NULL),
+(15, 'Winners of Storytelling Competition', 'winners-storytelling-competition', 1250, 'Cafe de Roemer', 'Botermarkt 17, 2011 XL Haarlem', 'The storytelling contest will be organized in June. The winners present their best original stories live on stage at the Verhalenhuis. A celebration of fresh local talent and the English-language art of oral storytelling. Come discover Haarlem\'s next generation of storytellers.', NULL, NULL, 'EN', '12+', 'best of', 0, '2026-07-26 16:00:00', '2026-07-26 17:30:00', 30, '/assets/images/stories/62eb5096ef38305169f70c4ff3fa0be0.jpeg', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Tickets`
+--
+
+CREATE TABLE `Tickets` (
+  `ticket_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `qr_token` varchar(256) NOT NULL,
+  `code` varchar(32) NOT NULL,
+  `scanned_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `Tickets`
+--
+
+INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`) VALUES
+(1, 26, 'a923818c2eb82ecd1a17ce90cf5d6e50dbd9b6bf09d20e19', 'HF-D3333304486D3FFD78CEB458', NULL),
+(2, 28, 'e6797f404e48bfa46d238296a7d4f6ea9278f8cea93a4933', 'HF-2C7FED9025A31DDEF40C79E0', NULL),
+(3, 29, '94972076503a958f554edd1b5d0e3d192d0f0bed3040fc66', 'HF-B13B28B84F84292749F3861B', NULL),
+(4, 30, '5da40adf52a617d40ac46b87686ef24f05ed338569129341', 'HF-5DD426C50E8DC17E686184D0', NULL),
+(5, 26, '1b17570ef3196885050ca104ac15a2f85a79068a448264b7', 'HF-B12347EF9942F2CD1D59D7F7', NULL),
+(6, 28, '3d207de6252c96003836f82371d45a9116ab4af41107b5ad', 'HF-98A738F7D9985EA784ED098A', NULL),
+(7, 29, 'b30749273d96ffbae4bf0172cab65f6e053ac863bee37e86', 'HF-0E3BFC3C1594BAA9C72F7BC3', NULL),
+(8, 30, '3101d372c93078753a15361ca89986d8cd4e879eede10a63', 'HF-4FA7492E9075AEC2A7AF9874', NULL),
+(9, 26, '29998198f669f92ab7fccd9ce59a78b530296425f607009f', 'HF-E28F2AB378CB426FF22D2019', NULL),
+(10, 28, '3a8a8c6af8ae61858fa971f6e29f585b140610b296e4c8c8', 'HF-95830103EF6C1B0820D7153C', NULL),
+(11, 29, '4dbd65af06053cb0808221fc5bf6b5841fae19e15db74331', 'HF-AB863FE60A7AAFCA92961C79', NULL),
+(12, 30, 'ae25dece85a78f569bf7a8d638cafa874dc8b38b696313fd', 'HF-9BEBE224FBCF474E47E1CD2A', NULL),
+(13, 26, '798c764842a7d8fdef059f26c4749c2b4a9d0542871b6afa', 'HF-F77EA899A46510D7DF8DA648', NULL),
+(14, 28, '167742445a2053f684600aa1a6b8aa0147ba274206df4bf4', 'HF-6312D13FE1959D9C9D304A45', NULL),
+(15, 29, '8f352f6448204a2a51aa756254903b5810d908e80d0bb1c8', 'HF-F6E8F3D18203077BB7531D00', NULL),
+(16, 30, 'f428588cedff03eb4c4f6764c8ed4afec3b38c9e1223e90f', 'HF-282542C69E2EB592433EEDC4', NULL),
+(17, 31, '6865e3f1e1f131f07f839b0df4a53bd0c2a016b9983f3f8d', 'HF-F33AE8C275A89C4BA0FBA631', NULL),
+(18, 32, 'ec2f8a6b9779066682a66e1281d9277321c5d82ccbf5da54', 'HF-90EBF0FCBA51191994104D79', NULL),
+(19, 33, '29c1956a1abcef8a32f557bf44a004d4cc7bab74a6c06ff8', 'HF-928AD51F8CE32F5A9E53B5BB', NULL),
+(20, 26, '9bd313a0e60161ad561081daf70cb30116692b76a0eb8c8b', 'HF-7C86EAC83F2ADCE1FF2E3C38', NULL),
+(21, 28, '7eae57fbf3cdd280e4bad3adbff176b4bd3476ebd9f493d5', 'HF-8428B3E2557C0551AF51726F', NULL),
+(22, 29, 'ed4e14974487f9eeba50d3f9ec8b22bb74b0e6ad27dd7f3e', 'HF-276AEBD4928A987538A0968C', NULL),
+(23, 30, 'b175b466213aaa258b67b1440d4d644d7b3df8300b10159b', 'HF-76A8638D2C840B466662C78F', NULL),
+(24, 34, 'fb5fa0afbeb29f9f5106da02d8593ec8fcee104c7dc330e1', 'HF-C79B907E9FE9B975C6F67395', NULL),
+(25, 35, 'e948c7e4c6711ee3af741b3cd63cb0caf53524f6e6ed12f9', 'HF-65D2EF15A543F250B0EF34D1', '2026-04-27 11:38:17');
 
 -- --------------------------------------------------------
 
@@ -1193,9 +902,7 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
-(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09'),
-(14, 'employee@employee.com', '$2y$12$0dv.PkporKCvCDhcNPZnDu64yyr8Ar34Gbixnhsq8zq3yWFtWQFKu', 'Employee', 'employee', NULL, '2026-04-06 13:17:11'),
-(15, 'saidraghoua@gmail.com', '$2y$12$FcpFaTHQ5P9XKHdjW1UU..X3o.HPI6S7NbBWOdiflwlDPWHcxBCjW', 'Said', 'customer', NULL, '2026-04-06 15:49:47');
+(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
 
 -- --------------------------------------------------------
 
@@ -1254,12 +961,22 @@ INSERT INTO `Venue` (`venue_id`, `name`, `address`) VALUES
 CREATE TABLE `YummyBookings` (
   `booking_id` int(16) NOT NULL,
   `reservation_id` int(16) NOT NULL,
-  `user_id` int(16) NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   `adult_number` tinyint(3) UNSIGNED NOT NULL,
   `child_number` tinyint(3) UNSIGNED NOT NULL,
   `comment` varchar(512) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `YummyBookings`
+--
+
+INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
+(20, 166, '2026-04-27 19:00:00', 2, 3, 'Some comment.'),
+(21, 179, '2026-05-01 00:00:00', 2, 8, 'ccv'),
+(22, 175, '2026-04-30 19:00:00', 3, 2, ''),
+(23, 165, '2026-04-27 17:00:00', 4, 3, ''),
+(24, 206, '2026-05-10 21:00:00', 4, 7, '');
 
 -- --------------------------------------------------------
 
@@ -1412,6 +1129,87 @@ CREATE TABLE `YummyReservationSlots` (
   `booked` smallint(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `YummyReservationSlots`
+--
+
+INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booked`) VALUES
+(132, 1, '2026-04-16', 0),
+(133, 2, '2026-04-16', 0),
+(134, 3, '2026-04-16', 0),
+(135, 1, '2026-04-17', 0),
+(136, 2, '2026-04-17', 0),
+(137, 3, '2026-04-17', 0),
+(138, 1, '2026-04-18', 0),
+(139, 2, '2026-04-18', 0),
+(140, 3, '2026-04-18', 0),
+(141, 1, '2026-04-19', 0),
+(142, 2, '2026-04-19', 0),
+(143, 3, '2026-04-19', 0),
+(144, 1, '2026-04-20', 0),
+(145, 2, '2026-04-20', 0),
+(146, 3, '2026-04-20', 0),
+(147, 1, '2026-04-21', 0),
+(148, 2, '2026-04-21', 0),
+(149, 3, '2026-04-21', 0),
+(150, 1, '2026-04-22', 0),
+(151, 2, '2026-04-22', 0),
+(152, 3, '2026-04-22', 0),
+(153, 1, '2026-04-23', 0),
+(154, 2, '2026-04-23', 0),
+(155, 3, '2026-04-23', 0),
+(156, 1, '2026-04-24', 0),
+(157, 2, '2026-04-24', 0),
+(158, 3, '2026-04-24', 0),
+(159, 1, '2026-04-25', 0),
+(160, 2, '2026-04-25', 0),
+(161, 3, '2026-04-25', 0),
+(162, 1, '2026-04-26', 0),
+(163, 2, '2026-04-26', 0),
+(164, 3, '2026-04-26', 0),
+(165, 1, '2026-04-27', 0),
+(166, 2, '2026-04-27', 0),
+(167, 3, '2026-04-27', 0),
+(168, 1, '2026-04-28', 0),
+(169, 2, '2026-04-28', 0),
+(170, 3, '2026-04-28', 0),
+(171, 1, '2026-04-29', 0),
+(172, 2, '2026-04-29', 0),
+(173, 3, '2026-04-29', 0),
+(174, 1, '2026-04-30', 0),
+(175, 2, '2026-04-30', 0),
+(176, 3, '2026-04-30', 0),
+(177, 1, '2026-05-01', 0),
+(178, 2, '2026-05-01', 0),
+(179, 3, '2026-05-01', 0),
+(180, 1, '2026-05-02', 0),
+(181, 2, '2026-05-02', 0),
+(182, 3, '2026-05-02', 0),
+(183, 1, '2026-05-03', 0),
+(184, 2, '2026-05-03', 0),
+(185, 3, '2026-05-03', 0),
+(186, 1, '2026-05-04', 0),
+(187, 2, '2026-05-04', 0),
+(188, 3, '2026-05-04', 0),
+(189, 1, '2026-05-05', 0),
+(190, 2, '2026-05-05', 0),
+(191, 3, '2026-05-05', 0),
+(192, 1, '2026-05-06', 0),
+(193, 2, '2026-05-06', 0),
+(194, 3, '2026-05-06', 0),
+(195, 1, '2026-05-07', 0),
+(196, 2, '2026-05-07', 0),
+(197, 3, '2026-05-07', 0),
+(198, 1, '2026-05-08', 0),
+(199, 2, '2026-05-08', 0),
+(200, 3, '2026-05-08', 0),
+(201, 1, '2026-05-09', 0),
+(202, 2, '2026-05-09', 0),
+(203, 3, '2026-05-09', 0),
+(204, 1, '2026-05-10', 0),
+(205, 2, '2026-05-10', 0),
+(206, 3, '2026-05-10', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1563,11 +1361,12 @@ INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `cap
 --
 
 --
--- Indexes for table `CartItem`
+-- Indexes for table `CMS_Content`
 --
-ALTER TABLE `CartItem`
-  ADD PRIMARY KEY (`cart_item_id`),
-  ADD KEY `user_id` (`user_id`);
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `cms_content`
@@ -1580,45 +1379,30 @@ ALTER TABLE `cms_content`
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
 
 --
--- Indexes for table `CMS_Content`
+-- Indexes for table `HistoryBookings`
 --
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
+ALTER TABLE `HistoryBookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `reservation_id` (`reservation_id`);
 
 --
--- Indexes for table `Event`
+-- Indexes for table `HistoryCMS`
 --
-ALTER TABLE `Event`
-  ADD PRIMARY KEY (`event_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `venue_id` (`venue_id`),
-  ADD KEY `idx_type` (`type`),
-  ADD KEY `idx_start_time` (`start_time`),
-  ADD KEY `idx_slug` (`slug`);
+ALTER TABLE `HistoryCMS`
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `festival_events`
+-- Indexes for table `HistoryReservationSlots`
 --
-ALTER TABLE `festival_events`
-  ADD PRIMARY KEY (`festival_event_id`);
+ALTER TABLE `HistoryReservationSlots`
+  ADD PRIMARY KEY (`reservation_id`),
+  ADD KEY `slot_id` (`slot_id`);
 
 --
--- Indexes for table `festival_event_tickets`
+-- Indexes for table `HistoryTimeSlot`
 --
-ALTER TABLE `festival_event_tickets`
-  ADD PRIMARY KEY (`festival_event_ticket_id`),
-  ADD UNIQUE KEY `qr_token` (`qr_token`),
-  ADD KEY `user_id` (`user_id`),
-  ADD KEY `festival_event_ticket_type_id` (`festival_event_ticket_type_id`);
-
---
--- Indexes for table `festival_event_ticket_types`
---
-ALTER TABLE `festival_event_ticket_types`
-  ADD PRIMARY KEY (`festival_event_ticket_type_id`),
-  ADD KEY `festival_event_id` (`festival_event_id`);
+ALTER TABLE `HistoryTimeSlot`
+  ADD PRIMARY KEY (`slot_id`);
 
 --
 -- Indexes for table `history_content`
@@ -1662,19 +1446,6 @@ ALTER TABLE `history_highlights`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `history_tickets`
---
-ALTER TABLE `history_tickets`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `history_ticket_prices`
---
-ALTER TABLE `history_ticket_prices`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ticket_type` (`ticket_type`);
-
---
 -- Indexes for table `home_content`
 --
 ALTER TABLE `home_content`
@@ -1688,13 +1459,11 @@ ALTER TABLE `home_events`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `Invoice`
+-- Indexes for table `JazzBookings`
 --
-ALTER TABLE `Invoice`
-  ADD PRIMARY KEY (`invoice_id`),
-  ADD UNIQUE KEY `invoice_number` (`invoice_number`),
-  ADD KEY `order_id` (`order_id`),
-  ADD KEY `idx_invoice_number` (`invoice_number`);
+ALTER TABLE `JazzBookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `performer_id` (`performer_id`);
 
 --
 -- Indexes for table `jazz_experiences`
@@ -1762,20 +1531,18 @@ ALTER TABLE `jazz_recommendations`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `Order`
+-- Indexes for table `OrderItems`
 --
-ALTER TABLE `Order`
-  ADD PRIMARY KEY (`order_id`),
-  ADD KEY `idx_user_id` (`user_id`),
-  ADD KEY `idx_status` (`status`);
+ALTER TABLE `OrderItems`
+  ADD PRIMARY KEY (`item_id`),
+  ADD KEY `order_id` (`order_id`);
 
 --
--- Indexes for table `OrderItem`
+-- Indexes for table `Orders`
 --
-ALTER TABLE `OrderItem`
-  ADD PRIMARY KEY (`item_id`),
-  ADD KEY `idx_order_id` (`order_id`),
-  ADD KEY `idx_type_id` (`type_id`);
+ALTER TABLE `Orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `PasswordResetToken`
@@ -1786,21 +1553,26 @@ ALTER TABLE `PasswordResetToken`
   ADD UNIQUE KEY `key` (`key`);
 
 --
--- Indexes for table `Ticket`
+-- Indexes for table `StoryBookings`
 --
-ALTER TABLE `Ticket`
-  ADD PRIMARY KEY (`ticket_id`),
-  ADD UNIQUE KEY `barcode` (`barcode`),
-  ADD KEY `type_id` (`type_id`),
-  ADD KEY `idx_barcode` (`barcode`),
-  ADD KEY `idx_order_id` (`order_id`);
+ALTER TABLE `StoryBookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `event_id` (`event_id`);
 
 --
--- Indexes for table `Ticket_Type`
+-- Indexes for table `StoryEvents`
 --
-ALTER TABLE `Ticket_Type`
-  ADD PRIMARY KEY (`type_id`),
-  ADD KEY `idx_event_id` (`event_id`);
+ALTER TABLE `StoryEvents`
+  ADD PRIMARY KEY (`event_id`);
+
+--
+-- Indexes for table `Tickets`
+--
+ALTER TABLE `Tickets`
+  ADD PRIMARY KEY (`ticket_id`),
+  ADD UNIQUE KEY `qr_token` (`qr_token`),
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `item_id` (`item_id`);
 
 --
 -- Indexes for table `User`
@@ -1821,8 +1593,7 @@ ALTER TABLE `Venue`
 --
 ALTER TABLE `YummyBookings`
   ADD PRIMARY KEY (`booking_id`),
-  ADD KEY `reservation_id` (`reservation_id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD KEY `reservation_id` (`reservation_id`);
 
 --
 -- Indexes for table `YummyCMS`
@@ -1897,10 +1668,10 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 
 --
--- AUTO_INCREMENT for table `CartItem`
+-- AUTO_INCREMENT for table `CMS_Content`
 --
-ALTER TABLE `CartItem`
-  MODIFY `cart_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+ALTER TABLE `CMS_Content`
+  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cms_content`
@@ -1909,34 +1680,22 @@ ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
--- AUTO_INCREMENT for table `CMS_Content`
+-- AUTO_INCREMENT for table `HistoryBookings`
 --
-ALTER TABLE `CMS_Content`
-  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `HistoryBookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `Event`
+-- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
-ALTER TABLE `Event`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
+ALTER TABLE `HistoryReservationSlots`
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `festival_events`
+-- AUTO_INCREMENT for table `HistoryTimeSlot`
 --
-ALTER TABLE `festival_events`
-  MODIFY `festival_event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `festival_event_tickets`
---
-ALTER TABLE `festival_event_tickets`
-  MODIFY `festival_event_ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
-
---
--- AUTO_INCREMENT for table `festival_event_ticket_types`
---
-ALTER TABLE `festival_event_ticket_types`
-  MODIFY `festival_event_ticket_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `HistoryTimeSlot`
+  MODIFY `slot_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `history_content`
@@ -1975,18 +1734,6 @@ ALTER TABLE `history_highlights`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `history_tickets`
---
-ALTER TABLE `history_tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `history_ticket_prices`
---
-ALTER TABLE `history_ticket_prices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `home_content`
 --
 ALTER TABLE `home_content`
@@ -1999,10 +1746,10 @@ ALTER TABLE `home_events`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `Invoice`
+-- AUTO_INCREMENT for table `JazzBookings`
 --
-ALTER TABLE `Invoice`
-  MODIFY `invoice_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE `JazzBookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -2065,16 +1812,16 @@ ALTER TABLE `jazz_recommendations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `Order`
+-- AUTO_INCREMENT for table `OrderItems`
 --
-ALTER TABLE `Order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+ALTER TABLE `OrderItems`
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
--- AUTO_INCREMENT for table `OrderItem`
+-- AUTO_INCREMENT for table `Orders`
 --
-ALTER TABLE `OrderItem`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+ALTER TABLE `Orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -2083,22 +1830,28 @@ ALTER TABLE `PasswordResetToken`
   MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `Ticket`
+-- AUTO_INCREMENT for table `StoryBookings`
 --
-ALTER TABLE `Ticket`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+ALTER TABLE `StoryBookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `Ticket_Type`
+-- AUTO_INCREMENT for table `StoryEvents`
 --
-ALTER TABLE `Ticket_Type`
-  MODIFY `type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=182;
+ALTER TABLE `StoryEvents`
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `Tickets`
+--
+ALTER TABLE `Tickets`
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `Venue`
@@ -2110,7 +1863,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -2134,7 +1887,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -2165,28 +1918,10 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 
 --
--- Constraints for table `CartItem`
+-- Constraints for table `HistoryBookings`
 --
-ALTER TABLE `CartItem`
-  ADD CONSTRAINT `cartitem_user_fk` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `Event`
---
-ALTER TABLE `Event`
-  ADD CONSTRAINT `Event_ibfk_1` FOREIGN KEY (`venue_id`) REFERENCES `Venue` (`venue_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `festival_event_tickets`
---
-ALTER TABLE `festival_event_tickets`
-  ADD CONSTRAINT `festival_event_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `festival_event_ticket_types`
---
-ALTER TABLE `festival_event_ticket_types`
-  ADD CONSTRAINT `festival_event_ticket_types_ibfk_1` FOREIGN KEY (`festival_event_id`) REFERENCES `festival_events` (`festival_event_id`) ON DELETE CASCADE;
+ALTER TABLE `HistoryBookings`
+  ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `HistoryReservationSlots` (`reservation_id`);
 
 --
 -- Constraints for table `history_details`
@@ -2213,10 +1948,10 @@ ALTER TABLE `history_detail_sections`
   ADD CONSTRAINT `history_detail_sections_ibfk_1` FOREIGN KEY (`detail_id`) REFERENCES `history_details` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `Invoice`
+-- Constraints for table `JazzBookings`
 --
-ALTER TABLE `Invoice`
-  ADD CONSTRAINT `Invoice_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
+ALTER TABLE `JazzBookings`
+  ADD CONSTRAINT `1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`);
 
 --
 -- Constraints for table `jazz_performer_appearances`
@@ -2244,49 +1979,10 @@ ALTER TABLE `jazz_performer_tracks`
   ADD CONSTRAINT `fk_jazz_performer_tracks_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `Order`
+-- Constraints for table `Tickets`
 --
-ALTER TABLE `Order`
-  ADD CONSTRAINT `Order_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `OrderItem`
---
-ALTER TABLE `OrderItem`
-  ADD CONSTRAINT `OrderItem_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `OrderItem_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `PasswordResetToken`
---
-ALTER TABLE `PasswordResetToken`
-  ADD CONSTRAINT `PasswordResetToken_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `Ticket`
---
-ALTER TABLE `Ticket`
-  ADD CONSTRAINT `Ticket_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `Order` (`order_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `Ticket_ibfk_2` FOREIGN KEY (`type_id`) REFERENCES `Ticket_Type` (`type_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `Ticket_Type`
---
-ALTER TABLE `Ticket_Type`
-  ADD CONSTRAINT `Ticket_Type_ibfk_1` FOREIGN KEY (`event_id`) REFERENCES `Event` (`event_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `YummyBookings`
---
-ALTER TABLE `YummyBookings`
-  ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `YummyReservationSlots` (`reservation_id`),
-  ADD CONSTRAINT `2` FOREIGN KEY (`user_id`) REFERENCES `User` (`user_id`);
-
---
--- Constraints for table `YummyDishes`
---
-ALTER TABLE `YummyDishes`
-  ADD CONSTRAINT `YummyDishes_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `YummyRestaurants` (`restaurant_id`) ON DELETE CASCADE;
+ALTER TABLE `Tickets`
+  ADD CONSTRAINT `1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -5,11 +5,19 @@ use App\Repositories\HomeRepository;
 
 class HomeService
 {
+    private static ?HomeService $_instance = null;
+
+    public static function getInstance() : HomeService {
+        if(self::$_instance === null) self::$_instance = new HomeService(HomeRepository::getInstance());
+
+        return self::$_instance;
+    }
+
     private HomeRepository $repository;
 
-    public function __construct()
+    private function __construct(HomeRepository $repository)
     {
-        $this->repository = new HomeRepository();
+        $this->repository = $repository;
     }
 
     // ─── READ ────────────────────────────────────────────────────────────────

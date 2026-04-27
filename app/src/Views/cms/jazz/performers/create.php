@@ -76,7 +76,7 @@ require __DIR__ . '/../partials/tabs.php';
 
 <div class="jazz-cms-form-row">
 <label class="jazz-cms-label">Price</label>
-<input type="text" name="price_text" class="jazz-cms-input">
+<input type="text" name="price" class="jazz-cms-input">
 </div>
 
 <div class="jazz-cms-form-row">

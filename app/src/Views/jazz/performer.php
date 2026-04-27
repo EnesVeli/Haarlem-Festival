@@ -9,22 +9,28 @@ $recommendations = $vm->recommendations ?? [];
 
 $name = $performer->name ?? '';
 $bio = $performer->bio ?? '';
-$imagePath = $performer->imagePath ?? '';
-$style = $performer->performanceStyle ?? '';
-$eventDate = $performer->eventDateText ?? '';
-$eventTime = $performer->eventTimeText ?? '';
-$venueName = $performer->venueName ?? '';
-$venueAddress = $performer->venueAddress ?? '';
-$priceText = $performer->priceText ?? '';
-$noteText = $performer->noteText ?? '';
-$audioUrl = $performer->audioUrl ?? '';
+$imagePath = $performer->image_path ?? '';
+$style = $performer->performance_style ?? '';
+$eventDate = $performer->date->format('d.m.Y');
+$eventTime = $performer->start_time->format('H:i') . " - " . $performer->end_time->format('H:i');
+$venueName = $performer->venue_name ?? '';
+$venueAddress = $performer->venue_address ?? '';
+$price = "€" . number_format(($performer->price ?? 0) / 100, 2);
+$noteText = $performer->note_text ?? '';
+$audioUrl = $performer->audio_url ?? '';
 
 $firstAppearance = $appearances[0] ?? null;
-$heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
+$heroBannerImage = $performer->hero_image_path ?? $performer->image_path ?? '';
 ?>
 
 <div class="container perf-page">
     <a class="perf-back-link" href="/jazz">← Back to Jazz Main Page</a>
+
+    <?php if(!empty($error_message)): ?>
+        <div class="alert alert-danger" role="alert">
+            <?= htmlspecialchars($error_message) ?>
+        </div>
+    <?php endif; ?>
 
     <section class="perf-hero-banner">
         <?php if (!empty($heroBannerImage)): ?>
@@ -120,14 +126,14 @@ $heroBannerImage = $performer->heroImagePath ?? $performer->imagePath ?? '';
 
                 <div class="perf-ticket-price">
                     <span>TICKET PRICE</span>
-                    <strong><?= htmlspecialchars($priceText ?: '€15') ?></strong>
+                    <strong><?= htmlspecialchars($price) ?></strong>
                 </div>
 
                 <div class="perf-ticket-note">
                     <?= htmlspecialchars($noteText ?: 'Also available for FREE on Sunday at Grote Markt.') ?>
                 </div>
 
-                <a href="/tickets/jazz" class="perf-reserve-button">Reserve</a>
+                <a href="<?= '/jazz/book?perf=' . $performer->id ?>" class="perf-reserve-button">Reserve</a>
             </aside>
 
         </div>

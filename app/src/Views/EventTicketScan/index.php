@@ -36,11 +36,13 @@ $pageCSS = $vm->pageCSS;
             <p><?= htmlspecialchars($result['message']) ?></p>
 
             <?php if (!empty($result['ticket'])): ?>
-                <p><strong>Event:</strong> <?= htmlspecialchars($result['ticket']->title) ?></p>
-                <p><strong>Date:</strong> <?= htmlspecialchars($result['ticket']->eventDate) ?></p>
-                <p><strong>Time:</strong> <?= htmlspecialchars($result['ticket']->startTime) ?></p>
-                <p><strong>Location:</strong> <?= htmlspecialchars($result['ticket']->location) ?></p>
-                <p><strong>Ticket code:</strong> <?= htmlspecialchars($result['ticket']->ticketCode) ?></p>
+                <? $booking = $result['ticket']->order_item->booking; ?>
+                <p><strong>Event:</strong> <?= htmlspecialchars($booking->getEventName()) ?></p>
+                <p><strong>Number of Tickets:</strong> <?= htmlspecialchars($booking->getQuantityString()) ?></p>
+                <p><strong>Date:</strong> <?= htmlspecialchars($booking->getBookingStartDate()->format('d.m.Y')) ?></p>
+                <p><strong>Time:</strong> <?= htmlspecialchars($booking->getBookingStartDate()->format('H:i') . ' - ' . $booking->getBookingEndDate()->format('H:i')) ?></p>
+                <p><strong>Location:</strong> <?= htmlspecialchars($booking->getAddressFull()) ?></p>
+                <p><strong>Ticket code:</strong> <?= htmlspecialchars($result['ticket']->code) ?></p>
             <?php endif; ?>
 
             <form method="GET" action="/employee/scan">

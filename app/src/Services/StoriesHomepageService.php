@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Interfaces\IStoriesHomepageRepository;
 use App\Interfaces\IStoriesHomepageService;
 use App\Models\CmsContent;
+use App\Repositories\StoriesHomepageRepository;
 
 /**
  * StoriesHomepageService — business logic for the Stories homepage CMS content.
@@ -13,13 +14,18 @@ use App\Models\CmsContent;
  */
 class StoriesHomepageService implements IStoriesHomepageService
 {
+    private static ?StoriesHomepageService $_instance = null;
+
+    public static function getInstance() : StoriesHomepageService {
+        if(self::$_instance === null) self::$_instance = new StoriesHomepageService(StoriesHomepageRepository::getInstance());
+
+        return self::$_instance;
+    }
+
     /** @var IStoriesHomepageRepository */
     private IStoriesHomepageRepository $repository;
 
-    /**
-     * @param IStoriesHomepageRepository $repository
-     */
-    public function __construct(IStoriesHomepageRepository $repository)
+    private function __construct(StoriesHomepageRepository $repository)
     {
         $this->repository = $repository;
     }

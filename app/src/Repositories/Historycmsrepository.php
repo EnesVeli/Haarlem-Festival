@@ -7,6 +7,19 @@ use App\Framework\Repository;
 
 class HistoryCmsRepository extends Repository
 {
+    private static ?HistoryCmsRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : HistoryCmsRepository {
+        if(self::$_instance === null) self::$_instance = new HistoryCmsRepository();
+
+        return self::$_instance;
+    }
+
     // -----------------------------------------------------------------------
     // HIGHLIGHTS
     // -----------------------------------------------------------------------
@@ -96,66 +109,6 @@ class HistoryCmsRepository extends Repository
             ':image_left'  => $imgLeft,
             ':image_right' => $imgRight,
         ]);
-    }
-
-    // -----------------------------------------------------------------------
-    // TICKETS
-    // -----------------------------------------------------------------------
-
-    public function getAllTickets(): array
-    {
-        return $this->connection
-            ->query("SELECT * FROM history_tickets ORDER BY id ASC")
-            ->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getTicketPrices(): array
-    {
-        $rows = $this->connection
-            ->query("SELECT * FROM history_ticket_prices")
-            ->fetchAll(PDO::FETCH_ASSOC);
-
-        $result = [];
-        foreach ($rows as $row) {
-            $result[$row['ticket_type']] = $row;
-        }
-        return $result;
-    }
-
-    public function updateTicketPrice(string $type, float $price): void
-    {
-        $stmt = $this->connection->prepare(
-            "UPDATE history_ticket_prices SET price = :price WHERE ticket_type = :type"
-        );
-        $stmt->execute([':price' => $price, ':type' => $type]);
-    }
-
-    public function getTicketById(int $id): ?array
-    {
-        $stmt = $this->connection->prepare("SELECT * FROM history_tickets WHERE id=:id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-    }
-
-    public function createTicket(string $timeSlot, float $price, int $spots): void
-    {
-        $stmt = $this->connection->prepare(
-            "INSERT INTO history_tickets (time_slot, price, available_spots) VALUES (:ts, :price, :spots)"
-        );
-        $stmt->execute([':ts' => $timeSlot, ':price' => $price, ':spots' => $spots]);
-    }
-
-    public function updateTicket(int $id, string $timeSlot, float $price, int $spots): void
-    {
-        $stmt = $this->connection->prepare(
-            "UPDATE history_tickets SET time_slot=:ts, price=:price, available_spots=:spots WHERE id=:id"
-        );
-        $stmt->execute([':ts' => $timeSlot, ':price' => $price, ':spots' => $spots, ':id' => $id]);
-    }
-
-    public function deleteTicket(int $id): void
-    {
-        $this->connection->prepare("DELETE FROM history_tickets WHERE id=:id")->execute([':id' => $id]);
     }
 
     // -----------------------------------------------------------------------
@@ -342,5 +295,39 @@ class HistoryCmsRepository extends Repository
     public function deleteFact(int $id): void
     {
         $this->connection->prepare("DELETE FROM history_detail_facts WHERE id=:id")->execute([':id' => $id]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Tickets
+    // -----------------------------------------------------------------------
+
+    public function getIndividualPrice() : int {
+        $stmt = $this->connection->prepare("SELECT `individual_price` FROM `HistoryCMS` WHERE `id` = 1;");
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $res['individual_price'];
+    }
+
+    public function getFamilyPrice() : int {
+        $stmt = $this->connection->prepare("SELECT `family_price` FROM `HistoryCMS` WHERE `id` = 1;");
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $res['family_price'];
+    }
+
+    public function updateIndividualPrice(int $individual_price) : bool {
+        $stmt = $this->connection->prepare("UPDATE `HistoryCMS` SET `individual_price`=:individual_price WHERE `id` = 1;");
+
+        return $stmt->execute(['individual_price' => $individual_price]);
+    }
+
+    public function updateFamilyPrice(int $family_price) : bool {
+        $stmt = $this->connection->prepare("UPDATE `HistoryCMS` SET `family_price`=:family_price WHERE `id` = 1;");
+        
+        return $stmt->execute(['family_price' => $family_price]);
     }
 }

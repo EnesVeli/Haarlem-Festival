@@ -984,6 +984,54 @@ h1,h2,h3,h4{ font-family:"Playfair", serif; }
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* ===== Jazz Booking ===== */
+.stories-booking-ticket-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.stories-booking-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #2d2622;
+}
+
+/* Quantity Buttons */
+.stories-qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+.stories-qty-btn:hover {
+    background: #f0f0f0;
+}
+
+.stories-qty-btn--round {
+    width: 36px;
+    height: 36px;
+}
+
+#qtyInput,
+#seatInput {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: transparent;
+}
+
 /* =========================
    Jazz CMS
 ========================= */

@@ -14,6 +14,19 @@ use PDO;
  */
 class StoriesHomepageRepository extends Repository implements IStoriesHomepageRepository
 {
+    private static ?StoriesHomepageRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : StoriesHomepageRepository {
+        if(self::$_instance === null) self::$_instance = new StoriesHomepageRepository();
+
+        return self::$_instance;
+    }
+
     /**
      * Fetch a CMS_Content row by slug.
      *

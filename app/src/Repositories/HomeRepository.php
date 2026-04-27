@@ -5,6 +5,19 @@ use App\Framework\Repository;
 
 class HomeRepository extends Repository
 {
+    private static ?HomeRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : HomeRepository {
+        if(self::$_instance === null) self::$_instance = new HomeRepository();
+
+        return self::$_instance;
+    }
+
     // ─── READ ────────────────────────────────────────────────────────────────
 
     public function getHomeContent(): array

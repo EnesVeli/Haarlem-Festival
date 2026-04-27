@@ -3,12 +3,23 @@
 namespace App\Services;
 
 use App\Config;
+use App\Models\Order;
+use App\Models\Ticket;
 use Exception;
 
 use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
+    private static ?MailService $_instance = null;
+
+    private function __construct(){}
+    public static function getInstance() : MailService {
+        if(self::$_instance === null) self::$_instance = new MailService();
+
+        return self::$_instance;
+    }
+
     public function sendTestMail()
     {
         $mail = new PHPMailer(true); // Enable exceptions
@@ -78,13 +89,18 @@ class MailService
         'This is your password reset link: https://localhost/password-reset-start?key=' . $reset_key . '. \n
         Do not give it to anyone.\nThe link will expire in 15 minutes.');
     } 
-    public function sendOrderConfirmation(
-        string $email,
-        string $name,
-        array  $ticketPdfs,
-        string $invoicePdf,
-        string $invoiceNumber,
-        array  $tickets = []
+
+    /**
+     * Send order confirmation with all of its tickets and the invoice as attachments.
+     * @param string $email reciever email.
+     * @param string $name reciever name.
+     * @param string[] $ticketPdfs array of tickets pdfs as strings.
+     * @param string $invoicePdf invoice pdf as a string.
+     * @param Ticket[] $tickets array of tickets.
+     * @throws Exception 
+     * @return void
+     */
+    public function sendOrderConfirmation(string $email, string $name, array $ticketPdfs, string $invoicePdf, array $tickets
     ): void {
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -105,22 +121,28 @@ class MailService
         foreach ($ticketPdfs as $i => $pdf) {
             $mail->addStringAttachment($pdf, 'ticket-' . ($i + 1) . '.pdf', 'base64', 'application/pdf');
         }
-        $mail->addStringAttachment($invoicePdf, $invoiceNumber . '.pdf', 'base64', 'application/pdf');
+        $mail->addStringAttachment($invoicePdf, "invoice" . '.pdf', 'base64', 'application/pdf');
 
         if (!$mail->send()) {
             throw new Exception($mail->ErrorInfo);
         }
     }
 
+    /**
+     * Builds html for order confirmation email.
+     * @param string $name email reciever naem.
+     * @param Ticket[] $tickets array of order tickets.
+     * @return string returns html of confirmation email.
+     */
     private function buildOrderEmailHtml(string $name, array $tickets): string
     {
         $ticketRows = '';
-        foreach ($tickets as $i => $t) {
-            $qrImage   = (new \chillerlan\QRCode\QRCode())->render($t['qr_token']);
-            $eventName = htmlspecialchars($t['event_name'] ?? '');
-            $venue     = htmlspecialchars($t['venue_name'] ?? '');
-            $start     = !empty($t['start_time']) ? date('D d M Y, H:i', strtotime($t['start_time'])) : '';
-            $code      = htmlspecialchars($t['ticket_code'] ?? '');
+        foreach ($tickets as $t) {
+            $qrImage   = (new \chillerlan\QRCode\QRCode())->render($t->qr_token);
+            $eventName = htmlspecialchars($t->order_item->booking->getEventName());
+            $venue     = htmlspecialchars($t->order_item->booking->getAddressFull());
+            $start     = $t->order_item->booking->getBookingStartDate()->format('d.m.Y H:i') . ' - ' . $t->order_item->booking->getBookingEndDate()->format('H:i');
+            $code      = htmlspecialchars($t->code);
 
             $ticketRows .= '
             <tr>
@@ -136,39 +158,11 @@ class MailService
             </tr>';
         }
 
-        return '
-        <div style="font-family:Inter,Arial,sans-serif; max-width:600px; margin:0 auto; background:#fff; border-radius:12px; overflow:hidden; border:1px solid #eee;">
-            <div style="background:#1b3a5c; padding:32px 28px; text-align:center;">
-                <h1 style="color:#fff; margin:0; font-size:22px;">Festival Haarlem</h1>
-                <p style="color:rgba(255,255,255,0.8); margin:8px 0 0; font-size:14px;">Order Confirmation</p>
-            </div>
-            <div style="padding:28px;">
-                <p style="font-size:16px; color:#333;">Hello <strong>' . htmlspecialchars($name) . '</strong>,</p>
-                <p style="color:#555; font-size:14px;">Thank you for your order! Your tickets are listed below and also attached as PDFs together with your invoice.</p>
+        $html = file_get_contents(__DIR__ . '/../Views/mail/order.html');
 
-                <table style="width:100%; border-collapse:collapse; margin-top:20px;">
-                    <thead>
-                        <tr style="background:#f5f3ef;">
-                            <th style="padding:12px 16px; text-align:left; font-size:13px; color:#555; font-weight:600;">Event</th>
-                            <th style="padding:12px 16px; text-align:center; font-size:13px; color:#555; font-weight:600;">QR Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>' . $ticketRows . '</tbody>
-                </table>
+        $html = str_replace('@1', $name, $html);
+        $html = str_replace('@2', $ticketRows, $html);
 
-                <p style="color:#999; font-size:12px; margin-top:24px;">
-                    Show your QR code at the entrance. Each ticket is valid for one person.<br>
-                    See you at the festival! 🎶
-                </p>
-            </div>
-            <div style="background:#f5f3ef; padding:16px 28px; text-align:center;">
-                <p style="color:#aaa; font-size:11px; margin:0;">© 2025 Festival Haarlem · Haarlem, Netherlands</p>
-            </div>
-        </div>';
-    }
-    
-
-
-    
-      
+        return $html;
+    }    
 }

@@ -1,18 +1,20 @@
 <?php
 
-namespace App\ViewModels;
+namespace App\ViewModels\History;
 
 class HistoryIndexViewModel
 {
     public array $highlights;
-    public array $tickets;  // individual time-slot tickets only
+    public array $time_slots;
     public array $content;  // keyed by section name, e.g. $content['hero']
+    public int $max_date_offset;
 
-    public function __construct(array $highlights, array $tickets, array $rawContent)
+    public function __construct(array $highlights, array $time_slots, array $rawContent, int $max_date_offset)
     {
         $this->highlights = $highlights;
-        $this->tickets    = $tickets;
+        $this->time_slots    = $time_slots;
         $this->content    = $this->keyContentBySection($rawContent);
+        $this->max_date_offset = $max_date_offset;
     }
 
     // Turns the flat DB rows into a section-keyed array so views can do $content['hero']

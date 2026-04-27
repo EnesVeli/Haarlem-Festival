@@ -13,7 +13,7 @@ class TicketScanController
 
     public function __construct()
     {
-        $this->service = new TicketScanService();
+        $this->service = TicketScanService::getInstance();
     }
 
     private function requireEmployee(): void
@@ -40,28 +40,26 @@ class TicketScanController
 
         $result = null;
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $scanValue = trim($_POST['scan_value'] ?? '');
+        $scanValue = trim($_POST['scan_value'] ?? '');
 
-            try {
-                $ticket = $this->service->scanTicket($scanValue);
+        try {
+            $ticket = $this->service->scanTicket($scanValue);
 
-                $result = [
-                    'status' => 'success',
-                    'message' => 'Ticket is valid. Entry allowed.',
-                    'ticket' => $ticket
-                ];
-            } catch (TicketScanException $error) {
-                $result = [
-                    'status' => 'warning',
-                    'message' => $error->getMessage()
-                ];
-            } catch (\Throwable $error) {
-                $result = [
-                    'status' => 'error',
-                    'message' => 'Something went wrong while scanning the ticket.'
-                ];
-            }
+            $result = [
+                'status' => 'success',
+                'message' => 'Ticket is valid. Entry allowed.',
+                'ticket' => $ticket
+            ];
+        } catch (TicketScanException $error) {
+            $result = [
+                'status' => 'warning',
+                'message' => $error->getMessage()
+            ];
+        } catch (\Throwable $error) {
+            $result = [
+                'status' => 'error',
+                'message' => 'Something went wrong while scanning the ticket.' . $error->getMessage()
+            ];
         }
 
         $vm = new TicketScanViewModel($result);

@@ -17,7 +17,18 @@ use PDO;
 
 class JazzRepository extends Repository implements IJazzRepository
 {
-    // hero
+    private static ?JazzRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : JazzRepository {
+        if(self::$_instance === null) self::$_instance = new JazzRepository();
+
+        return self::$_instance;
+    }
 
     public function getHero(): ?JazzHero
     {
@@ -208,7 +219,8 @@ class JazzRepository extends Repository implements IJazzRepository
 
     public function getAllPerformers(bool $onlyActive = true): array
     {
-        $sql = "SELECT * FROM jazz_performers";
+        $sql = "SELECT `id`, `name`, `price`, `bio`, `date` AS `date_`, `start_time` AS `start_time_`, `end_time` AS `end_time_`, `sort_order`, `is_active`,
+            `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path` FROM jazz_performers";
 
         if ($onlyActive) {
             $sql .= " WHERE is_active = 1";
@@ -219,60 +231,23 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare($sql);
         $stmt->execute();
 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $performers = [];
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
+        $res = $stmt->fetchAll();
 
-        foreach ($rows as $row) {
-            $performers[] = new JazzPerformer(
-                (int) $row['id'],
-                $row['name'] ?? '',
-                $row['bio'] ?? '',
-                $row['performance_style'] ?? null,
-                $row['event_date_text'] ?? null,
-                $row['event_time_text'] ?? null,
-                $row['venue_name'] ?? null,
-                $row['venue_address'] ?? null,
-                $row['price_text'] ?? null,
-                $row['note_text'] ?? null,
-                $row['audio_url'] ?? null,
-                $row['image_path'] ?? null,
-                $row['hero_image_path'] ?? null,
-                (int) $row['sort_order'],
-                (int) $row['is_active']
-            );
-        }
-
-        return $performers;
+        return $res == false ? null : $res; 
     }
 
     public function getPerformerById(int $id): ?JazzPerformer
     {
-        $stmt = $this->connection->prepare("SELECT * FROM jazz_performers WHERE id = :id LIMIT 1");
+        $stmt = $this->connection->prepare("SELECT `id`, `name`, `price`, `bio`, `date` AS `date_`, `start_time` AS `start_time_`, `end_time` AS `end_time_`, `sort_order`,
+                `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`
+                FROM jazz_performers WHERE id = :id LIMIT 1");
         $stmt->execute([':id' => $id]);
 
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
+        $res = $stmt->fetch();
 
-        if (!$row) {
-            return null;
-        }
-
-        return new JazzPerformer(
-            (int) $row['id'],
-            $row['name'] ?? '',
-            $row['bio'] ?? '',
-            $row['performance_style'] ?? null,
-            $row['event_date_text'] ?? null,
-            $row['event_time_text'] ?? null,
-            $row['venue_name'] ?? null,
-            $row['venue_address'] ?? null,
-            $row['price_text'] ?? null,
-            $row['note_text'] ?? null,
-            $row['audio_url'] ?? null,
-            $row['image_path'] ?? null,
-            $row['hero_image_path'] ?? null,
-            (int) $row['sort_order'],
-            (int) $row['is_active']
-        );
+        return $res == false ? null : $res; 
     }
 
     public function storePerformer(array $data): void
@@ -280,13 +255,13 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare("
             INSERT INTO jazz_performers (
                 name,
+                price,
                 bio,
                 performance_style,
                 event_date_text,
                 event_time_text,
                 venue_name,
                 venue_address,
-                price_text,
                 note_text,
                 audio_url,
                 image_path,
@@ -296,13 +271,13 @@ class JazzRepository extends Repository implements IJazzRepository
             )
             VALUES (
                 :name,
+                :price,
                 :bio,
                 :performance_style,
                 :event_date_text,
                 :event_time_text,
                 :venue_name,
                 :venue_address,
-                :price_text,
                 :note_text,
                 :audio_url,
                 :image_path,
@@ -314,13 +289,13 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
+            ':price' => $data['price'],
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
             ':event_date_text' => $data['event_date_text'],
             ':event_time_text' => $data['event_time_text'],
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
-            ':price_text' => $data['price_text'],
             ':note_text' => $data['note_text'],
             ':audio_url' => $data['audio_url'],
             ':image_path' => $data['image_path'] ?? null,
@@ -335,6 +310,7 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt = $this->connection->prepare("
             UPDATE jazz_performers
             SET name = :name,
+                price = :price,
                 bio = :bio,
                 performance_style = :performance_style,
                 event_date_text = :event_date_text,
@@ -353,13 +329,13 @@ class JazzRepository extends Repository implements IJazzRepository
 
         $stmt->execute([
             ':name' => $data['name'],
+            ':price' => $data['price'],
             ':bio' => $data['bio'],
             ':performance_style' => $data['performance_style'],
             ':event_date_text' => $data['event_date_text'],
             ':event_time_text' => $data['event_time_text'],
             ':venue_name' => $data['venue_name'],
             ':venue_address' => $data['venue_address'],
-            ':price_text' => $data['price_text'],
             ':note_text' => $data['note_text'],
             ':audio_url' => $data['audio_url'],
             ':sort_order' => $data['sort_order'],

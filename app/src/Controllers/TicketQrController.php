@@ -12,7 +12,7 @@ class TicketQrController
 
     public function __construct()
     {
-        $this->repository = new TicketRepository();
+        $this->repository = TicketRepository::getInstance();
     }
 
     public function show(array $vars): void
@@ -26,7 +26,7 @@ class TicketQrController
             return;
         }
 
-        $qr = (new QRCode())->render($ticket->qrToken);
+        $qr = (new QRCode())->render($ticket->qr_token);
         $vm = new TicketQrViewModel($qr);
 
         require __DIR__ . '/../Views/eventTicketQr/index.php';
