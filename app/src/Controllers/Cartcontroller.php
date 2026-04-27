@@ -19,7 +19,7 @@ class CartController extends BaseController
 
     public function __construct()
     {
-        $this->order_service = new OrderService();
+        $this->order_service = OrderService::getInstance();
     }
 
     public function index() : void

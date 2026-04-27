@@ -19,14 +19,11 @@ class RegisterController extends BaseController
     private UserService $userService;
     private CaptchaService $captchaService;
 
-    /**
-     * @param UserService $userService Registration service
-     * @param CaptchaService $captchaService Captcha verification service
-     */
-    public function __construct(UserService $userService, CaptchaService $captchaService)
+
+    public function __construct()
     {
-        $this->userService = $userService;
-        $this->captchaService = $captchaService;
+        $this->userService = UserService::getInstance();
+        $this->captchaService = CaptchaService::getInstance();
     }
 
     /**

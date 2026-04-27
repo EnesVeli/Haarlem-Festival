@@ -7,6 +7,19 @@ use PDO;
 
 class StoriesRepository extends Repository
 {
+    private static ?StoriesRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : StoriesRepository {
+        if(self::$_instance === null) self::$_instance = new StoriesRepository();
+
+        return self::$_instance;
+    }
+
     public function getAll(): array
     {
         $sql = "SELECT `event_id`, `name`, `slug`, `price`, `address_name`, `address_text`, `description`, `performer_name`, `performer_bio`, `language`,

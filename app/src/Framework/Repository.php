@@ -17,6 +17,6 @@ class Repository
 
     public function getConnection(): PDO
     {
-    return $this->connection;
+        return $this->connection;
     }
 }

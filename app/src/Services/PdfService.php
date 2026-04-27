@@ -8,6 +8,16 @@ use Dompdf\Options;
 
 class PdfService
 {
+    private static ?PdfService $_instance = null;
+
+    private function __construct(){}
+
+    public static function getInstance() : PdfService {
+        if(self::$_instance === null) self::$_instance = new PdfService();
+
+        return self::$_instance;
+    }
+
     private function makePdf(string $html): string
     {
         $options = new Options();

@@ -17,7 +17,7 @@ class CmsStoriesController extends BaseController
 
     public function __construct()
     {
-        $this->service = new StoriesService();
+        $this->service = StoriesService::getInstance();
     }
 
     /**

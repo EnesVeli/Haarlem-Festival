@@ -11,7 +11,7 @@ class HomeCmsController
 
     public function __construct()
     {
-        $this->homeService = new HomeService();
+        $this->homeService = HomeService::getInstance();
         $this->requireAdmin();
     }
 

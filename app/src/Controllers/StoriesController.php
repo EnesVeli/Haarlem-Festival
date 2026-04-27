@@ -19,13 +19,12 @@ use Exception;
 class StoriesController extends BaseController
 {
     private StoriesService $service;
-
     private StoriesHomepageService $homepageService;
 
     public function __construct()
     {
-        $this->service         = new StoriesService();
-        $this->homepageService = new StoriesHomepageService();
+        $this->service         = StoriesService::getInstance();
+        $this->homepageService = StoriesHomepageService::getInstance();
     }
 
     /**

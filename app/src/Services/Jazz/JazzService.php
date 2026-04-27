@@ -13,15 +13,22 @@ use Throwable;
 
 class JazzService implements IJazzService
 {
-    private IJazzRepository $jazzRepo;
+    private static ?JazzService $_instance = null;
 
+    public static function getInstance() : JazzService {
+        if(self::$_instance === null) self::$_instance = new JazzService(JazzRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
+    private JazzRepository $jazzRepo;
     private OrderService $order_service;
 
-    public function __construct(?IJazzRepository $jazzRepo = null)
+    private function __construct(JazzRepository $jazzRepo, OrderService $order_service)
     {
-        $this->jazzRepo = $jazzRepo ?? new JazzRepository();
+        $this->jazzRepo = $jazzRepo;
 
-        $this->order_service = new OrderService();
+        $this->order_service = $order_service;
     }
 
     public function getHomePageData(): array

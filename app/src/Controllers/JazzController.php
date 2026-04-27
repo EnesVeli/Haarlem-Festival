@@ -14,9 +14,9 @@ class JazzController extends BaseController
 {
     private JazzService $service;
 
-    public function __construct(?JazzService $service = null)
+    public function __construct()
     {
-        $this->service = $service ?? new JazzService();
+        $this->service = JazzService::getInstance();
     }
 
     public function index(): void

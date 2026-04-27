@@ -27,6 +27,19 @@ class YummyRestaurantsRepository extends Repository
     public const NUMBER_OF_RESTAURANTS_PER_PAGE = 20;
     public const NUMBER_OF_RESTAURANTS_PER_PAGE_CMS = 24;
 
+    private static ?YummyRestaurantsRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : YummyRestaurantsRepository {
+        if(self::$_instance === null) self::$_instance = new YummyRestaurantsRepository();
+
+        return self::$_instance;
+    }
+
     /**
      * @param int $restaurant_id id of searched restaurant.
      * @return ?Restaurant returns restaurant object if found, null if not.

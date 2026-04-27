@@ -6,6 +6,19 @@ use PDO;
 
 class UserRepository extends Repository
 {
+    private static ?UserRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : UserRepository {
+        if(self::$_instance === null) self::$_instance = new UserRepository();
+
+        return self::$_instance;
+    }
+
     public function findByEmail(string $email): ?array
     {
         $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE email = :email LIMIT 1");

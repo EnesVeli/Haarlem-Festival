@@ -19,7 +19,7 @@ class AdminJazzController extends BaseCmsController
     public function __construct()
     {
         parent::__construct();
-        $this->service = new JazzCmsService();
+        $this->service = JazzCmsService::getInstance();
     }
 
     // dashboard

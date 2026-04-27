@@ -7,6 +7,19 @@ use PDO;
 
 class PasswordResetTokenRepository extends Repository
 {
+    private static ?PasswordResetTokenRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : PasswordResetTokenRepository {
+        if(self::$_instance === null) self::$_instance = new PasswordResetTokenRepository();
+
+        return self::$_instance;
+    }
+
     public function getTokenByUserId(string $user_id): ?PasswordResetToken
     {
         $stmt = $this->connection->prepare("SELECT `token_id`, `user_id`, `key`, `created_at`, `activated_at` FROM `PasswordResetToken` WHERE `user_id` = :user_id");

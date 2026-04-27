@@ -14,12 +14,20 @@ use App\Repositories\StoriesHomepageRepository;
  */
 class StoriesHomepageService implements IStoriesHomepageService
 {
+    private static ?StoriesHomepageService $_instance = null;
+
+    public static function getInstance() : StoriesHomepageService {
+        if(self::$_instance === null) self::$_instance = new StoriesHomepageService(StoriesHomepageRepository::getInstance());
+
+        return self::$_instance;
+    }
+
     /** @var IStoriesHomepageRepository */
     private IStoriesHomepageRepository $repository;
 
-    public function __construct()
+    private function __construct(StoriesHomepageRepository $repository)
     {
-        $this->repository = new StoriesHomepageRepository();
+        $this->repository = $repository;
     }
 
     /**

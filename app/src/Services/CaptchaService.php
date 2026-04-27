@@ -8,6 +8,16 @@ use App\Config;
  */
 class CaptchaService
 {
+    private static ?CaptchaService $_instance = null;
+
+    private function __construct(){}
+    
+    public static function getInstance() : CaptchaService {
+        if(self::$_instance === null) self::$_instance = new CaptchaService();
+
+        return self::$_instance;
+    }
+
     /**
      * Verifies registration captcha response token.
      */

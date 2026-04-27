@@ -10,7 +10,7 @@ class HistoryCmsController
 
     public function __construct()
     {
-        $this->repo = new HistoryCmsRepository();  
+        $this->repo = HistoryCmsRepository::getInstance();  
     }
 
     // Blocks anyone who isn't logged in as admin

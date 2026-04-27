@@ -6,6 +6,16 @@ use App\Framework\Session;
 
 class CmsDashboardService
 {
+    private static ?CmsDashboardService $_instance = null;
+
+    private function __construct(){}
+    
+    public static function getInstance() : CmsDashboardService {
+        if(self::$_instance === null) self::$_instance = new CmsDashboardService();
+
+        return self::$_instance;
+    }
+
     public function getDashboardData(): array
     {
         return [

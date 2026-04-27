@@ -17,7 +17,18 @@ use PDO;
 
 class JazzRepository extends Repository implements IJazzRepository
 {
-    // hero
+    private static ?JazzRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : JazzRepository {
+        if(self::$_instance === null) self::$_instance = new JazzRepository();
+
+        return self::$_instance;
+    }
 
     public function getHero(): ?JazzHero
     {

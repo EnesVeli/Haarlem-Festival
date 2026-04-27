@@ -33,6 +33,16 @@ class OrderService
     public static int $YUMMY_COST_PER_SEAT = 1000;
     public static int $HISTORY_ROUTE_DURATION = 180; // In munutes
 
+    private static ?OrderService $_instance = null;
+
+    public static function getInstance() : OrderService {
+        if(self::$_instance === null) self::$_instance = new OrderService(UserRepository::getInstance(), OrderRepository::getInstance(), TicketRepository::getInstance(),
+            HistoryCmsRepository::getInstance(), YummyRestaurantsRepository::getInstance(), StoriesRepository::getInstance(), HistoryRepository::getInstance(),
+            JazzRepository::getInstance(), PdfService::getInstance(), MailService::getInstance());
+
+        return self::$_instance;
+    }
+
     private UserRepository $user_rep;
     private OrderRepository $order_rep;
     private TicketRepository $ticket_rep;
@@ -44,18 +54,20 @@ class OrderService
     private PdfService $pdf_service;
     private MailService $mail_service;
 
-    public function __construct()
+    private function __construct(UserRepository $user_rep, OrderRepository $order_rep, TicketRepository $ticket_rep, HistoryCmsRepository $history_cms_rep,
+        YummyRestaurantsRepository $restaurant_rep, StoriesRepository $story_rep, HistoryRepository $history_rep, JazzRepository $jazz_rep,
+        PdfService $pdf_service, MailService $mail_service)
     {
-        $this->user_rep = new UserRepository();
-        $this->order_rep = new OrderRepository();
-        $this->ticket_rep = new TicketRepository();
-        $this->history_cms_rep = new HistoryCmsRepository();
-        $this->restaurant_rep = new YummyRestaurantsRepository();
-        $this->story_rep = new StoriesRepository();
-        $this->history_rep = new HistoryRepository();
-        $this->jazz_rep = new JazzRepository();
-        $this->pdf_service = new PdfService();
-        $this->mail_service = new MailService();
+        $this->user_rep = $user_rep;
+        $this->order_rep = $order_rep;
+        $this->ticket_rep = $ticket_rep;
+        $this->history_cms_rep = $history_cms_rep;
+        $this->restaurant_rep = $restaurant_rep;
+        $this->story_rep = $story_rep;
+        $this->history_rep = $history_rep;
+        $this->jazz_rep = $jazz_rep;
+        $this->pdf_service = $pdf_service;
+        $this->mail_service = $mail_service;
     }
 
     /**

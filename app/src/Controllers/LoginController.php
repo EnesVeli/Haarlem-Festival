@@ -12,7 +12,7 @@ class LoginController
 
     public function __construct()
     {
-        $this->userService = new UserService();
+        $this->userService = UserService::getInstance();
     }
 
     public function index()

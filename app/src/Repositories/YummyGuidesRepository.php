@@ -7,6 +7,19 @@ use PDO;
 
 class YummyGuidesRepository extends Repository
 {
+    private static ?YummyGuidesRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : YummyGuidesRepository {
+        if(self::$_instance === null) self::$_instance = new YummyGuidesRepository();
+
+        return self::$_instance;
+    }
+
     /**
      * @param int $guide_id id of searched guid.
      * @return ?Guide returns guide object if found, null if not.

@@ -9,6 +9,19 @@ use App\Framework\Repository;
 
 class HistoryRepository extends Repository
 {
+    private static ?HistoryRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : HistoryRepository {
+        if(self::$_instance === null) self::$_instance = new HistoryRepository();
+
+        return self::$_instance;
+    }
+
     public function getAllHighlights()
     {
         $sql = "SELECT * FROM history_highlights ORDER BY id ASC";

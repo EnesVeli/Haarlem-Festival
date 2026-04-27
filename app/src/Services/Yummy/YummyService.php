@@ -26,6 +26,15 @@ use RoundingMode;
 
 class YummyService
 {
+    private static ?YummyService $_instance = null;
+
+    public static function getInstance() : YummyService {
+        if(self::$_instance === null) self::$_instance = new YummyService(YummyGuidesRepository::getInstance(), YummyRestaurantsRepository::getInstance(), OrderRepository::getInstance(),
+            YummyFoodTypeRepository::getInstance(), YummyCmsRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
     private YummyGuidesRepository $guide_repository;
     private YummyRestaurantsRepository $restaurant_repository;
     private OrderRepository $order_repository;
@@ -34,14 +43,15 @@ class YummyService
     private OrderService $order_service;
 
 
-    public function __construct()
+    private function __construct(YummyGuidesRepository $guide_repository, YummyRestaurantsRepository $restaurant_repository, OrderRepository $order_repository,
+        YummyFoodTypeRepository $type_repository, YummyCmsRepository $cms_repository, OrderService $order_service)
     {
-        $this->guide_repository = new YummyGuidesRepository();
-        $this->restaurant_repository = new YummyRestaurantsRepository();
-        $this->order_repository = new OrderRepository();
-        $this->type_repository = new YummyFoodTypeRepository();
-        $this->cms_repository = new YummyCmsRepository();
-        $this->order_service = new OrderService();
+        $this->guide_repository = $guide_repository;
+        $this->restaurant_repository = $restaurant_repository;
+        $this->order_repository = $order_repository;
+        $this->type_repository = $type_repository;
+        $this->cms_repository = $cms_repository;
+        $this->order_service = $order_service;
     }
 
     public function getHomeViewModel() : YummyHomeViewModel {

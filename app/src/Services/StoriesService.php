@@ -13,13 +13,21 @@ use App\Models\StoryEvent;
  */
 class StoriesService
 {
+    private static ?StoriesService $_instance = null;
+
+    public static function getInstance() : StoriesService {
+        if(self::$_instance === null) self::$_instance = new StoriesService(StoriesRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
     private StoriesRepository $repository;
     private OrderService $order_service;
 
-    public function __construct()
+    private function __construct(StoriesRepository $repository, OrderService $order_service)
     {
-        $this->repository = new StoriesRepository();
-        $this->order_service = new OrderService();
+        $this->repository = $repository;
+        $this->order_service = $order_service;
     }
 
     /** @return StoryEvent[] */

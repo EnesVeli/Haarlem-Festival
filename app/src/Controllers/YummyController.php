@@ -16,7 +16,7 @@ class YummyController
 
     public function __construct()
     {
-        $this->service = new YummyService();
+        $this->service = YummyService::getInstance();
     }
 
     public function index()

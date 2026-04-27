@@ -12,7 +12,7 @@ class CmsDashboardController extends BaseCmsController
     public function __construct()
     {
         parent::__construct();
-        $this->service = new CmsDashboardService();
+        $this->service = CmsDashboardService::getInstance();
     }
 
     public function index(): void

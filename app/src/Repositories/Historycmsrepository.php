@@ -7,6 +7,19 @@ use App\Framework\Repository;
 
 class HistoryCmsRepository extends Repository
 {
+    private static ?HistoryCmsRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : HistoryCmsRepository {
+        if(self::$_instance === null) self::$_instance = new HistoryCmsRepository();
+
+        return self::$_instance;
+    }
+
     // -----------------------------------------------------------------------
     // HIGHLIGHTS
     // -----------------------------------------------------------------------

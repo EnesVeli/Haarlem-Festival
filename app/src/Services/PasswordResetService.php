@@ -13,18 +13,23 @@ use Exception;
 
 class PasswordResetService
 {
+    private static ?PasswordResetService $_instance = null;
+
+    public static function getInstance() : PasswordResetService {
+        if(self::$_instance === null) self::$_instance = new PasswordResetService(UserRepository::getInstance(), PasswordResetTokenRepository::getInstance(), VerificationService::getInstance());
+
+        return self::$_instance;
+    }
+
     private PasswordResetTokenRepository $password_reset_token_repository;
     private UserRepository $user_repository;
     private VerificationService $verify_service;
 
-    private Config $config;
-
-    public function __construct()
+    private function __construct(UserRepository $user_repository, PasswordResetTokenRepository $password_reset_token_repository, VerificationService $verify_service)
     {
-        $this->user_repository = new UserRepository();
-        $this->password_reset_token_repository = new PasswordResetTokenRepository();
-        $this->config = new Config();
-        $this->verify_service = new VerificationService();
+        $this->user_repository = $user_repository;
+        $this->password_reset_token_repository = $password_reset_token_repository;
+        $this->verify_service = $verify_service;
     }
 
     public function requestPasswordReset(?string $email)
@@ -37,7 +42,7 @@ class PasswordResetService
         
         $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
 
-        $key = $this->config->generateKey();
+        $key = Config::generateKey();
 
         if($token == null){
             if(!$this->password_reset_token_repository->createNewToken($user['user_id'], password_hash($key, PASSWORD_DEFAULT))){

@@ -21,7 +21,7 @@ class CmsStoriesHomepageController extends BaseController
 
     public function __construct()
     {
-        $this->homepageService = new StoriesHomepageService();
+        $this->homepageService = StoriesHomepageService::getInstance();
     }
 
     /**

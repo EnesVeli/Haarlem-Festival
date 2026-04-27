@@ -8,6 +8,15 @@ use App\Models\Exceptions\PasswordMismatchException;
 use App\Models\Exceptions\IncorrectEmailException;
 
 class VerificationService{
+    private static ?VerificationService $_instance = null;
+
+    private function __construct(){}
+
+    public static function getInstance() : VerificationService {
+        if(self::$_instance === null) self::$_instance = new VerificationService();
+
+        return self::$_instance;
+    }
     /**
     * Throws either EmptyPasswordException, InappropriatePasswordLengthException or PasswordMismatchException, if password is not appropriate.
     * If password is appropriate, then does not throw any exception.

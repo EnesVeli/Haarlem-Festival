@@ -8,6 +8,19 @@ use PDO;
 
 class TicketRepository extends Repository
 {
+    private static ?TicketRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : TicketRepository {
+        if(self::$_instance === null) self::$_instance = new TicketRepository();
+
+        return self::$_instance;
+    }
+
     public function findByTicketCode(string $code): ?Ticket
     {
         $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` AS `scanned_at_` FROM `Tickets` WHERE `code` = :code LIMIT 1;");

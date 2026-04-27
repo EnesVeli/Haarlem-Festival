@@ -10,7 +10,7 @@ class HomeController
 
     public function __construct()
     {
-        $this->homeService = new HomeService();
+        $this->homeService = HomeService::getInstance();
     }
 
     public function index(): void

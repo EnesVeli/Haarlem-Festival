@@ -8,13 +8,21 @@ use Exception;
 
 class UserService
 {
+    private static ?UserService $_instance = null;
+
+    public static function getInstance() : UserService {
+        if(self::$_instance === null) self::$_instance = new UserService(UserRepository::getInstance(), VerificationService::getInstance());
+
+        return self::$_instance;
+    }
+
     private UserRepository $userRepository;
     private VerificationService $verification_service;
 
-    public function __construct()
+    private function __construct(UserRepository $userRepository, VerificationService $verification_service)
     {
-        $this->userRepository = new UserRepository();
-        $this->verification_service = new VerificationService();
+        $this->userRepository = $userRepository;
+        $this->verification_service = $verification_service;
     }
 
     public function registerUser(string $name, string $email, string $password, string $password_confirm): void

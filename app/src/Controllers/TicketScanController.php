@@ -13,7 +13,7 @@ class TicketScanController
 
     public function __construct()
     {
-        $this->service = new TicketScanService();
+        $this->service = TicketScanService::getInstance();
     }
 
     private function requireEmployee(): void

@@ -20,7 +20,7 @@ class HistoryController extends BaseController
 
     public function __construct()
     {
-        $this->service = new HistoryService();
+        $this->service = HistoryService::getInstance();
     }
 
     public function index()

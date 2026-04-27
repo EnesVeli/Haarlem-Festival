@@ -11,6 +11,15 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class MailService
 {
+    private static ?MailService $_instance = null;
+
+    private function __construct(){}
+    public static function getInstance() : MailService {
+        if(self::$_instance === null) self::$_instance = new MailService();
+
+        return self::$_instance;
+    }
+
     public function sendTestMail()
     {
         $mail = new PHPMailer(true); // Enable exceptions

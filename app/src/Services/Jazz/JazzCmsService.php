@@ -7,11 +7,19 @@ use App\Repositories\JazzRepository;
 
 class JazzCmsService
 {
+    private static ?JazzCmsService $_instance = null;
+
+    public static function getInstance() : JazzCmsService {
+        if(self::$_instance === null) self::$_instance = new JazzCmsService(JazzRepository::getInstance());
+
+        return self::$_instance;
+    }
+
     private JazzRepository $jazzRepo;
 
-    public function __construct()
+    private function __construct(JazzRepository $jazzRepo)
     {
-        $this->jazzRepo = new JazzRepository();
+        $this->jazzRepo = $jazzRepo;
     }
 
     // dashboard

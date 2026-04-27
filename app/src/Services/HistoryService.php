@@ -14,15 +14,23 @@ class HistoryService
 {
     public static int $max_date_offset = 12;
 
+    private static ?HistoryService $_instance = null;
+
+    public static function getInstance() : HistoryService {
+        if(self::$_instance === null) self::$_instance = new HistoryService(HistoryRepository::getInstance(), OrderRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
     private HistoryRepository $history_rep;
     private OrderRepository $order_rep;
     private OrderService $order_service;
 
-    public function __construct()
+    private function __construct(HistoryRepository $history_rep, OrderRepository $order_rep, OrderService $order_service)
     {
-        $this->history_rep = new HistoryRepository();
-        $this->order_rep = new OrderRepository();
-        $this->order_service = new OrderService();
+        $this->history_rep = $history_rep;
+        $this->order_rep = $order_rep;
+        $this->order_service = $order_service;
     }
 
     public function getHighlights()

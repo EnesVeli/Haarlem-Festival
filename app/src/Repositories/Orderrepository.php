@@ -14,6 +14,19 @@ use PDO;
 
 class OrderRepository extends Repository
 {
+    private static ?OrderRepository $_instance = null;
+
+    private function __construct()
+    {
+        parent::__construct();
+    }
+
+    public static function getInstance() : OrderRepository {
+        if(self::$_instance === null) self::$_instance = new OrderRepository();
+
+        return self::$_instance;
+    }
+
     /**
      * Gets order by user_id and status form db.
      * @param int $user_id 

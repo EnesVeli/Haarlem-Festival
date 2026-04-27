@@ -9,13 +9,21 @@ use DateTime;
 
 class TicketScanService
 {
+    private static ?TicketScanService $_instance = null;
+
+    public static function getInstance() : TicketScanService {
+        if(self::$_instance === null) self::$_instance = new TicketScanService(TicketRepository::getInstance(), OrderService::getInstance());
+
+        return self::$_instance;
+    }
+
     private TicketRepository $repository;
     private OrderService $order_service;
 
-    public function __construct()
+    private function __construct(TicketRepository $repository, OrderService $order_service)
     {
-        $this->repository = new TicketRepository();
-        $this->order_service = new OrderService();
+        $this->repository = $repository;
+        $this->order_service = $order_service;
     }
 
     public function scanTicket(string $scan_value): Ticket
