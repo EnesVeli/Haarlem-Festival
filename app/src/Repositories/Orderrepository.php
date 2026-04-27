@@ -157,7 +157,7 @@ class OrderRepository extends Repository
     /**
      * Gets order item by its id.
      * @param int $item_id id of the order item.
-     * @return ?OrderItem returns order item if it was found, otherwise, returns null. 
+     * @return OrderItem|bool|null returns order item if it was found. If it was not found, returns null. If there were errors during execution returns false;
      */
     public function getOrderItemById(int $item_id) : ?OrderItem{
         $stmt = $this->connection->prepare("SELECT `item_id`, `order_id`, `booking_id`, `booking_type` AS `booking_type_`, `price` FROM `OrderItems` WHERE `item_id` = :item_id;");
@@ -165,9 +165,7 @@ class OrderRepository extends Repository
         $stmt->execute(['item_id' => $item_id]);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, OrderItem::class);
-        $res = $stmt->fetch();
-
-        return $res == false ? null : $res;
+        return $stmt->fetch();     
     }
 
     /**

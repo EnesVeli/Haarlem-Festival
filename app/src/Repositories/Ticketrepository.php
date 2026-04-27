@@ -10,7 +10,7 @@ class TicketRepository extends Repository
 {
     public function findByTicketCode(string $code): ?Ticket
     {
-        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `code` = :code LIMIT 1;");
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` AS `scanned_at_` FROM `Tickets` WHERE `code` = :code LIMIT 1;");
         $stmt->bindValue('code', $code, PDO::PARAM_STR);
 
         $stmt->execute();
@@ -23,7 +23,7 @@ class TicketRepository extends Repository
 
     public function findByQrToken(string $qr_token): ?Ticket
     {
-        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `qr_token` = :qr_token LIMIT 1;");
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` AS `scanned_at_` FROM `Tickets` WHERE `qr_token` = :qr_token LIMIT 1;");
         $stmt->bindValue('qr_token', $qr_token, PDO::PARAM_STR);
 
         $stmt->execute();
@@ -36,7 +36,7 @@ class TicketRepository extends Repository
 
     public function findById(int $ticket_id): ?Ticket
     {
-        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` FROM `Tickets` WHERE `ticket_id` = :ticket_id LIMIT 1;");
+        $stmt = $this->connection->prepare("SELECT `ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at` AS `scanned_at_` FROM `Tickets` WHERE `ticket_id` = :ticket_id LIMIT 1;");
         $stmt->bindValue('ticket_id', $ticket_id, PDO::PARAM_INT);
 
         $stmt->execute();

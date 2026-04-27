@@ -172,6 +172,17 @@ class OrderService
         return 0;
     }
 
+    public function getOrderItemWithBooking(int $item_id) : ?OrderItem {
+        $item = $this->order_rep->getOrderItemById($item_id);
+        if($item === null) return null;
+        if($item === false) throw new QueryExecutionException("Failed to get order item by id.");  
+
+        $item->booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
+        if($item->booking === null) throw new QueryExecutionException("Failed to get booking for order item.");  
+
+        return $item;
+    }
+
     /**
      * Get users cart order with order items (and bookings inside) filled in.
      * @param int $user_id id of the user.
@@ -293,7 +304,7 @@ class OrderService
 
         // Get order item
         $item = $this->order_rep->getOrderItemById($item_id);
-        if($item == null) throw new EmptyPostException("No order item found with provided id.");
+        if($item === null || $item === false) throw new EmptyPostException("No order item found with provided id.");
         if($item->order_id != $order_id) throw new PostMismatchException("");
         
         // Remove order item from the cart
