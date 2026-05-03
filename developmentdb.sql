@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Apr 27, 2026 at 11:42 AM
+-- Generation Time: May 03, 2026 at 08:47 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -20,36 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -105,6 +75,36 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 (42, 'jazz_home', 'recommendation', 0, 'Dance', NULL, 'Feel the energy of live DJs, dance shows, and late-night party vibes.', '/dance', NULL, 4, 1),
 (43, 'jazz_home', 'recommendation', 0, 'Haarlem Jazz', NULL, 'Live jazz performances and unforgettable sessions across the city.', '/jazz', NULL, 5, 1),
 (46, 'jazz_home', 'experience', 0, 'Late Night Chill Jam', '', 'Improvised jam sessions guided by top musicians in the festival. Feels like a smoky underground room.', '', '', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -172,7 +172,8 @@ INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `boo
 (5, 3, '2026-04-21', 0),
 (6, 1, '2026-04-30', 0),
 (7, 1, '2026-04-25', 0),
-(8, 1, '2026-04-27', 0);
+(8, 1, '2026-04-27', 0),
+(9, 1, '2026-05-09', 0);
 
 -- --------------------------------------------------------
 
@@ -549,7 +550,7 @@ CREATE TABLE `jazz_performers` (
 
 INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `date`, `start_time`, `end_time`, `sort_order`, `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`) VALUES
 (1, 'Evolve', 1590, 'wneqifhskjhdfwe', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
-(2, 'Fox & The Mayors', 980, '', '2026-04-30', '21:00:00', '23:30:00', 2, 1, '/assets/uploads/jazz/performers/1773540909_FoxAndTheMayors.png', 'Smooth, expressive', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '', '', NULL),
+(2, 'Fox & The Mayors q', 1091, '', '2026-05-03', '21:05:00', '23:05:00', 3, 1, '/assets/uploads/jazz/performers/1777298211_91048f798a8fa4ce7dd9f7ebe2593aba.png', 'Smooth, expressive q', 'Philharmonie Haarlem q', 'Lange Begijnestraat 11, 2011 HH Haarlem q', 'qqq', 'qqq', NULL),
 (3, 'Gare du Nord', 1590, 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', '2026-04-27', '16:00:00', '19:00:00', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
 (4, 'Gumbo Kings', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
 (5, 'Han Bennink', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', NULL),
@@ -560,7 +561,8 @@ INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `date`, `start_time
 (13, 'Soul Six', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', NULL),
 (14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
 (15, 'The Nordanians', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', NULL),
-(17, 'Uncle Sue', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', NULL);
+(17, 'Uncle Sue', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', NULL),
+(19, 'Ratatouille', 12, 'aaa', '1917-04-30', '03:00:00', '15:00:00', 3, 1, '/assets/uploads/jazz/performers/1777298414_55t.png', 'Smooth, expressiveaa', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '11', '111', '/assets/uploads/jazz/performers/1777298414_91048f798a8fa4ce7dd9f7ebe2593aba.png');
 
 -- --------------------------------------------------------
 
@@ -711,7 +713,8 @@ INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `
 (32, 9, 8, b'011', 11130),
 (33, 10, 22, b'010', 5000),
 (34, 11, 23, b'010', 7000),
-(35, 12, 24, b'010', 11000);
+(35, 12, 24, b'010', 11000),
+(36, 7, 25, b'010', 5000);
 
 -- --------------------------------------------------------
 
@@ -724,21 +727,23 @@ CREATE TABLE `Orders` (
   `user_id` int(11) NOT NULL,
   `date` datetime DEFAULT NULL,
   `status` bit(3) NOT NULL DEFAULT b'0',
-  `total_price` decimal(10,0) DEFAULT NULL
+  `total_price` decimal(10,0) DEFAULT NULL,
+  `stripe_session` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `Orders`
 --
 
-INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`) VALUES
-(6, 10, NULL, b'000', NULL),
-(7, 2, NULL, b'000', NULL),
-(8, 5, '2026-04-26 19:47:29', b'010', 23155),
-(9, 5, '2026-04-26 19:38:03', b'010', 23031),
-(10, 5, '2026-04-26 19:42:36', b'010', 5450),
-(11, 5, '2026-04-26 19:56:23', b'010', 7630),
-(12, 5, '2026-04-27 11:20:48', b'010', 11990);
+INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`, `stripe_session`) VALUES
+(6, 10, NULL, b'000', NULL, NULL),
+(7, 2, '2026-04-27 13:28:44', b'010', 5450, NULL),
+(8, 5, NULL, b'000', 21244, NULL),
+(9, 5, '2026-04-26 19:38:03', b'010', 23031, NULL),
+(10, 5, '2026-04-26 19:42:36', b'010', 5450, NULL),
+(11, 5, '2026-04-26 19:56:23', b'001', 7630, NULL),
+(12, 5, '2026-04-27 11:20:48', b'010', 11990, NULL),
+(13, 2, NULL, b'000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -868,7 +873,8 @@ INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`)
 (22, 29, 'ed4e14974487f9eeba50d3f9ec8b22bb74b0e6ad27dd7f3e', 'HF-276AEBD4928A987538A0968C', NULL),
 (23, 30, 'b175b466213aaa258b67b1440d4d644d7b3df8300b10159b', 'HF-76A8638D2C840B466662C78F', NULL),
 (24, 34, 'fb5fa0afbeb29f9f5106da02d8593ec8fcee104c7dc330e1', 'HF-C79B907E9FE9B975C6F67395', NULL),
-(25, 35, 'e948c7e4c6711ee3af741b3cd63cb0caf53524f6e6ed12f9', 'HF-65D2EF15A543F250B0EF34D1', '2026-04-27 11:38:17');
+(25, 35, 'e948c7e4c6711ee3af741b3cd63cb0caf53524f6e6ed12f9', 'HF-65D2EF15A543F250B0EF34D1', '2026-04-27 11:38:17'),
+(26, 36, 'b60d287c506ec7bac36b8546c5b0adb5f94d66fbb9770aec', 'HF-97750D2A2B6E6F6B95C980A1', NULL);
 
 -- --------------------------------------------------------
 
@@ -976,7 +982,8 @@ INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_numb
 (21, 179, '2026-05-01 00:00:00', 2, 8, 'ccv'),
 (22, 175, '2026-04-30 19:00:00', 3, 2, ''),
 (23, 165, '2026-04-27 17:00:00', 4, 3, ''),
-(24, 206, '2026-05-10 21:00:00', 4, 7, '');
+(24, 206, '2026-05-10 21:00:00', 4, 7, ''),
+(25, 169, '2026-04-28 19:00:00', 1, 4, 'adad');
 
 -- --------------------------------------------------------
 
@@ -1208,7 +1215,19 @@ INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booke
 (203, 3, '2026-05-09', 0),
 (204, 1, '2026-05-10', 0),
 (205, 2, '2026-05-10', 0),
-(206, 3, '2026-05-10', 0);
+(206, 3, '2026-05-10', 0),
+(207, 1, '2026-05-11', 0),
+(208, 2, '2026-05-11', 0),
+(209, 3, '2026-05-11', 0),
+(210, 1, '2026-05-12', 0),
+(211, 2, '2026-05-12', 0),
+(212, 3, '2026-05-12', 0),
+(213, 1, '2026-05-13', 0),
+(214, 2, '2026-05-13', 0),
+(215, 3, '2026-05-13', 0),
+(216, 1, '2026-05-14', 0),
+(217, 2, '2026-05-14', 0),
+(218, 3, '2026-05-14', 0);
 
 -- --------------------------------------------------------
 
@@ -1361,14 +1380,6 @@ INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `cap
 --
 
 --
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
-
---
 -- Indexes for table `cms_content`
 --
 ALTER TABLE `cms_content`
@@ -1377,6 +1388,14 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
+
+--
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `HistoryBookings`
@@ -1542,6 +1561,7 @@ ALTER TABLE `OrderItems`
 --
 ALTER TABLE `Orders`
   ADD PRIMARY KEY (`order_id`),
+  ADD UNIQUE KEY `stripe_session` (`stripe_session`),
   ADD KEY `user_id` (`user_id`);
 
 --
@@ -1668,16 +1688,16 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 
 --
--- AUTO_INCREMENT for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT for table `cms_content`
 --
 ALTER TABLE `cms_content`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
+-- AUTO_INCREMENT for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `HistoryBookings`
@@ -1689,7 +1709,7 @@ ALTER TABLE `HistoryBookings`
 -- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
 ALTER TABLE `HistoryReservationSlots`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `HistoryTimeSlot`
@@ -1779,7 +1799,7 @@ ALTER TABLE `jazz_locations`
 -- AUTO_INCREMENT for table `jazz_performers`
 --
 ALTER TABLE `jazz_performers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_appearances`
@@ -1815,13 +1835,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1845,7 +1865,7 @@ ALTER TABLE `StoryEvents`
 -- AUTO_INCREMENT for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `User`
@@ -1863,7 +1883,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -1887,7 +1907,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -1951,8 +1971,7 @@ ALTER TABLE `history_detail_sections`
 -- Constraints for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  ADD CONSTRAINT `fk_jazzbookings_performer` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`);
-
+  ADD CONSTRAINT `1` FOREIGN KEY (`performer_id`) REFERENCES `jazz_performers` (`id`);
 
 --
 -- Constraints for table `jazz_performer_appearances`
@@ -1983,7 +2002,7 @@ ALTER TABLE `jazz_performer_tracks`
 -- Constraints for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  ADD CONSTRAINT `fk_tickets_orderitem` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
+  ADD CONSTRAINT `1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
