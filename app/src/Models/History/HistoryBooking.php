@@ -46,10 +46,20 @@ class HistoryBooking implements IBooking{
     public function getAddressFull() : ?string{
         return "Grote Markt 22, 2011 HL Haarlem";
     }
+    public function getAddressShort() : ?string{
+        return 'St. Bavo Church';
+    }
     public function getEventName() : ?string{
         return "Guided Tour";
     }
     public function getQuantityString() : ?string{
         return 'individual: ' . $this->individual_count . "; family: " . $this->family_count;
+    }
+    public function getCartDescString() : ?string{
+        return "individual tickets: " . $this->individual_count . "; family tickets: " . $this->family_count . "; language: " . $this->language;
+    }
+
+    public function getEventImagePath() : ?string{
+        return '/assets/uploads/history/bavo-church.jpg';
     }
 }

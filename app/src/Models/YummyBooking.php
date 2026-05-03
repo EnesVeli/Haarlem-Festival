@@ -48,6 +48,11 @@ class YummyBooking implements IBooking {
 
         return $this->restaurant->address_text;
     }
+    public function getAddressShort() : ?string{
+        if(!isset($this->restaurant)) return null;
+
+        return $this->restaurant->name;
+    }
     public function getEventName() : ?string{
         if(!isset($this->restaurant)) return null;
 
@@ -55,5 +60,15 @@ class YummyBooking implements IBooking {
     }
     public function getQuantityString() : ?string{
         return 'adults: ' . $this->adult_number . '; children: ' . $this->child_number;
+    }
+
+    public function getCartDescString() : ?string{
+        return $this->getQuantityString();
+    }
+
+    public function getEventImagePath() : ?string{
+        if(!isset($this->restaurant)) return null;
+
+        return '/assets/uploads/yummy/restaurants/' . $this->restaurant->main_img_path ;
     }
 }

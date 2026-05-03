@@ -1,3 +1,28 @@
+/* ==================== CSS VARIABLES ==================== */
+:root {
+    /* Primary colors */
+    --primary-color: #FFFFFF;
+    --burgundy: #8B1818;
+    --burgundy-dark: #6f0f12;
+    --navy: #1a4d7a;
+    --navy-dark: #153d61;
+
+    --green: #43983a;
+    --green-dark: #38882f;
+    
+    /* Accent colors */
+    --accent-gold: #d4a574;
+    --accent-orange: #f59e0b;
+    
+    /* Neutrals */
+    --neutral-light: #f9f9f9;
+    --neutral-grey: #9CA3AF;
+    --dark-text: #2c2c2c;
+    --medium-text: #4a4a4a;
+    --light-text: #666;
+    --border-color: #e5e5e5;
+}
+
 .program-layout {
     display: grid;
     grid-template-columns: 1fr 320px;
@@ -138,6 +163,13 @@
     margin: 0.8rem 0;
 }
 
+.program-summary__taxes_label {
+    margin-top: -14px;
+
+    color: #2a2a2a;
+    font-size: 0.8rem;
+}
+
 /* Responsive */
 @media (max-width: 800px) {
     .program-layout {
@@ -152,4 +184,186 @@
         width: 100%;
         height: 160px;
     }
+}
+
+/* Personal Program */
+.prog-layout {
+    display: block;
+    
+    width: auto;
+
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.prog-order{
+    background-color: white;
+
+    padding: 18px;
+
+    border-style: solid;
+    border-color: var(--accent-orange);
+    border-radius: 18px;
+    border-width: 2px;
+}
+
+.prog-order-items{
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.prog-prder-break{
+    width: auto;
+    height: 1px;
+
+    background-color: var(--border-color);
+
+    margin-left: 2px;
+    margin-right: 2px;
+
+    margin-bottom: 4px;
+    margin-top: 4px;
+
+    border-style: none;
+    border-radius: 99px;
+}
+
+.prog-order-actions{
+    display: flex;
+
+    width: 300px;
+
+    gap: 4px;
+
+    flex-direction: row;
+
+    justify-content: flex-start;
+}
+
+.prog-order-actions div{
+    display: flex;
+}
+
+.prog-order-cancel-button{
+    display: flex;
+
+    background: var(--burgundy);
+
+    border-style: none;
+    border-radius: 8px;
+
+    color: #fff;
+
+    font-size: 1.0rem;
+    font-weight: 700;
+
+    padding: 0.6rem 1.2rem;  
+
+    align-items: center;
+
+    cursor: pointer;
+
+    gap: 0.25rem;
+
+    line-height: 1;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.prog-order-cancel-button:hover{
+    background: var(--burgundy-dark);
+}
+
+
+.prog-order-pay-button{
+    display: flex;
+
+    background: var(--green);
+
+    border-style: none;
+    border-radius: 8px;
+
+    color: #fff;
+
+    font-size: 1.0rem;
+    font-weight: 700;
+
+    padding: 0.6rem 1.2rem;  
+
+    align-items: center;
+
+    cursor: pointer;
+
+    gap: 0.25rem;
+
+    line-height: 1;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.prog-order-pay-button:hover{
+    background: var(--green-dark);
+}
+
+.prog-order-label{
+    font-family: 'Inter', serif;
+    font-size: 1.6rem;
+    font-weight: 600;
+
+    color: var(--burgundy);
+}
+
+.prog-order-price-container{
+    display: flex;
+
+    margin-bottom: -9px;
+
+    gap: 5px;
+}
+
+.prog-order-price-label{
+    font-family: 'Inter', serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+
+    color: #2d2622;
+}
+
+.prog-order-price{
+    font-family: 'Inter', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+
+    color: var(--burgundy);
+
+    margin-top: -1px;
+}
+
+.prog-order-date{
+    font-family: 'Inter', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+
+    color: var(--dark-text);
+
+    margin-top: -0.5px;
+}
+
+.prog-order-status-paid{
+    font-family: 'Inter', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    color: var(--green);
+}
+
+.prog-order-status-not-paid{
+    font-family: 'Inter', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+
+    color: var(--burgundy);
 }

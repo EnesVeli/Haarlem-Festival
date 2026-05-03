@@ -38,6 +38,11 @@ class JazzBooking implements IBooking {
 
         return $this->performer->venue_address;
     }
+    public function getAddressShort() : ?string{
+        if(!isset($this->performer)) return null;
+
+        return $this->performer->venue_name;
+    }
     public function getEventName() : ?string{
         if(!isset($this->performer)) return null;
 
@@ -45,5 +50,15 @@ class JazzBooking implements IBooking {
     }
     public function getQuantityString() : ?string{
         return 'tickets: ' . $this->amount;
+    }
+
+    public function getCartDescString() : ?string{
+        return $this->getQuantityString();
+    }
+
+    public function getEventImagePath() : ?string{
+        if(!isset($this->performer)) return null;
+
+        return $this->performer->image_path;
     }
 }

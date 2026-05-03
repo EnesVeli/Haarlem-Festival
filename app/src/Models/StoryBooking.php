@@ -40,6 +40,11 @@ class StoryBooking implements IBooking {
         
         return $this->event->address_text;
     }
+    public function getAddressShort() : ?string{
+        if(!isset($this->event)) return null;
+
+        return $this->event->address_name;
+    }
     public function getEventName() : ?string{
         if(!isset($this->event)) return null;
 
@@ -47,5 +52,17 @@ class StoryBooking implements IBooking {
     }
     public function getQuantityString() : ?string{
         return 'tickets: ' . $this->quantity;
+    }
+
+    public function getCartDescString() : ?string{
+        if(!isset($this->event)) return null;
+
+        return "ticket number: " . $this->quantity . "; language: " . $this->event->language . ($this->haarlem_pass ? '; haarlem pass' : '');
+    }
+
+    public function getEventImagePath() : ?string{
+        if(!isset($this->event)) return null;
+
+        return $this->event->image_path;
     }
 }

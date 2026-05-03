@@ -163,16 +163,14 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
     
     // Cart
-    $r->addRoute('GET',  '/cart',        [\App\Controllers\CartController::class, 'index']);
-    $r->addRoute('POST', '/cart/add',    [\App\Controllers\CartController::class, 'add']);
-    $r->addRoute('POST', '/cart/update', [\App\Controllers\CartController::class, 'update']);
-    $r->addRoute('POST', '/cart/remove', [\App\Controllers\CartController::class, 'remove']);
-    $r->addRoute('GET', '/cart/checkout', [\App\Controllers\CartController::class, 'complete']);
-
-    // Payment
-    $r->addRoute('GET',  '/checkout',              [\App\Controllers\PaymentController::class, 'index']);
-    $r->addRoute('POST', '/checkout/process',      [\App\Controllers\PaymentController::class, 'process']);
-    $r->addRoute('GET',  '/checkout/confirmation', [\App\Controllers\PaymentController::class, 'confirmation']);
+    $r->addRoute('GET',  '/cart',         [\App\Controllers\CartController::class, 'index']);
+    $r->addRoute('POST', '/cart/add',     [\App\Controllers\CartController::class, 'add']);
+    $r->addRoute('POST', '/cart/update',  [\App\Controllers\CartController::class, 'update']);  
+    $r->addRoute('POST', '/cart/remove',  [\App\Controllers\CartController::class, 'remove']);
+    $r->addRoute('GET',  '/checkout',     [\App\Controllers\CartController::class, 'checkout']);
+    $r->addRoute('GET',  '/program',      [\App\Controllers\CartController::class, 'program']);
+    $r->addRoute('GET',  '/payment',      [\App\Controllers\CartController::class, 'payment']);
+    $r->addRoute('GET',  '/payment/fail', [\App\Controllers\CartController::class, 'paymentFail']);
 });
 
 // Fetch method and URI from Server

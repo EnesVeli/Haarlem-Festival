@@ -34,7 +34,7 @@ class OrderRepository extends Repository
      * @return ?Order returns if order was found returns it, otherwise, returns null. 
      */
     public function getOrderByUserIdAndStatus(int $user_id, OrderStatus $status) : ?Order {
-        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `status` = :status AND `user_id` = :user_id;");
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `status` = :status AND `user_id` = :user_id;");
 
         $stmt->bindValue('status', (int)$status->value, PDO::PARAM_INT);
         $stmt->bindValue('user_id', $user_id, PDO::PARAM_INT);
@@ -53,7 +53,7 @@ class OrderRepository extends Repository
      * @return ?Order returns if order was found returns it, otherwise, returns null. 
      */
     public function getOrderById(int $order_id) : ?Order {
-        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `order_id` = :order_id;");
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `order_id` = :order_id;");
 
         $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
 
@@ -64,6 +64,22 @@ class OrderRepository extends Repository
 
         return $res == false ? null : $res;
     }  
+
+    /**
+     * Gets array of orders for given user with status: Paid or NotPaid.
+     * @param int $user_id id of searched user.
+     * @return Order[]|null|bool retuns false if there were any errors. If nothing found returns null. If something found, returns array of orders.
+     */
+    public function getUserNonCartOrders(int $user_id) : array {
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `user_id` = :user_id AND (`status` = 1 OR `status` = 2);");
+
+        $stmt->bindValue('user_id', $user_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        return $stmt->fetchAll();
+    }
 
     /**
      * Updates status of the order.
@@ -81,19 +97,33 @@ class OrderRepository extends Repository
     }
 
     /**
-     * Updates order to paid (sets its status to Paid, sets its order date to now(), and sets its total price)
-     * @param int $order_id id of the order
-     * @param DateTime $date date of order complition.
-     * @param int $total_price total price of an order (including vat and etc.);
+     * Updates order to not_paid (sets its status to NotPaid and sets its total price)
+     * @param Order $order the order
      * @return bool returns true if operation was successfull, otherwise, returns false. 
      */
-    public function updateOrderToPaid(int $order_id, DateTime $date, int $total_price) : bool { 
-        $stmt = $this->connection->prepare("UPDATE `Orders` SET `date`=:date,`status`=:status,`total_price`=:total_price WHERE `order_id` = :order_id;");
+    public function updateOrderToNotPaid(Order $order) : bool { 
+        $stmt = $this->connection->prepare("UPDATE `Orders` SET `status`=:status,`total_price`=:total_price, `stripe_session`=:stripe_session, `date`=:date WHERE `order_id` = :order_id;");
 
-        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+        $stmt->bindValue('order_id', $order->order_id, PDO::PARAM_INT);
+        $stmt->bindValue('status', OrderStatus::NotPaid->value, PDO::PARAM_INT);
+        $stmt->bindValue('total_price', $order->total_price, PDO::PARAM_INT);
+        $stmt->bindValue('stripe_session', $order->stripe_session, PDO::PARAM_STR);
+        $stmt->bindValue('date', $order->date->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Updates order to paid (sets its status to Paid, sets its order date to now(), and sets its total price)
+     * @param Order $order the order
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
+    public function updateOrderToPaid(Order $order) : bool { 
+        $stmt = $this->connection->prepare("UPDATE `Orders` SET `date`=:date,`status`=:status WHERE `order_id` = :order_id;");
+
+        $stmt->bindValue('order_id', $order->order_id, PDO::PARAM_INT);
         $stmt->bindValue('status', OrderStatus::Paid->value, PDO::PARAM_INT);
-        $stmt->bindValue('date', $date->format('Y-m-d H:i:s'), PDO::PARAM_STR);
-        $stmt->bindValue('total_price', $total_price, PDO::PARAM_INT);
+        $stmt->bindValue('date', $order->date->format('Y-m-d H:i:s'), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -159,7 +189,7 @@ class OrderRepository extends Repository
      * @return bool returns true if operation was successfull, otherwise, returns false. 
      */
     public function removeOrderItemFromCartOrder(int $order_id, int $item_id) : bool {
-        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id AND `status` = 0;");
+        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id;");
 
         $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
         $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
