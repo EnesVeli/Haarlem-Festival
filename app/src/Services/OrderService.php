@@ -207,9 +207,22 @@ class OrderService
      * @return Order|null If no order found, returns null. Otherwise, returns order.
      */
     public function getOrderWithOrderItemsByUserId(int $user_id, OrderStatus $status = OrderStatus::InCart) : ?Order{
-        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, $status); // Get order
+        // Get order
+        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, $status);   
 
-        if($order != null){
+        // Fill order
+        $this->fillInOrder($order);
+
+        return $order;
+    }
+
+    /**
+     * Fills order's order_items and fills every order_item with bookings (from db). If order is null, then nogthing is filled.
+     * @param ?Order $order order to be filed
+     * @return void
+     */
+    private function fillInOrder(?Order $order){
+        if($order !== null){
             $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
             if($order_items === false) throw new QueryExecutionException("Failed to get order order_items.");  
 
@@ -217,15 +230,13 @@ class OrderService
             
             foreach($order_items as $item){
                 $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
-                if($booking == null) throw new QueryExecutionException("Failed to get booking.");  
+                if($booking === null) throw new QueryExecutionException("Failed to get booking.");  
 
                 $item->booking = $booking;
             }
 
             $order->order_items = $order_items;
         }
-
-        return $order;
     }
 
     /**
@@ -325,7 +336,7 @@ class OrderService
         if($item->order_id != $order_id) throw new PostMismatchException("");
         
         // Remove order item from the cart
-        $remove = $this->order_rep->removeOrderItemFromCartOrder($order_id, $item_id);
+        $remove = $this->order_rep->removeOrderItem($item_id);
         if(!$remove) throw new QueryExecutionException("Failed to remove order item.");
 
         // Remove booking
@@ -366,22 +377,10 @@ class OrderService
         $orders = $this->order_rep->getUserNonCartOrders($user_id);
         if($orders === false) throw new QueryExecutionException("Failed to get orders for personal program.");
 
-        if($orders == null) return [];
+        if($orders === null) return [];
 
         foreach($orders as $order){
-            $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
-            if($order_items === false) throw new QueryExecutionException("Failed to get order order_items.");  
-
-            if($order_items === null) $order_items = [];
-            
-            foreach($order_items as $item){
-                $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
-                if($booking == null) throw new QueryExecutionException("Failed to get booking.");  
-
-                $item->booking = $booking;
-            }
-
-            $order->order_items = $order_items;
+            $this->fillInOrder($order);
         }
 
         return $orders;
@@ -433,6 +432,82 @@ class OrderService
 
         return $stripe_session;
     }
+
+    /**
+     * Returns not-paid order stripe session.
+     * @param int $order_id id of ther order.
+     * @param int $user_id id of current user.
+     * @return void
+     */
+    public function restartOrderPayment(int $order_id, int $user_id) : \Stripe\Checkout\Session {
+        // Get order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order === null) throw new QueryExecutionException("Failed to get order by id.");
+        if($order->user_id !== $user_id) throw new PostMismatchException("Order user id do not match current user id.");
+
+        // Check if stripe session is null
+        if($order->stripe_session === null) throw new PostMismatchException("Order stripe session is null.");
+
+        // Return order stripe session.
+        return $this->stripe_client->checkout->sessions->retrieve($order->stripe_session);
+    }
+
+    /**
+     * Removes not-paid order from the db.
+     * @param int $order_id id of the order.
+     * @param int $user_id id of current user.
+     * @throws PostMismatchException thrown when order not found, or order status is not NotPaid.
+     * @return void
+     */
+    public function cancelNotPaidOrder(int $order_id, int $user_id){
+        // Get order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order == null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status != OrderStatus::NotPaid) throw new PostMismatchException("Order status is not NotPaid.");
+
+        // Check if users match
+        if($order->user_id != $user_id) throw new PostMismatchException("Current user do not match order user.");
+
+        // Fill order in
+        $this->fillInOrder($order);
+
+        // Delete order
+        $this->deleteNotPaidOrder($order);
+    }
+
+    /**
+     * Deletes not paid order.
+     * @param Order $order filled in order (with order items, and bookings inside items).
+     * @throws QueryExecutionException thrown if there were any errors during query execution. 
+     * @return void
+     */
+    private function deleteNotPaidOrder(Order $order){
+        // Delete order items and bookings
+        foreach($order->order_items as $item){
+            $remove = $this->removeBookingById($item->booking_id, $item->booking_type);
+            if($remove === false) throw new QueryExecutionException("Failed to remove booking.");
+
+            $remove = $this->order_rep->removeOrderItem($item->item_id);
+            if($remove === false) throw new QueryExecutionException("Failed to remove order item.");
+        }
+
+        //Delete order itself
+        $remove = $this->order_rep->removeOrder($order->order_id, OrderStatus::NotPaid);
+        if($remove === false) throw new QueryExecutionException("Failed to remove order.");
+    }
+
+    /*
+    public function cancelPaidOrder(int $order_id, int $user_id){
+        // Get and validate order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order === null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status !== OrderStatus::Paid) throw new PostMismatchException("Order status is not NotPaid.");
+        if($order->user_id !== $user_id) throw new PostMismatchException("Current user do not match order user.");
+        if($order->stripe_session === null) throw new PostMismatchException("Order stripe session is null.");
+
+
+    }
+    */
 
     public function finishOrderPayment(string $session_id, int $order_id){
         // Get order

@@ -71,10 +71,18 @@ $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0
                         </a>
 
                         <?php if (strtolower($user['role'] ?? '') === 'admin'): ?>
+                            <div class="profile-menu-divider"></div>
+
                             <a href="/cms" class="profile-menu-item">
                                 <i class="bi bi-speedometer2"></i> CMS Dashboard
                             </a>
                         <?php endif; ?>
+
+                        <div class="profile-menu-divider"></div>
+
+                        <a href="/program" class="profile-menu-item profile-menu-item--danger">
+                            <i class="bi bi-box-arrow-right"></i> Personal Program
+                        </a>
 
                         <div class="profile-menu-divider"></div>
 

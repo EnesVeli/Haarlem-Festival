@@ -100,13 +100,14 @@ class CartController extends BaseController
         }       
 
         $error_message = Session::popTempError();
+        $success_message = Session::popTempSuccess();
         
         try{
-            $view_model = new PersonalProgramViewModel();
+            $view_model = new PersonalProgramViewModel();      
             $view_model->orders = $this->order_service->getOrdersPersonalProgram(Session::user()['user_id']);
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to complete order.");
+            Session::setTempError("Failed to get order information. Try again later.");
         }
 
         require __DIR__ . '/../Views/cart/personal_program.php';
@@ -137,4 +138,74 @@ class CartController extends BaseController
     public function paymentFail(){
         require __DIR__ . '/../Views/cart/payment-fail.php';
     }
+
+    public function paymentNotPaidCancel(){
+        if(!$this->isLoggedIn())
+        {
+            Session::setTempError("Your session has expired. Log in, in order to cancel your orders.");
+            header("Location: /login");
+            exit;
+        }     
+
+        try{
+            if(!isset($_POST['order_id'])) throw new EmptyPostException();
+
+            $this->order_service->cancelNotPaidOrder($_POST['order_id'], Session::user()['user_id']);
+
+            Session::setTempSuccess("Successfully cancelled order.");
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to cancel order." . $ex->getMessage());
+        }
+
+        header('location: /program');
+    }
+
+    public function paymentNotPaidPay(){
+        if(!$this->isLoggedIn())
+        {
+            Session::setTempError("Your session has expired. Log in, in order to finish your order.");
+            header("Location: /login");
+            exit;
+        }     
+
+        try{
+            if(!isset($_POST['order_id'])) throw new EmptyPostException();
+
+            $stripe_session = $this->order_service->restartOrderPayment($_POST['order_id'], Session::user()['user_id']);
+
+            header('Location: ' . $stripe_session->url);
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to finish order. Try again later.");
+        }
+
+        header('location: /program');
+    }
+
+    /*public function paymentPaidCancel(){
+        return;
+
+        if(!$this->isLoggedIn())
+        {
+            Session::setTempError("Your session has expired. Log in, in order to cancel your orders.");
+            header("Location: /login");
+            exit;
+        }     
+
+        try{
+            if(!isset($_POST['order_id'])) throw new EmptyPostException();
+
+            $this->order_service->cancelPaidOrder($_POST['order_id'], Session::user()['user_id']);
+
+            header('Location: ');
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError("Failed to finish order. Try again later.");
+        }
+
+        header('location: /program');
+    }*/
 }

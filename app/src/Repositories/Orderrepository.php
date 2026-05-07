@@ -182,16 +182,30 @@ class OrderRepository extends Repository
         return $res;
     }
 
-        /**
-     * Removes order items only from cart order.
-     * @param int $order_id id of the cart order.
+    /**
+     * Removes order items in db (should ONLY be used onto non-paid orders).
+     * @param int $order_id id of the order.
+     * @param OrderStatus $status status of remove order. (If paid, imidiatly fails remove)
+     * @return bool returns true if operation was successfull, otherwise, returns false. 
+     */
+    public function removeOrder(int $order_id, OrderStatus $status) : bool {
+        if($status === OrderStatus::Paid) return false;
+
+        $stmt = $this->connection->prepare("DELETE FROM `Orders` WHERE `order_id` = :order_id;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Removes order items in db.
      * @param int $item_id id of the order item.
      * @return bool returns true if operation was successfull, otherwise, returns false. 
      */
-    public function removeOrderItemFromCartOrder(int $order_id, int $item_id) : bool {
-        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `order_id` = :order_id AND `item_id` = :item_id;");
+    public function removeOrderItem(int $item_id) : bool {
+        $stmt = $this->connection->prepare("DELETE FROM `OrderItems` WHERE `item_id` = :item_id;");
 
-        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
         $stmt->bindValue('item_id', $item_id, PDO::PARAM_INT);
 
         return $stmt->execute();

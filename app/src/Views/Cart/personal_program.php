@@ -1,5 +1,4 @@
 <?php
-use App\Enums\BookingType;
 use App\Enums\OrderStatus;
 
 $pageTitle = 'My Personal Program - The Festival Haarlem';
@@ -17,7 +16,7 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
 
 <div class="stories-page">
     <div class="stories-container" style="padding: 2rem 0 3rem;">
-        <?php if (!isset($view_model) || count($view_model->orders) <= 0): ?>
+        <?php if (!isset($view_model) || !isset($view_model->orders) || count($view_model->orders) <= 0): ?>
             <div style="text-align:center; padding:3rem 0;">
                 <i class="bi bi-calendar-event" style="font-size:3rem; color:#ccc;"></i>
                 <p style="margin:1rem 0 0.5rem; color:#888;">Your personal program is empty.</p>
@@ -27,6 +26,10 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
             <div class="prog-layout">
                 <?php if (!empty($error_message)): ?>
                     <div class="alert alert-danger"><?= htmlspecialchars($error_message) ?></div>
+                <?php endif; ?>
+
+                <?php if(!empty($success_message)): ?>
+                    <div class="alert alert-success" role="alert"><?= htmlspecialchars($success_message) ?></div>
                 <?php endif; ?>
 
                 <h1 style="font-family:'Playfair Display',serif; font-size:2.4rem; color:#8b1e1e; margin:0 0 0.3rem;">
@@ -45,7 +48,7 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
                                 <div class="prog-order-price">&euro;<?= number_format($order->total_price / 100, 2) ?></div>
                             </div>
                             <div class="prog-order-price-container">
-                                <div class="prog-order-price-label">Date:</div>
+                                <div class="prog-order-price-label">Order Date:</div>
                                 <div class="prog-order-date"><?= $order->date != null ? $order->date->format('d.m.Y H:i:s') : '-' ?></div>
                             </div>
                             <div class="prog-order-price-container">
@@ -53,28 +56,24 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
                                 <div class="<?= ($order->status == OrderStatus::Paid ? 'prog-order-status-paid' : 'prog-order-status-not-paid') ?>"><?= $order->status == OrderStatus::Paid ? 'Paid' : 'Pending' ?></div>
                             </div>
                             
-                            <div>
-                                <div class="prog-order-price-label">Actions:</div>
-                                <div class="prog-order-actions">
-                                    <? if($order->status == OrderStatus::NotPaid): ?>
+                            <div>                         
+                                <? if($order->status == OrderStatus::NotPaid): ?>
+                                    <div class="prog-order-price-label">Actions:</div>   
+                                    <div class="prog-order-actions"></div>
                                         <div>
-                                            <form>
+                                            <form method="post" action="/payment/notpaid/cancel">
+                                                <input type="hidden" name="order_id" value="<?= $order->order_id ?>">
                                                 <button type="submit" class="prog-order-cancel-button">Cancel</button>
                                             </form>
                                         </div>
                                         <div>
-                                            <form>
+                                            <form method="post" action="/payment/notpaid/pay">
+                                                <input type="hidden" name="order_id" value="<?= $order->order_id ?>">
                                                 <button type="submit" class="prog-order-pay-button">Pay</button>
                                             </form>
                                         </div>
-                                    <? else: ?>
-                                        <div>
-                                            <form>
-                                                <button type="submit" class="prog-order-cancel-button">Cancel</button>
-                                            </form>
-                                        </div>
-                                    <? endif; ?>
-                                </div>   
+                                    </div> 
+                                <? endif; ?>                      
                             </div>
                             <div class="prog-prder-break"></div>   
                             <div class="prog-order-price-label">Items:</div>

@@ -171,6 +171,9 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/program',      [\App\Controllers\CartController::class, 'program']);
     $r->addRoute('GET',  '/payment',      [\App\Controllers\CartController::class, 'payment']);
     $r->addRoute('GET',  '/payment/fail', [\App\Controllers\CartController::class, 'paymentFail']);
+    $r->addRoute('POST',  '/payment/notpaid/cancel', [\App\Controllers\CartController::class, 'paymentNotPaidCancel']);
+    $r->addRoute('POST',  '/payment/notpaid/pay', [\App\Controllers\CartController::class, 'paymentNotPaidPay']);
+    //$r->addRoute('POST',  '/payment/paid/cancel', [\App\Controllers\CartController::class, 'paymentPaidCancel']);
 });
 
 // Fetch method and URI from Server
