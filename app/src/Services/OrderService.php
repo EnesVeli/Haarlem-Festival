@@ -386,6 +386,12 @@ class OrderService
         return $orders;
     }
 
+    /**
+     * Starts stripe payment: creates and saves stripe session, and marks order as not-paid.
+     * @param int $user_id id of current user.
+     * @throws QueryExecutionException thrown when there were any errors during query execution.
+     * @return \Stripe\Checkout\Session returns new stripe session, that is filled in and can be used to redirect to stripe payment.
+     */
     public function startOrderPayment(int $user_id) : \Stripe\Checkout\Session {
         // Get user
         $user = $this->user_rep->findById($user_id);
@@ -431,6 +437,10 @@ class OrderService
         if($update === false) throw new QueryExecutionException("Failed to update order status.");
 
         return $stripe_session;
+    }
+
+    private function generateLineItemsForStripe(Order $order){
+        
     }
 
     /**
@@ -504,16 +514,18 @@ class OrderService
         if($order->status !== OrderStatus::Paid) throw new PostMismatchException("Order status is not NotPaid.");
         if($order->user_id !== $user_id) throw new PostMismatchException("Current user do not match order user.");
         if($order->stripe_session === null) throw new PostMismatchException("Order stripe session is null.");
-
-
     }
     */
 
     public function finishOrderPayment(string $session_id, int $order_id){
         // Get order
         $order = $this->order_rep->getOrderById($order_id);
-        if($order == null) throw new PostMismatchException("Failed to get order by id.");
-        if($order->status != OrderStatus::NotPaid) throw new PostMismatchException("Wrong order id.");
+        if($order === null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status !== OrderStatus::NotPaid) throw new PostMismatchException("Wrong order id.");
+
+        // Get user
+        $user = $this->user_rep->findById($order->user_id);
+        if($user === null) throw new QueryExecutionException("Failed to get order user.");
 
         // Verify session 
         if($session_id !== $order->stripe_session) throw new PostMismatchException("Stripe session values do not match.");
@@ -532,7 +544,8 @@ class OrderService
         $order_update = $this->order_rep->updateOrderToPaid($order);
         if($order_update === false) throw new QueryExecutionException("Failed to update order to paid.");
 
-        return; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // Fill in order
+        $this->fillInOrder($order);
 
         // Generate tickets
         $tickets = $this->generateTickets($order);

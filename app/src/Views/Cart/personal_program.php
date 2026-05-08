@@ -59,7 +59,7 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
                             <div>                         
                                 <? if($order->status == OrderStatus::NotPaid): ?>
                                     <div class="prog-order-price-label">Actions:</div>   
-                                    <div class="prog-order-actions"></div>
+                                    <div class="prog-order-actions">
                                         <div>
                                             <form method="post" action="/payment/notpaid/cancel">
                                                 <input type="hidden" name="order_id" value="<?= $order->order_id ?>">

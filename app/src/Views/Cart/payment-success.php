@@ -1,5 +1,6 @@
 <?php
 $pageTitle = 'My Personal Program - The Festival Haarlem';
+$pageCSS = "payment.css";
 
 /** @var \App\ViewModels\Cart\CartViewModel $view_model */
 /** @var ?string $error_message */
@@ -7,13 +8,13 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
 
 <?php require '/app/src/Views/partials/header.php';?>
 
-<div>
-    <div class="alert alert-success">
-        <h1>Payment successfull!</h1>
-        <div>Your payment were successful. Thank you for the purchase.</div>
-        <div>
-            <a href="/program">View Your Order</a>            
-            <a href="/tickets">Continue browsing</a>            
+<div class="pay-main">
+    <div class="pay-success-card">
+        <h2 class="pay-title-success">Payment successfull!</h2>
+        <div class="pay-text">Your payment was successful. Thank you for your purchase.</div>
+        <div class="pay-button-container">
+            <a class="pay-gold-button" href="/program">View Your Order</a>            
+            <a class="pay-grey-button" href="/tickets">Continue Browsing</a>            
         </div>
     </div>
 </div>
