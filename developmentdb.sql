@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 03, 2026 at 08:47 PM
+-- Generation Time: May 08, 2026 at 12:53 PM
 -- Server version: 12.1.2-MariaDB-ubu2404
 -- PHP Version: 8.3.30
 
@@ -126,7 +126,7 @@ CREATE TABLE `HistoryBookings` (
 --
 
 INSERT INTO `HistoryBookings` (`booking_id`, `reservation_id`, `date`, `language`, `individual_count`, `family_count`) VALUES
-(5, 8, '2026-04-27 10:00:00', 'nl', 3, 1);
+(6, 10, '2026-05-10 13:00:00', 'nl', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -173,7 +173,8 @@ INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `boo
 (6, 1, '2026-04-30', 0),
 (7, 1, '2026-04-25', 0),
 (8, 1, '2026-04-27', 0),
-(9, 1, '2026-05-09', 0);
+(9, 1, '2026-05-09', 0),
+(10, 2, '2026-05-10', 0);
 
 -- --------------------------------------------------------
 
@@ -422,14 +423,6 @@ CREATE TABLE `JazzBookings` (
   `performer_id` int(11) NOT NULL,
   `amount` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `JazzBookings`
---
-
-INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
-(7, 3, 4),
-(8, 3, 7);
 
 -- --------------------------------------------------------
 
@@ -705,16 +698,9 @@ CREATE TABLE `OrderItems` (
 --
 
 INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
-(26, 8, 20, b'010', 5000),
-(28, 8, 5, b'000', 8084),
-(29, 8, 14, b'001', 1800),
-(30, 8, 7, b'011', 6360),
-(31, 9, 21, b'010', 10000),
-(32, 9, 8, b'011', 11130),
-(33, 10, 22, b'010', 5000),
-(34, 11, 23, b'010', 7000),
-(35, 12, 24, b'010', 11000),
-(36, 7, 25, b'010', 5000);
+(42, 16, 30, b'010', 7000),
+(43, 17, 31, b'010', 5000),
+(44, 17, 6, b'000', 8084);
 
 -- --------------------------------------------------------
 
@@ -736,14 +722,8 @@ CREATE TABLE `Orders` (
 --
 
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`, `stripe_session`) VALUES
-(6, 10, NULL, b'000', NULL, NULL),
-(7, 2, '2026-04-27 13:28:44', b'010', 5450, NULL),
-(8, 5, NULL, b'000', 21244, NULL),
-(9, 5, '2026-04-26 19:38:03', b'010', 23031, NULL),
-(10, 5, '2026-04-26 19:42:36', b'010', 5450, NULL),
-(11, 5, '2026-04-26 19:56:23', b'001', 7630, NULL),
-(12, 5, '2026-04-27 11:20:48', b'010', 11990, NULL),
-(13, 2, NULL, b'000', NULL, NULL);
+(16, 5, '2026-05-07 18:39:14', b'010', 7000, 'cs_test_a1xWv5yRRcSq7MTsafx15J6T6XSMRiP9Pwc8qZ68u80NAFRlaIgeuk4csK'),
+(17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h');
 
 -- --------------------------------------------------------
 
@@ -773,13 +753,6 @@ CREATE TABLE `StoryBookings` (
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `StoryBookings`
---
-
-INSERT INTO `StoryBookings` (`booking_id`, `pay_as_you_like`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
-(14, NULL, 1, 4, b'1', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -849,32 +822,8 @@ CREATE TABLE `Tickets` (
 --
 
 INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`) VALUES
-(1, 26, 'a923818c2eb82ecd1a17ce90cf5d6e50dbd9b6bf09d20e19', 'HF-D3333304486D3FFD78CEB458', NULL),
-(2, 28, 'e6797f404e48bfa46d238296a7d4f6ea9278f8cea93a4933', 'HF-2C7FED9025A31DDEF40C79E0', NULL),
-(3, 29, '94972076503a958f554edd1b5d0e3d192d0f0bed3040fc66', 'HF-B13B28B84F84292749F3861B', NULL),
-(4, 30, '5da40adf52a617d40ac46b87686ef24f05ed338569129341', 'HF-5DD426C50E8DC17E686184D0', NULL),
-(5, 26, '1b17570ef3196885050ca104ac15a2f85a79068a448264b7', 'HF-B12347EF9942F2CD1D59D7F7', NULL),
-(6, 28, '3d207de6252c96003836f82371d45a9116ab4af41107b5ad', 'HF-98A738F7D9985EA784ED098A', NULL),
-(7, 29, 'b30749273d96ffbae4bf0172cab65f6e053ac863bee37e86', 'HF-0E3BFC3C1594BAA9C72F7BC3', NULL),
-(8, 30, '3101d372c93078753a15361ca89986d8cd4e879eede10a63', 'HF-4FA7492E9075AEC2A7AF9874', NULL),
-(9, 26, '29998198f669f92ab7fccd9ce59a78b530296425f607009f', 'HF-E28F2AB378CB426FF22D2019', NULL),
-(10, 28, '3a8a8c6af8ae61858fa971f6e29f585b140610b296e4c8c8', 'HF-95830103EF6C1B0820D7153C', NULL),
-(11, 29, '4dbd65af06053cb0808221fc5bf6b5841fae19e15db74331', 'HF-AB863FE60A7AAFCA92961C79', NULL),
-(12, 30, 'ae25dece85a78f569bf7a8d638cafa874dc8b38b696313fd', 'HF-9BEBE224FBCF474E47E1CD2A', NULL),
-(13, 26, '798c764842a7d8fdef059f26c4749c2b4a9d0542871b6afa', 'HF-F77EA899A46510D7DF8DA648', NULL),
-(14, 28, '167742445a2053f684600aa1a6b8aa0147ba274206df4bf4', 'HF-6312D13FE1959D9C9D304A45', NULL),
-(15, 29, '8f352f6448204a2a51aa756254903b5810d908e80d0bb1c8', 'HF-F6E8F3D18203077BB7531D00', NULL),
-(16, 30, 'f428588cedff03eb4c4f6764c8ed4afec3b38c9e1223e90f', 'HF-282542C69E2EB592433EEDC4', NULL),
-(17, 31, '6865e3f1e1f131f07f839b0df4a53bd0c2a016b9983f3f8d', 'HF-F33AE8C275A89C4BA0FBA631', NULL),
-(18, 32, 'ec2f8a6b9779066682a66e1281d9277321c5d82ccbf5da54', 'HF-90EBF0FCBA51191994104D79', NULL),
-(19, 33, '29c1956a1abcef8a32f557bf44a004d4cc7bab74a6c06ff8', 'HF-928AD51F8CE32F5A9E53B5BB', NULL),
-(20, 26, '9bd313a0e60161ad561081daf70cb30116692b76a0eb8c8b', 'HF-7C86EAC83F2ADCE1FF2E3C38', NULL),
-(21, 28, '7eae57fbf3cdd280e4bad3adbff176b4bd3476ebd9f493d5', 'HF-8428B3E2557C0551AF51726F', NULL),
-(22, 29, 'ed4e14974487f9eeba50d3f9ec8b22bb74b0e6ad27dd7f3e', 'HF-276AEBD4928A987538A0968C', NULL),
-(23, 30, 'b175b466213aaa258b67b1440d4d644d7b3df8300b10159b', 'HF-76A8638D2C840B466662C78F', NULL),
-(24, 34, 'fb5fa0afbeb29f9f5106da02d8593ec8fcee104c7dc330e1', 'HF-C79B907E9FE9B975C6F67395', NULL),
-(25, 35, 'e948c7e4c6711ee3af741b3cd63cb0caf53524f6e6ed12f9', 'HF-65D2EF15A543F250B0EF34D1', '2026-04-27 11:38:17'),
-(26, 36, 'b60d287c506ec7bac36b8546c5b0adb5f94d66fbb9770aec', 'HF-97750D2A2B6E6F6B95C980A1', NULL);
+(27, 43, '3de5da835c4a8d63f83a5bc36170e65e32a8a73938b91006', 'HF-7239DF35BDDAC9DC1459E17E', NULL),
+(28, 44, '977cc473d8c324a23b0ed29a29cf041378eccd64fe6ebad0', 'HF-52B485066663B3B4079AD57B', NULL);
 
 -- --------------------------------------------------------
 
@@ -978,12 +927,8 @@ CREATE TABLE `YummyBookings` (
 --
 
 INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
-(20, 166, '2026-04-27 19:00:00', 2, 3, 'Some comment.'),
-(21, 179, '2026-05-01 00:00:00', 2, 8, 'ccv'),
-(22, 175, '2026-04-30 19:00:00', 3, 2, ''),
-(23, 165, '2026-04-27 17:00:00', 4, 3, ''),
-(24, 206, '2026-05-10 21:00:00', 4, 7, ''),
-(25, 169, '2026-04-28 19:00:00', 1, 4, 'adad');
+(30, 196, '2026-05-07 19:00:00', 4, 3, 'fff'),
+(31, 205, '2026-05-10 19:00:00', 2, 3, '');
 
 -- --------------------------------------------------------
 
@@ -1227,7 +1172,28 @@ INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booke
 (215, 3, '2026-05-13', 0),
 (216, 1, '2026-05-14', 0),
 (217, 2, '2026-05-14', 0),
-(218, 3, '2026-05-14', 0);
+(218, 3, '2026-05-14', 0),
+(219, 1, '2026-05-15', 0),
+(220, 2, '2026-05-15', 0),
+(221, 3, '2026-05-15', 0),
+(222, 1, '2026-05-16', 0),
+(223, 2, '2026-05-16', 0),
+(224, 3, '2026-05-16', 0),
+(225, 1, '2026-05-17', 0),
+(226, 2, '2026-05-17', 0),
+(227, 3, '2026-05-17', 0),
+(228, 1, '2026-05-18', 0),
+(229, 2, '2026-05-18', 0),
+(230, 3, '2026-05-18', 0),
+(231, 1, '2026-05-19', 0),
+(232, 2, '2026-05-19', 0),
+(233, 3, '2026-05-19', 0),
+(234, 1, '2026-05-20', 0),
+(235, 2, '2026-05-20', 0),
+(236, 3, '2026-05-20', 0),
+(237, 1, '2026-05-21', 0),
+(238, 2, '2026-05-21', 0),
+(239, 3, '2026-05-21', 0);
 
 -- --------------------------------------------------------
 
@@ -1703,13 +1669,13 @@ ALTER TABLE `CMS_Content`
 -- AUTO_INCREMENT for table `HistoryBookings`
 --
 ALTER TABLE `HistoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
 ALTER TABLE `HistoryReservationSlots`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `HistoryTimeSlot`
@@ -1769,7 +1735,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1835,13 +1801,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1865,7 +1831,7 @@ ALTER TABLE `StoryEvents`
 -- AUTO_INCREMENT for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `User`
@@ -1883,7 +1849,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -1907,7 +1873,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -1941,7 +1907,7 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 -- Constraints for table `HistoryBookings`
 --
 ALTER TABLE `HistoryBookings`
-  ADD CONSTRAINT `1` FOREIGN KEY (`reservation_id`) REFERENCES `HistoryReservationSlots` (`reservation_id`);
+  ADD CONSTRAINT `history_ibfk_1` FOREIGN KEY (`reservation_id`) REFERENCES `HistoryReservationSlots` (`reservation_id`);
 
 --
 -- Constraints for table `history_details`
@@ -2002,7 +1968,7 @@ ALTER TABLE `jazz_performer_tracks`
 -- Constraints for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  ADD CONSTRAINT `1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
+  ADD CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `OrderItems` (`item_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
