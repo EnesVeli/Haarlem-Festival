@@ -1,11 +1,13 @@
 <?php
 namespace App\Services;
 
+use App\Config;
 use App\Enums\BookingType;
 use App\Enums\OrderStatus;
 use App\Framework\Session;
 use App\Models\Exceptions\EmptyCartException;
 use App\Models\Exceptions\EmptyPostException;
+use App\Models\Exceptions\PaymentException;
 use App\Models\Exceptions\PostMismatchException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Models\History\HistoryBooking;
@@ -27,6 +29,7 @@ use App\Repositories\YummyRestaurantsRepository;
 use DateInterval;
 use DateTime;
 use Exception;
+use Stripe\StripeClient;
 class OrderService
 {
     public static int $VAT_RATE = 900;
@@ -53,6 +56,7 @@ class OrderService
     private JazzRepository $jazz_rep;
     private PdfService $pdf_service;
     private MailService $mail_service;
+    private StripeClient $stripe_client;
 
     private function __construct(UserRepository $user_rep, OrderRepository $order_rep, TicketRepository $ticket_rep, HistoryCmsRepository $history_cms_rep,
         YummyRestaurantsRepository $restaurant_rep, StoriesRepository $story_rep, HistoryRepository $history_rep, JazzRepository $jazz_rep,
@@ -68,6 +72,7 @@ class OrderService
         $this->jazz_rep = $jazz_rep;
         $this->pdf_service = $pdf_service;
         $this->mail_service = $mail_service;
+        $this->stripe_client = new StripeClient(Config::STRIPE_PRIVATE_KEY);
     }
 
     /**
@@ -202,9 +207,22 @@ class OrderService
      * @return Order|null If no order found, returns null. Otherwise, returns order.
      */
     public function getOrderWithOrderItemsByUserId(int $user_id, OrderStatus $status = OrderStatus::InCart) : ?Order{
-        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, $status); // Get order
+        // Get order
+        $order = $this->order_rep->getOrderByUserIdAndStatus($user_id, $status);   
 
-        if($order != null){
+        // Fill order
+        $this->fillInOrder($order);
+
+        return $order;
+    }
+
+    /**
+     * Fills order's order_items and fills every order_item with bookings (from db). If order is null, then nogthing is filled.
+     * @param ?Order $order order to be filed
+     * @return void
+     */
+    private function fillInOrder(?Order $order){
+        if($order !== null){
             $order_items = $this->order_rep->getOrderOrderItems($order->order_id);
             if($order_items === false) throw new QueryExecutionException("Failed to get order order_items.");  
 
@@ -212,15 +230,13 @@ class OrderService
             
             foreach($order_items as $item){
                 $booking = $this->getBookingByIdAndType($item->booking_id, $item->booking_type);
-                if($booking == null) throw new QueryExecutionException("Failed to get booking.");  
+                if($booking === null) throw new QueryExecutionException("Failed to get booking.");  
 
                 $item->booking = $booking;
             }
 
             $order->order_items = $order_items;
         }
-
-        return $order;
     }
 
     /**
@@ -276,11 +292,11 @@ class OrderService
     }
 
     /**
-     * Calculates order subtotal (before Vat).
+     * Calculates order total price (sum of all order items price).
      * @param Order $order order with filled in order_items.
      * @return int returns subtotal as int.
      */
-    public function calcOrderSubtotalPrice(Order $order) : int{
+    public function calcOrderTotalCents(Order $order) : int{
         $subtotal = 0;
 
         foreach($order->order_items as $item){
@@ -320,7 +336,7 @@ class OrderService
         if($item->order_id != $order_id) throw new PostMismatchException("");
         
         // Remove order item from the cart
-        $remove = $this->order_rep->removeOrderItemFromCartOrder($order_id, $item_id);
+        $remove = $this->order_rep->removeOrderItem($item_id);
         if(!$remove) throw new QueryExecutionException("Failed to remove order item.");
 
         // Remove booking
@@ -351,8 +367,32 @@ class OrderService
         return false;
     }
 
-    public function completeOrder(int $user_id) : void
-    {
+    /**
+     * Returns filled in array of orders for users personal program.
+     * @param int $user_id id of the user.
+     * @throws QueryExecutionException thrown if errors during query execution.
+     * @return Order[] retuns array of user orders. can be empty if no orders found.
+     */
+    public function getOrdersPersonalProgram(int $user_id) : array {
+        $orders = $this->order_rep->getUserNonCartOrders($user_id);
+        if($orders === false) throw new QueryExecutionException("Failed to get orders for personal program.");
+
+        if($orders === null) return [];
+
+        foreach($orders as $order){
+            $this->fillInOrder($order);
+        }
+
+        return $orders;
+    }
+
+    /**
+     * Starts stripe payment: creates and saves stripe session, and marks order as not-paid.
+     * @param int $user_id id of current user.
+     * @throws QueryExecutionException thrown when there were any errors during query execution.
+     * @return \Stripe\Checkout\Session returns new stripe session, that is filled in and can be used to redirect to stripe payment.
+     */
+    public function startOrderPayment(int $user_id) : \Stripe\Checkout\Session {
         // Get user
         $user = $this->user_rep->findById($user_id);
         if($user == null) throw new QueryExecutionException("Failed to get user with id.");
@@ -361,19 +401,166 @@ class OrderService
         $order = $this->getOrderWithOrderItemsByUserId($user_id);
         if($order == null) throw new QueryExecutionException("Failed to get order with id.");
 
-        // Update order status
-        $subtotal_price = $this->calcOrderSubtotalPrice($order);
-        $total_price = (int)(($subtotal_price * (self::$VAT_RATE + 10000)) / 10000);
-        $order_date_time = new DateTime();
-
-        $order_update = $this->order_rep->updateOrderToPaid($order->order_id, $order_date_time, $total_price);
-        if(!$order_update) throw new QueryExecutionException("Failed to change order status.");
-
-        $order->status = OrderStatus::Paid;
-        $order->date = $order_date_time;
-        $order->total_price = $total_price;
+        // Calc order total price
+        $order->total_price = $this->calcOrderTotalCents($order);
         
+        // Create stripe session
+        $stripe_session = $this->stripe_client->checkout->sessions->create([
+            'mode'       => 'payment',
+            'ui_mode'       => 'hosted_page',
+            'submit_type'       => 'book',
+            'branding_settings' => [
+                'background_color' => '#8B1818',
+                'button_color' => '#8B1818',
+                'display_name' => 'The Festival Haarlem'
+            ],
+            'line_items' => [[
+                'price_data' => [
+                    'currency'     => 'eur',
+                    'unit_amount'  => $order->total_price,
+                    'product_data' => ['name' => 'Haarlem Festival — Order #' . $order->order_id],
+                ],
+                'quantity' => 1,
+            ]],
+            'customer_email' => $user['email'],
+            'metadata'   => ['user_id' => $user_id, 'order_id' => $order->order_id ],
+            'success_url' => 'http://127.0.0.1/payment?session_id={CHECKOUT_SESSION_ID}&order_id=' . $order->order_id,
+            'cancel_url' => 'http://127.0.0.1/payment/fail'
+        ]);
+
+        // Fill in order
+        $order->stripe_session = $stripe_session->id;
+        $order->date = new DateTime();
+
+        // Update order
+        $update = $this->order_rep->updateOrderToNotPaid($order);
+        if($update === false) throw new QueryExecutionException("Failed to update order status.");
+
+        return $stripe_session;
+    }
+
+    private function generateLineItemsForStripe(Order $order){
+        
+    }
+
+    /**
+     * Returns not-paid order stripe session.
+     * @param int $order_id id of ther order.
+     * @param int $user_id id of current user.
+     * @return void
+     */
+    public function restartOrderPayment(int $order_id, int $user_id) : \Stripe\Checkout\Session {
+        // Get order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order === null) throw new QueryExecutionException("Failed to get order by id.");
+        if($order->user_id !== $user_id) throw new PostMismatchException("Order user id do not match current user id.");
+
+        // Check if stripe session is null
+        if($order->stripe_session === null) throw new PostMismatchException("Order stripe session is null.");
+
+        // Return order stripe session.
+        return $this->stripe_client->checkout->sessions->retrieve($order->stripe_session);
+    }
+
+    /**
+     * Removes not-paid order from the db.
+     * @param int $order_id id of the order.
+     * @param int $user_id id of current user.
+     * @throws PostMismatchException thrown when order not found, or order status is not NotPaid.
+     * @return void
+     */
+    public function cancelNotPaidOrder(int $order_id, int $user_id){
+        // Get order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order == null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status != OrderStatus::NotPaid) throw new PostMismatchException("Order status is not NotPaid.");
+
+        // Check if users match
+        if($order->user_id != $user_id) throw new PostMismatchException("Current user do not match order user.");
+
+        // Fill order in
+        $this->fillInOrder($order);
+
+        // Delete order
+        $this->deleteNotPaidOrder($order);
+    }
+
+    /**
+     * Deletes not paid order.
+     * @param Order $order filled in order (with order items, and bookings inside items).
+     * @throws QueryExecutionException thrown if there were any errors during query execution. 
+     * @return void
+     */
+    private function deleteNotPaidOrder(Order $order){
+        // Delete order items and bookings
+        foreach($order->order_items as $item){
+            $remove = $this->removeBookingById($item->booking_id, $item->booking_type);
+            if($remove === false) throw new QueryExecutionException("Failed to remove booking.");
+
+            $remove = $this->order_rep->removeOrderItem($item->item_id);
+            if($remove === false) throw new QueryExecutionException("Failed to remove order item.");
+        }
+
+        //Delete order itself
+        $remove = $this->order_rep->removeOrder($order->order_id, OrderStatus::NotPaid);
+        if($remove === false) throw new QueryExecutionException("Failed to remove order.");
+    }
+
+    /*
+    public function cancelPaidOrder(int $order_id, int $user_id){
+        // Get and validate order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order === null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status !== OrderStatus::Paid) throw new PostMismatchException("Order status is not NotPaid.");
+        if($order->user_id !== $user_id) throw new PostMismatchException("Current user do not match order user.");
+        if($order->stripe_session === null) throw new PostMismatchException("Order stripe session is null.");
+    }
+    */
+
+    public function finishOrderPayment(string $session_id, int $order_id){
+        // Get order
+        $order = $this->order_rep->getOrderById($order_id);
+        if($order === null) throw new PostMismatchException("Failed to get order by id.");
+        if($order->status !== OrderStatus::NotPaid) throw new PostMismatchException("Wrong order id.");
+
+        // Get user
+        $user = $this->user_rep->findById($order->user_id);
+        if($user === null) throw new QueryExecutionException("Failed to get order user.");
+
+        // Verify session 
+        if($session_id !== $order->stripe_session) throw new PostMismatchException("Stripe session values do not match.");
+        
+        $stripe_session = $this->stripe_client->checkout->sessions->retrieve($session_id);
+
+        if((int)($stripe_session->metadata['order_id'] ?? -1) !== $order->order_id || (int)($stripe_session->metadata['user_id'] ?? -1) !== $order->user_id) throw new PostMismatchException("Session metadata do not match order's.");
+
+        // Check if session is paid
+        if($stripe_session->status !== 'complete') throw new PaymentException("Payment is not paid.");
+
+        // Mark order as paid
+        $order->status = OrderStatus::Paid;
+        $order->date = new DateTime();
+
+        $order_update = $this->order_rep->updateOrderToPaid($order);
+        if($order_update === false) throw new QueryExecutionException("Failed to update order to paid.");
+
+        // Fill in order
+        $this->fillInOrder($order);
+
         // Generate tickets
+        $tickets = $this->generateTickets($order);
+
+        // Send ticket and invoice to customer
+        $this->sendTicketsAndInvoice($order, $tickets, $user);   
+    }
+
+    /**
+     * Generate tickets for order, and incerts them into the db. Returns array of created tickets.
+     * @param Order $order order to generate tickets from.
+     * @throws QueryExecutionException thrown if there were errors during ticket incertion.
+     * @return Ticket[] Returns array of created tickets. If none were created, returns empty array.
+     */
+    private function generateTickets(Order $order) : array {
         $tickets = [];
 
         foreach ($order->order_items as $item) {
@@ -392,7 +579,7 @@ class OrderService
             array_push($tickets, $ticket);
         }
 
-        $this->sendTicketsAndInvoice($order, $tickets, $user);   
+        return $tickets;
     }
 
     /**
@@ -424,90 +611,4 @@ class OrderService
         // Send emails
         $this->mail_service->sendOrderConfirmation($user['email'], $user['name'], $ticket_pdfs, $invoice_pdf, $tickets);
     }
-
-    /*
-    public function completeOrder(int $userId, array $cartItems, string $paymentMethod, array $user): int
-    {
-        // 1 — Create the order
-        $orderId = $this->orderRepo->createOrder($userId, $paymentMethod);
-
-        // 2 — Save order items + generate one ticket per quantity unit
-        $generatedTickets = [];
-
-        foreach ($cartItems as $item) {
-            $typeId    = $this->resolveTypeId($item);
-            $quantity  = (int)$item['quantity'];
-            $unitPrice = (float)$item['price'];
-
-            $this->orderRepo->addOrderItem($orderId, $typeId, $quantity, $unitPrice);
-
-            for ($i = 0; $i < $quantity; $i++) {
-                $qrToken    = bin2hex(random_bytes(24));
-                $ticketCode = 'HF-' . strtoupper(bin2hex(random_bytes(3)));
-
-                // Persist ticket for scanning
-                $this->ticketRepo->createTicket($userId, $typeId, $qrToken, $ticketCode);
-
-                // Collect data for PDF + email (cart items already carry event info)
-                $generatedTickets[] = [
-                    'event_name'       => $item['event_name']  ?? 'Festival Event',
-                    'venue_name'       => $item['venue_name']  ?? '',
-                    'start_time'       => $item['event_start'] ?? '',
-                    'end_time'         => $item['event_end']   ?? '',
-                    'ticket_type_name' => 'Regular Ticket',
-                    'unit_price'       => $unitPrice,
-                    'qr_token'         => $qrToken,
-                    'ticket_code'      => $ticketCode,
-                ];
-            }
-        }
-
-        // 3 — Mark order as paid
-        $this->orderRepo->markPaid($orderId);
-
-        // 4 — Create invoice record
-        $total = array_sum(array_map(fn($i) => $i['price'] * $i['quantity'], $cartItems));
-        $this->invoiceRepo->createInvoice($orderId, $total, 9.00, $user['name'], $user['email']);
-
-        // 5 — Fetch invoice + order items for PDFs
-        $invoice    = $this->invoiceRepo->getByOrder($orderId);
-        $orderItems = $this->orderRepo->getOrderWithItems($orderId);
-
-        // 6 — Generate one ticket PDF per ticket (with QR code)
-        $ticketPdfs = [];
-        foreach ($generatedTickets as $ticket) {
-            $ticketPdfs[] = $this->pdfService->generateTicket($ticket, $user['name']);
-        }
-
-        // 7 — Generate invoice PDF
-        $invoicePdf = $this->pdfService->generateInvoice($orderItems, $invoice);
-
-        // 8 — Send single confirmation email with all PDFs + inline ticket summary
-        $this->mailService->sendOrderConfirmation(
-            $user['email'],
-            $user['name'],
-            $ticketPdfs,
-            $invoicePdf,
-            $invoice['invoice_number'],
-            $generatedTickets
-        );
-
-        return $orderId;
-    }
-
-    // Resolves Ticket_Type.type_id from a cart item
-    private function resolveTypeId(array $cartItem): int
-    {
-        $pdo  = $this->orderRepo->getConnection();
-        $stmt = $pdo->prepare(
-            "SELECT type_id FROM `Ticket_Type`
-             WHERE event_id = :eid
-             ORDER BY type_id ASC
-             LIMIT 1"
-        );
-        $stmt->execute([':eid' => $cartItem['event_id']]);
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $row ? (int)$row['type_id'] : 0;
-    }
-        */
 }

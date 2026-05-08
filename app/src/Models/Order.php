@@ -11,6 +11,7 @@ class Order{
     public ?DateTime $date;
     public OrderStatus $status;
     public ?int $total_price;
+    public ?string $stripe_session;
 
     public ?array $order_items;
 

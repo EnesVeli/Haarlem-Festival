@@ -38,21 +38,27 @@ $pageTitle = 'My Cart - The Festival Haarlem';
             <div class="program-layout">
                 <div class="program-items">
                     <? foreach ($view_model->order->order_items as $item): ?>
-                        <? switch($item->booking_type){
-                            case BookingType::Yummy:
-                                require '/app/src/Views/cart/partials/yummy-booking.php';
-                                break;
-                            case BookingType::History:
-                                require '/app/src/Views/cart/partials/history-booking.php';
-                                break;
-                            case BookingType::Stories:
-                                require '/app/src/Views/cart/partials/story-booking.php';
-                                break;
-                            case BookingType::Jazz:
-                                require '/app/src/Views/cart/partials/jazz-booking.php';
-                                break;
-                           }
-                        ?>               
+                        <div class="program-card">
+                            <div class="program-card__image" style="background-image: url(<?= $item->booking->getEventImagePath() ?>);">
+                                <div class="program-card__date-overlay">
+                                    <span class="program-card__date"><?= $item->booking->getBookingStartDate()->format('D, M j') ?></span>
+                                    <span class="program-card__time"><?= $item->booking->getBookingStartDate()->format('H:i') . ' - ' . $item->booking->getBookingEndDate()->format('H:i') ?></span>
+                                </div>
+                            </div>
+                            <div class="program-card__info">
+                                <h3 class="program-card__name"><?= htmlspecialchars($item->booking->getEventName()) ?></h3>
+                                <p class="program-card__venue"><i class="bi bi-geo-alt"></i><?= $item->booking->getAddressShort() ?></p>
+                                <p class="program-card__ticket"><?= $item->booking->getCartDescString() ?></p>
+                                <p class="program-card__subtotal">&euro;<?= number_format($item->price / 100, 2) ?></p>
+                            </div>
+                            <form method="post" action="/cart/remove" class="program-card__remove">
+                                <input type="hidden" name="item_id" value="<?= $item->item_id ?>">
+                                <input type="hidden" name="order_id" value="<?= $item->order_id ?>">
+                                <button type="submit" class="program-card__remove-btn" title="Remove">
+                                    <i class="bi bi-trash"></i> Remove
+                                </button>
+                            </form>
+                        </div>          
                     <? endforeach; ?>
                 </div>
 
@@ -60,14 +66,12 @@ $pageTitle = 'My Cart - The Festival Haarlem';
                     <div class="program-summary__card">
                         <h3 class="program-summary__title">Summary</h3>
 
+                        <? foreach($view_model->order->order_items as $item): ?>
                         <div class="program-summary__row">
-                            <span>Subtotal</span>
-                            <span>&euro;<?= $view_model->sub_total ?></span>
+                            <span><?= '- ' . $item->booking->getEventName(); ?></span>
+                            <span>&euro;<?= number_format($item->price / 100, 2) ?></span>
                         </div>
-                        <div class="program-summary__row">
-                            <span>VAT (<?= $view_model->vat_persent ?>%)</span>
-                            <span>&euro;<?= $view_model->vat_cost ?></span>
-                        </div>
+                        <? endforeach; ?>
 
                         <div class="program-summary__divider"></div>
 
@@ -76,7 +80,9 @@ $pageTitle = 'My Cart - The Festival Haarlem';
                             <strong style="color:#8b1e1e; font-size:1.3rem;">&euro;<?= $view_model->total ?></strong>
                         </div>
 
-                        <a href="/cart/checkout" class="stories-booking-submit"
+                        <div class="program-summary__taxes_label">*all taxes included.</div>
+
+                        <a href="/checkout" class="stories-booking-submit"
                             style="width:100%; text-align:center; margin-top:1rem; display:block;">
                             Proceed to Payment &rarr;
                         </a>

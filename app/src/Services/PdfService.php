@@ -50,11 +50,8 @@ class PdfService
     public function generateInvoice(Order $order, array $user): string
     {
         $rows = '';
-        $subtotal = 0;
 
         foreach ($order->order_items as $item) {
-            $lineTotal  = $item->price;
-            $subtotal  += $lineTotal;
             $rows .= '<tr>
                 <td>' . htmlspecialchars($item->booking->getEventName()) . '</td>
                 <td>' . htmlspecialchars($item->booking->getQuantityString()) . '</td>
@@ -62,10 +59,7 @@ class PdfService
             </tr>';
         }
 
-        $vatPct    = number_format(OrderService::$VAT_RATE / 100, 2);
-        $vatAmount = number_format(($order->total_price - $subtotal) / 100, 2);
         $total     = number_format($order->total_price / 100, 2);
-        $subtotal     = number_format($subtotal / 100, 2);
 
         $html = '
         <style>
@@ -79,7 +73,7 @@ class PdfService
         </style>
         <h1>Invoice - Festival Haarlem</h1>
         <hr>
-        <p><span class="label">Payment Date:</span> ' . $order->date->format('d M Y') . '</p>
+        <p><span class="label">Payment Date:</span> ' . $order->date->format('d.m.Y H:i:s') . '</p>
         <p><span class="label">Customer:</span> ' . htmlspecialchars($user['name']) . '</p>
         <p><span class="label">Email:</span> ' . htmlspecialchars($user['email']) . '</p>
         <table>
@@ -89,8 +83,6 @@ class PdfService
             ' . $rows . '
         </table>
         <div class="totals">
-            <p>Subtotal: €' . $subtotal . '</p>
-            <p>VAT (' . $vatPct . '%): €' . $vatAmount . '</p>
             <p><strong>Total: €' . $total . '</strong></p>
         </div>';
 
