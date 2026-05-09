@@ -84,4 +84,12 @@ class StoriesService
 
         $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
+
+    public function getAllStoriesForTickets(int $page, int $event_per_page) : array|null|bool{
+        return $this->repository->getAllStoriesForTickets($page, $event_per_page);
+    }
+
+    public function getNumberOfStories() : int|bool {
+        return $this->repository->getNumberOfStories();
+    }
 }

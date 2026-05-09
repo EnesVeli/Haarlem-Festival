@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 class StoryEvent
 {
     public int    $event_id;

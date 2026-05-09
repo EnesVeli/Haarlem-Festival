@@ -21,6 +21,8 @@
 
             <span><?= $perf->name ?> Tickets</span>
 
+            <span><?= $perf->getDateTimeFormated() ?></span>
+
             <div class="perf-ticket-price">
                 <span>TICKET PRICE</span>
                 <div>

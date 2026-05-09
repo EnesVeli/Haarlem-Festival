@@ -161,4 +161,44 @@ class StoriesRepository extends Repository
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } 
+
+    /**
+     * Returns list of story events for ticket page (only a few event fields are set) limited by page.
+     * @param int $page page to search (1 is first page. should be 1 or higher)
+     * @param int $event_per_page number of story events per page (should be more or equal to 1)
+     * @return StoryEvent[]|null|bool returns false if any errors occured. returns null if no restaurants found. returns array of restaurants otherwise.
+     */
+    public function getAllStoriesForTickets(int $page, int $event_per_page) : array|null|bool {
+        $sql = "SELECT `event_id`, `name`, `slug`, `description`, `language`, `age_group`, `image_path`
+                FROM `StoryEvents`
+                LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('limit', $event_per_page, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $event_per_page * ($page - 1), PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, StoryEvent::class);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Returns total number of stories.
+     * @return int|bool returns false if there were errors during execution. Returns number of restaurants on success. 
+     */
+    public function getNumberOfStories() : int|bool {
+        $sql = "SELECT COUNT(*) 
+                FROM `StoryEvents`;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res === false ? false : $res[0];
+    }
 }

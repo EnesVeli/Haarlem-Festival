@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Framework\Session;
 use App\Models\Exceptions\QueryExecutionException;
+use App\Services\Jazz\JazzService;
 use App\Services\StoriesService;
 use App\Services\Yummy\YummyService;
 use App\ViewModels\TicketsCategoryViewModel;
@@ -13,20 +14,22 @@ use Exception;
  * TicketsController — handles the public /tickets pages.
  *
  * Displays a main landing page with navigation tabs for every festival
- * event type (Jazz, Dance, Yummy, History, Stories). Each tab can point
+ * event type (Jazz, Yummy, History, Stories). Each tab can point
  * to a dedicated sub-page that lists events with add-to-cart forms.
  */
 class TicketsController extends BaseController
 {
     public static $NUMBER_OF_TICKETS_PER_PAGE = 16;
 
-    private StoriesService $storiesService;
     private YummyService $yummy_service;
+    private JazzService $jazz_service;
+    private StoriesService $stories_service;
 
     public function __construct()
     {
-        $this->storiesService = StoriesService::getInstance();
         $this->yummy_service = YummyService::getInstance();
+        $this->jazz_service = JazzService::getInstance();
+        $this->stories_service = StoriesService::getInstance();
     }
 
     /**
@@ -59,14 +62,30 @@ class TicketsController extends BaseController
      */
     public function stories(): void
     {
-        $events = $this->storiesService->getAllEvents();
-        $viewModel = new TicketsStoriesViewModel($events, $this->ensureCsrfToken());
+        $events = null;
+        $cur_page = null;
+        $total_page_number = null;
 
-        $this->render('tickets/stories', [
-            'viewModel' => $viewModel,
-            'pageTitle'  => $viewModel->pageTitle,
-            'pageCSS'    => $viewModel->pageCSS,
-        ]);
+        try{
+            // get page number from url
+            $cur_page = $this->getPage();
+
+            // Get paginated array of story events
+            $events = $this->stories_service->getAllStoriesForTickets($cur_page, self::$NUMBER_OF_TICKETS_PER_PAGE);
+            if($events === false) throw new QueryExecutionException("Failed to get story events for ticekt page.");
+
+            // Get total number of story events for pagination calculations
+            $event_number = $this->stories_service->getNumberOfStories();
+            if($event_number === false) throw new QueryExecutionException("Failed to get story events number for ticekt page.");
+
+            // Calc total number of pages
+            $total_page_number = ceil($event_number / self::$NUMBER_OF_TICKETS_PER_PAGE);
+        }
+        catch(Exception $ex){
+            Session::setTempError("Something went wrong. try again later." . $ex->getMessage());
+        }
+
+        $this->renderCategory('stories', $events, $cur_page, $total_page_number);
     }
 
     /**
@@ -74,24 +93,30 @@ class TicketsController extends BaseController
      */
     public function jazz(): void
     {
-        try{
-            
+        $performers = null;
+        $cur_page = null;
+        $total_page_number = null;
 
-            $this->renderCategory('jazz');
+        try{
+            // get page number from url
+            $cur_page = $this->getPage();
+
+            // Get paginated array of active performers
+            $performers = $this->jazz_service->getActivePerformersForTickets($cur_page, self::$NUMBER_OF_TICKETS_PER_PAGE);
+            if($performers === false) throw new QueryExecutionException("Failed to get performers for ticekt page.");
+
+            // Get total number of active performers for pagination calculations
+            $perf_number = $this->jazz_service->getNumberOfActivePerformers();
+            if($perf_number === false) throw new QueryExecutionException("Failed to get performers number for ticekt page.");
+
+            // Calc total number of pages
+            $total_page_number = ceil($perf_number / self::$NUMBER_OF_TICKETS_PER_PAGE);
         }
         catch(Exception $ex){
-
+            Session::setTempError("Something went wrong. try again later." . $ex->getMessage());
         }
 
-        header("location: /tickets");
-    }
-
-    /**
-     * Renders Dance ticket category page.
-     */
-    public function dance(): void
-    {
-        $this->renderCategory('dance');
+        $this->renderCategory('jazz', $performers, $cur_page, $total_page_number);
     }
 
     /**
