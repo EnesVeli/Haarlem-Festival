@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzPerformerViewModel $vm */
 
 $performer = $vm->performer;
 $appearances = $vm->appearances ?? [];

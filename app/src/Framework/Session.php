@@ -92,8 +92,19 @@ class Session
 
         $role = $user['role'] ?? null;
 
-        // supports both formats: 'admin' OR 1
-        return $role === 'admin' || (int)$role === 1;
+        return $role === 'admin' || (int)$role === \App\Enums\UserRole::Admin->value;
+    }
+
+    public static function isEmployee(): bool
+    {
+        $user = self::user();
+        if (!$user) {
+            return false;
+        }
+
+        $role = $user['role'] ?? null;
+
+        return $role === 'employee' || (int)$role === \App\Enums\UserRole::Employee->value;
     }
 
     public static function getCartItemsCount() : int{

@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzRecommendationsCmsViewModel $vm */
 
 $pageTitle = 'Create Recommendation';
 $pageCSS = 'jazz.css';

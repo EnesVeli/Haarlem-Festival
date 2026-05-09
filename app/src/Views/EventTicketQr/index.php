@@ -1,3 +1,4 @@
+<?php /** @var \App\ViewModels\TicketScanner\TicketQrViewModel $vm */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

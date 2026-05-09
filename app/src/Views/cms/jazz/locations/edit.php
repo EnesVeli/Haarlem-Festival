@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzLocationsCmsViewModel $vm */
 
 $pageTitle = 'Edit Location';
 $pageCSS = 'jazz.css';

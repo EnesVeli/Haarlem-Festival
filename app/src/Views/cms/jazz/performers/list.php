@@ -1,6 +1,6 @@
 <?php
 
-/** @var \App\ViewModels\Jazz\JazzPerformerViewModel $vm */
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzPerformersCmsViewModel $vm */
 
 $pageTitle = 'Performers';
 $pageCSS = 'jazz.css';

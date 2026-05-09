@@ -107,18 +107,20 @@ class JazzController extends BaseController
             ]);
         } catch (Throwable $error) {
             Session::setTempError("Something went wrong. Try again later.");
+            header('Location: /jazz');
+            exit;
         }
     }
 
     public function booking(){
         if(!$this->isLoggedIn()){
             Session::setTempError("Login first, in order to book a ticket.");
-            header("loaction: /login");
+            header("Location: /login");
             exit;
         }
 
         $this->render('jazz/book', [
-            'perf' => $this->service->getPerformerById($_GET['perf']),
+            'perf' => $this->service->getPerformerById((int)($_GET['perf'] ?? 0)),
             'error_message' => Session::popTempError(),
             'pageTitle' => 'Jazz Performer',
             'pageCSS' => 'jazz.css',
@@ -130,7 +132,7 @@ class JazzController extends BaseController
     public function book(){
         if(!$this->isLoggedIn()){
             Session::setTempError("Login first, in order to book a ticket.");
-            header("loaction: /login");
+            header("Location: /login");
             exit;
         }
 
@@ -139,20 +141,20 @@ class JazzController extends BaseController
         try{
             if(!isset($_POST['performer_id']) || !isset($_POST['quantity'])) throw new EmptyPostException();
 
-            $this->service->bookTickets($_POST['performer_id'], $_POST['quantity'], Session::user()['user_id']);
+            $this->service->bookTickets((int)$_POST['performer_id'], (int)$_POST['quantity'], (int)Session::get('user_id'));
 
-            header("location: /cart");
+            header('Location: /cart');
             exit;
         }
         catch(Exception $ex){
             Session::setTempError("Failed to book. Try again later.");
         }
 
-        if($_POST['performer_id'] != null){
-            header("location: /jazz/book?perf=" . $_POST['performer_id']);
+        if (!empty($_POST['performer_id'])) {
+            header('Location: /jazz/book?perf=' . (int)$_POST['performer_id']);
+        } else {
+            header('Location: /jazz');
         }
-        else{
-            header("location: /jazz");
-        }
+        exit;
     }
 }

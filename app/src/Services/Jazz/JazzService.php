@@ -65,7 +65,7 @@ class JazzService implements IJazzService
                 'recommendations' => $this->jazzRepo->getRecommendations(),
             ];
         } catch (Throwable $e) {
-            die($e->getMessage()); 
+            throw new RuntimeException('Failed to load performer data.', 0, $e);
         }
     }
     

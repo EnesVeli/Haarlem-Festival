@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzIntroCmsViewModel $vm */
 
 $pageTitle = 'Intro Content';
 $pageCSS = 'jazz.css';

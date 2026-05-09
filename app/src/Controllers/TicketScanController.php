@@ -18,9 +18,7 @@ class TicketScanController
 
     private function requireEmployee(): void
     {
-        $user = Session::user();
-
-        if (!$user || !isset($user['role']) || $user['role'] !== 'employee') {
+        if (!Session::isEmployee()) {
             header('Location: /login');
             exit;
         }
@@ -58,7 +56,7 @@ class TicketScanController
         } catch (\Throwable $error) {
             $result = [
                 'status' => 'error',
-                'message' => 'Something went wrong while scanning the ticket.' . $error->getMessage()
+                'message' => 'Something went wrong while scanning the ticket.'
             ];
         }
 

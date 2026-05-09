@@ -36,7 +36,7 @@ class LoginController
             
             if (Session::isAdmin()) {
                 header('Location: /cms');
-            } elseif (($user['role'] ?? '') === 'employee') {
+            } elseif (Session::isEmployee()) {
                 header('Location: /employee/scan');
             } else {
                 header('Location: /');
@@ -53,8 +53,7 @@ class LoginController
 
     public function logout()
     {
-        $_SESSION = [];
-        session_destroy();
+        Session::logout();
         header('Location: /');
         exit;
     }

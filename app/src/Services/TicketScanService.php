@@ -28,12 +28,9 @@ class TicketScanService
 
     public function scanTicket(string $scan_value): Ticket
     {
-        //$q = $this->repository->findById(25); $q->order_item = $this->order_service->getOrderItemWithBooking($q->item_id); return $q;
-
         $scan_value = trim($scan_value);
 
-        $ticket = $this->repository->findByQrToken($scan_value);  
-        //$ticket = $this->repository->findByTicketCode($scan_value);
+        $ticket = $this->repository->findByQrToken($scan_value);
 
         if (!$ticket) {
             throw new TicketScanException('Ticket not found.');

@@ -4,6 +4,7 @@ namespace App\Services\Jazz;
 
 use App\Framework\Session;
 use App\Repositories\JazzRepository;
+use RuntimeException;
 
 class JazzCmsService
 {
@@ -50,7 +51,7 @@ class JazzCmsService
 
             $this->jazzRepo->updateHero($data);
         } catch (\Exception $error) {
-            die('Could not update hero.');
+            throw new RuntimeException('Could not update hero.', 0, $error);
         }
     }
 
@@ -69,7 +70,7 @@ class JazzCmsService
         try {
             $this->jazzRepo->updateIntro($data);
         } catch (\Exception $error) {
-            die('Could not update intro.');
+            throw new RuntimeException('Could not update intro.', 0, $error);
         }
     }
 
@@ -100,7 +101,7 @@ class JazzCmsService
 
             $this->jazzRepo->storeExperience($data);
         } catch (\Exception $error) {
-            die('Could not save experience.');
+            throw new RuntimeException('Could not save experience.', 0, $error);
         }
     }
 
@@ -113,7 +114,7 @@ class JazzCmsService
 
             $this->jazzRepo->updateExperience($data);
         } catch (\Exception $error) {
-            die('Could not update experience.');
+            throw new RuntimeException('Could not update experience.', 0, $error);
         }
     }
 
@@ -155,7 +156,7 @@ class JazzCmsService
 
             $this->jazzRepo->storePerformer($data);
         } catch (\Exception $error) {
-            die('Could not save performer.');
+            throw new RuntimeException('Could not save performer.', 0, $error);
         }
     }
 
@@ -186,7 +187,7 @@ class JazzCmsService
                 );
             }
         } catch (\Exception $error) {
-            die('Could not update performer.' . $error->getMessage());
+            throw new RuntimeException('Could not update performer.', 0, $error);
         }
     }
 
@@ -222,7 +223,7 @@ class JazzCmsService
 
             $this->jazzRepo->storeRecommendation($data);
         } catch (\Exception $error) {
-            die('Could not save recommendation.');
+            throw new RuntimeException('Could not save recommendation.', 0, $error);
         }
     }
 
@@ -235,7 +236,7 @@ class JazzCmsService
 
             $this->jazzRepo->updateRecommendation($data);
         } catch (\Exception $error) {
-            die('Could not update recommendation.');
+            throw new RuntimeException('Could not update recommendation.', 0, $error);
         }
     }
 
@@ -258,7 +259,8 @@ class JazzCmsService
     {
         return [
             'user' => Session::user(),
-'location' => $this->jazzRepo->getLocationById($id),        ];
+            'location' => $this->jazzRepo->getLocationById($id),
+        ];
     }
 
     public function storeLocation(array $data): void
@@ -266,7 +268,7 @@ class JazzCmsService
         try {
             $this->jazzRepo->storeLocation($data);
         } catch (\Exception $error) {
-            die('Could not save location.');
+            throw new RuntimeException('Could not save location.', 0, $error);
         }
     }
 
@@ -275,7 +277,7 @@ class JazzCmsService
         try {
             $this->jazzRepo->updateLocation($data);
         } catch (\Exception $error) {
-            die('Could not update location.');
+            throw new RuntimeException('Could not update location.', 0, $error);
         }
     }
 

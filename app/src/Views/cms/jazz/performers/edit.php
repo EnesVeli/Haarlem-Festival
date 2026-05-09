@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzPerformersCmsViewModel $vm */
 
 $pageTitle = 'Edit Performer';
 $pageCSS = 'jazz.css';

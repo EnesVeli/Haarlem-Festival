@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzDashboardCmsViewModel $vm */
 
 $pageTitle = 'Jazz CMS Dashboard';
 $pageCSS = 'jazz.css';
