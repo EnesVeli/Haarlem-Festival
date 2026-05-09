@@ -75,7 +75,7 @@ class JazzService implements IJazzService
 
     public function bookTickets(int $performer_id, int $quantity, int $user_id){
         $perf = $this->jazzRepo->getPerformerById($performer_id);
-        if($perf == null) throw new QueryExecutionException("Failed to get performer by its id");
+        if($perf === null) throw new QueryExecutionException("Failed to get performer by its id");
 
         $booking = new JazzBooking();
         $booking->performer_id = $performer_id;

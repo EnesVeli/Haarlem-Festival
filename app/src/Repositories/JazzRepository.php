@@ -248,7 +248,7 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
         $res = $stmt->fetch();
 
-        return $res == false ? null : $res; 
+        return $res === false ? null : $res; 
     }
 
     public function storePerformer(array $data): void
