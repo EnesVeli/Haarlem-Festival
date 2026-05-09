@@ -13,7 +13,7 @@
 
         <nav class="tickets-tabs" aria-label="Event categories">
             <a href="/tickets/jazz" class="tickets-tab <?= $view_model->categoryKey === 'jazz' ? 'tickets-tab--active' : '' ?>" aria-label="Haarlem Jazz tickets">History</a>
-            <a href="/tickets/dance" class="tickets-tab <?= $view_model->categoryKey === 'dance' ? 'tickets-tab--active' : '' ?>" aria-label="Dance tickets">Stories</a>
+            <a href="/tickets/stories" class="tickets-tab <?= $view_model->categoryKey === 'stories' ? 'tickets-tab--active' : '' ?>" aria-label="Dance tickets">Stories</a>
             <a href="/tickets/yummy" class="tickets-tab <?= $view_model->categoryKey === 'yummy' ? 'tickets-tab--active' : '' ?>" aria-label="Yummy tickets">Yummy</a>
             <a href="/tickets/history" class="tickets-tab <?= $view_model->categoryKey === 'history' ? 'tickets-tab--active' : '' ?>" aria-label="History tickets">Jazz</a>
         </nav>
@@ -28,35 +28,13 @@
             <?php if (empty($view_model->events)): ?>
                 <p class="tickets-empty" role="alert"><?= htmlspecialchars($view_model->emptyMessage) ?></p>
             <?php else: ?>
-                <?php switch($view_model->categoryKey){
-                    case 'yummy':
-                        foreach ($view_model->events as $restaurant){ ?>
-                            <div class="tickets-day__list">
-                                <article class="tickets-event" aria-label="<?= htmlspecialchars($restaurant->name) ?>">
-                                    <div class="tickets-event__time">
-                                        <img class="ticekt-event__img" src="<?= '/assets/uploads/yummy/restaurants/' . $restaurant->main_img_path ?>" alt="restaurant image">
-                                    </div>
-                                    <div class="tickets-event__info">
-                                        <h4 class="tickets-event__name">
-                                            <a href="<?= '/yummy/restaurant?id=' . $restaurant->restaurant_id ?>">
-                                                <?= htmlspecialchars($restaurant->name) ?>
-                                            </a>
-                                        </h4>
-                                        <p class="tickets-event__meta">
-                                            <?= htmlspecialchars($restaurant->getRatingFormated()) ?>
-                                            <span class="meta-sep">|</span> <?= htmlspecialchars($restaurant->mini_text) ?>
-                                        </p>                                                                      
-                                    </div>  
-                                    <div class="tickets-event__action">
-                                        <div class="tickets-event__form">
-                                            <a href="<?= '/yummy/book?id=' . $restaurant->restaurant_id ?>" class="tickets-btn tickets-btn--price">Book</a>
-                                        </div>                                           
-                                    </div>                                    
-                                </article>
-                            </div>
-                        <? }
-                        break;
-                } ?>
+                <div class="tickets-day__list"></div>
+                    <? foreach ($view_model->events as $event): ?>                    
+                        <?php include '/app/src/Views/tickets/partials/event-' . $view_model->categoryKey . '.php'; ?>             
+                    <? endforeach; ?>
+
+                    <?php include '/app/src/Views/tickets/partials/page-selector.php'; ?>   
+                </div>
             <?php endif; ?>
         </div>
 

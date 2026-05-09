@@ -58,6 +58,10 @@ class YummyService
         return $this->restaurant_repository->getActiveRestaurantsForTickets($page, $res_per_page);
     }
 
+    public function getNumberOfActiveRestaurants() : int|bool {
+        return $this->restaurant_repository->getNumberOfActiveRestaurants();
+    }
+
     public function getHomeViewModel() : YummyHomeViewModel {
         $view_model = new YummyHomeViewModel();
 

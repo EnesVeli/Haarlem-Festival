@@ -18,7 +18,7 @@ use Exception;
  */
 class TicketsController extends BaseController
 {
-    public static $NUMBER_OF_TICKETS_PER_PAGE = 6;
+    public static $NUMBER_OF_TICKETS_PER_PAGE = 16;
 
     private StoriesService $storiesService;
     private YummyService $yummy_service;
@@ -108,16 +108,29 @@ class TicketsController extends BaseController
     public function yummy(): void
     {
         $restaurants = null;
+        $cur_page = null;
+        $total_page_number = null;
 
         try{
-            $restaurants = $this->yummy_service->getActiveRestaurantsForTickets($this->getPage(), self::$NUMBER_OF_TICKETS_PER_PAGE);
+            // get page number from url
+            $cur_page = $this->getPage();
+
+            // Get paginated array of active restaurants
+            $restaurants = $this->yummy_service->getActiveRestaurantsForTickets($cur_page, self::$NUMBER_OF_TICKETS_PER_PAGE);
             if($restaurants === false) throw new QueryExecutionException("Failed to get restaurants for ticekt page.");
+
+            // Get total number of active restaurants for pagination calculations
+            $res_number = $this->yummy_service->getNumberOfActiveRestaurants();
+            if($res_number === false) throw new QueryExecutionException("Failed to get restaurant number for ticekt page.");
+
+            // Calc total number of pages
+            $total_page_number = ceil($res_number / self::$NUMBER_OF_TICKETS_PER_PAGE);
         }
         catch(Exception $ex){
             Session::setTempError("Something went wrong. try again later.");
         }
 
-        $this->renderCategory('yummy', $restaurants);
+        $this->renderCategory('yummy', $restaurants, $cur_page, $total_page_number);
     }
 
     private function getPage() {
@@ -132,9 +145,9 @@ class TicketsController extends BaseController
         return 1;
     }
 
-    private function renderCategory(string $category_key, array $events): void
+    private function renderCategory(string $category_key, ?array $events, ?int $total_page_number, ?int $cur_page): void
     {
-        $view_model = new TicketsCategoryViewModel($category_key, $events);
+        $view_model = new TicketsCategoryViewModel($category_key, $events, $total_page_number, $cur_page);
 
         $error_message = Session::popTempError();
 

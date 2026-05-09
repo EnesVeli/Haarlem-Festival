@@ -100,6 +100,24 @@ class YummyRestaurantsRepository extends Repository
     }
 
     /**
+     * Returns total number of active restaurants
+     * @return int|bool returns false if there were errors during execution. Returns number of restaurants on success. 
+     */
+    public function getNumberOfActiveRestaurants() : int|bool {
+        $sql = "SELECT COUNT(*) 
+                FROM `YummyRestaurants`
+                WHERE `active` = 1;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res === false ? false : $res[0];
+    }
+
+    /**
      * @param array $all_types Array with all selected filters. If empty, no filter is applied.
      * @param int $page Selected resturant list page (e.g. if page is 0 will return resturants 0-24, if page is 1 will return 25-48 retaurants, e.t.c)
      * @param RestaurantSortingOption $sorting Sorting method applied. If empty, sorts by name ascending
