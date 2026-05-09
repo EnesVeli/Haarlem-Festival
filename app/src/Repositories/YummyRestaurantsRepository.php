@@ -73,7 +73,31 @@ class YummyRestaurantsRepository extends Repository
         $res = $stmt->fetchAll();
 
         return $res == false ? null : $res;
-    }   
+    } 
+    
+    /**
+     * Returns list of restaurants for ticket page (only a few restaurant fields are set) limited by page.
+     * @param int $page page to search (1 is first page. should be 1 or higher)
+     * @param int $res_per_page number of restaurant per page (should be more or equal to 1)
+     * @return Restaurant[]|null|bool returns false if any errors occured. returns null if no restaurants found. returns array of restaurants otherwise.
+     */
+    public function getActiveRestaurantsForTickets(int $page, int $res_per_page) : array|null|bool {
+        $sql = "SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`
+                FROM `YummyRestaurants` 
+                WHERE `active` = 1
+                LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('limit', $res_per_page, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $res_per_page * ($page - 1), PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
+
+        return $stmt->fetchAll();
+    }
 
     /**
      * @param array $all_types Array with all selected filters. If empty, no filter is applied.

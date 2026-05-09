@@ -1,9 +1,10 @@
 <?php
-/** @var \App\ViewModels\HistoryIndexViewModel $viewModel */
-/** @var ?string $error_message */
-
 $pageTitle = "History - Haarlem Festival";
 $pageCSS = "history.css"; 
+
+/** @var \App\ViewModels\History\HistoryIndexViewModel $viewModel */
+/** @var ?string $error_message */
+
 require __DIR__ . '/../partials/header.php';
 ?>
 
@@ -154,38 +155,37 @@ require __DIR__ . '/../partials/header.php';
                         <?php endforeach; ?>
                     </div>
                     
-                    <form id="book_form" method="post" action="\history\booking">
-                        <input id="sel_time_slot" type="hidden" name="slot_id" value="-1">
-                        <input id="sel_date_offset" type="hidden" name="date_offset" value="-1">     
-                    </form>
-                    
                     <button type="button" class="btn-book" onclick="onBookButtonClick()">Book</button>
 
                     <script>
+                        let date_offset = -1;
+                        let slot_id = -1;
+
                         let selectedTicketId = null;
                         let selectedTime = '';
-                        function updateDayLabel(date_offset) {
-                            document.getElementById('sel_date_offset').value = date_offset;
+
+                        function updateDayLabel(offset) {
+                            date_offset = offset;
                         }
                         function selectTicket(id) {
-                            document.getElementById('sel_time_slot').value = id;
+                            slot_id = id;
 
                             document.querySelectorAll('.ticket-row').forEach(r => r.style.background = '');
                             document.getElementById('time_slot_' + id).style.background = 'rgba(255,255,255,0.15)';
                         }
                         function onBookButtonClick() {
-                            if (document.getElementById('sel_time_slot').value == -1) 
+                            if (slot_id == -1) 
                             {
                                 alert('Please select a time slot first.');
                                 return;
                             }
-                            if (document.getElementById('sel_date_offset').value == -1)
+                            if (date_offset == -1)
                             { 
                                 alert('Please select a date first.'); 
                                 return;
                             }
 
-                            document.getElementById('book_form').submit();
+                            window.location.href = "/history/booking?slot=" + slot_id + '&offset=' + date_offset;
                         }
                     </script>
                 </div>

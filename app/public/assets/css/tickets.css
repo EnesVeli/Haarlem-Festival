@@ -137,7 +137,7 @@
 /*Event row*/
 .tickets-event {
     display: grid;
-    grid-template-columns: 130px 1fr auto;
+    grid-template-columns: 100px 1fr auto;
     align-items: center;
     gap: 1.25rem;
     padding: 1.05rem 0;
@@ -155,6 +155,19 @@
     font-weight: 600;
     color: #333;
     white-space: nowrap;
+}
+
+.ticekt-event__img {
+    width: 80px;
+    height: 80px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+
+    margin-left: 12px;
 }
 
 /* Info */

@@ -5,14 +5,14 @@ class TicketsCategoryViewModel
 {
     private const CONFIG = [
         'jazz' => [
-            'title' => 'Haarlem Jazz Tickets',
+            'title' => 'Jazz Tickets',
             'event_link' => '/jazz',
             'empty' => 'No jazz events found at this time.',
         ],
-        'dance' => [
-            'title' => 'Dance Tickets',
-            'event_link' => '/tickets/dance',
-            'empty' => 'No dance events found at this time.',
+        'stories' => [
+            'title' => 'Stories Tickets',
+            'event_link' => '/stories',
+            'empty' => 'No stories events found at this time.',
         ],
         'history' => [
             'title' => 'History Tickets',
@@ -22,34 +22,27 @@ class TicketsCategoryViewModel
         'yummy' => [
             'title' => 'Yummy Tickets',
             'event_link' => '/yummy',
-            'empty' => 'No yummy events found at this time.',
+            'empty' => 'No yummy restaurants found at this time.',
         ],
     ];
 
-    /** @var array<string, array<int, array<string, mixed>>> */
-    public array $eventsByDay = [];
-
-    public string $csrfToken = '';
     public string $categoryKey = '';
+    public ?array $events = null;
     public string $contentTitle = '';
     public string $eventLink = '/tickets';
     public string $emptyMessage = 'No events found at this time.';
-    public string $pageTitle = 'Festival Program – The Festival Haarlem';
+    public string $pageTitle = 'Festival Program - The Festival Haarlem';
     public string $pageCSS = 'tickets.css';
 
-    /**
-     * @param array<string, array<int, array<string, mixed>>> $eventsByDay
-     */
-    public function __construct(string $categoryKey, array $eventsByDay, string $csrfToken)
+    public function __construct(string $categoryKey, ?array $events)
     {
         $config = self::CONFIG[$categoryKey] ?? null;
 
         $this->categoryKey = $categoryKey;
-        $this->eventsByDay = $eventsByDay;
-        $this->csrfToken = $csrfToken;
+        $this->events = $events;
         $this->contentTitle = (string)($config['title'] ?? 'Festival Tickets');
         $this->eventLink = (string)($config['event_link'] ?? '/tickets');
         $this->emptyMessage = (string)($config['empty'] ?? $this->emptyMessage);
-        $this->pageTitle = $this->contentTitle . ' – The Festival Haarlem';
+        $this->pageTitle = $this->contentTitle . ' - The Festival Haarlem';
     }
 }

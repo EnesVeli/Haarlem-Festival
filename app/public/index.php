@@ -102,7 +102,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     // History
     $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
-    $r->addRoute('POST', '/history/booking', [\App\Controllers\HistoryController::class, 'booking']);
+    $r->addRoute('GET', '/history/booking', [\App\Controllers\HistoryController::class, 'booking']);
     $r->addRoute('POST', '/history/book',    [\App\Controllers\HistoryController::class, 'book']);
     $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
 

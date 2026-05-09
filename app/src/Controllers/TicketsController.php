@@ -1,10 +1,13 @@
 <?php
 namespace App\Controllers;
 
-use App\Interfaces\INonStoriesTicketsService;
+use App\Framework\Session;
+use App\Models\Exceptions\QueryExecutionException;
 use App\Services\StoriesService;
+use App\Services\Yummy\YummyService;
 use App\ViewModels\TicketsCategoryViewModel;
 use App\ViewModels\TicketsStoriesViewModel;
+use Exception;
 
 /**
  * TicketsController — handles the public /tickets pages.
@@ -15,19 +18,15 @@ use App\ViewModels\TicketsStoriesViewModel;
  */
 class TicketsController extends BaseController
 {
-    /** @var StoriesService Service for fetching story events. */
-    private StoriesService $storiesService;
-    private INonStoriesTicketsService $nonStoriesTicketsService;
+    public static $NUMBER_OF_TICKETS_PER_PAGE = 6;
 
-    /**
-     * Constructor — receives the StoriesService via dependency injection.
-     *
-     * @param StoriesService $storiesService Service for story events
-     */
-    public function __construct(StoriesService $storiesService, INonStoriesTicketsService $nonStoriesTicketsService)
+    private StoriesService $storiesService;
+    private YummyService $yummy_service;
+
+    public function __construct()
     {
-        $this->storiesService = $storiesService;
-        $this->nonStoriesTicketsService = $nonStoriesTicketsService;
+        $this->storiesService = StoriesService::getInstance();
+        $this->yummy_service = YummyService::getInstance();
     }
 
     /**
@@ -56,11 +55,9 @@ class TicketsController extends BaseController
      * TicketsStoriesViewModel (which groups them by day), and renders
      * the tickets/stories view with add-to-cart POST forms.
      *
-     * @param array $vars Route parameters
-     *
      * @return void
      */
-    public function stories(array $vars = []): void
+    public function stories(): void
     {
         $events = $this->storiesService->getAllEvents();
         $viewModel = new TicketsStoriesViewModel($events, $this->ensureCsrfToken());
@@ -74,61 +71,78 @@ class TicketsController extends BaseController
 
     /**
      * Renders Jazz ticket category page.
-     *
-     * @param array $vars Route parameters 
      */
-    public function jazz(array $vars = []): void
+    public function jazz(): void
     {
-        $this->renderCategory('jazz');
+        try{
+            
+
+            $this->renderCategory('jazz');
+        }
+        catch(Exception $ex){
+
+        }
+
+        header("location: /tickets");
     }
 
     /**
      * Renders Dance ticket category page.
-     *
-     * @param array $vars Route parameters 
      */
-    public function dance(array $vars = []): void
+    public function dance(): void
     {
         $this->renderCategory('dance');
     }
 
     /**
      * Renders History ticket category page.
-     *
-     * @param array $vars Route parameters
      */
-    public function history(array $vars = []): void
+    public function history(): void
     {
         $this->renderCategory('history');
     }
 
     /**
      * Renders Yummy ticket category page.
-     *
-     * @param array $vars Route parameters 
      */
-    public function yummy(array $vars = []): void
+    public function yummy(): void
     {
-        $this->renderCategory('yummy');
+        $restaurants = null;
+
+        try{
+            $restaurants = $this->yummy_service->getActiveRestaurantsForTickets($this->getPage(), self::$NUMBER_OF_TICKETS_PER_PAGE);
+            if($restaurants === false) throw new QueryExecutionException("Failed to get restaurants for ticekt page.");
+        }
+        catch(Exception $ex){
+            Session::setTempError("Something went wrong. try again later.");
+        }
+
+        $this->renderCategory('yummy', $restaurants);
     }
 
-    /**
-     * Shared category rendering logic for non-stories tickets.
-     */
-    private function renderCategory(string $categoryKey): void
-    {
-        $eventsByDay = $this->nonStoriesTicketsService->getCategoryTickets($categoryKey);
-        $viewModel = new TicketsCategoryViewModel($categoryKey, $eventsByDay, $this->ensureCsrfToken());
+    private function getPage() {
+        if(isset($_GET['page']) && filter_var($_GET['page'], FILTER_VALIDATE_INT)){
+            $page = $_GET['page'];
 
-        $success = $this->popFlash('cart_success');
-        $error = $this->popFlash('cart_error');
+            if($page < 1) return 1;
+
+            return $page;
+        }
+
+        return 1;
+    }
+
+    private function renderCategory(string $category_key, array $events): void
+    {
+        $view_model = new TicketsCategoryViewModel($category_key, $events);
+
+        $error_message = Session::popTempError();
 
         $this->render('tickets/category', [
-            'viewModel' => $viewModel,
-            'success' => $success,
-            'error' => $error,
-            'pageTitle' => $viewModel->pageTitle,
-            'pageCSS' => $viewModel->pageCSS,
+            'view_model' => $view_model,
+            'error_message' => $error_message,
+            'pageTitle' => $view_model->pageTitle,
+            'pageCSS' => $view_model->pageCSS,
         ]);
     }
 }
