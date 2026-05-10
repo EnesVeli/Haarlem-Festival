@@ -21,10 +21,10 @@ class JazzService implements IJazzService
         return self::$_instance;
     }
 
-    private JazzRepository $jazzRepo;
+    private IJazzRepository $jazzRepo;
     private OrderService $order_service;
 
-    private function __construct(JazzRepository $jazzRepo, OrderService $order_service)
+    private function __construct(IJazzRepository $jazzRepo, OrderService $order_service)
     {
         $this->jazzRepo = $jazzRepo;
 
@@ -73,9 +73,9 @@ class JazzService implements IJazzService
         return $this->jazzRepo->getPerformerById($id);
     }
 
-    public function bookTickets(int $performer_id, int $quantity, int $user_id){
+    public function bookTickets(int $performer_id, int $quantity, int $user_id): void {
         $perf = $this->jazzRepo->getPerformerById($performer_id);
-        if($perf == null) throw new QueryExecutionException("Failed to get performer by its id");
+        if($perf === null) throw new QueryExecutionException("Failed to get performer by its id");
 
         $booking = new JazzBooking();
         $booking->performer_id = $performer_id;

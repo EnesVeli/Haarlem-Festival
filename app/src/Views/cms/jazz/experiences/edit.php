@@ -3,7 +3,6 @@
 
 $pageTitle = 'Edit Experience';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $experience = $vm->experience ?? null;
 
 require __DIR__ . '/../../../partials/header.php';

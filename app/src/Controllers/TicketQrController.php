@@ -2,33 +2,43 @@
 
 namespace App\Controllers;
 
-use App\Repositories\TicketRepository;
+use App\Framework\Session;
+use App\Interfaces\Services\ITicketScanService;
+use App\Services\TicketScanService;
 use App\ViewModels\TicketScanner\TicketQrViewModel;
-use chillerlan\QRCode\QRCode;
 
-class TicketQrController
+class TicketQrController extends BaseController
 {
-    private TicketRepository $repository;
+    private ITicketScanService $service;
 
     public function __construct()
     {
-        $this->repository = TicketRepository::getInstance();
+        $this->service = TicketScanService::getInstance();
     }
 
     public function show(array $vars): void
     {
-        $ticketId = (int) ($vars['id'] ?? 0);
-        $ticket = $this->repository->findById($ticketId);
+        if (!Session::isLoggedIn()) {
+            header('Location: /login');
+            exit;
+        }
 
-        if (!$ticket) {
+        $ticketId = (int) ($vars['id'] ?? 0);
+        $qr = $this->service->getTicketQr($ticketId);
+
+        if ($qr === null) {
             http_response_code(404);
             echo 'Ticket not found';
             return;
         }
 
-        $qr = (new QRCode())->render($ticket->qr_token);
         $vm = new TicketQrViewModel($qr);
 
-        require __DIR__ . '/../Views/eventTicketQr/index.php';
+        $this->render('EventTicketQr/index', [
+            'vm'        => $vm,
+            'pageTitle' => 'My Ticket QR',
+            'mainClass' => 'qr-main',
+            'user'      => Session::user(),
+        ]);
     }
 }

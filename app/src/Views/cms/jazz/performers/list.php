@@ -4,7 +4,6 @@
 
 $pageTitle = 'Performers';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $performers = $vm->performers ?? [];
 
 require __DIR__ . '/../../../partials/header.php';

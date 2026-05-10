@@ -4,6 +4,7 @@ namespace App\ViewModels\Jazz;
 
 use App\Models\Jazz\JazzHero;
 use App\Models\Jazz\JazzIntro;
+use App\Models\User;
 
 class JazzHomeViewModel
 {
@@ -13,7 +14,7 @@ class JazzHomeViewModel
     public array $performers;
     public array $recommendations;
     public array $locations;
-    public ?array $currentUser;
+    public ?User $currentUser;
 
     public function __construct(
         ?JazzHero $hero,
@@ -22,7 +23,7 @@ class JazzHomeViewModel
         array $performers,
         array $recommendations,
         array $locations,
-        ?array $currentUser
+        ?User $currentUser
     ) {
         $this->hero = $hero;
         $this->intro = $intro;

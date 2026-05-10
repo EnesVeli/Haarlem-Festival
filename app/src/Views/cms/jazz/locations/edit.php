@@ -3,7 +3,6 @@
 
 $pageTitle = 'Edit Location';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $location = $vm->location ?? null;
 
 require __DIR__ . '/../../../partials/header.php';

@@ -3,14 +3,15 @@
 namespace App\ViewModels\Jazz\JazzCmsViewModels;
 
 use App\Models\Jazz\JazzHero;
+use App\Models\User;
 
 class JazzHeroCmsViewModel
 {
     public ?JazzHero $hero;
-    public ?array $currentUser;
+    public ?User $currentUser;
     public string $activeTab;
 
-    public function __construct(?JazzHero $hero, ?array $currentUser)
+    public function __construct(?JazzHero $hero, ?User $currentUser)
     {
         $this->hero = $hero;
         $this->currentUser = $currentUser;

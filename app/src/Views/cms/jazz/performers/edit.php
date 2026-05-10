@@ -3,7 +3,6 @@
 
 $pageTitle = 'Edit Performer';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $performer = $vm->performer ?? null;
 $highlights = $vm->highlights ?? [];
 $tracks = $vm->tracks ?? [];
