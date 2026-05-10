@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Framework\Session;
+use App\Interfaces\Services\IJazzService;
 use App\Models\Exceptions\EmptyPostException;
 use App\Services\Jazz\JazzService;
 use App\ViewModels\Jazz\JazzHomeViewModel;
@@ -12,7 +13,7 @@ use Throwable;
 
 class JazzController extends BaseController
 {
-    private JazzService $service;
+    private IJazzService $service;
 
     public function __construct()
     {
@@ -31,7 +32,7 @@ class JazzController extends BaseController
                 $data['performers'],
                 $data['recommendations'],
                 $data['locations'],
-                Session::user()
+                Session::currentUser()
             );
 
             $this->render('jazz/home', [
@@ -94,7 +95,7 @@ class JazzController extends BaseController
                 $data['tracks'],
                 $data['locations'],
                 $data['recommendations'],
-                Session::user()
+                Session::currentUser()
             );
     
             $this->render('jazz/performer', [
@@ -112,15 +113,22 @@ class JazzController extends BaseController
         }
     }
 
-    public function booking(){
+    public function booking(): void {
         if(!$this->isLoggedIn()){
             Session::setTempError("Login first, in order to book a ticket.");
             header("Location: /login");
             exit;
         }
 
+        $perf = $this->service->getPerformerById((int)($_GET['perf'] ?? 0));
+
+        if ($perf === null) {
+            header('Location: /jazz');
+            exit;
+        }
+
         $this->render('jazz/book', [
-            'perf' => $this->service->getPerformerById((int)($_GET['perf'] ?? 0)),
+            'perf' => $perf,
             'error_message' => Session::popTempError(),
             'pageTitle' => 'Jazz Performer',
             'pageCSS' => 'jazz.css',
@@ -129,19 +137,17 @@ class JazzController extends BaseController
         ]);
     }
 
-    public function book(){
+    public function book(): void {
         if(!$this->isLoggedIn()){
             Session::setTempError("Login first, in order to book a ticket.");
             header("Location: /login");
             exit;
         }
 
-        $error_message = Session::popTempError();
-
         try{
             if(!isset($_POST['performer_id']) || !isset($_POST['quantity'])) throw new EmptyPostException();
 
-            $this->service->bookTickets((int)$_POST['performer_id'], (int)$_POST['quantity'], (int)Session::get('user_id'));
+            $this->service->bookTickets((int)$_POST['performer_id'], (int)$_POST['quantity'], Session::currentUser()->user_id);
 
             header('Location: /cart');
             exit;

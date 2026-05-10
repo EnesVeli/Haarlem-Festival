@@ -18,7 +18,7 @@
         <h2 class="stories-booking-category">Haarlem Jazz</h2>
 
         <?php if (!empty($error_message)): ?>
-            <div style="background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;border-radius:8px;padding:12px 16px;margin-bottom:1.5rem;font-size:14px;">
+            <div style="background:#fef2f2;border:1px solid #fca5a5;color:#b91c1c;padding:12px 16px;border-radius:6px;margin-bottom:16px;">
                 <?= htmlspecialchars($error_message) ?>
             </div>
         <?php endif; ?>

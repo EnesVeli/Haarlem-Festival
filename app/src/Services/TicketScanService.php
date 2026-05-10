@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Exceptions\TicketScanException;
+use App\Interfaces\Services\ITicketScanService;
 use App\Models\Ticket;
 use App\Repositories\TicketRepository;
+use chillerlan\QRCode\QRCode;
 use DateTime;
 
-class TicketScanService
+class TicketScanService implements ITicketScanService
 {
     private static ?TicketScanService $_instance = null;
 
@@ -46,5 +48,12 @@ class TicketScanService
         $ticket->order_item = $this->order_service->getOrderItemWithBooking($ticket->item_id);
 
         return $ticket;
+    }
+
+    public function getTicketQr(int $ticketId): ?string
+    {
+        $ticket = $this->repository->findById($ticketId);
+        if ($ticket === null) return null;
+        return (new QRCode())->render($ticket->qr_token);
     }
 }

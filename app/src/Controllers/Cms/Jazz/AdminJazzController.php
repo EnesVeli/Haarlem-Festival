@@ -3,6 +3,7 @@
 namespace App\Controllers\Cms\Jazz;
 
 use App\Controllers\Cms\BaseCmsController;
+use App\Interfaces\Services\IJazzCmsService;
 use App\Services\Jazz\JazzCmsService;
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzDashboardCmsViewModel;
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzHeroCmsViewModel;
@@ -14,7 +15,7 @@ use App\ViewModels\Jazz\JazzCmsViewModels\JazzLocationsCmsViewModel;
 
 class AdminJazzController extends BaseCmsController
 {
-    private JazzCmsService $service;
+    private IJazzCmsService $service;
 
     public function __construct()
     {
@@ -37,7 +38,7 @@ class AdminJazzController extends BaseCmsController
     public function hero(): void
     {
         $data = $this->service->getHeroPageData();
-        $vm = new JazzHeroCmsViewModel($data['hero'] ?? [], $data['user']);
+        $vm = new JazzHeroCmsViewModel($data['hero'] ?? null, $data['user']);
 
         require __DIR__ . '/../../../Views/cms/jazz/hero.php';
     }
@@ -58,7 +59,7 @@ class AdminJazzController extends BaseCmsController
     public function intro(): void
     {
         $data = $this->service->getIntroPageData();
-        $vm = new JazzIntroCmsViewModel($data['intro'] ?? [], $data['user']);
+        $vm = new JazzIntroCmsViewModel($data['intro'] ?? null, $data['user']);
 
         require __DIR__ . '/../../../Views/cms/jazz/intro.php';
     }
@@ -99,7 +100,7 @@ class AdminJazzController extends BaseCmsController
         }
 
         $data = $this->service->getExperienceByIdData($id);
-        $vm = new JazzExperiencesCmsViewModel([], $data['user'], $data['experience'] ?? []);
+        $vm = new JazzExperiencesCmsViewModel([], $data['user'], $data['experience'] ?? null);
 
         require __DIR__ . '/../../../Views/cms/jazz/experiences/edit.php';
     }
@@ -241,7 +242,7 @@ class AdminJazzController extends BaseCmsController
         }
 
         $data = $this->service->getRecommendationByIdData($id);
-        $vm = new JazzRecommendationsCmsViewModel([], $data['user'], $data['recommendation'] ?? []);
+        $vm = new JazzRecommendationsCmsViewModel([], $data['user'], $data['recommendation'] ?? null);
 
         require __DIR__ . '/../../../Views/cms/jazz/recommendations/edit.php';
     }
@@ -308,7 +309,7 @@ class AdminJazzController extends BaseCmsController
         }
 
         $data = $this->service->getLocationByIdData($id);
-        $vm = new JazzLocationsCmsViewModel([], $data['user'], $data['location'] ?? []);
+        $vm = new JazzLocationsCmsViewModel([], $data['user'], $data['location'] ?? null);
 
         require __DIR__ . '/../../../Views/cms/jazz/locations/edit.php';
     }

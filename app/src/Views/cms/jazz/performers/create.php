@@ -3,7 +3,6 @@
 
 $pageTitle = 'Create Performer';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 

@@ -3,6 +3,7 @@
 namespace App\ViewModels\Jazz;
 
 use App\Models\Jazz\JazzPerformer;
+use App\Models\User;
 
 class JazzPerformerViewModel
 {
@@ -12,7 +13,7 @@ class JazzPerformerViewModel
     public array $tracks;
     public array $locations;
     public array $recommendations;
-    public ?array $currentUser;
+    public ?User $currentUser;
 
     public function __construct(
         JazzPerformer $performer,
@@ -21,7 +22,7 @@ class JazzPerformerViewModel
         array $tracks,
         array $locations,
         array $recommendations,
-        ?array $currentUser
+        ?User $currentUser
     ) {
         $this->performer = $performer;
         $this->appearances = $appearances;

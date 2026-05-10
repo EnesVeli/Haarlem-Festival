@@ -3,7 +3,6 @@
 
 $pageTitle = 'Locations';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $locations = $vm->locations ?? [];
 
 require __DIR__ . '/../../../partials/header.php';

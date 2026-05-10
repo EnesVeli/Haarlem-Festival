@@ -1,10 +1,5 @@
 <?php
 /** @var ?string $error */
-$pageTitle = 'Login — The Festival Haarlem';
-$mainClass = 'login-main';
-$user      = \App\Framework\Session::user();
-
-require __DIR__ . '/partials/header.php';
 ?>
 
 <section class="login-section">
@@ -173,4 +168,3 @@ body {
 }
 </style>
 
-<?php require __DIR__ . '/partials/footer.php'; ?>

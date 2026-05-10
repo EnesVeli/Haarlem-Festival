@@ -3,10 +3,12 @@
 namespace App\Services\Jazz;
 
 use App\Framework\Session;
+use App\Interfaces\Repositories\IJazzRepository;
+use App\Interfaces\Services\IJazzCmsService;
 use App\Repositories\JazzRepository;
 use RuntimeException;
 
-class JazzCmsService
+class JazzCmsService implements IJazzCmsService
 {
     private static ?JazzCmsService $_instance = null;
 
@@ -16,9 +18,9 @@ class JazzCmsService
         return self::$_instance;
     }
 
-    private JazzRepository $jazzRepo;
+    private IJazzRepository $jazzRepo;
 
-    private function __construct(JazzRepository $jazzRepo)
+    private function __construct(IJazzRepository $jazzRepo)
     {
         $this->jazzRepo = $jazzRepo;
     }
@@ -28,7 +30,7 @@ class JazzCmsService
     public function getDashboardData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
         ];
     }
 
@@ -37,7 +39,7 @@ class JazzCmsService
     public function getHeroPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'hero' => $this->jazzRepo->getHero(),
         ];
     }
@@ -60,7 +62,7 @@ class JazzCmsService
     public function getIntroPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'intro' => $this->jazzRepo->getIntro(),
         ];
     }
@@ -79,7 +81,7 @@ class JazzCmsService
     public function getExperiencesPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'experiences' => $this->jazzRepo->getExperiences(),
         ];
     }
@@ -87,7 +89,7 @@ class JazzCmsService
     public function getExperienceByIdData(int $id): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'experience' => $this->jazzRepo->getExperienceById($id),
         ];
     }
@@ -128,7 +130,7 @@ class JazzCmsService
     public function getPerformersPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'performers' => $this->jazzRepo->getAllPerformers(false),
         ];
     }
@@ -136,7 +138,7 @@ class JazzCmsService
     public function getPerformerByIdData(int $id): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'performer' => $this->jazzRepo->getPerformerById($id),
             'highlights' => $this->jazzRepo->getHighlightsByPerformer($id),
             'tracks' => $this->jazzRepo->getTracksByPerformer($id),
@@ -201,7 +203,7 @@ class JazzCmsService
     public function getRecommendationsPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'recommendations' => $this->jazzRepo->getRecommendations(),
         ];
     }
@@ -209,7 +211,7 @@ class JazzCmsService
     public function getRecommendationByIdData(int $id): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'recommendation' => $this->jazzRepo->getRecommendationById($id),
         ];
     }
@@ -250,7 +252,7 @@ class JazzCmsService
     public function getLocationsPageData(): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'locations' => $this->jazzRepo->getLocations(),
         ];
     }
@@ -258,7 +260,7 @@ class JazzCmsService
     public function getLocationByIdData(int $id): array
     {
         return [
-            'user' => Session::user(),
+            'user' => Session::currentUser(),
             'location' => $this->jazzRepo->getLocationById($id),
         ];
     }

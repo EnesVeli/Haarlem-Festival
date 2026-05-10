@@ -30,11 +30,11 @@ require __DIR__ . '/../partials/header.php';
         </form>
 
         <?php if (!empty($result)): ?>
-            <div class="scanner-result scanner-result--<?= htmlspecialchars($result['status']) ?>">
-                <p class="scanner-result__message"><?= htmlspecialchars($result['message']) ?></p>
+            <div class="scanner-result scanner-result--<?= htmlspecialchars($result->status) ?>">
+                <p class="scanner-result__message"><?= htmlspecialchars($result->message) ?></p>
 
-                <?php if (!empty($result['ticket'])): ?>
-                    <?php $booking = $result['ticket']->order_item->booking; ?>
+                <?php if (!empty($result->ticket)): ?>
+                    <?php $booking = $result->ticket->order_item->booking; ?>
                     <div class="scanner-ticket-info">
                         <div class="scanner-ticket-row">
                             <span class="scanner-ticket-label">Event</span>
@@ -58,7 +58,7 @@ require __DIR__ . '/../partials/header.php';
                         </div>
                         <div class="scanner-ticket-row">
                             <span class="scanner-ticket-label">Ticket code</span>
-                            <span><?= htmlspecialchars($result['ticket']->code) ?></span>
+                            <span><?= htmlspecialchars($result->ticket->code) ?></span>
                         </div>
                     </div>
                 <?php endif; ?>
