@@ -22,7 +22,7 @@
     </div>  
     <div class="tickets-event__action">
         <div class="tickets-event__form">
-            <a href="<?= '/stories/' . $event->slug . '/book' ?>" class="tickets-btn tickets-btn--price">Reserve</a>
+            <a href="<?= '/stories/' . $event->slug . '/book' ?>" class="tickets-btn tickets-btn--price">Book</a>
         </div>                                           
     </div>                                    
 </article>

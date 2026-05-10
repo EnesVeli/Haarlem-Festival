@@ -20,7 +20,7 @@
     </div>  
     <div class="tickets-event__action">
         <div class="tickets-event__form">
-            <a href="<?= '/jazz/book?perf=' . $event->id ?>" class="tickets-btn tickets-btn--price">Reserve</a>
+            <a href="<?= '/jazz/book?perf=' . $event->id ?>" class="tickets-btn tickets-btn--price">Book</a>
         </div>                                           
     </div>                                    
 </article>

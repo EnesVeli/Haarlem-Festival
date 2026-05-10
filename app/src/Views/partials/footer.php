@@ -18,11 +18,10 @@
             <div class="footer-column">
                 <h6 class="footer-heading">Events</h6>
                 <ul class="footer-links">
-                    <li><a href="/jazz">Haarlem Jazz</a></li>
-                    <li><a href="/dance">DANCE!</a></li>
-                    <li><a href="/yummy">Yummy!</a></li>
-                    <li><a href="/history">A Stroll through History</a></li>
-                    <li><a href="/stories">Stories in Haarlem</a></li>
+                    <li><a href="/jazz">Jazz</a></li>
+                    <li><a href="/yummy">Yummy</a></li>
+                    <li><a href="/history">History</a></li>
+                    <li><a href="/stories">Stories</a></li>
                 </ul>
             </div>
 

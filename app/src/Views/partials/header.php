@@ -41,7 +41,6 @@ $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0
             <li><a href="/stories">Stories</a></li>
             <li><a href="/yummy">Yummy</a></li>
             <li><a href="/jazz">Jazz</a></li>
-            <li><a href="/dance">Dance</a></li>
 
             <?php if ($user && strtolower($user['role'] ?? '') === 'admin'): ?>
                 <li><a href="/cms">Dashboard</a></li>
