@@ -69,7 +69,7 @@ class BaseController
 
     protected function isLoggedIn(): bool
     {
-        return isset($_SESSION['user_id']);
+        return Session::isLoggedIn();
     }
 
     protected function getCurrentUser(): ?array

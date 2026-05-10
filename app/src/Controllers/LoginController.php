@@ -1,12 +1,11 @@
 <?php
 namespace App\Controllers;
 
-use App\Interfaces\ICartService;
 use App\Services\UserService;
 use App\Framework\Session;
 use Exception;
 
-class LoginController
+class LoginController extends BaseController
 {
     private UserService $userService;
 
@@ -15,28 +14,35 @@ class LoginController
         $this->userService = UserService::getInstance();
     }
 
-    public function index()
+    public function index(): void
     {
         $error = Session::pop('login_error');
-        require __DIR__ . '/../Views/login.php';
+        $this->render('login', [
+            'error'     => $error,
+            'pageTitle' => 'Login — The Festival Haarlem',
+            'mainClass' => 'login-main',
+            'user'      => Session::user(),
+        ]);
     }
 
-    public function login()
+    public function login(): void
     {
+        $email    = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        if ($email === '' || $password === '') {
+            Session::set('login_error', 'Email and password are required.');
+            header('Location: /login');
+            exit;
+        }
+
         try {
-            $email = $_POST['email'] ?? '';
-            $password = $_POST['password'] ?? '';
-
-            if ($email === '' || $password === '') {
-                throw new Exception("Email and password are required.");
-            }
-
             $user = $this->userService->authenticate($email, $password);
             Session::login($user);
-            
+
             if (Session::isAdmin()) {
                 header('Location: /cms');
-            } elseif (($user['role'] ?? '') === 'employee') {
+            } elseif (Session::isEmployee()) {
                 header('Location: /employee/scan');
             } else {
                 header('Location: /');
@@ -45,16 +51,15 @@ class LoginController
             exit;
 
         } catch (Exception $e) {
-            Session::set('login_error', $e->getMessage());
-            header("Location: /login"); 
+            Session::set('login_error', 'Invalid email or password.');
+            header('Location: /login');
             exit;
         }
     }
 
-    public function logout()
+    public function logout(): void
     {
-        $_SESSION = [];
-        session_destroy();
+        Session::logout();
         header('Location: /');
         exit;
     }

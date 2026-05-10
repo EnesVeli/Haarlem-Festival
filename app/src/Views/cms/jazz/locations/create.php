@@ -1,8 +1,8 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzLocationsCmsViewModel $vm */
 
 $pageTitle = 'Create Location';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 
 require __DIR__ . '/../../../partials/header.php';
 

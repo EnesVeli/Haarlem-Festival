@@ -1,82 +1,170 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
+<?php
+/** @var ?string $error */
+?>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<section class="login-section">
+    <div class="login-card">
+        <h1 class="login-title">Welcome back</h1>
+        <p class="login-subtitle">Sign in to your festival account</p>
 
-  <style>
-    <?php include '/app/public/assets/css/main.css'; ?>
-  </style>
-</head>
-<body class="bg-light">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-7 col-lg-5">
-
-        <div class="card shadow-sm border-0 mt-5">
-          <div class="card-body p-4">
-            <h1 class="h4 mb-3">Login</h1>
-            <p class="text-muted mb-4">Sign in with your email and password.</p>
-
-            <?php if (!empty($error)): ?>
-              <div class="alert alert-danger" role="alert">
+        <?php if (!empty($error)): ?>
+            <div class="login-error">
                 <?= htmlspecialchars($error) ?>
-              </div>
-            <?php endif; ?>
+            </div>
+        <?php endif; ?>
 
-            <form method="post" action="/login" novalidate>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
+        <form method="POST" action="/login" novalidate>
+            <div class="login-field">
+                <label for="email">Email</label>
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  class="form-control"
-                  placeholder="name@example.com"
-                  required
-                  autocomplete="email"
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    required
+                    autocomplete="email"
                 >
-              </div>
+            </div>
 
-              <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
+            <div class="login-field">
+                <label for="password">Password</label>
                 <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  class="form-control"
-                  placeholder="••••••••"
-                  required
-                  autocomplete="current-password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    required
+                    autocomplete="current-password"
                 >
-              </div>
+            </div>
 
-              <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary">
-                  Login
-                </button>
-                <a class="btn btn-outline-secondary" href="/register">
-                  Create account
-                </a>
-              </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
 
-            </form>
-
-            <div>Forgot your password? <a href="/password-reset-request">Password reset</a></div>
-          </div>
+        <div class="login-links">
+            <a href="/register">Create account</a>
+            <a href="/password-reset-request">Forgot password?</a>
         </div>
-
-        <p class="text-center text-muted mt-3 small">
-          Haarlem Festival
-        </p>
-
-      </div>
     </div>
-  </div>
+</section>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<style>
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.login-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--neutral-light);
+    padding: 1.5rem;
+}
+
+.login-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 32px 32px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: var(--burgundy);
+    margin-bottom: 8px;
+}
+
+.login-subtitle {
+    color: var(--light-text);
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.login-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.login-field {
+    margin-bottom: 20px;
+}
+
+.login-field label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark-text);
+    margin-bottom: 6px;
+}
+
+.login-field input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--dark-text);
+    transition: border-color var(--transition-base);
+    outline: none;
+}
+
+.login-field input:focus {
+    border-color: var(--navy);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background var(--transition-base), transform var(--transition-base);
+}
+
+.login-btn:hover {
+    background: var(--navy-dark);
+    transform: translateY(-1px);
+}
+
+.login-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    font-size: 14px;
+}
+
+.login-links a {
+    color: var(--navy);
+    text-decoration: none;
+}
+
+.login-links a:hover {
+    color: var(--burgundy);
+    text-decoration: underline;
+}
+</style>
+

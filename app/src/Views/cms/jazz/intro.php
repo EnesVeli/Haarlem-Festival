@@ -1,8 +1,8 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzIntroCmsViewModel $vm */
 
 $pageTitle = 'Intro Content';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $intro = $vm->intro;
 
 require __DIR__ . '/../../partials/header.php';

@@ -1,8 +1,8 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzExperiencesCmsViewModel $vm */
 
 $pageTitle = 'Create Experience';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $experience = $vm->experience ?? null;
 
 require __DIR__ . '/../../../partials/header.php';

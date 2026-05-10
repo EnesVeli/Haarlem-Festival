@@ -3,14 +3,15 @@
 namespace App\ViewModels\Jazz\JazzCmsViewModels;
 
 use App\Models\Jazz\JazzIntro;
+use App\Models\User;
 
 class JazzIntroCmsViewModel
 {
     public ?JazzIntro $intro;
-    public ?array $currentUser;
+    public ?User $currentUser;
     public string $activeTab;
 
-    public function __construct(?JazzIntro $intro, ?array $currentUser)
+    public function __construct(?JazzIntro $intro, ?User $currentUser)
     {
         $this->intro = $intro;
         $this->currentUser = $currentUser;

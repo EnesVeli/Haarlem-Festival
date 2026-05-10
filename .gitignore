@@ -52,3 +52,6 @@ app/public/assets/images/
 
 # Ventor
 app/vendor/
+
+# claude
+.claude/

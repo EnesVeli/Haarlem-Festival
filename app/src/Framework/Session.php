@@ -65,6 +65,28 @@ class Session
         return !empty($_SESSION['user_id']);
     }
 
+    public static function currentUser(): ?\App\Models\User
+    {
+        if (!self::isLoggedIn()) {
+            return null;
+        }
+
+        $user = new \App\Models\User();
+        $user->user_id = (int)$_SESSION['user_id'];
+        $user->email   = $_SESSION['email'] ?? '';
+        $user->name    = $_SESSION['name'] ?? '';
+
+        $raw = $_SESSION['role'] ?? null;
+        if (is_numeric($raw)) {
+            $user->role = \App\Enums\UserRole::from((int)$raw);
+        } else {
+            $map = ['customer' => \App\Enums\UserRole::Customer, 'admin' => \App\Enums\UserRole::Admin, 'employee' => \App\Enums\UserRole::Employee];
+            $user->role = $map[strtolower((string)$raw)] ?? \App\Enums\UserRole::Customer;
+        }
+
+        return $user;
+    }
+
     public static function user(): ?array
     {
         if (!self::isLoggedIn()) {
@@ -92,8 +114,19 @@ class Session
 
         $role = $user['role'] ?? null;
 
-        // supports both formats: 'admin' OR 1
-        return $role === 'admin' || (int)$role === 1;
+        return $role === 'admin' || (int)$role === \App\Enums\UserRole::Admin->value;
+    }
+
+    public static function isEmployee(): bool
+    {
+        $user = self::user();
+        if (!$user) {
+            return false;
+        }
+
+        $role = $user['role'] ?? null;
+
+        return $role === 'employee' || (int)$role === \App\Enums\UserRole::Employee->value;
     }
 
     public static function getCartItemsCount() : int{

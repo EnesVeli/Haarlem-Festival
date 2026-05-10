@@ -1,4 +1,5 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzHomeViewModel $vm */
 
 $hero = $vm->hero;
 $intro = $vm->intro;

@@ -1,8 +1,8 @@
 <?php
+/** @var \App\ViewModels\Jazz\JazzCmsViewModels\JazzRecommendationsCmsViewModel $vm */
 
 $pageTitle = 'Recommendations';
 $pageCSS = 'jazz.css';
-$user = $vm->currentUser ?? null;
 $recommendations = $vm->recommendations ?? [];
 
 require __DIR__ . '/../../../partials/header.php';

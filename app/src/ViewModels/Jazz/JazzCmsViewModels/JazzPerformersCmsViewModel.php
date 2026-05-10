@@ -3,19 +3,20 @@
 namespace App\ViewModels\Jazz\JazzCmsViewModels;
 
 use App\Models\Jazz\JazzPerformer;
+use App\Models\User;
 
 class JazzPerformersCmsViewModel
 {
     public array $performers;
     public ?JazzPerformer $performer;
-    public ?array $currentUser;
+    public ?User $currentUser;
     public string $activeTab;
     public array $highlights;
     public array $tracks;
 
     public function __construct(
         array $performers,
-        ?array $currentUser,
+        ?User $currentUser,
         ?JazzPerformer $performer = null,
         array $highlights = [],
         array $tracks = []

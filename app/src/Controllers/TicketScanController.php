@@ -4,12 +4,14 @@ namespace App\Controllers;
 
 use App\Exceptions\TicketScanException;
 use App\Framework\Session;
+use App\Interfaces\Services\ITicketScanService;
+use App\Models\TicketScanResult;
 use App\Services\TicketScanService;
 use App\ViewModels\TicketScanner\TicketScanViewModel;
 
 class TicketScanController
 {
-    private TicketScanService $service;
+    private ITicketScanService $service;
 
     public function __construct()
     {
@@ -18,9 +20,7 @@ class TicketScanController
 
     private function requireEmployee(): void
     {
-        $user = Session::user();
-
-        if (!$user || !isset($user['role']) || $user['role'] !== 'employee') {
+        if (!Session::isEmployee()) {
             header('Location: /login');
             exit;
         }
@@ -31,7 +31,7 @@ class TicketScanController
         $this->requireEmployee();
 
         $vm = new TicketScanViewModel();
-        require __DIR__ . '/../Views/eventTicketScan/index.php';
+        require __DIR__ . '/../Views/EventTicketScan/index.php';
     }
 
     public function scan(): void
@@ -44,25 +44,14 @@ class TicketScanController
 
         try {
             $ticket = $this->service->scanTicket($scanValue);
-
-            $result = [
-                'status' => 'success',
-                'message' => 'Ticket is valid. Entry allowed.',
-                'ticket' => $ticket
-            ];
+            $result = new TicketScanResult('success', 'Ticket is valid. Entry allowed.', $ticket);
         } catch (TicketScanException $error) {
-            $result = [
-                'status' => 'warning',
-                'message' => $error->getMessage()
-            ];
+            $result = new TicketScanResult('warning', $error->getMessage());
         } catch (\Throwable $error) {
-            $result = [
-                'status' => 'error',
-                'message' => 'Something went wrong while scanning the ticket.' . $error->getMessage()
-            ];
+            $result = new TicketScanResult('error', 'Something went wrong while scanning the ticket.');
         }
 
         $vm = new TicketScanViewModel($result);
-        require __DIR__ . '/../Views/eventTicketScan/index.php';
+        require __DIR__ . '/../Views/EventTicketScan/index.php';
     }
 }
