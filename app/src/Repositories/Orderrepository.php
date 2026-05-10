@@ -431,4 +431,53 @@ class OrderRepository extends Repository
 
         return $stmt->execute();
     }
+
+    /**
+     * Returns total number of non-cart orders for orders cms.
+     * @return int|bool if error during query excetution, returns false. Otherwise returns total order number.
+     */
+    public function getTotalOrderNumberForCms() : int|bool{
+        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `Orders` WHERE `status` != 0;");
+
+        $res = $stmt->execute();  
+        
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res === false ? false : $res[0];
+    }
+
+    /**
+     * Returns paginated and sorted array of order for cms page.
+     * @param int $orders_per_page number of orders per page.
+     * @param int $page current page.
+     * @param string $sort name of field to sort by.
+     * @param int $sort_order order of sorting (either 0 for ASC or 1 for DESC).
+     * @return array|null|bool returns false if there were ant errors during query execution. Returns null if no orders found. Otherwise, returns array of orders.
+     */
+    public function getOrdersSortedForCms(int $orders_per_page, int $page, string $sort, int $sort_order) : array|null|bool {
+        $sql = "SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `status` != 0 ORDER BY ";
+        $sql .= $this->getSortStringCms($sort, $sort_order);
+        $sql .= ' LIMIT :limit OFFSET :offset;';
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('limit', $orders_per_page, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $orders_per_page * ($page - 1), PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        return $stmt->fetchAll();
+    }
+
+    private function getSortStringCms(string $sort, int $sort_order) : string {
+        $order_string = $sort_order === 0 ? 'ASC' : 'DESC';
+
+        switch($sort){
+            case 'date':
+                return '`date`' . $order_string; 
+            default:
+                return '`date`' . $order_string;
+        }
+    }
 }

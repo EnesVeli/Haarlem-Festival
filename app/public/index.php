@@ -102,7 +102,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     // History
     $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
-    $r->addRoute('GET', '/history/booking', [\App\Controllers\HistoryController::class, 'booking']);
+    $r->addRoute('GET', '/history/booking',  [\App\Controllers\HistoryController::class, 'booking']);
     $r->addRoute('POST', '/history/book',    [\App\Controllers\HistoryController::class, 'book']);
     $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
 
@@ -160,7 +160,10 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // CMS — Stories Homepage content
     $r->addRoute('GET',  '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'edit']);
     $r->addRoute('POST', '/cms/stories/homepage', [\App\Controllers\CmsStoriesHomepageController::class, 'update']);
-    
+
+    // Orders CMS
+    $r->addRoute('GET',  '/cms/order', [\App\Controllers\Cms\Orders\OrderCmsController::class, 'index']);
+
     // Cart
     $r->addRoute('GET',  '/cart',         [\App\Controllers\CartController::class, 'index']);
     $r->addRoute('POST', '/cart/add',     [\App\Controllers\CartController::class, 'add']);
