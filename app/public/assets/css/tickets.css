@@ -137,7 +137,7 @@
 /*Event row*/
 .tickets-event {
     display: grid;
-    grid-template-columns: 130px 1fr auto;
+    grid-template-columns: 100px 1fr auto;
     align-items: center;
     gap: 1.25rem;
     padding: 1.05rem 0;
@@ -155,6 +155,19 @@
     font-weight: 600;
     color: #333;
     white-space: nowrap;
+}
+
+.ticekt-event__img {
+    width: 80px;
+    height: 80px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+
+    margin-left: 12px;
 }
 
 /* Info */
@@ -246,61 +259,63 @@
     gap: 0.5rem;
 }
 
-/* Quantity stepper */
-.tickets-qty-stepper {
+/* Pagiantion */
+.tickets-pages-container{
     display: flex;
-    align-items: center;
-    border: 1.5px solid #d8d1c7;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #fff;
-}
 
-.tickets-qty-btn {
-    width: 34px;
-    height: 36px;
-    background: #f5f3ef;
-    border: none;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #1b3a5c;
-    cursor: pointer;
-    transition: background 0.15s ease;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    flex-shrink: 0;
+
+    gap: 6px;
+
+    margin-top: 8px;
 }
 
-.tickets-qty-btn:hover:not(:disabled) {
-    background: #e8e4de;
-}
+.ticket-page-btn{
+    vertical-align: middle;
 
-.tickets-qty-btn:disabled {
-    color: #ccc;
-    cursor: not-allowed;
-}
+    padding: 0px;
+    margin: 0px;
 
-.tickets-qty-input {
-    width: 44px;
-    height: 36px;
-    padding: 0;
+    width: 34px;
+    height: 34px;
+
     border: none;
-    border-left: 1.5px solid #d8d1c7;
-    border-right: 1.5px solid #d8d1c7;
+    border-radius: 99px;
+
     font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #1a1a1a;
+
+    text-decoration: none;
     text-align: center;
-    background: #fff;
-    -moz-appearance: textfield;
+
+    line-height: 2.1rem;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease; 
 }
 
-.tickets-qty-input::-webkit-outer-spin-button,
-.tickets-qty-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+.ticket-page-btn__not-sel{
+    background: #1b3a5c;
+    color: #fff;
+}
+
+.ticket-page-btn__not-sel:hover{
+    background: #15304d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+
+.ticket-page-btn__sel{
+    background: #f59e0b;
+    color: #000;
+}
+
+.ticket-page-btn__sel:hover{
+    background: #ce860a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
 }
 
 /* Responsive*/

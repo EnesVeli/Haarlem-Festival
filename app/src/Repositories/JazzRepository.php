@@ -248,7 +248,7 @@ class JazzRepository extends Repository implements IJazzRepository
         $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
         $res = $stmt->fetch();
 
-        return $res === false ? null : $res;
+        return $res === false ? null : $res; 
     }
 
     public function storePerformer(array $data): void
@@ -668,89 +668,131 @@ public function getTracksByPerformer(int $performerId): array
         $stmt->execute([':id' => $id]);
     }
     public function updateHighlightsByPerformer(int $performerId, array $highlights): void
-{
-    $deleteStmt = $this->connection->prepare("
-        DELETE FROM jazz_performer_highlights
-        WHERE performer_id = :performer_id
-    ");
-    $deleteStmt->execute([':performer_id' => $performerId]);
+    {
+        $deleteStmt = $this->connection->prepare("
+            DELETE FROM jazz_performer_highlights
+            WHERE performer_id = :performer_id
+        ");
+        $deleteStmt->execute([':performer_id' => $performerId]);
 
-    $insertStmt = $this->connection->prepare("
-        INSERT INTO jazz_performer_highlights (
-            performer_id,
-            title,
-            description,
-            sort_order
-        )
-        VALUES (
-            :performer_id,
-            :title,
-            :description,
-            :sort_order
-        )
-    ");
+        $insertStmt = $this->connection->prepare("
+            INSERT INTO jazz_performer_highlights (
+                performer_id,
+                title,
+                description,
+                sort_order
+            )
+            VALUES (
+                :performer_id,
+                :title,
+                :description,
+                :sort_order
+            )
+        ");
 
-    foreach ($highlights as $highlight) {
-        $title = trim($highlight['title'] ?? '');
+        foreach ($highlights as $highlight) {
+            $title = trim($highlight['title'] ?? '');
 
-        if ($title === '') {
-            continue;
+            if ($title === '') {
+                continue;
+            }
+
+            $insertStmt->execute([
+                ':performer_id' => $performerId,
+                ':title' => $title,
+                ':description' => $highlight['description'] ?? '',
+                ':sort_order' => (int)($highlight['sort_order'] ?? 0),
+            ]);
         }
-
-        $insertStmt->execute([
-            ':performer_id' => $performerId,
-            ':title' => $title,
-            ':description' => $highlight['description'] ?? '',
-            ':sort_order' => (int)($highlight['sort_order'] ?? 0),
-        ]);
     }
-}
 
-public function updateTracksByPerformer(int $performerId, array $tracks): void
-{
-    $deleteStmt = $this->connection->prepare("
-        DELETE FROM jazz_performer_tracks
-        WHERE performer_id = :performer_id
-    ");
-    $deleteStmt->execute([':performer_id' => $performerId]);
+    public function updateTracksByPerformer(int $performerId, array $tracks): void
+    {
+        $deleteStmt = $this->connection->prepare("
+            DELETE FROM jazz_performer_tracks
+            WHERE performer_id = :performer_id
+        ");
+        $deleteStmt->execute([':performer_id' => $performerId]);
 
-    $insertStmt = $this->connection->prepare("
-        INSERT INTO jazz_performer_tracks (
-            performer_id,
-            title,
-            release_date_text,
-            description,
-            image_path,
-            listen_url,
-            sort_order
-        )
-        VALUES (
-            :performer_id,
-            :title,
-            :release_date_text,
-            :description,
-            :image_path,
-            :listen_url,
-            :sort_order
-        )
-    ");
+        $insertStmt = $this->connection->prepare("
+            INSERT INTO jazz_performer_tracks (
+                performer_id,
+                title,
+                release_date_text,
+                description,
+                image_path,
+                listen_url,
+                sort_order
+            )
+            VALUES (
+                :performer_id,
+                :title,
+                :release_date_text,
+                :description,
+                :image_path,
+                :listen_url,
+                :sort_order
+            )
+        ");
 
-    foreach ($tracks as $track) {
-        $title = trim($track['title'] ?? '');
+        foreach ($tracks as $track) {
+            $title = trim($track['title'] ?? '');
 
-        if ($title === '') {
-            continue;
+            if ($title === '') {
+                continue;
+            }
+
+            $insertStmt->execute([
+                ':performer_id' => $performerId,
+                ':title' => $title,
+                ':release_date_text' => $track['release_date_text'] ?? null,
+                ':description' => $track['description'] ?? null,
+                ':image_path' => $track['image_path'] ?? null,
+                ':listen_url' => $track['listen_url'] ?? null,
+                ':sort_order' => (int)($track['sort_order'] ?? 0),
+            ]);
         }
-
-        $insertStmt->execute([
-            ':performer_id' => $performerId,
-            ':title' => $title,
-            ':release_date_text' => $track['release_date_text'] ?? null,
-            ':description' => $track['description'] ?? null,
-            ':image_path' => $track['image_path'] ?? null,
-            ':listen_url' => $track['listen_url'] ?? null,
-            ':sort_order' => (int)($track['sort_order'] ?? 0),
-        ]);
     }
-}
+
+    /**
+     * Returns list of jazz performers for ticket page (only a few performer fields are set) limited by page.
+     * @param int $page page to search (1 is first page. should be 1 or higher)
+     * @param int $perf_per_page number of restaurant per page (should be more or equal to 1)
+     * @return JazzPerformer[]|null|bool returns false if any errors occured. returns null if no restaurants found. returns array of restaurants otherwise.
+     */
+    public function getActivePerformersForTickets(int $page, int $perf_per_page) : array|null|bool {
+        $sql = "SELECT `id`, `name`, `bio`, `date` AS `date_`, `start_time` AS `start_time_`, `end_time` AS `end_time_`, `image_path`
+                FROM `jazz_performers` 
+                WHERE `is_active` = 1
+                LIMIT :limit OFFSET :offset;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('limit', $perf_per_page, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $perf_per_page * ($page - 1), PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, JazzPerformer::class);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Returns total number of active performers.
+     * @return int|bool returns false if there were errors during execution. Returns number of restaurants on success. 
+     */
+    public function getNumberOfActivePerformers() : int|bool {
+        $sql = "SELECT COUNT(*) 
+                FROM `jazz_performers`
+                WHERE `is_active` = 1;";
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res === false ? false : $res[0];
+    }
 }

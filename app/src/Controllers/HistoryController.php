@@ -78,11 +78,11 @@ class HistoryController extends BaseController
 
         try{
             if($reservation_id == null){
-                if(!isset($_POST['slot_id']) || !isset($_POST['date_offset'])) throw new EmptyPostException();
+                if(!isset($_GET['slot']) || !isset($_GET['offset'])) throw new EmptyPostException();
 
-                if($_POST['date_offset'] < 0 || $_POST['date_offset'] > HistoryService::$max_date_offset) throw new PostMismatchException();
+                if($_GET['offset'] < 0 || $_GET['offset'] > HistoryService::$max_date_offset) throw new PostMismatchException();
 
-                $reservation = $this->service->getHistoryReservationBySlotIdAndDateOffset($_POST['slot_id'], $_POST['date_offset']);
+                $reservation = $this->service->getHistoryReservationBySlotIdAndDateOffset($_GET['slot'], $_GET['offset']);
                 if($reservation == null) throw new PostMismatchException("Failed to find reservation slot by slot_id and date_offset");
             }
             else{

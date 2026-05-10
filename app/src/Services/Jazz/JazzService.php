@@ -83,4 +83,12 @@ class JazzService implements IJazzService
 
         $this->order_service->createAndAddBookingToCart($user_id, $booking);
     }
+
+    public function getActivePerformersForTickets(int $page, int $perf_per_page) : array|null|bool {
+        return $this->jazzRepo->getActivePerformersForTickets($page, $perf_per_page);
+    }
+
+     public function getNumberOfActivePerformers() : int|bool {
+        return $this->jazzRepo->getNumberOfActivePerformers();
+    }
 }

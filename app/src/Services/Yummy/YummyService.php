@@ -53,6 +53,14 @@ class YummyService
         $this->cms_repository = $cms_repository;
         $this->order_service = $order_service;
     }
+    
+    public function getActiveRestaurantsForTickets(int $page, int $res_per_page) : array|null|bool {
+        return $this->restaurant_repository->getActiveRestaurantsForTickets($page, $res_per_page);
+    }
+
+    public function getNumberOfActiveRestaurants() : int|bool {
+        return $this->restaurant_repository->getNumberOfActiveRestaurants();
+    }
 
     public function getHomeViewModel() : YummyHomeViewModel {
         $view_model = new YummyHomeViewModel();

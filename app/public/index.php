@@ -102,7 +102,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     // History
     $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
-    $r->addRoute('POST', '/history/booking', [\App\Controllers\HistoryController::class, 'booking']);
+    $r->addRoute('GET', '/history/booking', [\App\Controllers\HistoryController::class, 'booking']);
     $r->addRoute('POST', '/history/book',    [\App\Controllers\HistoryController::class, 'book']);
     $r->addRoute('GET', '/history/{slug}',   [\App\Controllers\HistoryController::class, 'detail']);
 
@@ -136,7 +136,6 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     // Tickets — main landing & per-event-type sub-pages
     $r->addRoute('GET', '/tickets',         [\App\Controllers\TicketsController::class, 'index']);
     $r->addRoute('GET', '/tickets/jazz',    [\App\Controllers\TicketsController::class, 'jazz']);
-    $r->addRoute('GET', '/tickets/dance',   [\App\Controllers\TicketsController::class, 'dance']);
     $r->addRoute('GET', '/tickets/history', [\App\Controllers\TicketsController::class, 'history']);
     $r->addRoute('GET', '/tickets/yummy',   [\App\Controllers\TicketsController::class, 'yummy']);
     $r->addRoute('GET', '/tickets/stories', [\App\Controllers\TicketsController::class, 'stories']);

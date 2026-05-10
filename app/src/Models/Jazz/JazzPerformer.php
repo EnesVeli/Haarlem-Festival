@@ -34,4 +34,10 @@ class JazzPerformer
             $this->end_time = new DateTime($value);
         }
     }
+
+    public function getDateTimeFormated() : string {
+        if(!isset($this->date) || !isset($this->start_time) ||!isset($this->end_time)) return "";
+
+        return $this->start_time->format('H:i') . ' - ' . $this->end_time->format('H:i') . ' ' . $this->date->format('d.m.Y');
+    }
 }
