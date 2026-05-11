@@ -12,7 +12,7 @@ use Exception;
 class OrderCmsController extends BaseCmsController
 {
     public static array $ALLOWED_SORTING = ['date'];
-    public static $NUMBER_OF_ORDERS_PER_PAGE = 24;
+    public static $NUMBER_OF_ORDERS_PER_PAGE = 3;
 
     private OrderCmsService $service;
 
@@ -48,6 +48,8 @@ class OrderCmsController extends BaseCmsController
             $view_model->sorting_order = $order;
             $view_model->current_page = $page;
             $view_model->total_page_number = $total_page_number;
+
+            $view_model->calcOffsets();
         }
         catch(Exception $ex){
             Session::setTempError("Something went wrong. Try again later." . $ex->getMessage());

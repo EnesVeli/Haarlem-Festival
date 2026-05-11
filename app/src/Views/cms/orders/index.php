@@ -1,4 +1,5 @@
 <?
+use App\Enums\OrderStatus;
 /** @var ?App\ViewModels\CmsOrderListViewModel $view_model */
 /** @var ?string $error_message */
 
@@ -10,30 +11,39 @@ $pageCSS = 'order.css';
 
 <div>
     <? if(!isset($view_model)): ?>
-        <div>
-            <h3>No Orders found.</h3>
-            <div></div>
+        <div class="main-card">
+            <h3 class="title">Order List:</h3>
+            <div class="ohter-text">No</div>
         </div>
     <? else: ?>
-        <div>
-            <table>
-                <thead>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </thead>
-                <tbody>
-                    <? foreach($view_model->orders as $order): ?>
+        <div class="main-card">
+            <h3 class="title">Order List:</h3>
+            <div class="order-table-wrap">
+                <table class="order-table">
+                    <thead>
                         <tr>
-                            <th><?= $order->date->format('d.m.Y H:i:s') ?></th>
-                            <th><?= $order->status->value ?></th>
-                            <th><?= '€' . number_format($order->total_price / 100, 2) ?></th>
-                            <th></th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Price</th>
+                            <th>Action</th>
                         </tr>
-                    <? endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="order-table-body">
+                        <? foreach($view_model->orders as $order): ?>
+                            <tr>
+                                <th><?= $order->date->format('d.m.Y H:i:s') ?></th>
+                                <th class="<?= $order->status == OrderStatus::Paid ? 'stauts-paid' : ($order->status == OrderStatus::Canceled ? 'status-cancelled' : '') ?>"><?= $order->getStatusString() ?></th>
+                                <th><?= '€' . number_format($order->total_price / 100, 2) ?></th>
+                                <th>
+                                    <a class="view-button" href="<?= '/cms/order/view?id=' . $order->order_id ?>">View</a>
+                                </th>
+                            </tr>
+                        <? endforeach; ?>
+                    </tbody>
+                </table>
+            </div> 
+            
+            <?php include '/app/src/Views/cms/orders/partials/page-selector.php'; ?>      
         </div>
     <? endif; ?>
 </div>

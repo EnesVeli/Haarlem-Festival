@@ -23,4 +23,19 @@ class Order{
             $this->status = OrderStatus::from($value);
         }
     }
+
+    public function getStatusString() : string {
+        switch ($this->status) {
+            case OrderStatus::InCart:
+                return 'In Cart';
+            case OrderStatus::NotPaid:
+                return 'Pending';
+            case OrderStatus::Paid:
+                return 'Paid';
+            case OrderStatus::Canceled:
+                return 'Cancelled';
+        }
+
+        return '';
+    }
 }
