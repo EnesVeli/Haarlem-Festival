@@ -5,7 +5,7 @@ namespace App\ViewModels;
 class CmsOrderListViewModel {
     public ?array $orders;
 
-    public string $sorting;
+    public int $sorting;
     public int $sorting_order;
 
     public ?int $current_page;

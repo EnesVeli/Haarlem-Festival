@@ -93,6 +93,8 @@
 
     font-size: 15px;
     font-weight: 700;
+
+    cursor: pointer; 
 }
 
 .order-table tbody th{
@@ -202,4 +204,8 @@
     background: #ce860a;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+
+.sorted-by-title{
+    text-decoration: underline;
 }

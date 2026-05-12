@@ -454,7 +454,7 @@ class OrderRepository extends Repository
      * @param int $sort_order order of sorting (either 0 for ASC or 1 for DESC).
      * @return array|null|bool returns false if there were ant errors during query execution. Returns null if no orders found. Otherwise, returns array of orders.
      */
-    public function getOrdersSortedForCms(int $orders_per_page, int $page, string $sort, int $sort_order) : array|null|bool {
+    public function getOrdersSortedForCms(int $orders_per_page, int $page, int $sort, int $sort_order) : array|null|bool {
         $sql = "SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `status` != 0 ORDER BY ";
         $sql .= $this->getSortStringCms($sort, $sort_order);
         $sql .= ' LIMIT :limit OFFSET :offset;';
@@ -474,8 +474,12 @@ class OrderRepository extends Repository
         $order_string = $sort_order === 0 ? 'ASC' : 'DESC';
 
         switch($sort){
-            case 'date':
+            case 0:
                 return '`date`' . $order_string; 
+            case 1:
+                return '`status`' . $order_string; 
+            case 2:
+                return '`total_price`' . $order_string; 
             default:
                 return '`date`' . $order_string;
         }

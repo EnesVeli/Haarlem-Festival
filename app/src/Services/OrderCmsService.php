@@ -45,7 +45,7 @@ class OrderCmsService {
         return $this->order_rep->getTotalOrderNumberForCms();
     }
 
-    public function getOrdersSortedForCms(int $orders_per_page, int $page, string $sort, int $sort_order) : array|null|bool {
+    public function getOrdersSortedForCms(int $orders_per_page, int $page, int $sort, int $sort_order) : array|null|bool {
         return $this->order_rep->getOrdersSortedForCms($orders_per_page, $page, $sort, $sort_order);
     }
 }

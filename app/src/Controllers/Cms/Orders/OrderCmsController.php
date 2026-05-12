@@ -11,8 +11,8 @@ use Exception;
 
 class OrderCmsController extends BaseCmsController
 {
-    public static array $ALLOWED_SORTING = ['date'];
-    public static $NUMBER_OF_ORDERS_PER_PAGE = 3;
+    public static array $ALLOWED_SORTING = [0, 1, 2];
+    public static $NUMBER_OF_ORDERS_PER_PAGE = 12;
 
     private OrderCmsService $service;
 
@@ -70,16 +70,16 @@ class OrderCmsController extends BaseCmsController
         return $page;    
     }
 
-    private function getSort() : string {
-        if(!isset($_GET['page']) || !in_array($_GET['page'], self::$ALLOWED_SORTING)) return 'date';
+    private function getSort() : int {
+        if(!isset($_GET['sort']) || !filter_var($_GET['sort'], FILTER_VALIDATE_INT) || !in_array($_GET['sort'], self::$ALLOWED_SORTING)) return 0;
 
-        return $_GET['page'];
+        return $_GET['sort'];
     }
 
     private function getOrder() : int {
         if(!isset($_GET['order']) || !filter_var($_GET['order'], FILTER_VALIDATE_INT)) return 0;
 
-        if($_GET['order'] === 1) return 1;
+        if($_GET['order'] == 1) return 1;
 
         return 0;
     }

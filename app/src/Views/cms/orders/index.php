@@ -22,10 +22,32 @@ $pageCSS = 'order.css';
                 <table class="order-table">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th>Price</th>
-                            <th>Action</th>
+                            <th>
+                                <span id="sort_0" class="" onclick="onSortingClick(0)">
+                                    Date
+                                    <span id="ord_0_0" style="display:none;">&#8593;</span>
+                                    <span id="ord_0_1" style="display:none;">&#8595;</span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="sort_1" class="" onclick="onSortingClick(1)">
+                                    Status
+                                    <span id="ord_1_0" style="display:none;">&#8593;</span>
+                                    <span id="ord_1_1" style="display:none;">&#8595;</span>
+                                </span>
+                            </th>
+                            <th>
+                                <span id="sort_2" class="" onclick="onSortingClick(2)">
+                                    Price
+                                    <span id="ord_2_0" style="display:none;">&#8593;</span>
+                                    <span id="ord_2_1" style="display:none;">&#8595;</span>
+                                </span>
+                            </th>
+                            <th>
+                                <span style="cursor: auto;">
+                                    Action
+                                </span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="order-table-body">
@@ -47,5 +69,45 @@ $pageCSS = 'order.css';
         </div>
     <? endif; ?>
 </div>
+
+<script>
+    let sort = <?= $view_model == null ? 0 : $view_model->sorting ?>;
+    let order = <?= $view_model == null ? 0 : $view_model->sorting_order ?>;
+
+    updateSorting(sort, order);
+
+    function updateSorting(new_sort, new_order){
+        hideSingle('sort_' + sort, 'ord_' + sort + '_' + order);
+        showSingle('sort_' + new_sort, 'ord_' + new_sort + '_' + new_order);
+    }
+
+    function hideSingle(sort_id, arrow_id){
+        title = document.getElementById(sort_id);
+        title.className  = '';
+
+        arrow = document.getElementById(arrow_id);
+        arrow.style = 'display:none;';
+    }
+
+    function showSingle(sort_id, arrow_id){
+        title = document.getElementById(sort_id);
+        title.className  = 'sorted-by-title';
+
+        arrow = document.getElementById(arrow_id);
+        arrow.style = 'display:inline;';
+    }
+
+    function onSortingClick(clicked_sort){
+        if(clicked_sort == sort) {
+            if(order == 0) order = 1;
+            else order = 0;
+        }
+        else{
+            order = 0;
+        }
+
+        window.location.href = '/cms/order?sort=' + clicked_sort + '&order=' + order + '&page=0';
+    }
+</script>
 
 <?php require '/app/src/Views/partials/footer.php'; ?>
