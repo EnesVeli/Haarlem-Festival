@@ -127,7 +127,7 @@
 }
 
 .view-button{
-    font-family: 'Roboto';
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 700;
 
@@ -208,4 +208,146 @@
 
 .sorted-by-title{
     text-decoration: underline;
+}
+
+/* Order View Page */
+.view-order-main{
+    display: flex;
+
+    flex-direction: column;
+
+    width: 60%;
+
+    margin-top: 100px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    padding: 20px 24px;
+
+    border-style: solid;
+    border-color: var(--accent-orange);
+    border-width: 2px;
+    border-radius: 16px;
+}
+
+.view-title{
+    font-family: 'Playfair', serif;
+    font-size: 32px;
+    
+    color: var(--burgundy);
+}
+
+.order-view-stat-container{
+    display: block;
+
+    margin-bottom: 9px;
+}
+
+.order-view-stat-container h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+
+    margin-bottom: 0;
+}
+
+.order-view-stat-container div {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+
+    margin-left: 8px;
+    margin-top: 0;
+}
+
+.order-items-container{
+    margin-top: 16px;
+}
+
+.order-items-container h3{
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.view-order-table-wrap{
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+}
+
+.view-order-table{
+    width: 100%;
+
+    border-style: none;
+
+    font-family: 'Inter', sans-serif;
+}
+
+.view-order-table th{
+    text-align: left;
+
+    padding: 14px 16px;
+}
+
+.view-order-table thead th{
+    color: #081019;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.view-order-table tbody th{
+    color: #0D1B2A;
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.view-order-table tr{
+    padding: 14px 16px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    vertical-align: middle;
+
+    color: #374151;
+}
+
+.view-order-table-body tr:last-child{
+    border-style: none;
+}
+
+.view-order-action-container {
+    margin-top: 16px;
+}
+
+.order-view-go-back-button {
+    vertical-align: middle;
+
+    padding: 12px 4px;
+    margin: 0px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    text-decoration: none;
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease; 
+
+    background: #1b3a5c;
+    color: #fff;
+}
+
+.order-view-go-back-button:hover {
+    background: #15304d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
 }

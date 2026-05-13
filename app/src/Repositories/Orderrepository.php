@@ -484,4 +484,17 @@ class OrderRepository extends Repository
                 return '`date`' . $order_string;
         }
     }
+
+    public function getOrderByIdForCms(int $order_id) : ?Order {
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `order_id` = :order_id AND `status` != 0;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        $res = $stmt->fetch();
+
+        return $res === false ? null : $res;
+    }
 }

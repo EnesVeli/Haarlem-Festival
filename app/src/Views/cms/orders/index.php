@@ -3,7 +3,7 @@ use App\Enums\OrderStatus;
 /** @var ?App\ViewModels\CmsOrderListViewModel $view_model */
 /** @var ?string $error_message */
 
-$pageTitle = 'Order CMS - The Fsetical Haarlem';
+$pageTitle = 'Order List CMS - The Festival Haarlem';
 $pageCSS = 'order.css';
 ?>
 
@@ -13,7 +13,7 @@ $pageCSS = 'order.css';
     <? if(!isset($view_model)): ?>
         <div class="main-card">
             <h3 class="title">Order List:</h3>
-            <div class="ohter-text">No</div>
+            <div class="ohter-text">No orders found</div>
         </div>
     <? else: ?>
         <div class="main-card">

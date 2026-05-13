@@ -163,6 +163,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     // Orders CMS
     $r->addRoute('GET',  '/cms/order', [\App\Controllers\Cms\Orders\OrderCmsController::class, 'index']);
+    $r->addRoute('GET',  '/cms/order/view', [\App\Controllers\Cms\Orders\OrderCmsController::class, 'view']);
 
     // Cart
     $r->addRoute('GET',  '/cart',         [\App\Controllers\CartController::class, 'index']);

@@ -4,9 +4,11 @@ namespace App\Controllers\Cms\Orders;
 
 use App\Controllers\Cms\BaseCmsController;
 use App\Framework\Session;
+use App\Models\Exceptions\EmptyPostException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Services\OrderCmsService;
 use App\ViewModels\CmsOrderListViewModel;
+use App\ViewModels\ViewOrderCmsViewModel;
 use Exception;
 
 class OrderCmsController extends BaseCmsController
@@ -26,6 +28,7 @@ class OrderCmsController extends BaseCmsController
         $this->requireAdmin();
 
         try{
+            //throw new Exception();
             // Get order number
             $total_order_number = $this->service->getTotalOrderNumberForCms();
             if($total_order_number === false) throw new QueryExecutionException('Failed to get order number for order cms.');
@@ -82,5 +85,27 @@ class OrderCmsController extends BaseCmsController
         if($_GET['order'] == 1) return 1;
 
         return 0;
+    }
+
+    public function view(){
+        $this->requireAdmin();
+
+        try{
+            if(!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) throw new EmptyPostException('Order id is not set.');
+
+            $order = $this->service->getOrderForView($_GET['id']);
+            if($order === null) throw new QueryExecutionException('Failed to get order for view cms.');
+
+            $view_model = new ViewOrderCmsViewModel();
+            $view_model->order = $order;
+
+            require __DIR__ . '/../../../Views/cms/orders/order-view.php';
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError('Something went wrong. Try again later.');
+        }
+
+        header('Location: /cms/order');
     }
 }
