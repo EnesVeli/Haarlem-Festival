@@ -27,6 +27,8 @@ class OrderCmsController extends BaseCmsController
     public function index(){
         $this->requireAdmin();
 
+        $error_message = Session::popTempError();
+
         try{
             //throw new Exception();
             // Get order number
@@ -55,7 +57,7 @@ class OrderCmsController extends BaseCmsController
             $view_model->calcOffsets();
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong. Try again later." . $ex->getMessage());
+            $error_message = "Something went wrong. Try again later.";
         }
 
         require __DIR__ . '/../../../Views/cms/orders/index.php';
@@ -107,5 +109,24 @@ class OrderCmsController extends BaseCmsController
         }
 
         header('Location: /cms/order');
+    }
+
+    public function exportPage(){
+        $this->requireAdmin();
+
+        $error_message = Session::popTempError();
+
+        try{
+            
+        }
+        catch(Exception $ex){
+            $error_message = "Something went wrong. Try again later.";
+        }
+
+        require __DIR__ . '/../../../Views/cms/orders/export.php';
+    }
+
+    public function export(){
+
     }
 }

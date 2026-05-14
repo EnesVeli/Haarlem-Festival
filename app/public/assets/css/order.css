@@ -40,15 +40,55 @@
     border-radius: 16px;
 }
 
-.title{
-    padding-left: 18px;
+.order-top-action-container{
+    display: flex;
 
-    padding-top: 12px;
+    flex-wrap: wrap;
 
+    justify-content: space-between;
+    align-content: center;
+
+    margin-left: 18px;
+    margin-right: 18px;
+
+    margin-top: 16px;
+}
+
+.order-title{
     font-family: 'Playfair', serif;
     font-size: 32px;
     
     color: var(--burgundy);
+}
+
+.order-export-button{
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+
+    background-color: #174d18;
+
+    color: white;
+
+    margin: 0;
+    padding: 0;
+
+    width: 98px;
+    height: 34px;
+
+    text-align: center;
+    line-height: 30px;
+
+    border-style: none;
+    border-radius: 10px;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.order-export-button:hover{
+    background: #123d13;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
 }
 
 .ohter-text{
@@ -350,4 +390,168 @@
     background: #15304d;
     transform: translateY(-1px);
     box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+/* Export Page */
+.export-main-card{
+    display: flex;
+
+    flex-direction: column;
+
+    width: 60%;
+
+    margin-top: 100px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    border-style: solid;
+    border-color: var(--accent-orange);
+    border-width: 1.5px;
+    border-radius: 16px;    
+
+    padding: 12px 16px;
+}
+
+.export-title{
+    font-family: 'Playfair', serif;
+    font-size: 32px;
+    
+    color: var(--burgundy);
+
+    margin-bottom: 0;
+}
+
+.export-text{
+    font-family: Inter, system-ui;
+    font-size: 18px;
+    
+    color: black
+}
+
+.export-sel-section{
+    display: flex;
+
+    justify-content: space-between;
+
+    width: 110px;
+
+    margin-left: 18px;
+}
+
+.export-sel-section label{
+    font-family: Inter, system-ui;
+    font-size: 16px;
+    
+    color: black
+}
+
+.export-staueses-container{
+    margin-top: 8px;
+}
+
+.export-staueses-container h5{
+    font-family: 'Playfair', serif;
+    font-size: 26px;
+    
+    color: var(--burgundy);
+
+    margin-bottom: 0;
+}
+
+.export-status-chocies{
+    margin-top: 3px;
+}
+
+.export-status-chocies div{
+    display: flex;
+
+    justify-content: space-between;
+
+    width: 110px;
+
+    margin-left: 18px;
+}
+
+.export-status-chocies div label{
+    font-family: Inter, system-ui;
+    font-size: 16px;
+    
+    color: black
+}
+
+.export-actions{
+    display: flex;
+
+    height: 32px;
+
+    justify-content: space-between;
+
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+.export-back-button{
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    text-decoration: none;
+    text-align: center;
+
+    line-height: 32px;
+    width: 86px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease; 
+
+    background: #1b3a5c;
+    color: #fff;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.export-back-button:hover{
+    background: #15304d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25); 
+}
+
+.export-export-button{
+    padding: 0;
+    margin: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    text-decoration: none;
+    text-align: center;
+
+    line-height: 32px;
+    width: 86px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease; 
+
+    background: #174d18;
+    color: #fff;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.export-export-button:hover{
+    background: #123d13;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25); 
 }

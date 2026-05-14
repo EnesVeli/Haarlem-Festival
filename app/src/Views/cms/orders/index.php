@@ -17,7 +17,10 @@ $pageCSS = 'order.css';
         </div>
     <? else: ?>
         <div class="main-card">
-            <h3 class="title">Order List:</h3>
+            <div class="order-top-action-container">
+                <h3 class="order-title">Order List:</h3>
+                <a class="order-export-button" href="/cms/order/export">Export Data</a>
+            </div>   
             <div class="order-table-wrap">
                 <table class="order-table">
                     <thead>
