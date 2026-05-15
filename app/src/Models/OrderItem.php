@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\BookingType;
-use DateTime;
 
 class OrderItem{
     public int $item_id;
@@ -14,9 +13,26 @@ class OrderItem{
 
     public ?IBooking $booking;
 
-    function __set($name, $value) {
+    public function __set($name, $value) {
         if($name == "booking_type_") {
             $this->booking_type = BookingType::from($value);
+        }
+    }
+
+    public function getBookingTypeString() : string {
+        if(!isset($this->booking_type)) return '';
+    
+        switch($this->booking_type){
+            case BookingType::History:
+                return 'History';
+            case BookingType::Stories:
+                return 'Stories';
+            case BookingType::Yummy:
+                return 'Yummy';
+            case BookingType::Jazz:
+                return 'Jazz';
+            default:
+                return '';
         }
     }
 }

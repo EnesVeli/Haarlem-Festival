@@ -51,6 +51,11 @@ class CmsDashboardService
                     'description' => 'Manage dance content.',
                     'url' => '/cms/dance',
                 ],
+                [
+                    'title' => 'Orders',
+                    'description' => 'Manage festival orders.',
+                    'url' => '/cms/order',
+                ]
             ],
         ];
     }

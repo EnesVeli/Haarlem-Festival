@@ -26,13 +26,11 @@ use App\Repositories\StoriesRepository;
 use App\Repositories\TicketRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\YummyRestaurantsRepository;
-use DateInterval;
 use DateTime;
 use Exception;
 use Stripe\StripeClient;
 class OrderService
 {
-    public static int $VAT_RATE = 900;
     public static int $YUMMY_COST_PER_SEAT = 1000;
     public static int $HISTORY_ROUTE_DURATION = 180; // In munutes
 

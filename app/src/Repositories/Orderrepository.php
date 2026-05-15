@@ -3,12 +3,14 @@ namespace App\Repositories;
 
 use App\Enums\OrderStatus;
 use App\Framework\Repository;
+use App\Models\ExportOrder;
 use App\Models\History\HistoryBooking;
 use App\Models\Jazz\JazzBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\YummyBooking;
+use App\ViewModels\OrderCmsExportParam;
 use DateTime;
 use PDO;
 
@@ -430,5 +432,143 @@ class OrderRepository extends Repository
         $stmt->bindValue('booking_id', $booking_id, PDO::PARAM_INT);
 
         return $stmt->execute();
+    }
+
+    /**
+     * Returns total number of non-cart orders for orders cms.
+     * @return int|bool if error during query excetution, returns false. Otherwise returns total order number.
+     */
+    public function getTotalOrderNumberForCms() : int|bool{
+        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `Orders` WHERE `status` != 0;");
+
+        $res = $stmt->execute();  
+        
+        $res = $stmt->fetch(PDO::FETCH_BOTH);
+
+        return $res === false ? false : $res[0];
+    }
+
+    /**
+     * Returns paginated and sorted array of order for cms page.
+     * @param int $orders_per_page number of orders per page.
+     * @param int $page current page.
+     * @param string $sort name of field to sort by.
+     * @param int $sort_order order of sorting (either 0 for ASC or 1 for DESC).
+     * @return array|null|bool returns false if there were ant errors during query execution. Returns null if no orders found. Otherwise, returns array of orders.
+     */
+    public function getOrdersSortedForCms(int $orders_per_page, int $page, int $sort, int $sort_order) : array|null|bool {
+        $sql = "SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price` FROM `Orders` WHERE `status` != 0 ORDER BY ";
+        $sql .= $this->getSortStringCms($sort, $sort_order);
+        $sql .= ' LIMIT :limit OFFSET :offset;';
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue('limit', $orders_per_page, PDO::PARAM_INT);
+        $stmt->bindValue('offset', $orders_per_page * ($page - 1), PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        return $stmt->fetchAll();
+    }
+
+    private function getSortStringCms(string $sort, int $sort_order) : string {
+        $order_string = $sort_order === 0 ? 'ASC' : 'DESC';
+
+        switch($sort){
+            case 0:
+                return '`date`' . $order_string; 
+            case 1:
+                return '`status`' . $order_string; 
+            case 2:
+                return '`total_price`' . $order_string; 
+            default:
+                return '`date`' . $order_string;
+        }
+    }
+
+    /**
+     * returns order by id for cms (no cart orders)
+     * @param int $order_id id of searched order.
+     */
+    public function getOrderByIdForCms(int $order_id) : ?Order {
+        $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `order_id` = :order_id AND `status` != 0;");
+
+        $stmt->bindValue('order_id', $order_id, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Order::class);
+        $res = $stmt->fetch();
+
+        return $res === false ? null : $res;
+    }
+
+    /**
+     * Returns arrray of export orders. 
+     * @param OrderCmsExportParam $param export paramethers.
+     * @return ExportOrder[]|null|bool returns false if there were any errors during query execution.
+     *  Returns null if no orders found.
+     *  Returns array of export orders if query executed successfully.
+     */
+    public function getOrdersForExport(OrderCmsExportParam $param) : array|null|bool {
+        $sql = $this->genQueryForExport($param);
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, ExportOrder::class);
+        $res = $stmt->fetchAll();
+
+        return $res;
+    }
+
+    /**
+     * Generetes sql query for exporting orders based on paramethers.
+     * @param OrderCmsExportParam $param export paramethers (have to be set).
+     * @return string sql query.
+     */
+    private function genQueryForExport(OrderCmsExportParam $param) : string {
+        $sql = "SELECT ";
+
+        $order_fields = $param->getQueryOrderArguments();
+        $user_fields = $param->getQueryUserArguments();
+
+        if(count($order_fields) > 0){
+            $sql .= '`O`.`' . $order_fields[0] . '`';
+
+            for($i = 1; $i < count($order_fields); $i++){
+                $sql .= ', `O`.`' . $order_fields[$i] . '`';
+            }
+
+            for($i = 0; $i < count($user_fields); $i++){
+                $sql .= ', `U`.`' . $user_fields[$i] . '`';
+            }
+        }
+        else{
+            $sql .= '`U`.`' . $user_fields[0] . '`';
+
+            for($i = 1; $i < count($user_fields); $i++){
+                $sql .= ', `U`.`' . $user_fields[$i] . '`';
+            }
+        }     
+        
+        if(count($user_fields) > 0){ 
+            $sql .= ' FROM `Orders` AS `O` INNER JOIN `User` AS `U` ON `O`.`user_id` = `U`.`user_id` WHERE `status` != 0';
+        }
+        else{
+            $sql .= ' FROM `Orders` AS `O` WHERE `status` != 0';
+        }   
+
+        $excluded_statuses = $param->getQueryExcludedStatuses();
+
+        for ($i = 0; $i < count($excluded_statuses); $i++) { 
+            $sql .= ' AND `status` != ' . $excluded_statuses[$i];
+        }
+
+        $sql .= ';';
+
+        return $sql;
     }
 }
