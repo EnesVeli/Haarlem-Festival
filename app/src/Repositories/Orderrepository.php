@@ -3,12 +3,14 @@ namespace App\Repositories;
 
 use App\Enums\OrderStatus;
 use App\Framework\Repository;
+use App\Models\ExportOrder;
 use App\Models\History\HistoryBooking;
 use App\Models\Jazz\JazzBooking;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\YummyBooking;
+use App\ViewModels\OrderCmsExportParam;
 use DateTime;
 use PDO;
 
@@ -485,6 +487,10 @@ class OrderRepository extends Repository
         }
     }
 
+    /**
+     * returns order by id for cms (no cart orders)
+     * @param int $order_id id of searched order.
+     */
     public function getOrderByIdForCms(int $order_id) : ?Order {
         $stmt = $this->connection->prepare("SELECT `order_id`, `user_id`, `date` AS `date_`, `status` AS `status_`, `total_price`, `stripe_session` FROM `Orders` WHERE `order_id` = :order_id AND `status` != 0;");
 
@@ -496,5 +502,73 @@ class OrderRepository extends Repository
         $res = $stmt->fetch();
 
         return $res === false ? null : $res;
+    }
+
+    /**
+     * Returns arrray of export orders. 
+     * @param OrderCmsExportParam $param export paramethers.
+     * @return ExportOrder[]|null|bool returns false if there were any errors during query execution.
+     *  Returns null if no orders found.
+     *  Returns array of export orders if query executed successfully.
+     */
+    public function getOrdersForExport(OrderCmsExportParam $param) : array|null|bool {
+        $sql = $this->genQueryForExport($param);
+
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, ExportOrder::class);
+        $res = $stmt->fetchAll();
+
+        return $res;
+    }
+
+    /**
+     * Generetes sql query for exporting orders based on paramethers.
+     * @param OrderCmsExportParam $param export paramethers (have to be set).
+     * @return string sql query.
+     */
+    private function genQueryForExport(OrderCmsExportParam $param) : string {
+        $sql = "SELECT ";
+
+        $order_fields = $param->getQueryOrderArguments();
+        $user_fields = $param->getQueryUserArguments();
+
+        if(count($order_fields) > 0){
+            $sql .= '`O`.`' . $order_fields[0] . '`';
+
+            for($i = 1; $i < count($order_fields); $i++){
+                $sql .= ', `O`.`' . $order_fields[$i] . '`';
+            }
+
+            for($i = 0; $i < count($user_fields); $i++){
+                $sql .= ', `U`.`' . $user_fields[$i] . '`';
+            }
+        }
+        else{
+            $sql .= '`U`.`' . $user_fields[0] . '`';
+
+            for($i = 1; $i < count($user_fields); $i++){
+                $sql .= ', `U`.`' . $user_fields[$i] . '`';
+            }
+        }     
+        
+        if(count($user_fields) > 0){ 
+            $sql .= ' FROM `Orders` AS `O` INNER JOIN `User` AS `U` ON `O`.`user_id` = `U`.`user_id` WHERE `status` != 0';
+        }
+        else{
+            $sql .= ' FROM `Orders` AS `O` WHERE `status` != 0';
+        }   
+
+        $excluded_statuses = $param->getQueryExcludedStatuses();
+
+        for ($i = 0; $i < count($excluded_statuses); $i++) { 
+            $sql .= ' AND `status` != ' . $excluded_statuses[$i];
+        }
+
+        $sql .= ';';
+
+        return $sql;
     }
 }

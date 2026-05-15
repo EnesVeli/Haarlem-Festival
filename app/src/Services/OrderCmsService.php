@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\BookingType;
 use App\Models\Exceptions\QueryExecutionException;
+use App\Models\ExportOrder;
 use App\Models\History\HistoryBooking;
 use App\Models\IBooking;
 use App\Models\Jazz\JazzBooking;
@@ -17,6 +18,8 @@ use App\Repositories\OrderRepository;
 use App\Repositories\StoriesRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\YummyRestaurantsRepository;
+use App\ViewModels\OrderCmsExportParam;
+use InvalidArgumentException;
 
 class OrderCmsService {
     private static ?OrderCmsService $_instance = null;
@@ -140,5 +143,36 @@ class OrderCmsService {
         }
 
         return null;
+    }
+
+    public function exportOrderToCsv(OrderCmsExportParam $param){
+        if(!$param->isSetCorrectly()) throw new InvalidArgumentException("Params are invalid.");
+
+        $exports = $this->order_rep->getOrdersForExport($param);
+
+        $this->sendOrderImportCSV($param, $exports);
+    }
+
+    /**
+     * Sends file csv file to client.
+     * @param OrderCmsExportParam $param
+     * @param ExportOrder[] $exports
+     * @return void
+     */
+    private function sendOrderImportCSV(OrderCmsExportParam $param, array $exports){
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="orders.csv"');
+
+        $order_csv[0] = $param->getAllArgumentsForHeader();
+
+        foreach($exports as $export){
+            array_push($order_csv, $export->getArrayValuesForCSV($param));
+        }
+
+        $fp = fopen('php://output', 'wb');
+        foreach ($order_csv as $line) {
+            fputcsv($fp, $line, ';', "\"", "");
+        }
+        fclose($fp);
     }
 }

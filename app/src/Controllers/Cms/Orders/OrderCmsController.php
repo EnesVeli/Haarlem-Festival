@@ -8,6 +8,7 @@ use App\Models\Exceptions\EmptyPostException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Services\OrderCmsService;
 use App\ViewModels\CmsOrderListViewModel;
+use App\ViewModels\OrderCmsExportParam;
 use App\ViewModels\ViewOrderCmsViewModel;
 use Exception;
 
@@ -116,17 +117,33 @@ class OrderCmsController extends BaseCmsController
 
         $error_message = Session::popTempError();
 
-        try{
-            
-        }
-        catch(Exception $ex){
-            $error_message = "Something went wrong. Try again later.";
-        }
-
         require __DIR__ . '/../../../Views/cms/orders/export.php';
     }
 
     public function export(){
+        $this->requireAdmin();
 
+        try{
+            if(count($_POST) < 1) throw new EmptyPostException();
+
+            $export_param = new OrderCmsExportParam();
+            $export_param->user_id =     $_POST['user_id'] ?? false;
+            $export_param->user_email =  $_POST['user_email'] ?? false;
+            $export_param->user_name =   $_POST['user_name'] ?? false;
+            $export_param->order_id =    $_POST['order_id'] ?? false;
+            $export_param->order_date =  $_POST['date'] ?? false;
+            $export_param->total_price = $_POST['total_price'] ?? false;
+            $export_param->status =      $_POST['status'] ?? false;
+            $export_param->status_1 =    $_POST['status_1'] ?? false;
+            $export_param->status_2 =    $_POST['status_2'] ?? false;
+            $export_param->status_3 =    $_POST['status_3'] ?? false;
+
+            $this->service->exportOrderToCsv($export_param);
+        }
+        catch(Exception $ex){
+            Session::setTempError('Something went wrong. Try again later.');
+        }
+
+        //header('Location: /cms/order/export');
     }
 }
