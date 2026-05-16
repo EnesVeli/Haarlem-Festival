@@ -1,43 +1,36 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Password Reset</title>
+<?
+$pageTitle = 'Password Reset Request - The Festival Haarlem';
+$mainClass = 'login-main';
+$pageCSS = 'login.css';
+?>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php require '/app/src/Views/partials/header.php';?>
 
-        <style>
-            <?php include '/app/public/assets/css/main.css'; ?>
-        </style>
-    </head>
-    <body class="bg-light">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="MainBoxTop card shadow-sm border-0 col-12 col-sm-10 col-md-7 col-lg-5">
-              <div class="card-body p-4">
-                <?php if(!empty($error_message)): ?>
-                  <div class="alert alert-danger" role="alert">
-                      <?= htmlspecialchars($error_message) ?>
-                  </div>
-                <?php endif; ?>
+<div class="login-section">
+    <div class="login-card">      
+        <h1 class="login-title">Password Reset Request</h1>
+        <p class="login-subtitle">Request an password request.</p>
 
-                <form method="post" action="/password-reset-request" novalidate>
-                      <div class="mb-3">
-                        <label for="email" class="form-label">Enter your email</label>
-                        <input id="email" name="email" type="email" class="form-control" placeholder="name@example.com" required autocomplete="email">
-                      </div>
+        <?php if(!empty($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($error_message) ?>
+            </div>
+        <?php endif; ?>
 
-                      <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Sent Password Reset</button>
-                        <a class="btn btn-outline-secondary" href="/login">Cancel</a>
-                      </div>
-                </form>
-              </div>
-          </div>
-        </div>
-      </div>
+        <form method="post" action="/password-reset-request" novalidate>
+            <div class="login-field">
+                <label for="email">Enter your email</label>
+                <input id="email" name="email" type="email" placeholder="name@example.com" required autocomplete="email">
+            </div>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+            <button type="submit" class="login-btn">Sent Password Reset</button>
+
+            <div class="login-links">
+                <a href="/login">Know the password? Login</a>
+                <a href="/register">Don't have an account? Register</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php require '/app/src/Views/partials/footer.php';?>

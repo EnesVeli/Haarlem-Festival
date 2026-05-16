@@ -1,27 +1,18 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Password Reset</title>
+<?
+$pageTitle = 'Password Reset Request (Successs) - The Festival Haarlem';
+$mainClass = 'login-main';
+$pageCSS = 'login.css';
+?>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php require '/app/src/Views/partials/header.php';?>
 
-        <style>
-            <?php include '/app/public/assets/css/main.css'; ?>
-        </style>
-    </head>
-    <body class="bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="card shadow-sm border-0 mt-5 col-12 col-sm-10 col-md-7 col-lg-5">
-                    <div class="card-body p-4">
-                        <div class="alert alert-success">Password reset request was sent to your email</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="login-section">
+    <div class="login-card">      
+        <h1 class="login-title">Password Reset Request</h1>
+        <p class="login-subtitle">Sucessfull request.</p>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+        <div class="alert alert-success">Password reset link was sent to your email.</div>
+    </div>
+</div>
+
+<?php require '/app/src/Views/partials/footer.php';?>

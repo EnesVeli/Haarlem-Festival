@@ -1,51 +1,43 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Password Reset</title>
+<?
+$pageTitle = 'Password Reset - The Festival Haarlem';
+$mainClass = 'login-main';
+$pageCSS = 'login.css';
+?>
 
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<?php require '/app/src/Views/partials/header.php';?>
 
-        <style>
-            <?php include '/app/public/assets/css/main.css'; ?>
-        </style>
-    </head>
-    <body class="bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="card shadow-sm border-0 mt-5 col-12 col-sm-10 col-md-7 col-lg-5">
-                    <div class="card-body p-4">
-                        <?php if(!empty($error_message)): ?>
-                            <div class="alert alert-danger" role="alert">
-                                <?= htmlspecialchars($error_message) ?>
-                            </div>
-                        <?php endif; ?>
+<div class="login-section">
+    <div class="login-card">      
+        <h1 class="login-title">Password Reset</h1>
+        <p class="login-subtitle">Make a new password and confirm it.</p>
 
-                        <form method="post" action="/password-reset" novalidate>
-                            <input type="hidden" id="key" name="key" value="<? echo $key?>">
-                            <input type="hidden" id="email" name="email" value="<? echo $email?>">
-
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Enter new password</label>
-                                <input id="password" name="password" type="password" class="form-control" required autocomplete="new-password">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="password_confirm" class="form-label">Confirm new password</label>
-                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" required autocomplete="new-password">
-                            </div>
-
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">Reset Password</button>
-                                <a class="btn btn-outline-secondary" href="/login">Cancel</a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
+        <?php if(!empty($error_message)): ?>
+            <div class="alert alert-danger" role="alert">
+                <?= htmlspecialchars($error_message) ?>
             </div>
-        </div>
+        <?php endif; ?>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+        <form method="post" action="/password-reset" novalidate>
+            <input type="hidden" id="key" name="key" value="<? echo $key?>">
+            <input type="hidden" id="email" name="email" value="<? echo $email?>">
+
+            <div class="login-field">
+                <label for="password">Enter new password</label>
+                <input id="password" name="password" type="password" required autocomplete="new-password">
+            </div>
+
+            <div class="login-field">
+                <label for="password_confirm">Confirm new password</label>
+                <input id="password_confirm" name="password_confirm" type="password" required autocomplete="new-password">
+            </div>
+
+            <button type="submit" class="login-btn">Reset Password</button>
+
+            <div class="login-links">
+                <a href="/login">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<?php require '/app/src/Views/partials/footer.php';?>

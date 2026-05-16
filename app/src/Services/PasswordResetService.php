@@ -9,14 +9,13 @@ use App\Models\Exceptions\IncorrectEmailException;
 use App\Models\Exceptions\InvalidKeyException;
 use App\Repositories\UserRepository;
 use App\Repositories\PasswordResetTokenRepository;
-use Exception;
 
 class PasswordResetService
 {
     private static ?PasswordResetService $_instance = null;
 
     public static function getInstance() : PasswordResetService {
-        if(self::$_instance === null) self::$_instance = new PasswordResetService(UserRepository::getInstance(), PasswordResetTokenRepository::getInstance(), VerificationService::getInstance());
+        if(self::$_instance === null) self::$_instance = new PasswordResetService(UserRepository::getInstance(), PasswordResetTokenRepository::getInstance(), VerificationService::getInstance(), MailService::getInstance());
 
         return self::$_instance;
     }
@@ -24,12 +23,14 @@ class PasswordResetService
     private PasswordResetTokenRepository $password_reset_token_repository;
     private UserRepository $user_repository;
     private VerificationService $verify_service;
+    private MailService $mail_service;
 
-    private function __construct(UserRepository $user_repository, PasswordResetTokenRepository $password_reset_token_repository, VerificationService $verify_service)
+    private function __construct(UserRepository $user_repository, PasswordResetTokenRepository $password_reset_token_repository, VerificationService $verify_service, MailService $mail_service)
     {
         $this->user_repository = $user_repository;
         $this->password_reset_token_repository = $password_reset_token_repository;
         $this->verify_service = $verify_service;
+        $this->mail_service = $mail_service;
     }
 
     public function requestPasswordReset(?string $email)
@@ -55,8 +56,7 @@ class PasswordResetService
             } 
         }
 
-        $mail_service = new MailService();
-        $mail_service->sendPasswordReset($email, $user['name'], $key);    
+        $this->mail_service->sendPasswordReset($email, $user['name'], $key);    
     }  
 
     public function startPasswordReset(?string $key, ?string $email)

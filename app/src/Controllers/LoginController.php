@@ -16,11 +16,13 @@ class LoginController extends BaseController
 
     public function index(): void
     {
-        $error = Session::pop('login_error');
+        $error = Session::popTempError();
+
         $this->render('login', [
             'error'     => $error,
             'pageTitle' => 'Login — The Festival Haarlem',
             'mainClass' => 'login-main',
+            'pageCSS' => 'login.css',
             'user'      => Session::user(),
         ]);
     }
@@ -51,7 +53,7 @@ class LoginController extends BaseController
             exit;
 
         } catch (Exception $e) {
-            Session::set('login_error', 'Invalid email or password.');
+            Session::setTempError('Invalid email or password.');
             header('Location: /login');
             exit;
         }
