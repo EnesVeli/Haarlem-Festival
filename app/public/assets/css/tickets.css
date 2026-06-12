@@ -1,0 +1,344 @@
+/* Page wrapper  */
+.tickets-page {
+    padding: 2rem 0 4rem;
+    background: #f5f3ef;
+    min-height: 70vh;
+}
+
+.tickets-container {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Header*/
+.tickets-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.tickets-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d2622;
+    margin-bottom: 0.4rem;
+}
+
+.tickets-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    color: #5f5952;
+}
+
+/*Tabs*/
+.tickets-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+}
+
+.tickets-tab {
+    display: inline-block;
+    padding: 0.55rem 1.5rem;
+    border-radius: 999px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #2f2b27;
+    background: #fff;
+    border: 1.5px solid #d8d1c7;
+    transition: all 0.2s ease;
+}
+
+.tickets-tab:hover {
+    background: #f8f6f2;
+    border-color: #c9c1b5;
+}
+
+.tickets-tab--active,
+.tickets-tab--active:hover {
+    background: #1b3a5c;
+    color: #fff;
+    border-color: #1b3a5c;
+}
+
+/*Placeholder (main /tickets page) */
+.tickets-placeholder {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+/*Content heading */
+.tickets-content__title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #8b1e1e;
+    margin-bottom: 2rem;
+}
+
+.tickets-empty {
+    text-align: center;
+    color: #888;
+    padding: 2rem 0;
+    font-family: 'Inter', sans-serif;
+}
+
+.tickets-flash {
+    margin: 0 0 1.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+}
+
+.tickets-flash--success {
+    background: #edf7ed;
+    border: 1px solid #9fd39f;
+    color: #1d5e1d;
+}
+
+.tickets-flash--error {
+    background: #fdeeee;
+    border: 1px solid #e9b3b3;
+    color: #7b1d1d;
+}
+
+/* Day section  */
+.tickets-day {
+    margin-bottom: 2.5rem;
+}
+
+.tickets-day__heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #2d2622;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #8b1e1e;
+    padding-left: 0.85rem;
+}
+
+.tickets-day__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/*Event row*/
+.tickets-event {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid #e3ddd3;
+}
+
+.tickets-event:last-child {
+    border-bottom: none;
+}
+
+/* Time */
+.tickets-event__time {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+}
+
+.ticekt-event__img {
+    width: 80px;
+    height: 80px;
+
+    object-fit: cover;
+
+    border-radius: 12px;
+
+    box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+
+    margin-left: 12px;
+}
+
+/* Info */
+.tickets-event__info {
+    min-width: 0; /* prevent flex/grid overflow */
+}
+
+.tickets-event__name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: #1a1a1a;
+}
+
+.tickets-event__name a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.tickets-event__name a:hover {
+    text-decoration: underline;
+    color: #8b1a1a;
+}
+
+.tickets-event__meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.84rem;
+    color: #69635d;
+    margin: 0;
+}
+
+.tickets-event__meta .meta-sep {
+    margin: 0 0.3rem;
+    color: #ccc;
+}
+
+/*Buttons */
+.tickets-btn {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    text-align: center;
+}
+
+.tickets-btn--price {
+    background: #1b3a5c;
+    color: #fff;
+}
+
+.tickets-btn--price:hover {
+    background: #15304d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+
+.tickets-btn--paylike {
+    background: #8b1a1a;
+    color: #fff;
+}
+
+.tickets-btn--paylike:hover {
+    background: #721515;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(139,26,26,0.25);
+}
+
+.tickets-btn--soldout,
+.tickets-btn--soldout:hover {
+    background: #999;
+    color: #fff;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.tickets-event__form {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Pagiantion */
+.tickets-pages-container{
+    display: flex;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+.ticket-page-btn{
+    vertical-align: middle;
+
+    padding: 0px;
+    margin: 0px;
+
+    width: 34px;
+    height: 34px;
+
+    border: none;
+    border-radius: 99px;
+
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    text-decoration: none;
+    text-align: center;
+
+    line-height: 2.1rem;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease; 
+}
+
+.ticket-page-btn__not-sel{
+    background: #1b3a5c;
+    color: #fff;
+}
+
+.ticket-page-btn__not-sel:hover{
+    background: #15304d;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+
+.ticket-page-btn__sel{
+    background: #f59e0b;
+    color: #000;
+}
+
+.ticket-page-btn__sel:hover{
+    background: #ce860a;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(27,58,92,0.25);
+}
+
+/* Responsive*/
+@media (max-width: 640px) {
+    .tickets-event {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .tickets-event__time {
+        font-size: 0.85rem;
+    }
+
+    .tickets-event__action {
+        text-align: left;
+    }
+
+    .tickets-tab {
+        padding: 0.45rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    .tickets-header h1 {
+        font-size: 1.5rem;
+    }
+}

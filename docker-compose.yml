@@ -15,6 +15,7 @@ services:
             context: .
             dockerfile: PHP.Dockerfile
         volumes:
+            - ./localpath/php.ini:/usr/local/etc/php/conf.d/uploads.ini
             - ./app:/app
     mysql:
         image: mariadb:latest
@@ -22,7 +23,7 @@ services:
             MYSQL_ROOT_PASSWORD: 'secret123'
             MYSQL_USER: 'developer'
             MYSQL_PASSWORD: 'secret123'
-            MYSQL_DATABASE: 'haarlem_festival'
+            MYSQL_DATABASE: 'Haarlem-Festival'
         volumes:
             - mysqldata:/var/lib/mysql
         ports:

@@ -27,6 +27,7 @@ cache/
 storage/
 var/
 app/storage/
+app/public/assets/uploads
 app/cache/
 app/var/
 .phpunit.result.cache
@@ -38,3 +39,19 @@ node_modules/
 # Docker overrides (optional local overrides)
 docker-compose.override.yml
 
+# Config
+app/src/config.php
+app/src/Config.php
+
+# Images
+app/public/assets/css/uploads/
+app/public/assets/css/Images/
+app/public/assets/uploads/
+app/public/assets/Images/
+app/public/assets/images/
+
+# Ventor
+app/vendor/
+
+# claude
+.claude/

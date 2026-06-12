@@ -1,0 +1,129 @@
+:root {
+    /* Primary colors */
+    --burgundy: #8B1818;
+    --burgundy-dark: #6f0f12;
+    
+    /* Accent colors */
+    --accent-gold: #d4a574;
+    --accent-orange: #f59e0b;
+    
+    --cms-main-light: #174d18;
+    --cms-alt-main: #0d2a0f;
+    --cms-sel: #309531;
+}
+
+.pay-main{
+    margin-top: 120px;
+    margin-bottom: 10.0%;
+
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+.pay-fail-card{
+    border-style: solid;
+    border-color: var(--burgundy);
+    border-width: 3px;
+    border-radius: 12px;
+
+    padding: 24px;
+}
+
+.pay-success-card{
+    border-style: solid;
+    border-color: var(--accent-orange);
+    border-width: 3px;
+    border-radius: 12px;
+
+    padding: 24px;
+}
+
+.pay-title-fail{
+    color: var(--burgundy);
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.pay-title-success{
+    color: var(--accent-orange);
+    font-size: 36px;
+    font-weight: 700;
+}
+
+.pay-text{
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.pay-button-container{
+    display: flex;
+
+    justify-content: flex-start;
+
+    gap: 6px;
+
+    margin-top: 12px;
+}
+
+.pay-view-button{
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-weight: 700;
+
+    color: white;
+
+    background-color: var(--burgundy);
+
+    padding: 7px 12px;
+
+    border-style: none;
+    border-radius: 14px;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pay-view-button:hover {
+    background-color: var(--burgundy-dark);
+}
+
+.pay-grey-button{
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-weight: 700;
+
+    color: white;
+
+    background-color: var(--navy);
+
+    padding: 7px 12px;
+
+    border-style: none;
+    border-radius: 14px;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pay-grey-button:hover {
+    background-color: var(--navy-dark);
+}
+
+.pay-gold-button{
+    font-family: 'Roboto';
+    font-size: 16px;
+    font-weight: 700;
+
+    color: white;
+
+    background-color: var(--accent-orange);
+
+    padding: 7px 12px;
+
+    border-style: none;
+    border-radius: 14px;
+
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pay-gold-button:hover {
+    background-color: var(--accent-gold);
+}

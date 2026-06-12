@@ -1,0 +1,1472 @@
+.stories-page {
+    background: #f6f4f1;
+    color: #2d2622;
+}
+
+.stories-page * {
+    box-sizing: border-box;
+}
+
+.stories-page p,
+.stories-page a,
+.stories-page button,
+.stories-page select,
+.stories-page span,
+.stories-page label {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.stories-page h1,
+.stories-page h2,
+.stories-page h3,
+.stories-page h4 {
+    font-family: 'Playfair Display', serif;
+    line-height: 1.2;
+}
+
+.stories-container {
+    width: min(1200px, 92%);
+    margin: 0 auto;
+}
+
+.stories-section-title {
+    font-size: 2.2rem;
+    color: #8b1e1e;
+    text-align: center;
+    margin: 0 0 2rem 0;
+}
+
+.stories-section-title--left {
+    text-align: left;
+    font-size: 1.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.stories-hero-section {
+    background: #970f10;
+    padding: 1.2rem 0 1.2rem 0;
+}
+
+.stories-hero-card {
+    display: grid;
+    grid-template-columns: 1.2fr 0.9fr;
+    background: #f6f4f1;
+    border-radius: 14px;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.stories-hero-text {
+    padding: 2.4rem 3.2rem 1.3rem 3.2rem;
+    background: #f6f4f1;
+}
+
+.stories-hero-text h1 {
+    font-size: 3.2rem;
+    color: #2d2622;
+    margin: 0 0 1.25rem 0;
+}
+
+.stories-hero-description {
+    max-width: 520px;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #2f2f2f;
+    margin: 0 0 1.6rem 0;
+}
+
+.stories-hero-subtitle {
+    font-size: 0.95rem;
+    color: #4f4f4f;
+    margin: 1rem 0 0 0;
+}
+
+.stories-hero-image {
+    min-height: 300px;
+    background: url('/assets/images/stories/stories-hero.jpg') center center / cover no-repeat;
+    background-color: #5b3b2d;
+}
+
+.stories-primary-button {
+    display: inline-block;
+    padding: 0.75rem 1.3rem;
+    background: #17355a;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-primary-button:hover {
+    background: #244874;
+    color: #ffffff;
+}
+
+.stories-quote-section {
+    padding: 1.3rem 0 0.8rem 0;
+}
+
+.stories-quote-text {
+    text-align: center;
+    color: #8b1e1e;
+    font-size: 2rem;
+    font-style: italic;
+    margin: 0;
+}
+
+.stories-ticket-section {
+    padding: 0.5rem 0 2rem 0;
+}
+
+.stories-ticket-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stories-ticket-card {
+    background: #f7f5f3;
+    border: 1px solid #8f8a84;
+    border-radius: 14px;
+    padding: 1.3rem 1.4rem;
+    min-height: 140px;
+}
+
+.stories-ticket-card h3 {
+    font-size: 1.9rem;
+    color: #7b1c1c;
+    margin: 0 0 0.9rem 0;
+}
+
+.stories-ticket-card p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0 0 0.75rem 0;
+    color: #2f2f2f;
+}
+
+.stories-filter-section {
+    padding: 0.3rem 0 2rem 0;
+}
+
+.stories-filter-box {
+    background: #f9f8f5;
+    border: 1px solid #dccf95;
+    border-radius: 16px;
+    padding: 1.3rem 1.4rem 1.5rem 1.4rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.stories-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2rem;
+    align-items: center;
+}
+
+.stories-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.stories-filter-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #7b1c1c;
+    letter-spacing: 0.04em;
+}
+
+.stories-day-buttons {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.stories-day-button {
+    border: none;
+    background: #2f4665;
+    color: #ffffff;
+    border-radius: 999px;
+    padding: 0.42rem 0.9rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.stories-day-button.is-active {
+    background: #1f3450;
+}
+
+.stories-filter-select {
+    min-width: 170px;
+    border: 1px solid #e3e0db;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.86rem;
+    color: #333333;
+}
+
+/* ---- Programme ---- */
+.stories-program-section {
+    padding: 0.2rem 0 2rem 0;
+}
+
+.stories-day-section {
+    margin-bottom: 1.8rem;
+}
+
+.stories-day-title {
+    font-size: 1.9rem;
+    color: #8b1e1e;
+    margin: 0 0 0.8rem 0;
+}
+
+.stories-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.2rem;
+}
+
+.stories-event-card {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+    min-height: 145px;
+}
+
+.stories-event-card__content {
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.stories-event-card__content h4 {
+    font-size: 1rem;
+    color: #1e1e1e;
+    margin: 0;
+}
+
+.stories-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.stories-badge {
+    display: inline-block;
+    background: #f0b321;
+    color: #1e1e1e;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.18rem 0.55rem;
+}
+
+.stories-event-meta {
+    font-size: 0.83rem;
+    color: #303030;
+    margin: 0.2rem 0 0.35rem 0;
+}
+
+.stories-event-meta span {
+    margin: 0 0.3rem;
+}
+
+.stories-card-button {
+    display: inline-block;
+    align-self: flex-start;
+    margin-top: auto;
+    background: #17355a;
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.42rem 0.62rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-card-button:hover {
+    background: #244874;
+    color: #ffffff;
+}
+
+.stories-event-card__image {
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 145px;
+    border-left: 1px solid #d5b247;
+    background-color: #d8d0c2;
+}
+
+/* ---- Map ---- */
+.stories-map-section {
+    padding: 0.8rem 0 2rem 0;
+}
+
+.stories-map-box {
+    overflow: hidden;
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+/* ---- CTA ---- */
+.stories-cta-section {
+    padding: 0.3rem 0 2rem 0;
+}
+
+.stories-cta-box {
+    background: #304965;
+    border-radius: 18px;
+    color: #ffffff;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.stories-cta-text h2 {
+    font-size: 2rem;
+    color: #ffffff;
+    margin: 0 0 0.4rem 0;
+}
+
+.stories-cta-text p {
+    font-size: 0.92rem;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 560px;
+}
+
+.stories-cta-buttons {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+}
+
+.stories-cta-button {
+    display: inline-block;
+    padding: 0.85rem 1.4rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.stories-cta-button--dark {
+    background: #17355a;
+    color: #ffffff;
+}
+
+.stories-cta-button--red {
+    background: #9e1718;
+    color: #ffffff;
+    border: 2px solid #d5b247;
+}
+
+.stories-cta-button--dark:hover,
+.stories-cta-button--red:hover {
+    opacity: 0.92;
+    color: #ffffff;
+}
+
+.stories-journey-section {
+    padding: 0.3rem 0 2.2rem 0;
+}
+
+.stories-journey-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stories-journey-card {
+    display: block;
+    background: #ffffff;
+    border: 1px solid #d7d2ca;
+    border-radius: 8px;
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+}
+
+.stories-journey-card__image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.stories-journey-card__image--history {
+    background-image: url('/assets/images/stories/journey-history.jpg');
+    background-color: #c7b39c;
+}
+
+.stories-journey-card__image--jazz {
+    background-image: url('/assets/images/stories/journey-jazz.jpg');
+    background-color: #243246;
+}
+
+.stories-journey-card__image--yummy {
+    background-image: url('/assets/images/stories/journey-yummy.jpg');
+    background-color: #7d2d63;
+}
+
+.stories-journey-card__content {
+    padding: 0.8rem 0.9rem 1rem 0.9rem;
+}
+
+.stories-journey-card__content h3 {
+    font-size: 1.85rem;
+    color: #7b1c1c;
+    margin: 0 0 0.4rem 0;
+}
+
+.stories-journey-card__content p {
+    margin: 0;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: #333333;
+}
+
+@media (max-width: 980px) {
+    .stories-hero-card,
+    .stories-ticket-grid,
+    .stories-card-grid,
+    .stories-journey-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-cta-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 700px) {
+    .stories-hero-text {
+        padding: 1.6rem;
+    }
+
+    .stories-hero-text h1 {
+        font-size: 2.3rem;
+    }
+
+    .stories-quote-text {
+        font-size: 1.45rem;
+    }
+
+    .stories-filter-row {
+        gap: 1rem;
+    }
+
+    .stories-event-card {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-event-card__image {
+        min-height: 130px;
+        border-left: none;
+        border-top: 1px solid #d5b247;
+    }
+
+    .stories-section-title {
+        font-size: 1.8rem;
+    }
+
+    .stories-section-title--left,
+    .stories-cta-text h2,
+    .stories-ticket-card h3,
+    .stories-day-title,
+    .stories-journey-card__content h3 {
+        font-size: 1.5rem;
+    }
+}
+/* ==========================================================================
+   STORIES DETAIL PAGE  (shared by Fixed-Price & Pay-As-You-Like)
+   ========================================================================== */
+
+/* --- Breadcrumb --- */
+.stories-breadcrumb {
+    padding: 0.6rem 0;
+    font-size: 0.82rem;
+    color: #666;
+}
+
+.stories-breadcrumb a {
+    color: #555;
+    text-decoration: none;
+}
+
+.stories-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.stories-breadcrumb span {
+    color: #2d2622;
+    font-weight: 600;
+}
+
+/* --- Hero Banner (contained) --- */
+.stories-detail-hero {
+    width: 100%;
+    min-height: 280px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stories-detail-hero__overlay {
+    width: 100%;
+    min-height: 280px;
+    background: linear-gradient(to right, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.15) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem 2rem;
+}
+
+.stories-detail-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #ffffff;
+    margin: 0 0 0.3rem 0;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.stories-detail-hero__subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.9);
+    margin: 0;
+}
+
+/* --- Subtitle (red, below hero) --- */
+.stories-detail-subtitle {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    color: #8b1e1e;
+    margin: 0 0 0.6rem 0;
+}
+
+/* --- Detail Meta (badges row below subtitle) --- */
+.stories-detail-meta {
+    padding: 1rem 0 0.5rem 0;
+}
+
+/* --- Two-Column Grid --- */
+.stories-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+    align-items: start;
+}
+
+/* --- Left Column: Content --- */
+.stories-detail-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    font-weight: 700;
+    color: #2d2622;
+    margin: 2rem 0 0.8rem 0;
+    border-bottom: 2px solid #dccf95;
+    padding-bottom: 0.5rem;
+}
+
+.stories-detail-content p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.stories-detail-img {
+    width: 100%;
+    height: auto;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #d5b247;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+/* --- Photo Gallery --- */
+.stories-gallery__main {
+    margin-bottom: 0.8rem;
+}
+
+.stories-gallery__thumbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.stories-gallery__thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e0dbd3;
+}
+
+/* --- Audio Preview --- */
+.stories-audio-section {
+    margin: 2rem 0;
+    background: #f9f8f5;
+    border: 1px solid #e0d9cc;
+    border-radius: 10px;
+    padding: 1rem 1.2rem;
+}
+
+.stories-audio-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #8b1e1e;
+    letter-spacing: 0.06em;
+    margin: 0 0 0.5rem 0;
+}
+
+.stories-audio-player audio {
+    width: 100%;
+    border-radius: 8px;
+}
+
+.stories-audio-title {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0.5rem 0 0 0;
+    font-style: italic;
+}
+
+/* --- Right Column: Sidebar --- */
+.stories-detail-sidebar {
+    position: sticky;
+    top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Sidebar Cards */
+.stories-sidebar-card {
+    background: #ffffff;
+    border: 2px solid #d5b247;
+    border-radius: 12px;
+    padding: 1.4rem 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.stories-sidebar-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: #8b1e1e;
+    margin: 0 0 0.4rem 0;
+    font-weight: 700;
+}
+
+.stories-sidebar-meta {
+    font-size: 0.82rem;
+    color: #888;
+    margin: 0 0 1rem 0;
+    font-style: italic;
+}
+
+/* Pay-as-you-like highlight card */
+.stories-sidebar-card--pay {
+    background: #fffdf5;
+    border-color: #d5b247;
+}
+
+.stories-sidebar-card--pay h3 {
+    font-style: italic;
+}
+
+.stories-sidebar-card--pay p {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: #444;
+    margin: 0 0 0.5rem 0;
+}
+
+/* Sidebar rows */
+.stories-sidebar-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0ece5;
+    font-size: 0.9rem;
+    color: #2d2622;
+}
+
+.stories-sidebar-row:last-of-type {
+    border-bottom: none;
+}
+
+.stories-sidebar-label {
+    font-weight: 600;
+}
+
+/* Venue */
+.stories-sidebar-venue {
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    color: #333;
+    line-height: 1.5;
+}
+
+.stories-sidebar-venue a {
+    color: #17355a;
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 0.85rem;
+}
+
+/* Price */
+.stories-sidebar-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 0.8rem 0;
+}
+
+.stories-sidebar-price__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.stories-sidebar-price__value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #8b1e1e;
+}
+
+/* HaarlemPas box */
+.stories-sidebar-haarlempas {
+    background: #f9f8f5;
+    border: 1px solid #e0d9cc;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin: 0.6rem 0 1rem 0;
+    font-size: 0.85rem;
+}
+
+.stories-sidebar-haarlempas strong {
+    color: #2d2622;
+}
+
+.stories-sidebar-haarlempas p {
+    margin: 0.2rem 0 0 0;
+    color: #555;
+    font-size: 0.82rem;
+}
+
+/* Reserve Button */
+.stories-reserve-button {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    background: #8b1e1e;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 0.5rem;
+    transition: background 0.2s;
+}
+
+.stories-reserve-button:hover {
+    background: #a52525;
+}
+
+/* Schedule rows */
+.stories-schedule-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid #f0ece5;
+    font-size: 0.85rem;
+    color: #2d2622;
+}
+
+.stories-schedule-row:last-child {
+    border-bottom: none;
+}
+
+/* --- "You might also like" Section --- */
+.stories-also-like {
+    padding: 2rem 0 3rem 0;
+}
+
+.stories-also-like h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #2d2622;
+    margin: 0 0 1.5rem 0;
+}
+
+.stories-also-like__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+}
+
+.stories-also-like__card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e0dbd3;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stories-also-like__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.stories-also-like__image {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.stories-also-like__image--history {
+    background-image: url('/assets/images/stories/journey-history.jpg');
+    background-color: #c7b39c;
+}
+
+.stories-also-like__image--jazz {
+    background-image: url('/assets/images/stories/journey-jazz.jpg');
+    background-color: #243246;
+}
+
+.stories-also-like__image--yummy {
+    background-image: url('/assets/images/stories/journey-yummy.jpg');
+    background-color: #7d2d63;
+}
+
+.stories-badge--overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.stories-also-like__card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #2d2622;
+    padding: 0.8rem 1rem;
+    margin: 0;
+}
+
+/* --- Responsive: Detail Pages --- */
+@media (max-width: 980px) {
+    .stories-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .stories-detail-sidebar {
+        position: static;
+    }
+
+    .stories-also-like__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .stories-detail-hero h1 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .stories-detail-hero {
+        min-height: 220px;
+    }
+
+    .stories-detail-hero__overlay {
+        min-height: 220px;
+    }
+
+    .stories-detail-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .stories-also-like__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-sidebar-card {
+        padding: 1rem 1.1rem;
+    }
+
+    .stories-also-like h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* ==========================================================================
+   STORIES BOOKING / RESERVATION PAGE
+   ========================================================================== */
+
+.stories-booking-page {
+    padding: 1rem 0 3rem 0;
+    background: #ffffff;
+}
+
+.stories-booking-back {
+    display: inline-block;
+    color: #8b1e1e;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+}
+
+.stories-booking-back:hover {
+    text-decoration: underline;
+}
+
+.stories-booking-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: #2d2622;
+    margin: 0 0 0.8rem 0;
+}
+
+.stories-booking-category {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2d2622;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+/* Event Header */
+.stories-booking-event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin: 2rem 0 1.5rem 0;
+    gap: 1rem;
+}
+
+.stories-booking-event-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-style: italic;
+    color: #8b1e1e;
+    margin: 0 0 0.3rem 0;
+}
+
+.stories-booking-event-meta {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
+}
+
+/* Selected Time Box */
+.stories-booking-selected-time {
+    border: 2px solid #d5b247;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    text-align: center;
+    min-width: 140px;
+}
+
+.stories-booking-selected-time__label {
+    display: block;
+    font-size: 0.65rem;
+    color: #888;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.2rem;
+}
+
+.stories-booking-selected-time__value {
+    display: block;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #2d2622;
+}
+
+.stories-booking-selected-time__lang {
+    display: block;
+    font-size: 0.82rem;
+    color: #8b1e1e;
+}
+
+/* Section Title */
+.stories-booking-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #8b1e1e;
+    margin: 0 0 1rem 0;
+}
+
+.stories-booking-section-title--italic {
+    font-style: italic;
+}
+
+/* Ticket Card */
+.stories-booking-ticket-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 0.8rem;
+}
+
+.stories-booking-ticket-info strong {
+    display: block;
+    font-size: 1rem;
+    color: #2d2622;
+}
+
+.stories-booking-ticket-info small {
+    font-size: 0.82rem;
+    color: #888;
+}
+
+.stories-booking-ticket-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.stories-booking-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #2d2622;
+}
+
+/* Quantity Buttons */
+.stories-qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+.stories-qty-btn:hover {
+    background: #f0f0f0;
+}
+
+.stories-qty-btn--round {
+    width: 36px;
+    height: 36px;
+}
+
+#qtyInput,
+#seatInput {
+    width: 40px;
+    text-align: center;
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: transparent;
+}
+
+/* HaarlemPas Card */
+.stories-booking-haarlempas-card {
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    padding: 1rem 1.3rem;
+    margin-bottom: 1.2rem;
+}
+
+.stories-booking-haarlempas-card--inside {
+    border: none;
+    border-top: 1px solid #e0d9cc;
+    border-radius: 0;
+    margin: 1rem 0 0 0;
+    padding: 1rem 0 0 0;
+}
+
+.stories-booking-haarlempas-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+}
+
+.stories-booking-haarlempas-label strong {
+    font-size: 0.95rem;
+}
+
+.stories-booking-haarlempas-label small {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.stories-booking-haarlempas-code {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid #e0d9cc;
+    border-radius: 8px;
+    background: #fafaf8;
+}
+
+.stories-booking-haarlempas-code label {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    color: #333;
+}
+
+.stories-booking-haarlempas-code input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    width: 160px;
+}
+
+/* Donation Card (PAYL) */
+.stories-booking-donation-card {
+    border: 2px solid #d5b247;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 1.2rem;
+}
+
+.stories-booking-donation-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #fafaf8;
+    border: 1px solid #e0d9cc;
+    border-radius: 8px;
+}
+
+.stories-booking-donation-col strong {
+    display: block;
+    font-size: 0.95rem;
+    color: #2d2622;
+}
+
+.stories-booking-donation-col small {
+    display: block;
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 0.6rem;
+}
+
+.stories-booking-donation-qty {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+}
+
+.stories-booking-donation-amounts {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.stories-donation-btn {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem;
+    background: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.stories-donation-btn.is-active {
+    border-color: #8b1e1e;
+    color: #8b1e1e;
+    font-weight: 700;
+}
+
+.stories-donation-other {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.stories-donation-other input {
+    width: 60px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Summary & Total */
+.stories-booking-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.stories-booking-summary--right {
+    justify-content: flex-end;
+}
+
+.stories-booking-total {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+
+.stories-booking-total strong {
+    font-size: 0.82rem;
+    color: #555;
+}
+
+.stories-booking-total__amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #8b1e1e;
+}
+
+/* Action Buttons */
+.stories-booking-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+.stories-booking-cancel {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.stories-booking-cancel:hover {
+    background: #f5f5f5;
+}
+
+.stories-booking-submit {
+    display: inline-block;
+    padding: 0.8rem 2.5rem;
+    background: #8b1e1e;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.stories-booking-submit:hover {
+    background: #a52525;
+}
+
+/* Responsive: booking */
+@media (max-width: 700px) {
+    .stories-booking-event-header {
+        flex-direction: column;
+    }
+
+    .stories-booking-donation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stories-booking-actions {
+        flex-direction: column;
+    }
+
+    .stories-booking-cancel,
+    .stories-booking-submit {
+        width: 100%;
+        text-align: center;
+    }
+}
+/* Audio Player Specific Styling */
+.stories-audio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.stories-audio-label {
+    color: #e3000f; /* Haarlem Festival Red Accent */
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    margin: 0;
+    text-transform: uppercase;
+}
+.stories-audio-timer {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-family: monospace;
+}
+.stories-audio-player-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e9ecef;
+}
+.stories-audio-title-text {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+.stories-custom-player {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.stories-play-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.2s;
+    padding-left: 4px; /* visually center the play triangle */
+}
+.stories-play-btn.playing {
+    padding-left: 0; /* reset for pause icon */
+}
+.stories-play-btn:hover {
+    background-color: #e3000f;
+}
+.stories-audio-slider {
+    flex-grow: 1;
+    cursor: pointer;
+    height: 6px;
+    -webkit-appearance: none;
+    background: #dee2e6;
+    border-radius: 5px;
+    outline: none;
+}
+.stories-audio-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e3000f;
+    cursor: pointer;
+}
+.stories-audio-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e3000f;
+    cursor: pointer;
+    border: none;
+}
+.stories-transcript-toggle {
+    margin-top: 10px;
+}
+.stories-transcript-toggle a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.stories-transcript-toggle a:hover {
+    text-decoration: underline;
+}
+.stories-transcript-box {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    font-size: 0.95rem;
+    color: #555;
+    padding: 15px;
+    border-radius: 6px;
+}
+/* Dynamic Schedule Styling */
+.stories-schedule-list {
+    margin-top: 10px;
+}
+.stories-schedule-row--dynamic {
+    margin-bottom: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+.stories-schedule-row--dynamic:last-child {
+    border-bottom: none;
+}
+.stories-schedule-date {
+    display: block;
+    font-weight: bold;
+    font-size: 0.9em;
+    width: 100%;
+}
+.stories-schedule-time {
+    font-size: 0.9em;
+    color: #555;
+}
+.stories-badge--small {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    margin-left: auto;
+}
