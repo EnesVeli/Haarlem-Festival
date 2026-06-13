@@ -2,21 +2,29 @@
 
 namespace App\Controllers\Cms\History;
 
-use App\Repositories\HistoryCmsRepository;
+use App\Framework\Session;
+use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\FileToLargeException;
+use App\Models\Exceptions\InvalidKeyException;
+use App\Models\Exceptions\QueryExecutionException;
+use App\Services\HistoryCmsService;
+use App\ViewModels\Cms\History\HistoryCmsDetailViewModel;
+use App\ViewModels\Cms\History\HistoryCmsIndexViewModel;
+use Exception;
 
 class HistoryCmsController
 {
-    private HistoryCmsRepository $repo; // Direct access to repository layer. Not good. Add service layer.
+    private HistoryCmsService $service;
 
     public function __construct()
     {
-        $this->repo = HistoryCmsRepository::getInstance();  
+        $this->service = HistoryCmsService::getInstance();
     }
 
     // Blocks anyone who isn't logged in as admin
     private function requireAdmin(): void
     {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        if (!Session::isLoggedIn() || !Session::isAdmin()) {
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
             header('Location: /login');
             exit;
@@ -28,11 +36,18 @@ class HistoryCmsController
     {
         $this->requireAdmin();
 
-        $highlights   = $this->repo->getAllHighlights();
-        $content      = $this->repo->getAllContentKeyed();
-        $details      = $this->repo->getAllDetails();
-        $individual_price = $this->repo->getIndividualPrice();
-        $family_price = $this->repo->getFamilyPrice();
+        try {
+            $viewModel = new HistoryCmsIndexViewModel(
+                $this->service->getAllHighlights(),
+                $this->service->getAllContentKeyed(),
+                $this->service->getAllDetails(),
+                $this->service->getIndividualPrice(),
+                $this->service->getFamilyPrice()
+            );
+        } catch (Exception $e) {
+            $_SESSION['flash'] = 'Something went wrong loading the History CMS.';
+            $viewModel = HistoryCmsIndexViewModel::empty();
+        }
 
         require __DIR__ . '/../../../Views/cms/history/index.php';
     }
@@ -42,12 +57,23 @@ class HistoryCmsController
     {
         $this->requireAdmin();
 
-        $id         = (int)($vars['id'] ?? 0);
-        $detail     = $id > 0 ? $this->repo->getDetailById($id) : [];
-        $highlights = $this->repo->getAllHighlights();
-        $sections   = $id > 0 ? $this->repo->getDetailSections($id) : [];
-        $gallery    = $id > 0 ? $this->repo->getDetailGallery($id)  : [];
-        $facts      = $id > 0 ? $this->repo->getDetailFacts($id)    : [];
+        $id = (int)($vars['id'] ?? 0);
+
+        try {
+            $detail = $id > 0 ? $this->service->getDetailById($id) : null;
+
+            $viewModel = new HistoryCmsDetailViewModel(
+                $detail,
+                $this->service->getAllHighlights(),
+                $id > 0 ? $this->service->getDetailSections($id) : [],
+                $id > 0 ? $this->service->getDetailGallery($id) : [],
+                $id > 0 ? $this->service->getDetailFacts($id) : []
+            );
+        } catch (Exception $e) {
+            $_SESSION['flash'] = 'Something went wrong loading this detail page.';
+            $this->redirect('/cms/history#tab-details');
+            return;
+        }
 
         require __DIR__ . '/../../../Views/cms/history/detail.php';
     }
@@ -59,20 +85,28 @@ class HistoryCmsController
 
         $action = $_POST['_action'] ?? '';
 
-        switch ($action) {
-            case 'save_highlight':   $this->saveHighlight();   break;
-            case 'delete_highlight': $this->deleteHighlight(); break;
-            case 'save_ticket_price':  $this->saveTicketPrice();  break;
-            case 'save_content':     $this->saveContent();     break;
-            case 'save_detail':      $this->saveDetail();      break;
-            case 'delete_detail':    $this->deleteDetail();    break;
-            case 'save_section':     $this->saveSection();     break;
-            case 'delete_section':   $this->deleteSection();   break;
-            case 'add_gallery':      $this->addGallery();      break;
-            case 'delete_gallery':   $this->deleteGallery();   break;
-            case 'save_fact':        $this->saveFact();        break;
-            case 'delete_fact':      $this->deleteFact();      break;
-            default:                 $this->redirect('/cms/history');
+        try {
+            switch ($action) {
+                case 'save_highlight':   $this->saveHighlight();   break;
+                case 'delete_highlight': $this->deleteHighlight(); break;
+                case 'save_ticket_price': $this->saveTicketPrice(); break;
+                case 'save_content':     $this->saveContent();     break;
+                case 'save_detail':      $this->saveDetail();      break;
+                case 'delete_detail':    $this->deleteDetail();    break;
+                case 'save_section':     $this->saveSection();     break;
+                case 'delete_section':   $this->deleteSection();   break;
+                case 'add_gallery':      $this->addGallery();      break;
+                case 'delete_gallery':   $this->deleteGallery();   break;
+                case 'save_fact':        $this->saveFact();        break;
+                case 'delete_fact':      $this->deleteFact();      break;
+                default:                 $this->redirect('/cms/history');
+            }
+        } catch (EmptyFieldException|FileToLargeException|InvalidKeyException $e) {
+            // Validation-style errors: safe to show the message to the admin.
+            $this->redirect($this->fallbackRedirect(), $e->getMessage());
+        } catch (Exception $e) {
+            // Anything else (DB failures etc.): never leak details to the user.
+            $this->redirect($this->fallbackRedirect(), 'Something went wrong. Please try again.');
         }
     }
 
@@ -80,35 +114,23 @@ class HistoryCmsController
 
     private function saveHighlight(): void
     {
-        $this->requireAdmin();
-
-        if ($_SERVER['CONTENT_LENGTH'] > 0 && empty($_POST) && empty($_FILES)) {
-            $this->redirect('/cms/history', 'File too large. Max 8MB.');
+        if (($_SERVER['CONTENT_LENGTH'] ?? 0) > 0 && empty($_POST) && empty($_FILES)) {
+            throw new FileToLargeException('File too large. Max 8MB.');
         }
 
-        $id    = (int)($_POST['id'] ?? 0);
-        $title = trim($_POST['title'] ?? '');
-        $desc  = trim($_POST['description'] ?? '');
-
-        if (!empty($_FILES['image']['tmp_name'])) {
-            $image = $this->uploadFile($_FILES['image']);
-        } else {
-            $existing = $id > 0 ? $this->repo->getHighlightById($id) : [];
-            $image    = $existing['image'] ?? null;
-        }
-
-        if ($id > 0) {
-            $this->repo->updateHighlight($id, $title, $desc, $image);
-        } else {
-            $this->repo->createHighlight($title, $desc, $image);
-        }
+        $this->service->saveHighlight(
+            (int)($_POST['id'] ?? 0),
+            $_POST['title'] ?? '',
+            $_POST['description'] ?? '',
+            $_FILES['image'] ?? null
+        );
 
         $this->redirect('/cms/history', 'Highlight saved.');
     }
 
     private function deleteHighlight(): void
     {
-        $this->repo->deleteHighlight((int)($_POST['id'] ?? 0));
+        $this->service->deleteHighlight((int)($_POST['id'] ?? 0));
         $this->redirect('/cms/history', 'Highlight deleted.');
     }
 
@@ -116,221 +138,120 @@ class HistoryCmsController
 
     private function saveTicketPrice(): void
     {
-        $this->requireAdmin();
-
-        if(isset($_POST['type']) && isset($_POST['price']))
-
-        $price = (int)($_POST['price'] * 100);
-
-        if($_POST['type'] == 0){
-            $this->repo->updateIndividualPrice($price);
+        if (!isset($_POST['type']) || !isset($_POST['price'])) {
+            throw new EmptyFieldException('Ticket type and price are required.');
         }
-        else {
-            $this->repo->updateFamilyPrice($price);
+
+        if (!is_numeric($_POST['price'])) {
+            throw new EmptyFieldException('Price must be a number.');
         }
+
+        $this->service->saveTicketPrice((int)$_POST['type'], (float)$_POST['price']);
 
         $this->redirect('/cms/history#tab-tickets', 'Ticket price updated.');
     }
 
-    // ── Page Content ──────────────────────────────────────────────────────
+    // ── Page Content ─────────────────────────────────────────────────────
 
     private function saveContent(): void
     {
-        $this->requireAdmin();
-
-        if ($_SERVER['CONTENT_LENGTH'] > 0 && empty($_POST) && empty($_FILES)) {
-            $this->redirect('/cms/history#tab-content', 'File too large. Max 8MB.');
+        if (($_SERVER['CONTENT_LENGTH'] ?? 0) > 0 && empty($_POST) && empty($_FILES)) {
+            throw new FileToLargeException('File too large. Max 8MB.');
         }
 
-        foreach (['hero', 'intro', 'walk', 'cta'] as $s) {
-            $title    = trim($_POST["{$s}_title"]    ?? '');
-            $subtitle = trim($_POST["{$s}_subtitle"] ?? '');
-
-            $image    = $_POST["{$s}_img_current"]       ?? null;
-            $imgLeft  = $_POST["{$s}_img_left_current"]  ?? null;
-            $imgRight = $_POST["{$s}_img_right_current"] ?? null;
-
-            if (!empty($_FILES["{$s}_image"]['tmp_name'])) {
-                $image = $this->uploadFile($_FILES["{$s}_image"]);
-            }
-            if (!empty($_FILES["{$s}_image_left"]['tmp_name'])) {
-                $imgLeft = $this->uploadFile($_FILES["{$s}_image_left"]);
-            }
-            if (!empty($_FILES["{$s}_image_right"]['tmp_name'])) {
-                $imgRight = $this->uploadFile($_FILES["{$s}_image_right"]);
-            }
-
-            $this->repo->upsertContent($s, $title, $subtitle, $image, $imgLeft, $imgRight);
-        }
+        $this->service->saveContent($_POST, $_FILES);
 
         $this->redirect('/cms/history#tab-content', 'Content saved.');
     }
 
-    // ── Details ───────────────────────────────────────────────────────────
+    // ── Details ──────────────────────────────────────────────────────────
 
     private function saveDetail(): void
     {
-        $this->requireAdmin();
-
         $id = (int)($_POST['id'] ?? 0);
+        $savedId = $this->service->saveDetail($id, $_POST, $_FILES['hero_image'] ?? null);
 
-        $data = [
-            'highlight_id'     => (int)($_POST['highlight_id'] ?? 0),
-            'slug'             => trim($_POST['slug'] ?? ''),
-            'page_title'       => trim($_POST['page_title'] ?? ''),
-            'hero_image'       => null,
-            'location'         => trim($_POST['location'] ?? ''),
-            'founded_year'     => trim($_POST['founded_year'] ?? ''),
-            'style_type'       => trim($_POST['style_type'] ?? ''),
-            'meta_description' => trim($_POST['meta_description'] ?? ''),
-        ];
-
-        if (!empty($_FILES['hero_image']['tmp_name'])) {
-            $data['hero_image'] = $this->uploadFile($_FILES['hero_image']);
-        } elseif ($id > 0) {
-            $existing           = $this->repo->getDetailById($id);
-            $data['hero_image'] = $existing['hero_image'] ?? null;
-        }
-
-        if ($id > 0) {
-            $this->repo->updateDetail($id, $data);
-            $this->redirect("/cms/history/detail/{$id}", 'Detail page saved.');
-        } else {
-            $newId = $this->repo->createDetail($data);
-            $this->redirect("/cms/history/detail/{$newId}", 'Detail page created.');
-        }
+        $message = $id > 0 ? 'Detail page saved.' : 'Detail page created.';
+        $this->redirect("/cms/history/detail/{$savedId}", $message);
     }
 
     private function deleteDetail(): void
     {
-        $this->requireAdmin();
-
-        $this->repo->deleteDetail((int)($_POST['id'] ?? 0));
+        $this->service->deleteDetail((int)($_POST['id'] ?? 0));
         $this->redirect('/cms/history#tab-details', 'Detail page deleted.');
     }
 
-    // ── Sections ──────────────────────────────────────────────────────────
+    // ── Sections ─────────────────────────────────────────────────────────
 
     private function saveSection(): void
     {
-        $this->requireAdmin();
-
-        $id       = (int)($_POST['id'] ?? 0);
+        $id = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
 
-        if (!empty($_FILES['image_path']['tmp_name'])) {
-            $image = $this->uploadFile($_FILES['image_path']);
-        } else {
-            $existing = $id > 0 ? $this->repo->getSectionById($id) : [];
-            $image    = $existing['image_path'] ?? null;
-        }
-
-        $data = [
-            ':detail_id'     => $detailId,
-            ':section_type'  => trim($_POST['section_type']  ?? ''),
-            ':section_title' => trim($_POST['section_title'] ?? ''),
-            ':content'       => trim($_POST['content']       ?? ''),
-            ':image_path'    => $image,
-            ':sort_order'    => (int)($_POST['sort_order']   ?? 0),
-        ];
-
-        if ($id > 0) {
-            $this->repo->updateSection($id, $data);
-        } else {
-            $this->repo->createSection($data);
-        }
+        $this->service->saveSection($id, $detailId, $_POST, $_FILES['image_path'] ?? null);
 
         $this->redirect("/cms/history/detail/{$detailId}", 'Section saved.');
     }
 
     private function deleteSection(): void
     {
-        $this->requireAdmin();
-
         $detailId = (int)($_POST['detail_id'] ?? 0);
-        $this->repo->deleteSection((int)($_POST['id'] ?? 0));
+        $this->service->deleteSection((int)($_POST['id'] ?? 0), $detailId);
+
         $this->redirect("/cms/history/detail/{$detailId}", 'Section deleted.');
     }
 
-    // ── Gallery ───────────────────────────────────────────────────────────
+    // ── Gallery ──────────────────────────────────────────────────────────
 
     private function addGallery(): void
     {
-        $this->requireAdmin();
-
         $detailId = (int)($_POST['detail_id'] ?? 0);
-        $caption  = trim($_POST['caption']    ?? '');
-        $order    = (int)($_POST['sort_order'] ?? 0);
 
-        if (!empty($_FILES['image_path']['tmp_name'])) {
-            $imagePath = $this->uploadFile($_FILES['image_path']);
-            $this->repo->createGalleryImage($detailId, $imagePath, $caption, $order);
-        }
+        $this->service->addGalleryImage(
+            $detailId,
+            $_POST['caption'] ?? '',
+            (int)($_POST['sort_order'] ?? 0),
+            $_FILES['image_path'] ?? null
+        );
 
         $this->redirect("/cms/history/detail/{$detailId}", 'Image added.');
     }
 
     private function deleteGallery(): void
     {
-        $this->requireAdmin();
-
-        $img      = $this->repo->getGalleryImageById((int)($_POST['id'] ?? 0));
-        $detailId = $img['detail_id'] ?? 0;
-        $this->repo->deleteGalleryImage((int)($_POST['id'] ?? 0));
+        $detailId = $this->service->deleteGalleryImage((int)($_POST['id'] ?? 0));
         $this->redirect("/cms/history/detail/{$detailId}", 'Image deleted.');
     }
 
-    // ── Facts ─────────────────────────────────────────────────────────────
+    // ── Facts ────────────────────────────────────────────────────────────
 
     private function saveFact(): void
     {
-        $this->requireAdmin();
-
-        $id       = (int)($_POST['id']        ?? 0);
+        $id = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
 
-        $data = [
-            ':detail_id'  => $detailId,
-            ':icon'       => trim($_POST['icon']        ?? ''),
-            ':label'      => trim($_POST['label']       ?? ''),
-            ':value'      => trim($_POST['value']       ?? ''),
-            ':sort_order' => (int)($_POST['sort_order'] ?? 0),
-        ];
-
-        if ($id > 0) {
-            $this->repo->updateFact($id, $data);
-        } else {
-            $this->repo->createFact($data);
-        }
+        $this->service->saveFact($id, $detailId, $_POST);
 
         $this->redirect("/cms/history/detail/{$detailId}", 'Fact saved.');
     }
 
     private function deleteFact(): void
     {
-        $this->requireAdmin();
-
-        $fact     = $this->repo->getFactById((int)($_POST['id'] ?? 0));
-        $detailId = $fact['detail_id'] ?? 0;
-        $this->repo->deleteFact((int)($_POST['id'] ?? 0));
+        $detailId = $this->service->deleteFact((int)($_POST['id'] ?? 0));
         $this->redirect("/cms/history/detail/{$detailId}", 'Fact deleted.');
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────
+    // ── Helpers ──────────────────────────────────────────────────────────
 
-    private function uploadFile(array $file): string
+    /**
+     * Best-effort redirect target for the generic error catch block, based on
+     * the detail_id the form submission referenced (if any).
+     */
+    private function fallbackRedirect(): string
     {
-        $dir = __DIR__ . '/../../../../public/assets/uploads/history/';
+        $detailId = (int)($_POST['detail_id'] ?? 0);
 
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        $ext      = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($file['tmp_name'], $dir . $filename);
-
-        return $filename;
+        return $detailId > 0 ? "/cms/history/detail/{$detailId}" : '/cms/history';
     }
 
     private function redirect(string $url, string $flash = ''): void
