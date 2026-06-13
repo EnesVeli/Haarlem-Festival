@@ -2,8 +2,14 @@
 
 namespace App\Controllers\Cms\Home;
 
+use App\Framework\Session;
+use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\FileToLargeException;
+use App\Models\Exceptions\InvalidKeyException;
+use App\Models\Exceptions\QueryExecutionException;
 use App\Services\HomeService;
 use App\ViewModels\HomeEditViewModel;
+use Exception;
 
 class HomeCmsController
 {
@@ -17,7 +23,7 @@ class HomeCmsController
 
     private function requireAdmin(): void
     {
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+        if (!Session::isLoggedIn() || !Session::isAdmin()) {
             $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
             header('Location: /login');
             exit;
@@ -27,10 +33,15 @@ class HomeCmsController
     // GET /cms/home
     public function index(): void
     {
-        $viewModel = new HomeEditviewmodel(
-            $this->homeService->getHomeContent(),
-            $this->homeService->getAllHomeEvents()
-        );
+        try {
+            $viewModel = new HomeEditViewModel(
+                $this->homeService->getHomeContent(),
+                $this->homeService->getAllHomeEvents()
+            );
+        } catch (Exception $e) {
+            $_SESSION['flash'] = 'Something went wrong loading the homepage CMS.';
+            $viewModel = new HomeEditViewModel([], []);
+        }
 
         require __DIR__ . '/../../../Views/cms/home/home.php';
     }
@@ -38,73 +49,55 @@ class HomeCmsController
     // POST /cms/home/save-content
     public function saveContent(): void
     {
-        $allowedKeys = [
-            'hero_image', 'hero_title', 'hero_subtitle',
-            'hero_description', 'program_title', 'program_description',
-        ];
-
-        $data = [];
-        foreach ($allowedKeys as $key) {
-            if (isset($_POST[$key])) {
-                $data[$key] = trim($_POST[$key]);
-            }
+        try {
+            $this->homeService->saveHomeContent($_POST);
+            $this->redirect('/cms/home', 'Content saved.');
+        } catch (Exception $e) {
+            $this->redirect('/cms/home', 'Something went wrong. Please try again.');
         }
-
-        $this->homeService->saveHomeContent($data);
-
-        $this->redirect('/cms/home', 'Content saved.');
     }
 
     // POST /cms/home/save-event
     public function saveEvent(): void
     {
-        $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
-
-        $eventData = [
-            'title'             => trim($_POST['title']             ?? ''),
-            'category'          => trim($_POST['category']          ?? ''),
-            'short_description' => trim($_POST['short_description'] ?? ''),
-            'long_description'  => trim($_POST['long_description']  ?? ''),
-            'venues'            => trim($_POST['venues']            ?? ''),
-            'url'               => trim($_POST['url']               ?? ''),
-            'button_label'      => trim($_POST['button_label']      ?? ''),
-            'icon'              => trim($_POST['icon']              ?? ''),
-            'bg_class'          => trim($_POST['bg_class']          ?? ''),
-            'sort_order'        => (int)($_POST['sort_order']       ?? 0),
-            'is_active'         => isset($_POST['is_active']) ? 1 : 0,
-        ];
-
-        if (!empty($_FILES['image']['tmp_name'])) {
-            $dir      = __DIR__ . '/../../../../public/assets/uploads/History/';
-            if (!is_dir($dir)) mkdir($dir, 0755, true);
-            $ext      = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $filename = time() . '_' . uniqid() . '.' . $ext;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $dir . $filename)) {
-                $eventData['image'] = $filename;
+        try {
+            if (($_SERVER['CONTENT_LENGTH'] ?? 0) > 0 && empty($_POST) && empty($_FILES)) {
+                throw new FileToLargeException('File too large. Max 8MB.');
             }
-        } elseif (!empty($_POST['existing_image'])) {
-            $eventData['image'] = trim($_POST['existing_image']);
+
+            $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+
+            $this->homeService->saveHomeEvent($id, $_POST, $_FILES['image'] ?? null);
+
+            $this->redirect('/cms/home', 'Event card saved.');
+        } catch (EmptyFieldException|FileToLargeException|InvalidKeyException $e) {
+            $this->redirect('/cms/home', $e->getMessage());
+        } catch (Exception $e) {
+            $this->redirect('/cms/home', 'Something went wrong. Please try again.');
         }
-
-        $this->homeService->saveHomeEvent($id, $eventData);
-
-        $this->redirect('/cms/home', 'Event card saved.');
     }
 
     // POST /cms/home/delete-event
     public function deleteEvent(): void
     {
-        $id = (int)($_POST['id'] ?? 0);
-        if ($id > 0) {
-            $this->homeService->deleteHomeEvent($id);
-        }
+        try {
+            $id = (int)($_POST['id'] ?? 0);
+            if ($id > 0) {
+                $this->homeService->deleteHomeEvent($id);
+            }
 
-        $this->redirect('/cms/home', 'Event card deleted.');
+            $this->redirect('/cms/home', 'Event card deleted.');
+        } catch (Exception $e) {
+            $this->redirect('/cms/home', 'Something went wrong. Please try again.');
+        }
     }
 
     private function redirect(string $url, string $flash = ''): void
     {
-        if ($flash) $_SESSION['flash'] = $flash;
+        if ($flash) {
+            $_SESSION['flash'] = $flash;
+        }
+
         header('Location: ' . $url);
         exit;
     }

@@ -59,42 +59,28 @@ require __DIR__ . '/partials/header.php';
         <div class="events-grid">
             <?php foreach ($viewModel->eventCards as $card): ?>
             <div class="event-card">
-                <div class="event-card-header <?= htmlspecialchars($card['bg_class']) ?>">
-                    <span class="event-category-label"><?= htmlspecialchars($card['category']) ?></span>
-                    <?php if (!empty($card['image'])): ?>
-                        <img src="/assets/uploads/History/<?= htmlspecialchars($card['image']) ?>"
-                             alt="<?= htmlspecialchars($card['title']) ?>" class="event-card-img" loading="lazy">
+                <div class="event-card-header <?= htmlspecialchars($card->bgClass ?? '') ?>">
+                    <span class="event-category-label"><?= htmlspecialchars($card->category) ?></span>
+                    <?php if (!empty($card->image)): ?>
+                        <img src="/assets/uploads/history/<?= htmlspecialchars($card->image) ?>"
+                             alt="<?= htmlspecialchars($card->title) ?>" class="event-card-img" loading="lazy">
                     <?php else: ?>
-                        <i class="bi <?= htmlspecialchars($card['icon']) ?> event-card-icon"></i>
+                        <i class="bi <?= htmlspecialchars($card->icon ?? '') ?> event-card-icon"></i>
                     <?php endif; ?>
                 </div>
                 <div class="event-card-body">
-                    <h3><?= htmlspecialchars($card['title']) ?></h3>
-                    <p class="event-short"><?= htmlspecialchars($card['short_description'] ?? '') ?></p>
-                    <p class="event-detail"><?= htmlspecialchars($card['long_description'] ?? '') ?></p>
-                    <?php if (!empty($card['venues'])): ?>
-                    <p class="event-venues"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($card['venues']) ?></p>
+                    <h3><?= htmlspecialchars($card->title) ?></h3>
+                    <p class="event-short"><?= htmlspecialchars($card->shortDescription ?? '') ?></p>
+                    <p class="event-detail"><?= htmlspecialchars($card->longDescription ?? '') ?></p>
+                    <?php if (!empty($card->venues)): ?>
+                    <p class="event-venues"><i class="bi bi-geo-alt"></i> <?= htmlspecialchars($card->venues) ?></p>
                     <?php endif; ?>
-                    <a href="<?= htmlspecialchars($card['url']) ?>" class="btn btn-explore">
-                        Explore <?= htmlspecialchars($card['button_label'] ?? $card['title']) ?>
+                    <a href="<?= htmlspecialchars($card->url ?? '#') ?>" class="btn btn-explore">
+                        Explore <?= htmlspecialchars($card->buttonLabel ?? $card->title) ?>
                     </a>
                 </div>
             </div>
             <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<!-- ===== NEWSLETTER ===== -->
-<section class="newsletter-section">
-    <div class="container">
-        <div class="newsletter-box">
-            <h3>Stay Updated</h3>
-            <p>Subscribe to our newsletter for the latest updates</p>
-            <form class="newsletter-form" method="POST" action="/newsletter/subscribe">
-                <input type="email" name="email" placeholder="Your email" required>
-                <button type="submit" class="btn btn-primary-custom">Subscribe</button>
-            </form>
         </div>
     </div>
 </section>

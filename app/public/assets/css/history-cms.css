@@ -1,0 +1,128 @@
+/* History CMS – custom admin styling
+   Gives the History CMS its own visual identity instead of plain Bootstrap defaults. */
+
+.history-cms {
+    --hcms-accent: #8a5a32;
+    --hcms-accent-dark: #5e3c1f;
+    --hcms-bg: #f7f3ee;
+    --hcms-border: #e4dccf;
+}
+
+.history-cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--hcms-border);
+}
+
+.history-cms-header h1 {
+    font-weight: 700;
+    color: var(--hcms-accent-dark);
+    letter-spacing: 0.02em;
+}
+
+.history-cms .nav-tabs {
+    border-bottom: 2px solid var(--hcms-border);
+}
+
+.history-cms .nav-tabs .nav-link {
+    color: #6b5b4d;
+    font-weight: 600;
+    border: none;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    padding: 0.65rem 1.1rem;
+}
+
+.history-cms .nav-tabs .nav-link.active {
+    color: var(--hcms-accent-dark);
+    border-bottom-color: var(--hcms-accent);
+    background: transparent;
+}
+
+.history-cms .card {
+    border: 1px solid var(--hcms-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.history-cms .card-header {
+    background: var(--hcms-accent-dark) !important;
+    color: #fff !important;
+    border-bottom: none;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.history-cms .card-header.card-header-muted {
+    background: #8c7a68 !important;
+}
+
+.history-cms .btn-primary-accent {
+    background-color: var(--hcms-accent);
+    border-color: var(--hcms-accent);
+    color: #fff;
+}
+
+.history-cms .btn-primary-accent:hover {
+    background-color: var(--hcms-accent-dark);
+    border-color: var(--hcms-accent-dark);
+    color: #fff;
+}
+
+.history-cms .section-block {
+    border: 1px solid var(--hcms-border);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: var(--hcms-bg);
+}
+
+.history-cms .section-block h6 {
+    color: var(--hcms-accent-dark);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+}
+
+.history-cms .thumb {
+    width: 56px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--hcms-border);
+}
+
+.history-cms .thumb-lg {
+    width: 110px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--hcms-border);
+}
+
+.history-cms .gallery-item {
+    width: 110px;
+    text-align: center;
+}
+
+.history-cms .gallery-caption {
+    font-size: 0.7rem;
+    color: #8c7a68;
+    margin: 0.25rem 0;
+}
+
+.history-cms .price-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--hcms-accent-dark);
+}
+
+.history-cms .badge-type {
+    background-color: var(--hcms-accent);
+    color: #fff;
+}

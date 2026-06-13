@@ -1,0 +1,65 @@
+/* Home CMS – custom admin styling
+   Gives the Homepage CMS its own visual identity instead of plain Bootstrap defaults. */
+
+.home-cms {
+    --hocms-accent: #b3263a;
+    --hocms-accent-dark: #7c1626;
+    --hocms-bg: #fbf3f4;
+    --hocms-border: #ecd9dc;
+}
+
+.home-cms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--hocms-border);
+}
+
+.home-cms-header h1 {
+    font-weight: 700;
+    color: var(--hocms-accent-dark);
+    letter-spacing: 0.02em;
+}
+
+.home-cms .card {
+    border: 1px solid var(--hocms-border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.home-cms .card-header {
+    background: var(--hocms-accent-dark) !important;
+    color: #fff !important;
+    border-bottom: none;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.home-cms .btn-primary-accent {
+    background-color: var(--hocms-accent);
+    border-color: var(--hocms-accent);
+    color: #fff;
+}
+
+.home-cms .btn-primary-accent:hover {
+    background-color: var(--hocms-accent-dark);
+    border-color: var(--hocms-accent-dark);
+    color: #fff;
+}
+
+.home-cms .thumb {
+    max-height: 120px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid var(--hocms-border);
+}
+
+.home-cms .table-thumb {
+    width: 56px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--hocms-border);
+}

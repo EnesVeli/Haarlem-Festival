@@ -1,5 +1,8 @@
 <?php
+
 namespace App\ViewModels;
+
+use App\Models\HomeEvent;
 
 class HomeViewModel
 {
@@ -10,9 +13,16 @@ class HomeViewModel
     public string $heroDescription;
     public string $programTitle;
     public string $programDescription;
-    public array  $eventCards;
-    public array  $venueList;
 
+    /** @var HomeEvent[] */
+    public array $eventCards;
+
+    public array $venueList;
+
+    /**
+     * @param array<string, string> $homeContent
+     * @param HomeEvent[]            $eventCards
+     */
     public function __construct(array $homeContent, array $eventCards, array $venueList)
     {
         $this->pageTitle          = 'Home - The Festival Haarlem';
