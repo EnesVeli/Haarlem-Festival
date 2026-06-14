@@ -84,7 +84,7 @@ $locations = $vm->locations;
   <div class="artists-grid mt-3">
     <?php if (!empty($performers)): ?>
       <?php foreach ($performers as $performer): ?>
-        <a class="artist-link" href="<?= $performer->id > 0 ? "/jazz/performer?id={$performer->id}" : "#" ?>">
+        <a class="artist-link" href="<?= (int)$performer->id > 0 ? "/jazz/performer?id=" . (int)$performer->id : "#" ?>">
           <div class="card-soft">
 
             <?php if (!empty($performer->image_path)): ?>
