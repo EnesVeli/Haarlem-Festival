@@ -33,7 +33,7 @@ class LoginController extends BaseController
         $password = $_POST['password'] ?? '';
 
         if ($email === '' || $password === '') {
-            Session::set('login_error', 'Email and password are required.');
+            Session::setTempError('Email and password are required.');
             header('Location: /login');
             exit;
         }

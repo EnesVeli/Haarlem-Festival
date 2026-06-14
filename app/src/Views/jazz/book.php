@@ -7,7 +7,7 @@
 
 <link rel="stylesheet" href="/assets/css/stories.css">
 
-<div class="stories-booking-page">
+<section class="stories-booking-page">
     <div class="stories-container">
 
         <a href="/jazz/performer?id=<?= (int)$perf->id ?>" class="stories-booking-back">
@@ -76,7 +76,7 @@
         </form>
 
     </div>
-</div>
+</section>
 
 <script>
     var ticketPrice = <?= (int)$perf->price ?>;
