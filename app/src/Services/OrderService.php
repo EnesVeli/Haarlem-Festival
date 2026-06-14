@@ -178,7 +178,7 @@ class OrderService
             case BookingType::Jazz:
                 $booking = (fn($booking):JazzBooking=>$booking)($booking);
 
-                $perf = $this->jazz_rep->getPerformerById($booking->booking_id);
+                $perf = $this->jazz_rep->getPerformerById($booking->performer_id);
                 if($perf == null) throw new QueryExecutionException("Failed to get jazz performer.");
 
                 return $booking->amount * $perf->price;
