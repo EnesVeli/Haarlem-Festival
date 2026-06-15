@@ -9,4 +9,6 @@ interface ITicketScanService
     public function scanTicket(string $scan_value): Ticket;
 
     public function getTicketQr(int $ticketId): ?string;
+
+    public function getTicketOwnerId(int $ticketId): ?int;
 }

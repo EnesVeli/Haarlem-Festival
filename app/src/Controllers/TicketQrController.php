@@ -24,6 +24,17 @@ class TicketQrController extends BaseController
         }
 
         $ticketId = (int) ($vars['id'] ?? 0);
+
+        if (!Session::isAdmin() && !Session::isEmployee()) {
+            $ownerId = $this->service->getTicketOwnerId($ticketId);
+            $currentUserId = Session::currentUser()->user_id;
+            if ($ownerId === null || $ownerId !== $currentUserId) {
+                http_response_code(404);
+                echo 'Ticket not found';
+                return;
+            }
+        }
+
         $qr = $this->service->getTicketQr($ticketId);
 
         if ($qr === null) {
