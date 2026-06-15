@@ -130,20 +130,24 @@ require __DIR__ . '/../partials/header.php';
                     <h3>Guided Tour Tickets</h3>
                     <p class="subtitle">Secure your guide to history</p>
                     
+                    <?php
+                        $minDate = new DateTime();
+                        $maxDate = (clone $minDate)->add(new DateInterval('P' . ($viewModel->max_date_offset - 1) . 'D'));
+                    ?>
                     <div class="ticket-selector">
                         <label><strong>Select a Date:</strong></label>
-                        <select class="date-select" onchange="updateDayLabel(this.value)">
-                            <option value="-1" disabled selected>Select</option>
-                            <? for($i = 0; $i < $viewModel->max_date_offset; $i++):?>
-                                <?
-                                    $date = new DateTime();
-                                    $date->add(new DateInterval('P' . $i .'D'));
-                                ?>
-                                <option value="<?= $i ?>"><?= $date->format('d.m.Y l') ?></option>
-                            <? endfor; ?>
-                        </select>
+                        <input
+                            type="date"
+                            class="date-select"
+                            id="tour-date"
+                            min="<?= $minDate->format('Y-m-d') ?>"
+                            max="<?= $maxDate->format('Y-m-d') ?>"
+                            data-min-date="<?= $minDate->format('Y-m-d') ?>"
+                            onchange="updateDayLabel(this)"
+                        >
+                        <p class="date-help-text">Tours are available Thursday through Sunday.</p>
                         
-                        <div class="available-slots-label" id="slots-day-label">Available Time Slots (Thursday)</div>
+                        <div class="available-slots-label" id="slots-day-label">Available Time Slots</div>
                     </div>
                     
                     <div class="tickets-list">
@@ -164,8 +168,36 @@ require __DIR__ . '/../partials/header.php';
                         let selectedTicketId = null;
                         let selectedTime = '';
 
-                        function updateDayLabel(offset) {
-                            date_offset = offset;
+                        function updateDayLabel(input) {
+                            if (!input.value) {
+                                date_offset = -1;
+                                document.getElementById('slots-day-label').textContent = 'Available Time Slots';
+                                return;
+                            }
+
+                            const selectedDate = createLocalDate(input.value);
+                            const minDate = createLocalDate(input.dataset.minDate);
+                            const selectedDayNumber = selectedDate.getDay();
+
+                            if (![0, 4, 5, 6].includes(selectedDayNumber)) {
+                                alert('Guided tours can only be booked from Thursday to Sunday.');
+                                input.value = '';
+                                date_offset = -1;
+                                document.getElementById('slots-day-label').textContent = 'Available Time Slots';
+                                return;
+                            }
+
+                            date_offset = Math.round((selectedDate - minDate) / 86400000);
+
+                            const selectedDay = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+                            const label = document.getElementById('slots-day-label');
+                            label.textContent = selectedDay
+                                ? 'Available Time Slots (' + selectedDay + ')'
+                                : 'Available Time Slots';
+                        }
+                        function createLocalDate(value) {
+                            const parts = value.split('-').map(Number);
+                            return new Date(parts[0], parts[1] - 1, parts[2]);
                         }
                         function selectTicket(id) {
                             slot_id = id;

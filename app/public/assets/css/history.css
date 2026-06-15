@@ -281,6 +281,12 @@
     margin-bottom: 1rem;
 }
 
+.date-help-text {
+    color: rgba(255,255,255,0.82);
+    font-size: 13px;
+    margin: -0.35rem 0 1rem;
+}
+
 .available-slots-label {
     font-size: 14px;
     font-weight: 600;

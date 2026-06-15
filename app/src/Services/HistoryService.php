@@ -12,7 +12,7 @@ use App\Repositories\OrderRepository;
 
 class HistoryService
 {
-    public static int $max_date_offset = 12;
+    public static int $max_date_offset = 31;
 
     private static ?HistoryService $_instance = null;
 
