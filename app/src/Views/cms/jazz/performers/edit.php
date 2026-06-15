@@ -175,20 +175,18 @@ require __DIR__ . '/../partials/tabs.php';
     </div>
 
     <small class="jazz-cms-help-text">
-        Used for performer cards and performer content sections.<br>
-        Upload path: <code>/assets/uploads/jazz/performers/</code>
+        Used for performer cards and performer content sections.
     </small>
 
-    <?php if (!empty($performer->imagePath)): ?>
-        <div class="jazz-cms-image-preview-wrap">
-            <p class="jazz-cms-preview-label">Current Performer Image</p>
-            <img
-                src="<?= htmlspecialchars($performer->image_path) ?>"
-                class="jazz-cms-image-preview"
-                alt="Performer image"
-            >
-        </div>
-    <?php endif; ?>
+    <div class="jazz-cms-image-preview-wrap" id="performerPreviewWrap" style="<?= empty($performer->image_path) ? 'display:none;' : '' ?>">
+        <p class="jazz-cms-preview-label">Current Performer Image</p>
+        <img
+            id="performerPreviewImg"
+            src="<?= htmlspecialchars($performer->image_path ?? '') ?>"
+            class="jazz-cms-image-preview"
+            alt="Performer image"
+        >
+    </div>
 </div>
 
 <div class="jazz-cms-form-row">
@@ -209,20 +207,18 @@ require __DIR__ . '/../partials/tabs.php';
     </div>
 
     <small class="jazz-cms-help-text">
-        Used for the large top banner on the performer detail page.<br>
-        Upload path: <code>/assets/uploads/jazz/performers/</code>
+        Used for the large top banner on the performer detail page.
     </small>
 
-    <?php if (!empty($performer->hero_image_path)): ?>
-        <div class="jazz-cms-image-preview-wrap">
-            <p class="jazz-cms-preview-label">Current Hero Image</p>
-            <img
-                src="<?= htmlspecialchars($performer->hero_image_path) ?>"
-                class="jazz-cms-image-preview"
-                alt="Hero image"
-            >
-        </div>
-    <?php endif; ?>
+    <div class="jazz-cms-image-preview-wrap" id="performerHeroPreviewWrap" style="<?= empty($performer->hero_image_path) ? 'display:none;' : '' ?>">
+        <p class="jazz-cms-preview-label">Current Hero Image</p>
+        <img
+            id="performerHeroPreviewImg"
+            src="<?= htmlspecialchars($performer->hero_image_path ?? '') ?>"
+            class="jazz-cms-image-preview"
+            alt="Hero image"
+        >
+    </div>
 </div>
 
 <hr class="my-4">
@@ -357,53 +353,53 @@ require __DIR__ . '/../partials/tabs.php';
 <script>
 const performerUploadBox = document.getElementById('performerUploadBox');
 const performerImageInput = document.getElementById('performerImageInput');
+const performerPreviewWrap = document.getElementById('performerPreviewWrap');
+const performerPreviewImg = document.getElementById('performerPreviewImg');
 
-if (performerUploadBox && performerImageInput) {
-    performerUploadBox.addEventListener('click', () => performerImageInput.click());
+performerUploadBox.addEventListener('click', function () {
+    performerImageInput.click();
+});
 
-    performerUploadBox.addEventListener('dragover', e => {
-        e.preventDefault();
-        performerUploadBox.classList.add('is-dragover');
-    });
+performerUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
+});
 
-    performerUploadBox.addEventListener('dragleave', () => {
-        performerUploadBox.classList.remove('is-dragover');
-    });
+performerUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    performerImageInput.files = e.dataTransfer.files;
+    performerPreviewImg.src = URL.createObjectURL(performerImageInput.files[0]);
+    performerPreviewWrap.style.display = '';
+});
 
-    performerUploadBox.addEventListener('drop', e => {
-        e.preventDefault();
-        performerUploadBox.classList.remove('is-dragover');
-
-        if (e.dataTransfer.files.length > 0) {
-            performerImageInput.files = e.dataTransfer.files;
-        }
-    });
-}
+performerImageInput.addEventListener('change', function () {
+    performerPreviewImg.src = URL.createObjectURL(performerImageInput.files[0]);
+    performerPreviewWrap.style.display = '';
+});
 
 const performerHeroUploadBox = document.getElementById('performerHeroUploadBox');
 const performerHeroImageInput = document.getElementById('performerHeroImageInput');
+const performerHeroPreviewWrap = document.getElementById('performerHeroPreviewWrap');
+const performerHeroPreviewImg = document.getElementById('performerHeroPreviewImg');
 
-if (performerHeroUploadBox && performerHeroImageInput) {
-    performerHeroUploadBox.addEventListener('click', () => performerHeroImageInput.click());
+performerHeroUploadBox.addEventListener('click', function () {
+    performerHeroImageInput.click();
+});
 
-    performerHeroUploadBox.addEventListener('dragover', e => {
-        e.preventDefault();
-        performerHeroUploadBox.classList.add('is-dragover');
-    });
+performerHeroUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
+});
 
-    performerHeroUploadBox.addEventListener('dragleave', () => {
-        performerHeroUploadBox.classList.remove('is-dragover');
-    });
+performerHeroUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    performerHeroImageInput.files = e.dataTransfer.files;
+    performerHeroPreviewImg.src = URL.createObjectURL(performerHeroImageInput.files[0]);
+    performerHeroPreviewWrap.style.display = '';
+});
 
-    performerHeroUploadBox.addEventListener('drop', e => {
-        e.preventDefault();
-        performerHeroUploadBox.classList.remove('is-dragover');
-
-        if (e.dataTransfer.files.length > 0) {
-            performerHeroImageInput.files = e.dataTransfer.files;
-        }
-    });
-}
+performerHeroImageInput.addEventListener('change', function () {
+    performerHeroPreviewImg.src = URL.createObjectURL(performerHeroImageInput.files[0]);
+    performerHeroPreviewWrap.style.display = '';
+});
 </script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

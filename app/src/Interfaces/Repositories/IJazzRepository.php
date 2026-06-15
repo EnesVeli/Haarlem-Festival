@@ -5,6 +5,7 @@ namespace App\Interfaces\Repositories;
 interface IJazzRepository
 {
     public function getHero(): ?object;
+    public function getHeroForCms(): ?object;
     public function updateHero(array $data): void;
 
     public function getIntro(): ?object;
