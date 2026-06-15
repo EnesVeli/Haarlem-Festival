@@ -109,13 +109,11 @@ class="jazz-cms-btn jazz-cms-btn-outline"
 Edit
 </a>
 
-<a
-href="/cms/jazz/performers/delete?id=<?= (int)$performer->id ?>"
-class="jazz-cms-btn jazz-cms-btn-danger"
-onclick="return confirm('Delete this performer?')"
->
-Delete
-</a>
+<form method="POST" action="/cms/jazz/performers/delete" style="display:inline" onsubmit="return confirm('Delete this performer?')">
+    <input type="hidden" name="id" value="<?= (int)$performer->id ?>">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Framework\Session::csrfToken()) ?>">
+    <button type="submit" class="jazz-cms-btn jazz-cms-btn-danger">Delete</button>
+</form>
 
 </td>
 

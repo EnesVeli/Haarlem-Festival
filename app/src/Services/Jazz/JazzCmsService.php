@@ -292,17 +292,40 @@ class JazzCmsService implements IJazzCmsService
 
     private function uploadImage(array $file, string $folder): string
     {
+        if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+            throw new \RuntimeException('Upload failed.');
+        }
+
+        if (($file['size'] ?? 0) > 5 * 1024 * 1024) {
+            throw new \RuntimeException('File too large (max 5 MB).');
+        }
+
+        $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
+        $allowedMime = ['image/jpeg', 'image/png', 'image/webp'];
+
+        $ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
+        if (!in_array($ext, $allowedExt, true)) {
+            throw new \RuntimeException('Only jpg, jpeg, png, webp are allowed.');
+        }
+
+        $mime = mime_content_type($file['tmp_name']);
+        if (!in_array($mime, $allowedMime, true)) {
+            throw new \RuntimeException('Invalid image file.');
+        }
+
         $uploadRoot = dirname(__DIR__, 3) . '/public';
 
-        $filename = time() . '_' . basename($file['name']);
+        $filename = bin2hex(random_bytes(8)) . '.' . $ext;
         $path = $folder . $filename;
         $fullPath = $uploadRoot . $path;
 
         if (!is_dir(dirname($fullPath))) {
-            mkdir(dirname($fullPath), 0777, true);
+            mkdir(dirname($fullPath), 0755, true);
         }
 
-        move_uploaded_file($file['tmp_name'], $fullPath);
+        if (!move_uploaded_file($file['tmp_name'], $fullPath)) {
+            throw new \RuntimeException('Could not save uploaded file.');
+        }
 
         return $path;
     }

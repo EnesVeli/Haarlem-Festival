@@ -74,7 +74,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/jazz/experiences/edit',   [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editExperience']);
     $r->addRoute('POST', '/cms/jazz/experiences/store',  [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeExperience']);
     $r->addRoute('POST', '/cms/jazz/experiences/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateExperience']);
-    $r->addRoute('GET',  '/cms/jazz/experiences/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteExperience']);
+    $r->addRoute('POST', '/cms/jazz/experiences/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteExperience']);
 
     // jazz CMS - Performers
     $r->addRoute('GET',  '/cms/jazz/performers',        [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'performers']);
@@ -82,7 +82,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/jazz/performers/edit',   [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editPerformer']);
     $r->addRoute('POST', '/cms/jazz/performers/store',  [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storePerformer']);
     $r->addRoute('POST', '/cms/jazz/performers/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updatePerformer']);
-    $r->addRoute('GET',  '/cms/jazz/performers/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deletePerformer']);
+    $r->addRoute('POST', '/cms/jazz/performers/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deletePerformer']);
 
     // jazz CMS - Recommendations
     $r->addRoute('GET',  '/cms/jazz/recommendations',        [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'recommendations']);
@@ -90,7 +90,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/jazz/recommendations/edit',   [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editRecommendation']);
     $r->addRoute('POST', '/cms/jazz/recommendations/store',  [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeRecommendation']);
     $r->addRoute('POST', '/cms/jazz/recommendations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateRecommendation']);
-    $r->addRoute('GET',  '/cms/jazz/recommendations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteRecommendation']);
+    $r->addRoute('POST', '/cms/jazz/recommendations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteRecommendation']);
 
     // jazz CMS - Locations
     $r->addRoute('GET',  '/cms/jazz/locations',        [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'locations']);
@@ -98,7 +98,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET',  '/cms/jazz/locations/edit',   [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'editLocation']);
     $r->addRoute('POST', '/cms/jazz/locations/store',  [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'storeLocation']);
     $r->addRoute('POST', '/cms/jazz/locations/update', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'updateLocation']);
-    $r->addRoute('GET',  '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
+    $r->addRoute('POST', '/cms/jazz/locations/delete', [\App\Controllers\Cms\Jazz\AdminJazzController::class, 'deleteLocation']);
 
     // History
     $r->addRoute('GET', '/history',          [\App\Controllers\HistoryController::class, 'index']);
