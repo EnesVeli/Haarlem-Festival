@@ -84,9 +84,11 @@ body {
 .login-btn {
     width: 100%;
     padding: 14px;
-    background: var(--navy);
+    background-color: #8B1818;
     color: #fff;
-    border: none;
+    border-color: #8B1818;
+    border-style: solid;
+    border-width: 1px;
     border-radius: 8px;
     font-size: 16px;
     font-weight: 600;
@@ -97,7 +99,8 @@ body {
 }
 
 .login-btn:hover {
-    background: var(--navy-dark);
+    background-color: #8B1818;
+    border-color: #8B1818;
     transform: translateY(-1px);
 }
 

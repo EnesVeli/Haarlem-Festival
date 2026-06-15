@@ -1,3 +1,11 @@
+<?php
+/**
+ * Renders the user registration form, with an optional validation error message.
+ *
+ * @var string      $csrfToken     CSRF token embedded in the registration form's hidden field.
+ * @var string|null $error_message Validation error shown above the form, or null if there is none.
+ */
+?>
 <!doctype html>
 <html lang="en">
 

@@ -1397,7 +1397,6 @@
     flex-grow: 1;
     cursor: pointer;
     height: 6px;
-    -webkit-appearance: none;
     background: #dee2e6;
     border-radius: 5px;
     outline: none;
