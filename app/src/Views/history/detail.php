@@ -176,6 +176,14 @@ require __DIR__ . '/../partials/header.php';
                     <p>Culinary storytelling experience with local chefs and food historians exploring Dutch cuisine traditions.</p>
                 </div>
             </a>
+
+            <a href="/tickets" class="journey-card">
+                <img src="/assets/uploads/history/tickets-event.jpg" alt="Tickets">
+                <div class="journey-card-body">
+                    <h3>Tickets</h3>
+                    <p>Browse every festival event and reserve the tickets you need for your personal Haarlem experience.</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>

@@ -247,27 +247,34 @@ require __DIR__ . '/../partials/header.php';
     <div class="container">
         <h2 class="section-title-burgundy mb-5">Complete Your Journey</h2>
         <div class="journey-grid">
-            <div class="journey-card">
+            <a href="/stories" class="journey-card">
                 <img src="/assets/uploads/History/stories-haarlem.jpg" alt="Stories in Haarlem">
                 <div class="journey-body">
                     <h3>Stories in Haarlem</h3>
                     <p>Guided walking tour through Haarlem with local storytellers sharing tales of the city's rich past.</p>
                 </div>
-            </div>
-            <div class="journey-card">
+            </a>
+            <a href="/jazz" class="journey-card">
                 <img src="/assets/uploads/History/jazz-event.jpg" alt="Jazz">
                 <div class="journey-body">
                     <h3>Jazz</h3>
                     <p>Interactive magic and illusion show at the famous Teylers Museum, perfect for families and wonder-seekers.</p>
                 </div>
-            </div>
-            <div class="journey-card">
+            </a>
+            <a href="/yummy" class="journey-card">
                 <img src="/assets/uploads/History/yummy-event.jpg" alt="Yummy">
                 <div class="journey-body">
                     <h3>Yummy!</h3>
                     <p>Culinary storytelling experience with local chefs and food historians exploring Dutch cuisine traditions.</p>
                 </div>
-            </div>
+            </a>
+            <a href="/tickets" class="journey-card">
+                <img src="/assets/uploads/History/tickets-event.jpg" alt="Tickets">
+                <div class="journey-body">
+                    <h3>Tickets</h3>
+                    <p>Browse every festival event and reserve the tickets you need for your personal Haarlem experience.</p>
+                </div>
+            </a>
         </div>
     </div>
 </section>
