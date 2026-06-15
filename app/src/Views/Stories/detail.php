@@ -1,9 +1,10 @@
 <?php
 /**
- * Detail view for Fixed-Price Story Events.
- * Layout: contained hero, subtitle, badges, photo gallery, audio player, sidebar, "You might also like".
+ * Renders the detail page for a single Stories in Haarlem event.
  *
- * @var \App\Models\StoryEvent $event
+ * @var \App\Models\StoryEvent   $event    The event object displayed on this page.
+ * @var \App\Models\StoryEvent[] $schedule Other sessions of the same event for the schedule sidebar.
+ * @var string                   $pageCSS  CSS filename loaded by the layout's <link> tag.
  */
 $imagePath     = $event->image_path ?: '/assets/images/stories/venue-placeholder.jpg';
 $formattedDate = date('l, F jS', strtotime($event->start_time));

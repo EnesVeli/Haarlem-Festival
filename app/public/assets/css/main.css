@@ -117,14 +117,14 @@ img {
 }
 
 .btn-primary {
-    background: var(--navy);
+    background-color: #8B1818;
     color: var(--primary-color);
-    border-color: var(--navy);
+    border-color: #8B1818;
 }
 
 .btn-primary:hover {
-    background: var(--navy-dark);
-    border-color: var(--navy-dark);
+    background-color: #8B1818;
+    border-color: #8B1818;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(26, 77, 122, 0.3);
 }

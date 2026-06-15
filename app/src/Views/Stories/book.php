@@ -1,9 +1,11 @@
 <?php
 /**
- * Booking page for Fixed-Price Story Events.
+ * Renders the ticket booking form for a Stories in Haarlem event.
  *
- * @var \App\Models\StoryEvent $event
- * @var string $slug
+ * @var \App\Models\StoryEvent $event      The event being booked.
+ * @var string                 $csrfToken  CSRF token embedded in the booking form's hidden field.
+ * @var string                 $slug       URL slug used in the form action attribute.
+ * @var string                 $pageCSS    CSS filename loaded by the layout's <link> tag.
  */
 $formattedDate = date('l, F jS', strtotime($event->start_time));
 $startTime = date('H:i', strtotime($event->start_time));
