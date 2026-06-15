@@ -281,6 +281,12 @@
     margin-bottom: 1rem;
 }
 
+.date-help-text {
+    color: rgba(255,255,255,0.82);
+    font-size: 13px;
+    margin: -0.35rem 0 1rem;
+}
+
 .available-slots-label {
     font-size: 14px;
     font-weight: 600;
@@ -443,11 +449,13 @@
     transform: translateY(-2px);
 }
 
-/* Journey Grid */
 .journey-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 0 1rem;
+    scrollbar-width: thin;
 }
 
 .journey-card {
@@ -456,6 +464,11 @@
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     transition: transform 0.3s ease;
+    color: inherit;
+    display: block;
+    flex: 0 0 min(380px, 82vw);
+    scroll-snap-align: start;
+    text-decoration: none;
 }
 
 .journey-card:hover {
@@ -527,10 +540,6 @@
 @media (max-width: 768px) {
     .highlights-grid {
         grid-template-columns: 1fr !important;
-    }
-    
-    .journey-grid {
-        grid-template-columns: 1fr;
     }
     
     .icon-boxes {

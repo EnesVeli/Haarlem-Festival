@@ -325,13 +325,18 @@
     text-align: center;
 }
 
-.journey-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.journey-section .journey-grid {
+    display: flex;
+    flex-wrap: nowrap;
     gap: 2rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0 0 1rem;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
 }
 
-.journey-card {
+.journey-section .journey-card {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
@@ -340,6 +345,9 @@
     text-decoration: none;
     color: inherit;
     display: block;
+    flex: 0 0 min(360px, 82vw);
+    max-width: min(360px, 82vw);
+    scroll-snap-align: start;
 }
 
 .journey-card:hover {
@@ -397,9 +405,6 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .journey-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 @media (max-width: 768px) {

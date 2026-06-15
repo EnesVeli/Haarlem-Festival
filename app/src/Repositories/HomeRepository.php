@@ -18,8 +18,15 @@ class HomeRepository extends Repository
         return self::$_instance;
     }
 
-    // ─── READ ────────────────────────────────────────────────────────────────
+    private const HOME_EVENT_COLUMNS = "
+        `id`, `title`, `category`, `short_description`, `long_description`,
+        `venues`, `url`, `button_label`, `icon`, `bg_class`, `image`,
+        `sort_order`, `is_active`
+    ";
 
+    /**
+     * @return array<string, string>
+     */
     public function getHomeContent(): array
     {
         $stmt = $this->connection->query("SELECT `key`, `value` FROM `home_content`");
@@ -32,26 +39,35 @@ class HomeRepository extends Repository
         return $content;
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getHomeEvents(): array
     {
         $stmt = $this->connection->query(
-            "SELECT * FROM `home_events` WHERE `is_active` = 1 ORDER BY `sort_order` ASC"
+            "SELECT " . self::HOME_EVENT_COLUMNS . "
+             FROM `home_events`
+             WHERE `is_active` = 1
+             ORDER BY `sort_order` ASC"
         );
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllHomeEvents(): array
     {
         $stmt = $this->connection->query(
-            "SELECT * FROM `home_events` ORDER BY `sort_order` ASC"
+            "SELECT " . self::HOME_EVENT_COLUMNS . "
+             FROM `home_events`
+             ORDER BY `sort_order` ASC"
         );
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    // ─── WRITE ───────────────────────────────────────────────────────────────
-
     /**
-     * Upsert an array of key/value pairs into home_content.
+     * @param array<string, string> $data
      */
     public function saveHomeContent(array $data): void
     {
@@ -67,12 +83,11 @@ class HomeRepository extends Repository
     }
 
     /**
-     * Insert or update a home_events row.
+     * @param array<string, mixed> $data
      */
     public function saveHomeEvent(?int $id, array $data): void
     {
         if ($id === null) {
-            // INSERT
             $stmt = $this->connection->prepare(
                 "INSERT INTO `home_events`
                  (`title`, `category`, `short_description`, `long_description`,
@@ -84,7 +99,6 @@ class HomeRepository extends Repository
                   :sort_order, :is_active)"
             );
         } else {
-            // UPDATE
             $stmt = $this->connection->prepare(
                 "UPDATE `home_events` SET
                   `title`             = :title,

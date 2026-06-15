@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Services\HomeService;
 use App\ViewModels\HomeViewModel;
+use Exception;
 
 class HomeController
 {
@@ -15,11 +16,17 @@ class HomeController
 
     public function index(): void
     {
-        $viewModel = new HomeViewModel(
-            $this->homeService->getHomeContent(),
-            $this->homeService->getHomeEvents(),
-            $this->homeService->getVenueList()
-        );
+        $errorMessage = null;
+
+        try {
+            $viewModel = new HomeViewModel(
+                $this->homeService->getHomeContent(),
+                $this->homeService->getHomeEvents()
+            );
+        } catch (Exception $exception) {
+            $errorMessage = 'Something went wrong. Please try again later.';
+            $viewModel = new HomeViewModel([], []);
+        }
 
         require __DIR__ . '/../Views/home.php';
     }
