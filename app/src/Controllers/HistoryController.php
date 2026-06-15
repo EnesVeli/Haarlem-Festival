@@ -40,6 +40,7 @@ class HistoryController extends BaseController
         }
         catch(Exception $ex){
             $error_message = 'Something went wrong. Try again later.';
+            $viewModel = new HistoryIndexViewModel([], [], [], HistoryService::$max_date_offset);
         }
 
         require __DIR__ . '/../Views/history/index.php';
@@ -47,8 +48,14 @@ class HistoryController extends BaseController
 
     public function detail($vars)
     {
-        $slug     = $vars['slug'] ?? '';
-        $pageData = $this->service->getDetailPage($slug);
+        try {
+            $slug = $vars['slug'] ?? '';
+            $pageData = $this->service->getDetailPage($slug);
+        } catch (Exception $ex) {
+            Session::setTempError("Something went wrong. Try again later.");
+            header('Location: /history');
+            exit;
+        }
 
         if (!$pageData) {
             header('Location: /history');
@@ -133,7 +140,7 @@ class HistoryController extends BaseController
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong. Try again later." . $ex->getMessage());
+            Session::setTempError("Something went wrong. Try again later.");
         }
 
         if(isset($_POST['reservation_id'])){

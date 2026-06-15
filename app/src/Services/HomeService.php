@@ -20,41 +20,41 @@ class HomeService
         $this->repository = $repository;
     }
 
-    // ─── READ ────────────────────────────────────────────────────────────────
-
+    /**
+     * @return array<string, string>
+     */
     public function getHomeContent(): array
     {
         return $this->repository->getHomeContent();
     }
 
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getHomeEvents(): array
     {
         return $this->repository->getHomeEvents();
     }
 
-    /** Returns ALL event cards (including inactive) for the CMS. */
+    /**
+     * @return array<int, array<string, mixed>>
+     */
     public function getAllHomeEvents(): array
     {
         return $this->repository->getAllHomeEvents();
     }
 
-    public function getVenueList(): array
-    {
-        return [
-            'Patronaat Haarlem', 'Grand Cafe Brinkman', 'New Vegas',
-            'Ratatouille', 'Restaurant ML', 'Urban Frenchy Bistro', 'Restaurant Fris',
-            'Grote Markt', 'Corrie ten Boom house',
-            'Verhalenhuis Haarlem', 'Elswout Theater', 'De Schuur', 'Café de Roemer',
-        ];
-    }
-
-   
-
+    /**
+     * @param array<string, string> $data
+     */
     public function saveHomeContent(array $data): void
     {
         $this->repository->saveHomeContent($data);
     }
 
+    /**
+     * @param array<string, mixed> $data
+     */
     public function saveHomeEvent(?int $id, array $data): void
     {
         $this->repository->saveHomeEvent($id, $data);

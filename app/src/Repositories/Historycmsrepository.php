@@ -8,6 +8,12 @@ use App\Framework\Repository;
 class HistoryCmsRepository extends Repository
 {
     private static ?HistoryCmsRepository $_instance = null;
+    private const HIGHLIGHT_COLUMNS = "`id`, `title`, `description`, `image`";
+    private const CONTENT_COLUMNS = "`id`, `section`, `title`, `subtitle`, `image`, `image_left`, `image_right`";
+    private const DETAIL_COLUMNS = "`id`, `highlight_id`, `slug`, `page_title`, `hero_image`, `location`, `founded_year`, `style_type`, `meta_description`";
+    private const SECTION_COLUMNS = "`id`, `detail_id`, `section_type`, `section_title`, `content`, `image_path`, `sort_order`";
+    private const GALLERY_COLUMNS = "`id`, `detail_id`, `image_path`, `caption`, `sort_order`";
+    private const FACT_COLUMNS = "`id`, `detail_id`, `icon`, `label`, `value`, `sort_order`";
 
     private function __construct()
     {
@@ -20,20 +26,18 @@ class HistoryCmsRepository extends Repository
         return self::$_instance;
     }
 
-    // -----------------------------------------------------------------------
-    // HIGHLIGHTS
-    // -----------------------------------------------------------------------
-
     public function getAllHighlights(): array
     {
         return $this->connection
-            ->query("SELECT * FROM history_highlights ORDER BY id ASC")
+            ->query("SELECT " . self::HIGHLIGHT_COLUMNS . " FROM history_highlights ORDER BY id ASC")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getHighlightById(int $id): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_highlights WHERE id = :id");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::HIGHLIGHT_COLUMNS . " FROM history_highlights WHERE id = :id"
+        );
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -59,14 +63,10 @@ class HistoryCmsRepository extends Repository
         $this->connection->prepare("DELETE FROM history_highlights WHERE id=:id")->execute([':id' => $id]);
     }
 
-    // -----------------------------------------------------------------------
-    // PAGE CONTENT
-    // -----------------------------------------------------------------------
-
     public function getAllContent(): array
     {
         return $this->connection
-            ->query("SELECT * FROM history_content ORDER BY id ASC")
+            ->query("SELECT " . self::CONTENT_COLUMNS . " FROM history_content ORDER BY id ASC")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -82,7 +82,9 @@ class HistoryCmsRepository extends Repository
 
     public function getContentBySection(string $section): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_content WHERE section=:s LIMIT 1");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::CONTENT_COLUMNS . " FROM history_content WHERE section=:s LIMIT 1"
+        );
         $stmt->execute([':s' => $section]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -111,14 +113,12 @@ class HistoryCmsRepository extends Repository
         ]);
     }
 
-    // -----------------------------------------------------------------------
-    // DETAILS
-    // -----------------------------------------------------------------------
-
     public function getAllDetails(): array
     {
         return $this->connection
-            ->query("SELECT hd.*, hh.title as highlight_title 
+            ->query("SELECT hd.`id`, hd.`highlight_id`, hd.`slug`, hd.`page_title`, hd.`hero_image`,
+                            hd.`location`, hd.`founded_year`, hd.`style_type`, hd.`meta_description`,
+                            hh.`title` AS `highlight_title`
                      FROM history_details hd
                      LEFT JOIN history_highlights hh ON hd.highlight_id = hh.id
                      ORDER BY hd.id ASC")
@@ -127,7 +127,9 @@ class HistoryCmsRepository extends Repository
 
     public function getDetailById(int $id): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_details WHERE id=:id");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::DETAIL_COLUMNS . " FROM history_details WHERE id=:id"
+        );
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -176,14 +178,10 @@ class HistoryCmsRepository extends Repository
         $this->connection->prepare("DELETE FROM history_details WHERE id=:id")->execute([':id' => $id]);
     }
 
-    // -----------------------------------------------------------------------
-    // SECTIONS
-    // -----------------------------------------------------------------------
-
     public function getDetailSections(int $detailId): array
     {
         $stmt = $this->connection->prepare(
-            "SELECT * FROM history_detail_sections WHERE detail_id=:id ORDER BY sort_order ASC"
+            "SELECT " . self::SECTION_COLUMNS . " FROM history_detail_sections WHERE detail_id=:id ORDER BY sort_order ASC"
         );
         $stmt->execute([':id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -191,7 +189,9 @@ class HistoryCmsRepository extends Repository
 
     public function getSectionById(int $id): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_detail_sections WHERE id=:id");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::SECTION_COLUMNS . " FROM history_detail_sections WHERE id=:id"
+        );
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -220,14 +220,10 @@ class HistoryCmsRepository extends Repository
         $this->connection->prepare("DELETE FROM history_detail_sections WHERE id=:id")->execute([':id' => $id]);
     }
 
-    // -----------------------------------------------------------------------
-    // GALLERY
-    // -----------------------------------------------------------------------
-
     public function getDetailGallery(int $detailId): array
     {
         $stmt = $this->connection->prepare(
-            "SELECT * FROM history_detail_gallery WHERE detail_id=:id ORDER BY sort_order ASC"
+            "SELECT " . self::GALLERY_COLUMNS . " FROM history_detail_gallery WHERE detail_id=:id ORDER BY sort_order ASC"
         );
         $stmt->execute([':id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -235,7 +231,9 @@ class HistoryCmsRepository extends Repository
 
     public function getGalleryImageById(int $id): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_detail_gallery WHERE id=:id");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::GALLERY_COLUMNS . " FROM history_detail_gallery WHERE id=:id"
+        );
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -254,14 +252,10 @@ class HistoryCmsRepository extends Repository
         $this->connection->prepare("DELETE FROM history_detail_gallery WHERE id=:id")->execute([':id' => $id]);
     }
 
-    // -----------------------------------------------------------------------
-    // FACTS
-    // -----------------------------------------------------------------------
-
     public function getDetailFacts(int $detailId): array
     {
         $stmt = $this->connection->prepare(
-            "SELECT * FROM history_detail_facts WHERE detail_id=:id ORDER BY sort_order ASC"
+            "SELECT " . self::FACT_COLUMNS . " FROM history_detail_facts WHERE detail_id=:id ORDER BY sort_order ASC"
         );
         $stmt->execute([':id' => $detailId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -269,7 +263,9 @@ class HistoryCmsRepository extends Repository
 
     public function getFactById(int $id): ?array
     {
-        $stmt = $this->connection->prepare("SELECT * FROM history_detail_facts WHERE id=:id");
+        $stmt = $this->connection->prepare(
+            "SELECT " . self::FACT_COLUMNS . " FROM history_detail_facts WHERE id=:id"
+        );
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -296,10 +292,6 @@ class HistoryCmsRepository extends Repository
     {
         $this->connection->prepare("DELETE FROM history_detail_facts WHERE id=:id")->execute([':id' => $id]);
     }
-
-    // -----------------------------------------------------------------------
-    // Tickets
-    // -----------------------------------------------------------------------
 
     public function getIndividualPrice() : int {
         $stmt = $this->connection->prepare("SELECT `individual_price` FROM `HistoryCMS` WHERE `id` = 1;");

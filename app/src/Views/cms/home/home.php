@@ -1,10 +1,11 @@
 <?php
 /** @var \App\ViewModels\HomeEditViewModel $viewModel */
 $pageTitle = $viewModel->pageTitle;
+$pageCSS = 'cms-home-history.css';
 require __DIR__ . '/../../partials/header.php';
 ?>
 
-<div class="container-fluid py-4">
+<div class="cms-page container-fluid py-4">
 
     <?php if (isset($_SESSION['flash'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -14,12 +15,23 @@ require __DIR__ . '/../../partials/header.php';
         <?php unset($_SESSION['flash']); ?>
     <?php endif; ?>
 
-    <h1 class="h3 mb-4">Edit Homepage</h1>
+    <?php if (isset($_SESSION['flash_error'])): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= htmlspecialchars($_SESSION['flash_error']) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <?php unset($_SESSION['flash_error']); ?>
+    <?php endif; ?>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         SECTION 1 – HERO & PROGRAM CONTENT
-    ═══════════════════════════════════════════════════════════════ -->
-    <div class="card mb-5">
+    <div class="cms-title-row">
+        <div>
+            <p class="cms-eyebrow">Content management</p>
+            <h1>Edit homepage</h1>
+        </div>
+        <a href="/" target="_blank" class="btn btn-outline-secondary">Preview site</a>
+    </div>
+
+    <div class="card cms-card mb-5">
         <div class="card-header fw-semibold">Hero &amp; Program Section</div>
         <div class="card-body">
             <form method="POST" action="/cms/home/save-content" enctype="multipart/form-data">
@@ -78,17 +90,14 @@ require __DIR__ . '/../../partials/header.php';
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         SECTION 2 – EVENT CARDS
-    ═══════════════════════════════════════════════════════════════ -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="h4 mb-0">Event Cards</h2>
         <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#eventModal" data-id="">
-            + Add Event Card
+            Add event card
         </button>
     </div>
 
-    <div class="table-responsive card">
+    <div class="table-responsive card cms-card">
         <table class="table table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
@@ -151,9 +160,6 @@ require __DIR__ . '/../../partials/header.php';
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     MODAL – Add / Edit Event Card
-═══════════════════════════════════════════════════════════════ -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">

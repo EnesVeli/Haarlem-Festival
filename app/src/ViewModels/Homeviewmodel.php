@@ -11,9 +11,8 @@ class HomeViewModel
     public string $programTitle;
     public string $programDescription;
     public array  $eventCards;
-    public array  $venueList;
 
-    public function __construct(array $homeContent, array $eventCards, array $venueList)
+    public function __construct(array $homeContent, array $eventCards)
     {
         $this->pageTitle          = 'Home - The Festival Haarlem';
         $this->heroImage          = $homeContent['hero_image']          ?? 'Heroimage.png';
@@ -23,6 +22,5 @@ class HomeViewModel
         $this->programTitle       = $homeContent['program_title']       ?? 'What Is My Program?';
         $this->programDescription = $homeContent['program_description'] ?? '';
         $this->eventCards         = $eventCards;
-        $this->venueList          = $venueList;
     }
 }
