@@ -30,6 +30,9 @@ class HistoryCmsController
 
     public function index(): void
     {
+        // Ensure CSRF token is generated
+        $csrfToken = $this->getCsrfToken();
+
         try {
             $highlights = $this->service->getAllHighlights();
             $content = $this->service->getAllContentKeyed();
@@ -50,6 +53,9 @@ class HistoryCmsController
 
     public function detail(array $vars): void
     {
+        // Ensure CSRF token is generated
+        $csrfToken = $this->getCsrfToken();
+
         try {
             $id = (int)($vars['id'] ?? 0);
             $detail = $id > 0 ? $this->service->getDetailById($id) : [];
@@ -73,6 +79,7 @@ class HistoryCmsController
     public function action(): void
     {
         try {
+            $this->validateCsrfToken();
             $action = $_POST['_action'] ?? '';
 
             switch ($action) {
@@ -249,6 +256,8 @@ class HistoryCmsController
 
     private function saveSection(): void
     {
+        $this->guardUploadSize("/cms/history/detail/{$_POST['detail_id']}");
+
         $id = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
         $image = $this->getCurrentSectionImage($id);
@@ -293,7 +302,9 @@ class HistoryCmsController
         $this->redirect("/cms/history/detail/{$detailId}", 'Section deleted.');
     }
 
-    private function addGallery(): void
+    privathis->guardUploadSize("/cms/history/detail/{$_POST['detail_id']}");
+
+        $te function addGallery(): void
     {
         $detailId = (int)($_POST['detail_id'] ?? 0);
         $caption = trim($_POST['caption'] ?? '');
@@ -309,9 +320,13 @@ class HistoryCmsController
 
     private function deleteGallery(): void
     {
-        $image = $this->service->getGalleryImageById((int)($_POST['id'] ?? 0));
-        $detailId = (int)($image['detail_id'] ?? 0);
-        $this->service->deleteGalleryImage((int)($_POST['id'] ?? 0));
+        $galleryId = (int)($_POST['id'] ?? 0);
+        $image = $this->service->getGalleryImageById($galleryId);
+        if (!$image || empty($image['detail_id'])) {
+            $this->redirect('/cms/history#tab-details', 'Image not found.', true);
+        }
+        $detailId = (int)$image['detail_id'];
+        $this->service->deleteGalleryImage($galleryId);
         $this->redirect("/cms/history/detail/{$detailId}", 'Image deleted.');
     }
 
@@ -329,9 +344,13 @@ class HistoryCmsController
 
         $this->service->saveFact($id > 0 ? $id : null, $data);
         $this->redirect("/cms/history/detail/{$detailId}", 'Fact saved.');
-    }
-
-    private function deleteFact(): void
+    }Id = (int)($_POST['id'] ?? 0);
+        $fact = $this->service->getFactById($factId);
+        if (!$fact || empty($fact['detail_id'])) {
+            $this->redirect('/cms/history#tab-details', 'Fact not found.', true);
+        }
+        $detailId = (int)$fact['detail_id'];
+        $this->service->deleteFact($factId
     {
         $fact = $this->service->getFactById((int)($_POST['id'] ?? 0));
         $detailId = (int)($fact['detail_id'] ?? 0);
@@ -386,7 +405,25 @@ class HistoryCmsController
         }
 
         return $filename;
+    }validateCsrfToken(): void
+    {
+        $token = $_POST['_csrf_token'] ?? '';
+        $sessionToken = $_SESSION['_csrf_token'] ?? '';
+
+        if ($token === '' || $token !== $sessionToken) {
+            throw new Exception('CSRF token validation failed.');
+        }
     }
+
+    public function getCsrfToken(): string
+    {
+        if (empty($_SESSION['_csrf_token'])) {
+            $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['_csrf_token'];
+    }
+
+    private function 
 
     private function redirect(string $url, string $flash = '', bool $isError = false): void
     {

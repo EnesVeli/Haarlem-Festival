@@ -89,6 +89,7 @@ function imgPreview(string $filename, string $field): string {
                   <form method="POST" action="/cms/history/action" class="d-inline"
                         onsubmit="return confirm('Delete?')">
                     <input type="hidden" name="_action" value="delete_highlight">
+                    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
                     <input type="hidden" name="id" value="<?= $h['id'] ?>">
                     <button class="btn btn-sm btn-outline-danger">Delete</button>
                   </form>
@@ -117,6 +118,7 @@ function imgPreview(string $filename, string $field): string {
               <p class="text-muted mb-3">Current price: <strong>€<?= number_format($individual_price / 100, 2) ?></strong></p>
               <form method="POST" action="/cms/history/action">
                 <input type="hidden" name="_action" value="save_ticket_price">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
                 <input type="hidden" name="type" value="0">
                 <div class="input-group">
                   <span class="input-group-text">€</span>
@@ -140,6 +142,7 @@ function imgPreview(string $filename, string $field): string {
             <div class="card-body">
               <p class="text-muted mb-3">Current price: <strong>€<?= number_format($family_price / 100, 2) ?></strong></p>
               <form method="POST" action="/cms/history/action">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
                 <input type="hidden" name="_action" value="save_ticket_price">
                 <input type="hidden" name="type" value="1">
                 <div class="input-group">
@@ -162,7 +165,8 @@ function imgPreview(string $filename, string $field): string {
       <div class="card cms-card">
         <div class="card-header"><strong>Page Content</strong></div>
         <div class="card-body">
-          <form method="POST" action="/cms/history/action" enctype="multipart/form-data">
+          <form method="POST" action="/cms/history/action" enctype="m
+            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">ultipart/form-data">
             <input type="hidden" name="_action" value="save_content">
 
             <?php
@@ -232,7 +236,8 @@ function imgPreview(string $filename, string $field): string {
                   <a href="/cms/history/detail/<?= $d['id'] ?>" class="btn btn-sm btn-outline-primary me-1">Edit</a>
                   <form method="POST" action="/cms/history/action" class="d-inline"
                         onsubmit="return confirm('Delete this detail page and all its content?')">
-                    <input type="hidden" name="_action" value="delete_detail">
+                    <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                    <input type="hidden" name="id" value="<?= $d['id'] ?>">l">
                     <input type="hidden" name="id" value="<?= $d['id'] ?>">
                     <button class="btn btn-sm btn-outline-danger">Delete</button>
                   </form>
@@ -254,6 +259,7 @@ function imgPreview(string $filename, string $field): string {
 <div class="modal fade" id="highlightModal" tabindex="-1">
   <div class="modal-dialog">
     <form method="POST" action="/cms/history/action" enctype="multipart/form-data" class="modal-content">
+      <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
       <input type="hidden" name="_action" value="save_highlight">
       <input type="hidden" name="id" id="h_id" value="0">
       <div class="modal-header">

@@ -44,6 +44,7 @@ require __DIR__ . '/../../partials/header.php';
     <div class="card-body">
       <form method="POST" action="/cms/history/action" enctype="multipart/form-data">
         <input type="hidden" name="_action" value="save_detail">
+        <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
         <input type="hidden" name="id" value="<?= $detailId ?>">
 
         <div class="row g-3">
@@ -133,6 +134,8 @@ require __DIR__ . '/../../partials/header.php';
               <form method="POST" action="/cms/history/action" class="d-inline"
                     onsubmit="return confirm('Delete section?')">
                 <input type="hidden" name="_action" value="delete_section">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                <input type="hidden" name="detail_id" value="<?= $detailId ?>">
                 <input type="hidden" name="id" value="<?= $s['id'] ?>">
                 <button class="btn btn-sm btn-outline-danger">Delete</button>
               </form>
@@ -156,7 +159,8 @@ require __DIR__ . '/../../partials/header.php';
 
       <div class="collapse mb-3" id="galleryUpload">
         <form method="POST" action="/cms/history/action" enctype="multipart/form-data"
-              class="border rounded p-3 bg-light">
+              class="border rounded p_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+          <input type="hidden" name="-3 bg-light">
           <input type="hidden" name="_action" value="add_gallery">
           <input type="hidden" name="detail_id" value="<?= $detailId ?>">
           <div class="row g-2 align-items-end">
@@ -188,6 +192,7 @@ require __DIR__ . '/../../partials/header.php';
               <?= htmlspecialchars($img['caption'] ?? '') ?>
             </p>
             <form method="POST" action="/cms/history/action" onsubmit="return confirm('Delete image?')">
+              <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
               <input type="hidden" name="_action" value="delete_gallery">
               <input type="hidden" name="id" value="<?= $img['id'] ?>">
               <button class="btn btn-sm btn-outline-danger" style="font-size:.7rem;padding:1px 6px">Delete</button>
@@ -224,6 +229,8 @@ require __DIR__ . '/../../partials/header.php';
               <form method="POST" action="/cms/history/action" class="d-inline"
                     onsubmit="return confirm('Delete fact?')">
                 <input type="hidden" name="_action" value="delete_fact">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                <input type="hidden" name="detail_id" value="<?= $detailId ?>">
                 <input type="hidden" name="id" value="<?= $f['id'] ?>">
                 <button class="btn btn-sm btn-outline-danger">Delete</button>
               </form>
@@ -245,6 +252,7 @@ require __DIR__ . '/../../partials/header.php';
   <div class="modal-dialog modal-lg">
     <form method="POST" action="/cms/history/action" enctype="multipart/form-data" class="modal-content">
       <input type="hidden" name="_action" value="save_section">
+      <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
       <input type="hidden" name="id" id="s_id" value="0">
       <input type="hidden" name="detail_id" value="<?= $detailId ?>">
       <div class="modal-header">
@@ -292,6 +300,7 @@ require __DIR__ . '/../../partials/header.php';
 <div class="modal fade" id="factModal" tabindex="-1">
   <div class="modal-dialog">
     <form method="POST" action="/cms/history/action" class="modal-content">
+      <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
       <input type="hidden" name="_action" value="save_fact">
       <input type="hidden" name="id" id="f_id" value="0">
       <input type="hidden" name="detail_id" value="<?= $detailId ?>">
