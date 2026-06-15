@@ -75,7 +75,7 @@ class StoriesController extends BaseController
                 'ctaDescription'   => $viewModel->ctaDescription,
                 'eventsByDay'      => $viewModel->eventsByDay,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo 'Something went wrong. Please try again later.';
         }
     }
@@ -110,7 +110,7 @@ class StoriesController extends BaseController
                 'event'    => $event,
                 'schedule' => $schedule,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo 'Something went wrong. Please try again later.';
         }
     }
@@ -148,7 +148,7 @@ class StoriesController extends BaseController
                 'csrfToken' => $this->ensureCsrfToken(),
                 'slug'      => $slug,
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             echo 'Something went wrong. Please try again later.';
         }
     }
@@ -201,20 +201,21 @@ class StoriesController extends BaseController
                 $booking->pay_as_you_like   = $pay_amount;
             }
 
-            $this->service->createBooking(Session::user()['user_id'], $booking);
+           $this->service->createBooking(Session::user()['user_id'], $booking);
 
-            $this->redirect('/cart');
-            return;
-        }
-        catch(\Exception $ex){
-            Session::setTempError("Something went wrong. Try again later.");
-        }
+        $this->redirect('/cart');
+        return;
+    }
+    catch(Exception $ex){
+        Session::setTempError("Something went wrong. Try again later.");
 
-        if(isset($_POST['slug'])){
-            $this->redirect('/stories/' . $_POST['slug'] . '/book');
-        }
-        else{
+        $slug = preg_replace('/[^a-z0-9\-]/i', '', $_POST['slug'] ?? '');
+        if (!empty($slug)) {
+            $this->redirect('/stories/' . $slug . '/book');
+        } else {
             $this->redirect('/stories');
         }
+        return;
+    }
     }
 }
