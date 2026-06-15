@@ -55,10 +55,9 @@ require __DIR__ . '/../../partials/header.php';
 
                     <div class="col-md-6">
                         <label class="form-label">Hero Background Image</label>
-                        <input type="text" name="hero_image" class="form-control"
-                               placeholder="Heroimage.png"
-                               value="<?= $viewModel->get('hero_image', 'Heroimage.png') ?>">
-                        <div class="form-text">Filename inside <code>/assets/uploads/History/</code></div>
+                        <input type="file" name="hero_image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                        <div class="form-text">Upload JPG, PNG or WEBP image. Max size 5 MB.</div>
+                        <input type="hidden" name="existing_hero_image" value="<?= htmlspecialchars($viewModel->content['hero_image'] ?? '') ?>">
                     </div>
 
                     <div class="col-md-6">
@@ -216,8 +215,8 @@ require __DIR__ . '/../../partials/header.php';
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Card Image (optional)</label>
-                            <input type="file" name="image" class="form-control" accept="image/*">
-                            <div class="form-text" id="modal-image-hint"></div>
+                            <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
+                            <div class="form-text">Upload JPG, PNG or WEBP image. Max size 5 MB.</div>
                         </div>
                         <div class="col-md-6 d-flex align-items-end">
                             <div class="form-check">

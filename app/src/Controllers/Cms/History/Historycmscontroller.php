@@ -7,11 +7,16 @@ use Exception;
 
 class HistoryCmsController
 {
+    private const MAX_IMAGE_SIZE_BYTES = 8_388_608; // 8 MB
+    private const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+    private const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
     private HistoryCmsService $service;
 
     public function __construct()
     {
         $this->service = HistoryCmsService::getInstance();
+        $this->requireAdmin();
     }
 
     private function requireAdmin(): void
@@ -25,8 +30,6 @@ class HistoryCmsController
 
     public function index(): void
     {
-        $this->requireAdmin();
-
         try {
             $highlights = $this->service->getAllHighlights();
             $content = $this->service->getAllContentKeyed();
@@ -47,8 +50,6 @@ class HistoryCmsController
 
     public function detail(array $vars): void
     {
-        $this->requireAdmin();
-
         try {
             $id = (int)($vars['id'] ?? 0);
             $detail = $id > 0 ? $this->service->getDetailById($id) : [];
@@ -71,8 +72,6 @@ class HistoryCmsController
 
     public function action(): void
     {
-        $this->requireAdmin();
-
         try {
             $action = $_POST['_action'] ?? '';
 
@@ -156,12 +155,15 @@ class HistoryCmsController
 
     private function saveTicketPrice(): void
     {
-        if (!isset($_POST['type'], $_POST['price'])) {
-            $this->redirect('/cms/history#tab-tickets', 'Missing ticket price data.', true);
+        if (!isset($_POST['type'], $_POST['price']) || !is_numeric($_POST['price'])) {
+            $this->redirect('/cms/history#tab-tickets', 'Missing or invalid ticket price.', true);
         }
 
         $type = (int)$_POST['type'];
         $priceInCents = (int)round((float)$_POST['price'] * 100);
+        if ($priceInCents < 0) {
+            $this->redirect('/cms/history#tab-tickets', 'Ticket price must be zero or positive.', true);
+        }
 
         $this->service->updateTicketPrice($type, $priceInCents);
         $this->redirect('/cms/history#tab-tickets', 'Ticket price updated.');
@@ -255,9 +257,15 @@ class HistoryCmsController
             $image = $this->uploadFile($_FILES['image_path']);
         }
 
+        $sectionType = trim($_POST['section_type'] ?? 'about');
+        $allowedTypes = ['about', 'history', 'highlight', 'special'];
+        if (!in_array($sectionType, $allowedTypes, true)) {
+            $sectionType = 'about';
+        }
+
         $data = [
             ':detail_id' => $detailId,
-            ':section_type' => trim($_POST['section_type'] ?? ''),
+            ':section_type' => $sectionType,
             ':section_title' => trim($_POST['section_title'] ?? ''),
             ':content' => trim($_POST['content'] ?? ''),
             ':image_path' => $image,
@@ -292,7 +300,8 @@ class HistoryCmsController
         $order = (int)($_POST['sort_order'] ?? 0);
 
         if (!empty($_FILES['image_path']['tmp_name'])) {
-            $this->service->addGalleryImage($detailId, $this->uploadFile($_FILES['image_path']), $caption, $order);
+            $imagePath = $this->uploadFile($_FILES['image_path']);
+            $this->service->addGalleryImage($detailId, $imagePath, $caption, $order);
         }
 
         $this->redirect("/cms/history/detail/{$detailId}", 'Image added.');
@@ -339,15 +348,42 @@ class HistoryCmsController
 
     private function uploadFile(array $file): string
     {
-        $dir = __DIR__ . '/../../../../public/assets/uploads/history/';
-
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+        $fileError = (int)($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if ($fileError !== UPLOAD_ERR_OK) {
+            throw new Exception('Image upload failed with error code ' . $fileError . '.');
         }
 
-        $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $filename = time() . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($file['tmp_name'], $dir . $filename);
+        $tmpPath = (string)($file['tmp_name'] ?? '');
+        if ($tmpPath === '' || !is_uploaded_file($tmpPath)) {
+            throw new Exception('Invalid uploaded image.');
+        }
+
+        $size = (int)($file['size'] ?? 0);
+        if ($size > self::MAX_IMAGE_SIZE_BYTES) {
+            throw new Exception('Image exceeds maximum size of 8 MB.');
+        }
+
+        $extension = strtolower(pathinfo((string)($file['name'] ?? ''), PATHINFO_EXTENSION));
+        if (!in_array($extension, self::ALLOWED_IMAGE_EXTENSIONS, true)) {
+            throw new Exception('Invalid image file type. Allowed: jpg, jpeg, png, webp.');
+        }
+
+        $mimeType = mime_content_type($tmpPath) ?: '';
+        if (!in_array($mimeType, self::ALLOWED_IMAGE_MIME_TYPES, true)) {
+            throw new Exception('Invalid image MIME type.');
+        }
+
+        $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            throw new Exception('Unable to create upload directory.');
+        }
+
+        $filename = time() . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $destination = $dir . $filename;
+
+        if (!move_uploaded_file($tmpPath, $destination)) {
+            throw new Exception('Unable to save uploaded image.');
+        }
 
         return $filename;
     }

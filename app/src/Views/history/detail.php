@@ -6,7 +6,7 @@ require __DIR__ . '/../partials/header.php';
 ?>
 
 <!-- HERO SECTION -->
-<section class="detail-hero" style="background-image: url('/assets/uploads/history/<?= htmlspecialchars($viewModel->heroImage) ?>');">
+<section class="detail-hero" style="background-image: url('/assets/uploads/History/<?= htmlspecialchars($viewModel->heroImage) ?>');">
     <div class="container">
         <h1><?= htmlspecialchars($viewModel->pageTitle) ?></h1>
         <div class="detail-hero-meta">
@@ -50,7 +50,7 @@ require __DIR__ . '/../partials/header.php';
         <h2 class="gallery-title">Photo Gallery</h2>
         <div class="photo-gallery">
             <?php foreach ($viewModel->gallery as $image): ?>
-                <img src="/assets/uploads/history/<?= htmlspecialchars($image['image_path']) ?>" 
+                <img src="/assets/uploads/History/<?= htmlspecialchars($image['image_path']) ?>" 
                      alt="<?= htmlspecialchars($image['caption'] ?? $viewModel->pageTitle) ?>" 
                      class="gallery-image">
             <?php endforeach; ?>
@@ -82,7 +82,7 @@ require __DIR__ . '/../partials/header.php';
                                 <p><?= nl2br(htmlspecialchars($paragraph)) ?></p>
                             <?php endforeach; ?>
                             <?php if (!empty($section['image_path'])): ?>
-                                <img src="/assets/uploads/history/<?= htmlspecialchars($section['image_path']) ?>" 
+                                <img src="/assets/uploads/History/<?= htmlspecialchars($section['image_path']) ?>" 
                                      alt="<?= htmlspecialchars($section['section_title']) ?>">
                             <?php endif; ?>
                         </div>
@@ -144,7 +144,7 @@ require __DIR__ . '/../partials/header.php';
         <div class="journey-grid">
             <?php foreach ($viewModel->otherHighlights as $highlight): ?>
                 <a href="/history/<?= htmlspecialchars($highlight['slug']) ?>" class="journey-card">
-                    <img src="/assets/uploads/history/<?= htmlspecialchars($highlight['image']) ?>" 
+                    <img src="/assets/uploads/History/<?= htmlspecialchars($highlight['image']) ?>" 
                          alt="<?= htmlspecialchars($highlight['title']) ?>">
                     <div class="journey-card-body">
                         <h3><?= htmlspecialchars($highlight['title']) ?></h3>
@@ -154,7 +154,7 @@ require __DIR__ . '/../partials/header.php';
             <?php endforeach; ?>
 
             <a href="/stories" class="journey-card">
-                <img src="/assets/uploads/history/stories-haarlem.jpg" alt="Stories in Haarlem">
+                <img src="/assets/uploads/History/stories-haarlem.jpg" alt="Stories in Haarlem">
                 <div class="journey-card-body">
                     <h3>Stories in Haarlem</h3>
                     <p>Guided walking tour through historic Haarlem with local storytellers sharing tales of the city's rich past.</p>
@@ -162,7 +162,7 @@ require __DIR__ . '/../partials/header.php';
             </a>
 
             <a href="/jazz" class="journey-card">
-                <img src="/assets/uploads/history/jazz-event.jpg" alt="Jazz">
+                <img src="/assets/uploads/History/jazz-event.jpg" alt="Jazz">
                 <div class="journey-card-body">
                     <h3>Jazz</h3>
                     <p>Interactive magic and illusion show at the famous Teylers Museum, perfect for families and wonder-seekers.</p>
@@ -170,7 +170,7 @@ require __DIR__ . '/../partials/header.php';
             </a>
 
             <a href="/yummy" class="journey-card">
-                <img src="/assets/uploads/history/yummy-event.jpg" alt="Yummy">
+                <img src="/assets/uploads/History/yummy-event.jpg" alt="Yummy">
                 <div class="journey-card-body">
                     <h3>Yummy!</h3>
                     <p>Culinary storytelling experience with local chefs and food historians exploring Dutch cuisine traditions.</p>
@@ -178,7 +178,7 @@ require __DIR__ . '/../partials/header.php';
             </a>
 
             <a href="/tickets" class="journey-card">
-                <img src="/assets/uploads/history/tickets-event.jpg" alt="Tickets">
+                <img src="/assets/uploads/History/tickets-event.jpg" alt="Tickets">
                 <div class="journey-card-body">
                     <h3>Tickets</h3>
                     <p>Browse every festival event and reserve the tickets you need for your personal Haarlem experience.</p>

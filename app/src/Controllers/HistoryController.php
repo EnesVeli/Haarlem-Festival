@@ -85,11 +85,17 @@ class HistoryController extends BaseController
 
         try{
             if($reservation_id == null){
-                if(!isset($_GET['slot']) || !isset($_GET['offset'])) throw new EmptyPostException();
+                if(!isset($_GET['slot']) || !isset($_GET['offset']) || !is_numeric($_GET['slot']) || !is_numeric($_GET['offset'])) {
+                    throw new EmptyPostException();
+                }
 
-                if($_GET['offset'] < 0 || $_GET['offset'] > HistoryService::$max_date_offset) throw new PostMismatchException();
+                $slotId = (int)$_GET['slot'];
+                $offset = (int)$_GET['offset'];
+                if($offset < 0 || $offset > HistoryService::$max_date_offset) {
+                    throw new PostMismatchException();
+                }
 
-                $reservation = $this->service->getHistoryReservationBySlotIdAndDateOffset($_GET['slot'], $_GET['offset']);
+                $reservation = $this->service->getHistoryReservationBySlotIdAndDateOffset($slotId, $offset);
                 if($reservation == null) throw new PostMismatchException("Failed to find reservation slot by slot_id and date_offset");
             }
             else{
@@ -126,13 +132,16 @@ class HistoryController extends BaseController
         } 
 
         try{
-            if(!isset($_POST['reservation_id']) || !isset($_POST['individual_count']) || !isset($_POST['family_count']) || !isset($_POST['language'])) throw new EmptyPostException();
+            if(!isset($_POST['reservation_id'], $_POST['individual_count'], $_POST['family_count'], $_POST['language']) ||
+               !is_numeric($_POST['reservation_id']) || !is_numeric($_POST['individual_count']) || !is_numeric($_POST['family_count'])) {
+                throw new EmptyPostException();
+            }
 
             $booking = new HistoryBooking();
-            $booking->reservation_id = $_POST['reservation_id'];
-            $booking->language = $_POST['language'];
-            $booking->individual_count = $_POST['individual_count'];
-            $booking->family_count = $_POST['family_count'];
+            $booking->reservation_id = (int)$_POST['reservation_id'];
+            $booking->language = trim((string)$_POST['language']);
+            $booking->individual_count = max(0, (int)$_POST['individual_count']);
+            $booking->family_count = max(0, (int)$_POST['family_count']);
 
             $this->service->bookHistoryBooking($booking, Session::user()['user_id']);
 

@@ -8,6 +8,10 @@ use Exception;
 
 class HomeCmsController
 {
+    private const MAX_IMAGE_SIZE_BYTES = 5_242_880; // 5 MB
+    private const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+    private const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
     private HomeService $homeService;
 
     public function __construct()
@@ -43,8 +47,10 @@ class HomeCmsController
     public function saveContent(): void
     {
         try {
+            $this->guardUploadSize('/cms/home');
+
             $allowedKeys = [
-                'hero_image', 'hero_title', 'hero_subtitle',
+                'hero_title', 'hero_subtitle',
                 'hero_description', 'program_title', 'program_description',
             ];
 
@@ -55,10 +61,26 @@ class HomeCmsController
                 }
             }
 
+            $heroImage = trim($_POST['existing_hero_image'] ?? '');
+            if (!empty($_FILES['hero_image']['tmp_name'])) {
+                $heroImage = $this->processImageUpload($_FILES['hero_image']);
+            }
+
+            if ($heroImage !== '') {
+                $data['hero_image'] = $heroImage;
+            }
+
             $this->homeService->saveHomeContent($data);
             $this->redirect('/cms/home', 'Content saved.');
         } catch (Exception $exception) {
             $this->redirect('/cms/home', 'Something went wrong. Please try again later.', true);
+        }
+    }
+
+    private function guardUploadSize(string $redirectUrl): void
+    {
+        if ($_SERVER['CONTENT_LENGTH'] > 0 && empty($_POST) && empty($_FILES)) {
+            $this->redirect($redirectUrl, 'File too large. Max 5MB.', true);
         }
     }
 
@@ -82,15 +104,7 @@ class HomeCmsController
             ];
 
             if (!empty($_FILES['image']['tmp_name'])) {
-                $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
-                if (!is_dir($dir)) {
-                    mkdir($dir, 0755, true);
-                }
-                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                $filename = time() . '_' . uniqid() . '.' . $ext;
-                if (move_uploaded_file($_FILES['image']['tmp_name'], $dir . $filename)) {
-                    $eventData['image'] = $filename;
-                }
+                $eventData['image'] = $this->processImageUpload($_FILES['image']);
             } elseif (!empty($_POST['existing_image'])) {
                 $eventData['image'] = trim($_POST['existing_image']);
             }
@@ -122,5 +136,46 @@ class HomeCmsController
         }
         header('Location: ' . $url);
         exit;
+    }
+
+    private function processImageUpload(array $file): string
+    {
+        $fileError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        if ($fileError !== UPLOAD_ERR_OK) {
+            throw new Exception('Image upload failed with error code ' . $fileError . '.');
+        }
+
+        $tmpPath = (string) ($file['tmp_name'] ?? '');
+        if ($tmpPath === '' || !is_uploaded_file($tmpPath)) {
+            throw new Exception('Invalid uploaded image.');
+        }
+
+        $extension = strtolower(pathinfo((string) ($file['name'] ?? ''), PATHINFO_EXTENSION));
+        $mimeType = mime_content_type($tmpPath) ?: '';
+
+        if (!in_array($extension, self::ALLOWED_IMAGE_EXTENSIONS, true)) {
+            throw new Exception('Invalid image extension. Allowed: jpg, jpeg, png, webp.');
+        }
+
+        if (!in_array($mimeType, self::ALLOWED_IMAGE_MIME_TYPES, true)) {
+            throw new Exception('Invalid image MIME type. Allowed: image/jpeg, image/png, image/webp.');
+        }
+
+        if (!isset($file['size']) || (int) $file['size'] > self::MAX_IMAGE_SIZE_BYTES) {
+            throw new Exception('Image exceeds maximum size of 5 MB.');
+        }
+
+        $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
+        if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            throw new Exception('Unable to create upload directory.');
+        }
+
+        $filename = time() . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $destination = $dir . $filename;
+        if (!move_uploaded_file($tmpPath, $destination)) {
+            throw new Exception('Unable to save uploaded image.');
+        }
+
+        return $filename;
     }
 }

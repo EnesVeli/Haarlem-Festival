@@ -60,6 +60,6 @@ class HistoryBooking implements IBooking{
     }
 
     public function getEventImagePath() : ?string{
-        return '/assets/uploads/history/bavo-church.jpg';
+        return '/assets/uploads/History/bavo-church.jpg';
     }
 }
