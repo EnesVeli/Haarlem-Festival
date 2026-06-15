@@ -12,8 +12,8 @@ require __DIR__ . '/../../partials/header.php';
 
 function imgPreview(string $filename, string $field): string {
     if (!$filename) return '';
-    return '<img src="/assets/uploads/History/' . htmlspecialchars($filename) . '" class="img-thumbnail mb-1 cms-preview-img">
-            <input type="hidden" name="' . $field . '_current" value="' . htmlspecialchars($filename) . '">';
+    return '<img src="/assets/uploads/History/' . htmlspecialchars($filename) . '" class="img-thumbnail mb-1 cms-preview-img">'
+         . '<input type="hidden" name="' . $field . '_current" value="' . htmlspecialchars($filename) . '">';
 }
 ?>
 
@@ -69,7 +69,7 @@ function imgPreview(string $filename, string $field): string {
                 <td>
                   <?php if ($h['image']): ?>
                     <img src="/assets/uploads/History/<?= htmlspecialchars($h['image']) ?>" class="cms-preview-img" alt="">
-                  <?php else: ?><span class="text-muted">–</span><?php endif; ?>
+                  <?php else: ?><span class="text-muted">-</span><?php endif; ?>
                 </td>
                 <td><?= htmlspecialchars($h['title']) ?></td>
                 <td class="text-muted small"><?= htmlspecialchars(mb_substr($h['description'], 0, 70)) ?>...</td>
@@ -165,8 +165,8 @@ function imgPreview(string $filename, string $field): string {
       <div class="card cms-card">
         <div class="card-header"><strong>Page Content</strong></div>
         <div class="card-body">
-          <form method="POST" action="/cms/history/action" enctype="m
-            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">ultipart/form-data">
+          <form method="POST" action="/cms/history/action" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
             <input type="hidden" name="_action" value="save_content">
 
             <?php
@@ -229,7 +229,7 @@ function imgPreview(string $filename, string $field): string {
             <tbody>
               <?php foreach ($details as $d): ?>
               <tr>
-                <td><?= htmlspecialchars($d['highlight_title'] ?? '–') ?></td>
+                <td><?= htmlspecialchars($d['highlight_title'] ?? '-') ?></td>
                 <td><?= htmlspecialchars($d['page_title']) ?></td>
                 <td><code>/history/<?= htmlspecialchars($d['slug']) ?></code></td>
                 <td>
@@ -237,7 +237,7 @@ function imgPreview(string $filename, string $field): string {
                   <form method="POST" action="/cms/history/action" class="d-inline"
                         onsubmit="return confirm('Delete this detail page and all its content?')">
                     <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
-                    <input type="hidden" name="id" value="<?= $d['id'] ?>">l">
+                    <input type="hidden" name="_action" value="delete_detail">
                     <input type="hidden" name="id" value="<?= $d['id'] ?>">
                     <button class="btn btn-sm btn-outline-danger">Delete</button>
                   </form>
@@ -297,11 +297,10 @@ function openHighlightModal(data = null) {
   document.getElementById('h_modalTitle').textContent = data ? 'Edit Highlight' : 'Add Highlight';
   const prev = document.getElementById('h_img_preview');
   prev.innerHTML = data?.image
-    ? `<img src="/assets/uploads/History/${data.image}" class="img-thumbnail mb-2" style="height:56px;object-fit:cover">`
+    ? '<img src="/assets/uploads/History/' + data.image + '" class="img-thumbnail mb-2" style="height:56px;object-fit:cover">'
     : '';
   new bootstrap.Modal(document.getElementById('highlightModal')).show();
 }
-
 </script>
 
 <?php require __DIR__ . '/../../partials/footer.php'; ?>
