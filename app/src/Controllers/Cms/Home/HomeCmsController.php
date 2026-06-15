@@ -90,7 +90,8 @@ class HomeCmsController
 
     public function saveEvent(): void
     {
-        try {this->validateCsrfToken();
+        try {
+            $this->validateCsrfToken();
             $this->guardUploadSize('/cms/home');
 
             $id = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
@@ -118,14 +119,11 @@ class HomeCmsController
             $this->homeService->saveHomeEvent($id, $eventData);
             $this->redirect('/cms/home', 'Event card saved.');
         } catch (Exception $exception) {
-            $this->redirect('/cms/home', $exception->getMessage()
             $this->redirect('/cms/home', 'Something went wrong. Please try again later.', true);
         }
     }
 
-    public futhis->validateCsrfToken();
-
-            $nction deleteEvent(): void
+    public function deleteEvent(): void
     {
         try {
             $id = (int)($_POST['id'] ?? 0);
@@ -149,17 +147,21 @@ class HomeCmsController
 
     private function processImageUpload(array $file): string
     {
-        $fileError = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+        $fileError = (int)($file['error'] ?? UPLOAD_ERR_NO_FILE);
         if ($fileError !== UPLOAD_ERR_OK) {
             throw new Exception('Image upload failed with error code ' . $fileError . '.');
         }
 
-        // Check size first (cheapest check)
-        if (!isset($file['size']) || (int) $file['size'] > self::MAX_IMAGE_SIZE_BYTES) {
+        $tmpPath = (string)($file['tmp_name'] ?? '');
+        if ($tmpPath === '' || !is_uploaded_file($tmpPath)) {
+            throw new Exception('Invalid uploaded image.');
+        }
+
+        if (!isset($file['size']) || (int)$file['size'] > self::MAX_IMAGE_SIZE_BYTES) {
             throw new Exception('Image exceeds maximum size of 5 MB.');
         }
 
-        $extension = strtolower(pathinfo((string) ($file['name'] ?? ''), PATHINFO_EXTENSION));
+        $extension = strtolower(pathinfo((string)($file['name'] ?? ''), PATHINFO_EXTENSION));
         if (!in_array($extension, self::ALLOWED_IMAGE_EXTENSIONS, true)) {
             throw new Exception('Invalid image extension. Allowed: jpg, jpeg, png, webp.');
         }
@@ -169,7 +171,7 @@ class HomeCmsController
             throw new Exception('Invalid image MIME type. Allowed: image/jpeg, image/png, image/webp.');
         }
 
-        $dir = __DIR__ . '/../../../../public/assets/uploads/History/';
+        $dir = __DIR__ . '/../../../../public/assets/uploads/Home/';
         if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
             throw new Exception('Unable to create upload directory.');
         }
@@ -198,11 +200,6 @@ class HomeCmsController
         if (empty($_SESSION['_csrf_token'])) {
             $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
         }
-        return $_SESSION['_csrf_token']dir . $filename;
-        if (!move_uploaded_file($tmpPath, $destination)) {
-            throw new Exception('Unable to save uploaded image.');
-        }
-
-        return $filename;
+        return $_SESSION['_csrf_token'];
     }
 }

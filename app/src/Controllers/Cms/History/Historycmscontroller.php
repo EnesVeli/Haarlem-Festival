@@ -7,7 +7,7 @@ use Exception;
 
 class HistoryCmsController
 {
-    private const MAX_IMAGE_SIZE_BYTES = 8_388_608; // 8 MB
+    private const MAX_IMAGE_SIZE_BYTES = 8388608; // 8 MB
     private const ALLOWED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
     private const ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -30,22 +30,21 @@ class HistoryCmsController
 
     public function index(): void
     {
-        // Ensure CSRF token is generated
         $csrfToken = $this->getCsrfToken();
 
         try {
-            $highlights = $this->service->getAllHighlights();
-            $content = $this->service->getAllContentKeyed();
-            $details = $this->service->getAllDetails();
+            $highlights       = $this->service->getAllHighlights();
+            $content          = $this->service->getAllContentKeyed();
+            $details          = $this->service->getAllDetails();
             $individual_price = $this->service->getIndividualPrice();
-            $family_price = $this->service->getFamilyPrice();
+            $family_price     = $this->service->getFamilyPrice();
         } catch (Exception $exception) {
             $_SESSION['flash_error'] = 'Something went wrong. Please try again later.';
-            $highlights = [];
-            $content = [];
-            $details = [];
+            $highlights       = [];
+            $content          = [];
+            $details          = [];
             $individual_price = 0;
-            $family_price = 0;
+            $family_price     = 0;
         }
 
         require __DIR__ . '/../../../Views/cms/history/index.php';
@@ -53,24 +52,23 @@ class HistoryCmsController
 
     public function detail(array $vars): void
     {
-        // Ensure CSRF token is generated
         $csrfToken = $this->getCsrfToken();
 
         try {
-            $id = (int)($vars['id'] ?? 0);
-            $detail = $id > 0 ? $this->service->getDetailById($id) : [];
+            $id         = (int)($vars['id'] ?? 0);
+            $detail     = $id > 0 ? $this->service->getDetailById($id) : [];
             $highlights = $this->service->getAllHighlights();
-            $sections = $id > 0 ? $this->service->getDetailSections($id) : [];
-            $gallery = $id > 0 ? $this->service->getDetailGallery($id) : [];
-            $facts = $id > 0 ? $this->service->getDetailFacts($id) : [];
+            $sections   = $id > 0 ? $this->service->getDetailSections($id) : [];
+            $gallery    = $id > 0 ? $this->service->getDetailGallery($id) : [];
+            $facts      = $id > 0 ? $this->service->getDetailFacts($id) : [];
         } catch (Exception $exception) {
             $_SESSION['flash_error'] = 'Something went wrong. Please try again later.';
-            $id = 0;
-            $detail = [];
+            $id         = 0;
+            $detail     = [];
             $highlights = [];
-            $sections = [];
-            $gallery = [];
-            $facts = [];
+            $sections   = [];
+            $gallery    = [];
+            $facts      = [];
         }
 
         require __DIR__ . '/../../../Views/cms/history/detail.php';
@@ -131,10 +129,10 @@ class HistoryCmsController
     {
         $this->guardUploadSize('/cms/history');
 
-        $id = (int)($_POST['id'] ?? 0);
-        $title = trim($_POST['title'] ?? '');
+        $id          = (int)($_POST['id'] ?? 0);
+        $title       = trim($_POST['title'] ?? '');
         $description = trim($_POST['description'] ?? '');
-        $image = $this->getCurrentHighlightImage($id);
+        $image       = $this->getCurrentHighlightImage($id);
 
         if (!empty($_FILES['image']['tmp_name'])) {
             $image = $this->uploadFile($_FILES['image']);
@@ -166,8 +164,9 @@ class HistoryCmsController
             $this->redirect('/cms/history#tab-tickets', 'Missing or invalid ticket price.', true);
         }
 
-        $type = (int)$_POST['type'];
+        $type         = (int)$_POST['type'];
         $priceInCents = (int)round((float)$_POST['price'] * 100);
+
         if ($priceInCents < 0) {
             $this->redirect('/cms/history#tab-tickets', 'Ticket price must be zero or positive.', true);
         }
@@ -189,24 +188,33 @@ class HistoryCmsController
 
     private function saveContentBlock(string $section): void
     {
-        $image = $_POST["{$section}_img_current"] ?? null;
-        $imageLeft = $_POST["{$section}_img_left_current"] ?? null;
-        $imageRight = $_POST["{$section}_img_right_current"] ?? null;
+        $keyImage       = $section . '_image';
+        $keyImageLeft   = $section . '_image_left';
+        $keyImageRight  = $section . '_image_right';
+        $keyImgCurrent  = $section . '_img_current';
+        $keyImgLeftCur  = $section . '_img_left_current';
+        $keyImgRightCur = $section . '_img_right_current';
+        $keyTitle       = $section . '_title';
+        $keySubtitle    = $section . '_subtitle';
 
-        if (!empty($_FILES["{$section}_image"]['tmp_name'])) {
-            $image = $this->uploadFile($_FILES["{$section}_image"]);
+        $image      = $_POST[$keyImgCurrent]  ?? null;
+        $imageLeft  = $_POST[$keyImgLeftCur]  ?? null;
+        $imageRight = $_POST[$keyImgRightCur] ?? null;
+
+        if (!empty($_FILES[$keyImage]['tmp_name'])) {
+            $image = $this->uploadFile($_FILES[$keyImage]);
         }
-        if (!empty($_FILES["{$section}_image_left"]['tmp_name'])) {
-            $imageLeft = $this->uploadFile($_FILES["{$section}_image_left"]);
+        if (!empty($_FILES[$keyImageLeft]['tmp_name'])) {
+            $imageLeft = $this->uploadFile($_FILES[$keyImageLeft]);
         }
-        if (!empty($_FILES["{$section}_image_right"]['tmp_name'])) {
-            $imageRight = $this->uploadFile($_FILES["{$section}_image_right"]);
+        if (!empty($_FILES[$keyImageRight]['tmp_name'])) {
+            $imageRight = $this->uploadFile($_FILES[$keyImageRight]);
         }
 
         $this->service->saveContentSection(
             $section,
-            trim($_POST["{$section}_title"] ?? ''),
-            trim($_POST["{$section}_subtitle"] ?? ''),
+            trim($_POST[$keyTitle] ?? ''),
+            trim($_POST[$keySubtitle] ?? ''),
             $image,
             $imageLeft,
             $imageRight
@@ -215,11 +223,11 @@ class HistoryCmsController
 
     private function saveDetail(): void
     {
-        $id = (int)($_POST['id'] ?? 0);
-        $data = $this->detailFormData($id);
+        $id      = (int)($_POST['id'] ?? 0);
+        $data    = $this->detailFormData($id);
         $savedId = $this->service->saveDetail($id > 0 ? $id : null, $data);
 
-        $this->redirect("/cms/history/detail/{$savedId}", $id > 0 ? 'Detail page saved.' : 'Detail page created.');
+        $this->redirect('/cms/history/detail/' . $savedId, $id > 0 ? 'Detail page saved.' : 'Detail page created.');
     }
 
     /**
@@ -232,18 +240,18 @@ class HistoryCmsController
         if (!empty($_FILES['hero_image']['tmp_name'])) {
             $heroImage = $this->uploadFile($_FILES['hero_image']);
         } elseif ($id > 0) {
-            $existing = $this->service->getDetailById($id);
+            $existing  = $this->service->getDetailById($id);
             $heroImage = $existing['hero_image'] ?? null;
         }
 
         return [
-            'highlight_id' => (int)($_POST['highlight_id'] ?? 0),
-            'slug' => trim($_POST['slug'] ?? ''),
-            'page_title' => trim($_POST['page_title'] ?? ''),
-            'hero_image' => $heroImage,
-            'location' => trim($_POST['location'] ?? ''),
-            'founded_year' => trim($_POST['founded_year'] ?? ''),
-            'style_type' => trim($_POST['style_type'] ?? ''),
+            'highlight_id'     => (int)($_POST['highlight_id'] ?? 0),
+            'slug'             => trim($_POST['slug'] ?? ''),
+            'page_title'       => trim($_POST['page_title'] ?? ''),
+            'hero_image'       => $heroImage,
+            'location'         => trim($_POST['location'] ?? ''),
+            'founded_year'     => trim($_POST['founded_year'] ?? ''),
+            'style_type'       => trim($_POST['style_type'] ?? ''),
             'meta_description' => trim($_POST['meta_description'] ?? ''),
         ];
     }
@@ -256,33 +264,33 @@ class HistoryCmsController
 
     private function saveSection(): void
     {
-        $this->guardUploadSize("/cms/history/detail/{$_POST['detail_id']}");
-
-        $id = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
+        $this->guardUploadSize('/cms/history/detail/' . $detailId);
+
+        $id    = (int)($_POST['id'] ?? 0);
         $image = $this->getCurrentSectionImage($id);
 
         if (!empty($_FILES['image_path']['tmp_name'])) {
             $image = $this->uploadFile($_FILES['image_path']);
         }
 
-        $sectionType = trim($_POST['section_type'] ?? 'about');
+        $sectionType  = trim($_POST['section_type'] ?? 'about');
         $allowedTypes = ['about', 'history', 'highlight', 'special'];
         if (!in_array($sectionType, $allowedTypes, true)) {
             $sectionType = 'about';
         }
 
         $data = [
-            ':detail_id' => $detailId,
+            ':detail_id'    => $detailId,
             ':section_type' => $sectionType,
-            ':section_title' => trim($_POST['section_title'] ?? ''),
-            ':content' => trim($_POST['content'] ?? ''),
-            ':image_path' => $image,
-            ':sort_order' => (int)($_POST['sort_order'] ?? 0),
+            ':section_title'=> trim($_POST['section_title'] ?? ''),
+            ':content'      => trim($_POST['content'] ?? ''),
+            ':image_path'   => $image,
+            ':sort_order'   => (int)($_POST['sort_order'] ?? 0),
         ];
 
         $this->service->saveSection($id > 0 ? $id : null, $data);
-        $this->redirect("/cms/history/detail/{$detailId}", 'Section saved.');
+        $this->redirect('/cms/history/detail/' . $detailId, 'Section saved.');
     }
 
     private function getCurrentSectionImage(int $id): ?string
@@ -299,63 +307,68 @@ class HistoryCmsController
     {
         $detailId = (int)($_POST['detail_id'] ?? 0);
         $this->service->deleteSection((int)($_POST['id'] ?? 0));
-        $this->redirect("/cms/history/detail/{$detailId}", 'Section deleted.');
+        $this->redirect('/cms/history/detail/' . $detailId, 'Section deleted.');
     }
 
-    privathis->guardUploadSize("/cms/history/detail/{$_POST['detail_id']}");
-
-        $te function addGallery(): void
+    private function addGallery(): void
     {
         $detailId = (int)($_POST['detail_id'] ?? 0);
+        $this->guardUploadSize('/cms/history/detail/' . $detailId);
+
         $caption = trim($_POST['caption'] ?? '');
-        $order = (int)($_POST['sort_order'] ?? 0);
+        $order   = (int)($_POST['sort_order'] ?? 0);
 
         if (!empty($_FILES['image_path']['tmp_name'])) {
             $imagePath = $this->uploadFile($_FILES['image_path']);
             $this->service->addGalleryImage($detailId, $imagePath, $caption, $order);
         }
 
-        $this->redirect("/cms/history/detail/{$detailId}", 'Image added.');
+        $this->redirect('/cms/history/detail/' . $detailId, 'Image added.');
     }
 
     private function deleteGallery(): void
     {
         $galleryId = (int)($_POST['id'] ?? 0);
-        $image = $this->service->getGalleryImageById($galleryId);
+        $image     = $this->service->getGalleryImageById($galleryId);
+
         if (!$image || empty($image['detail_id'])) {
             $this->redirect('/cms/history#tab-details', 'Image not found.', true);
         }
+
         $detailId = (int)$image['detail_id'];
         $this->service->deleteGalleryImage($galleryId);
-        $this->redirect("/cms/history/detail/{$detailId}", 'Image deleted.');
+        $this->redirect('/cms/history/detail/' . $detailId, 'Image deleted.');
     }
 
     private function saveFact(): void
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $id       = (int)($_POST['id'] ?? 0);
         $detailId = (int)($_POST['detail_id'] ?? 0);
+
         $data = [
-            ':detail_id' => $detailId,
-            ':icon' => trim($_POST['icon'] ?? ''),
-            ':label' => trim($_POST['label'] ?? ''),
-            ':value' => trim($_POST['value'] ?? ''),
+            ':detail_id'  => $detailId,
+            ':icon'       => trim($_POST['icon'] ?? ''),
+            ':label'      => trim($_POST['label'] ?? ''),
+            ':value'      => trim($_POST['value'] ?? ''),
             ':sort_order' => (int)($_POST['sort_order'] ?? 0),
         ];
 
         $this->service->saveFact($id > 0 ? $id : null, $data);
-        $this->redirect("/cms/history/detail/{$detailId}", 'Fact saved.');
-    }Id = (int)($_POST['id'] ?? 0);
-        $fact = $this->service->getFactById($factId);
+        $this->redirect('/cms/history/detail/' . $detailId, 'Fact saved.');
+    }
+
+    private function deleteFact(): void
+    {
+        $factId = (int)($_POST['id'] ?? 0);
+        $fact   = $this->service->getFactById($factId);
+
         if (!$fact || empty($fact['detail_id'])) {
             $this->redirect('/cms/history#tab-details', 'Fact not found.', true);
         }
+
         $detailId = (int)$fact['detail_id'];
-        $this->service->deleteFact($factId
-    {
-        $fact = $this->service->getFactById((int)($_POST['id'] ?? 0));
-        $detailId = (int)($fact['detail_id'] ?? 0);
-        $this->service->deleteFact((int)($_POST['id'] ?? 0));
-        $this->redirect("/cms/history/detail/{$detailId}", 'Fact deleted.');
+        $this->service->deleteFact($factId);
+        $this->redirect('/cms/history/detail/' . $detailId, 'Fact deleted.');
     }
 
     private function guardUploadSize(string $redirectUrl): void
@@ -397,7 +410,7 @@ class HistoryCmsController
             throw new Exception('Unable to create upload directory.');
         }
 
-        $filename = time() . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
+        $filename    = time() . '_' . bin2hex(random_bytes(8)) . '.' . $extension;
         $destination = $dir . $filename;
 
         if (!move_uploaded_file($tmpPath, $destination)) {
@@ -405,9 +418,11 @@ class HistoryCmsController
         }
 
         return $filename;
-    }validateCsrfToken(): void
+    }
+
+    private function validateCsrfToken(): void
     {
-        $token = $_POST['_csrf_token'] ?? '';
+        $token        = $_POST['_csrf_token'] ?? '';
         $sessionToken = $_SESSION['_csrf_token'] ?? '';
 
         if ($token === '' || $token !== $sessionToken) {
@@ -422,8 +437,6 @@ class HistoryCmsController
         }
         return $_SESSION['_csrf_token'];
     }
-
-    private function 
 
     private function redirect(string $url, string $flash = '', bool $isError = false): void
     {
