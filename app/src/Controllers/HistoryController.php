@@ -89,9 +89,7 @@ class HistoryController extends BaseController
             exit;
         }
 
-        // Ensure CSRF token is generated
         $csrfToken = $this->getCsrfToken();
-
         $errorMessage = Session::popTempError();
 
         try{
@@ -117,12 +115,12 @@ class HistoryController extends BaseController
             $timeSlot = $this->service->getHistoryTimeSlotById($reservation->slot_id);
             if($timeSlot == null) throw new PostMismatchException("No history time slot with given id.");
 
-            $viewModel = new HistoryBookViewModel();
-            $viewModel->reservation_id = $reservation->reservation_id;
-            $viewModel->date = $reservation->date->format("d.m.Y - F j");
-            $viewModel->time = $timeSlot->time->format("H:i");
-            $viewModel->individual_cost = $this->service->getIndividualPrice();
-            $viewModel->family_cost = $this->service->getFamilyPrice();
+            $view_model = new HistoryBookViewModel();
+            $view_model->reservation_id = $reservation->reservation_id;
+            $view_model->date = $reservation->date->format("d.m.Y - F j");
+            $view_model->time = $timeSlot->time->format("H:i");
+            $view_model->individual_cost = $this->service->getIndividualPrice();
+            $view_model->family_cost = $this->service->getFamilyPrice();
 
             require __DIR__ . '/../Views/history/booking.php';
             exit;
@@ -143,7 +141,6 @@ class HistoryController extends BaseController
         } 
 
         try{
-            // Validate CSRF token
             $token = $_POST['_csrf_token'] ?? '';
             $sessionToken = $_SESSION['_csrf_token'] ?? '';
             if ($token === '' || $token !== $sessionToken) {
@@ -169,7 +166,6 @@ class HistoryController extends BaseController
         catch(Exception $ex){
             Session::setTempError($ex->getMessage() !== '' ? $ex->getMessage() : "Something went wrong. Try again later.");
             
-            // Redirect back to booking form if we have a valid reservation ID
             if(isset($_POST['reservation_id']) && is_numeric($_POST['reservation_id'])) {
                 header("Location: /history/booking?reservation_id=" . (int)$_POST['reservation_id']);
             } else {
