@@ -27,4 +27,15 @@ class StoryEvent
     // Gallery images 
     public ?string $gallery_image_1;
     public ?string $gallery_image_2;
+
+    public function getTypeLabel(): string
+    {
+        return match($this->story_type) {
+            'stories for the whole family'    => 'Stories for the whole family',
+            'recording podcast with audience' => 'Recording podcast with audience',
+            'stories with impact'             => 'Stories with impact',
+            'best of'                         => 'Best of',
+            default                           => ucfirst((string) $this->story_type),
+        };
+    }
 }
