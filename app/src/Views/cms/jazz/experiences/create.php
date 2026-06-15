@@ -92,9 +92,10 @@ require __DIR__ . '/../partials/cmsHero.php';
                         </div>
                     </div>
 
-                    <small class="jazz-cms-help-text">
-                        Upload path: <code>/public/uploads/experiences/</code>
-                    </small>
+                    <div class="jazz-cms-image-preview-wrap" id="experiencePreviewWrap" style="display:none;">
+                        <p class="jazz-cms-preview-label">Preview</p>
+                        <img id="experiencePreviewImg" src="" class="jazz-cms-image-preview">
+                    </div>
                 </div>
 
                 <div class="jazz-cms-form-actions">
@@ -119,30 +120,28 @@ require __DIR__ . '/../partials/cmsHero.php';
 <script>
 const experienceUploadBox = document.getElementById('experienceUploadBox');
 const experienceImageInput = document.getElementById('experienceImageInput');
+const experiencePreviewWrap = document.getElementById('experiencePreviewWrap');
+const experiencePreviewImg = document.getElementById('experiencePreviewImg');
 
-if (experienceUploadBox && experienceImageInput) {
-    experienceUploadBox.addEventListener('click', function () {
-        experienceImageInput.click();
-    });
+experienceUploadBox.addEventListener('click', function () {
+    experienceImageInput.click();
+});
 
-    experienceUploadBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        experienceUploadBox.classList.add('is-dragover');
-    });
+experienceUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
+});
 
-    experienceUploadBox.addEventListener('dragleave', function () {
-        experienceUploadBox.classList.remove('is-dragover');
-    });
+experienceUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    experienceImageInput.files = e.dataTransfer.files;
+    experiencePreviewImg.src = URL.createObjectURL(experienceImageInput.files[0]);
+    experiencePreviewWrap.style.display = '';
+});
 
-    experienceUploadBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        experienceUploadBox.classList.remove('is-dragover');
-
-        if (e.dataTransfer.files.length > 0) {
-            experienceImageInput.files = e.dataTransfer.files;
-        }
-    });
-}
+experienceImageInput.addEventListener('change', function () {
+    experiencePreviewImg.src = URL.createObjectURL(experienceImageInput.files[0]);
+    experiencePreviewWrap.style.display = '';
+});
 </script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

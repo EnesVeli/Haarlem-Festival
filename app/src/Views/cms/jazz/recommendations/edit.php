@@ -108,24 +108,14 @@ accept="image/*"
 
 </div>
 
-<small class="jazz-cms-help-text">
-Upload path: <code>/public/uploads/recommendations/</code>
-</small>
-
-<?php if (!empty($rec->imagePath)): ?>
-
-<div class="jazz-cms-image-preview-wrap">
-
+<div class="jazz-cms-image-preview-wrap" id="recommendationPreviewWrap" style="<?= empty($rec->imagePath) ? 'display:none;' : '' ?>">
 <p class="jazz-cms-preview-label">Current Image</p>
-
 <img
-src="<?= htmlspecialchars($rec->imagePath) ?>"
+id="recommendationPreviewImg"
+src="<?= htmlspecialchars($rec->imagePath ?? '') ?>"
 class="jazz-cms-image-preview"
 >
-
 </div>
-
-<?php endif; ?>
 
 </div>
 
@@ -152,36 +142,30 @@ Save Changes
 </div>
 
 <script>
-
 const recommendationUploadBox = document.getElementById('recommendationUploadBox');
 const recommendationImageInput = document.getElementById('recommendationImageInput');
+const recommendationPreviewWrap = document.getElementById('recommendationPreviewWrap');
+const recommendationPreviewImg = document.getElementById('recommendationPreviewImg');
 
-if (recommendationUploadBox && recommendationImageInput) {
-
-recommendationUploadBox.addEventListener('click', () => recommendationImageInput.click());
-
-recommendationUploadBox.addEventListener('dragover', e => {
-e.preventDefault();
-recommendationUploadBox.classList.add('is-dragover');
+recommendationUploadBox.addEventListener('click', function () {
+    recommendationImageInput.click();
 });
 
-recommendationUploadBox.addEventListener('dragleave', () => {
-recommendationUploadBox.classList.remove('is-dragover');
+recommendationUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
 });
 
-recommendationUploadBox.addEventListener('drop', e => {
-
-e.preventDefault();
-recommendationUploadBox.classList.remove('is-dragover');
-
-if (e.dataTransfer.files.length > 0) {
-recommendationImageInput.files = e.dataTransfer.files;
-}
-
+recommendationUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    recommendationImageInput.files = e.dataTransfer.files;
+    recommendationPreviewImg.src = URL.createObjectURL(recommendationImageInput.files[0]);
+    recommendationPreviewWrap.style.display = '';
 });
 
-}
-
+recommendationImageInput.addEventListener('change', function () {
+    recommendationPreviewImg.src = URL.createObjectURL(recommendationImageInput.files[0]);
+    recommendationPreviewWrap.style.display = '';
+});
 </script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

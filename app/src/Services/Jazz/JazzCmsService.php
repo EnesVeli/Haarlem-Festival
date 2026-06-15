@@ -40,7 +40,7 @@ class JazzCmsService implements IJazzCmsService
     {
         return [
             'user' => Session::currentUser(),
-            'hero' => $this->jazzRepo->getHero(),
+            'hero' => $this->jazzRepo->getHeroForCms(),
         ];
     }
 

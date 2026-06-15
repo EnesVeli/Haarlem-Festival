@@ -128,9 +128,10 @@ accept="image/*"
 
 </div>
 
-<small class="jazz-cms-help-text">
-Upload path: <code>/public/uploads/performers/</code>
-</small>
+<div class="jazz-cms-image-preview-wrap" id="performerPreviewWrap" style="display:none;">
+<p class="jazz-cms-preview-label">Preview</p>
+<img id="performerPreviewImg" src="" class="jazz-cms-image-preview">
+</div>
 
 </div>
 
@@ -157,38 +158,30 @@ Create Performer
 </div>
 
 <script>
-
 const performerUploadBox = document.getElementById('performerUploadBox');
 const performerImageInput = document.getElementById('performerImageInput');
-
-if (performerUploadBox && performerImageInput) {
+const performerPreviewWrap = document.getElementById('performerPreviewWrap');
+const performerPreviewImg = document.getElementById('performerPreviewImg');
 
 performerUploadBox.addEventListener('click', function () {
-performerImageInput.click();
+    performerImageInput.click();
 });
 
 performerUploadBox.addEventListener('dragover', function (e) {
-e.preventDefault();
-performerUploadBox.classList.add('is-dragover');
-});
-
-performerUploadBox.addEventListener('dragleave', function () {
-performerUploadBox.classList.remove('is-dragover');
+    e.preventDefault();
 });
 
 performerUploadBox.addEventListener('drop', function (e) {
-
-e.preventDefault();
-performerUploadBox.classList.remove('is-dragover');
-
-if (e.dataTransfer.files.length > 0) {
-performerImageInput.files = e.dataTransfer.files;
-}
-
+    e.preventDefault();
+    performerImageInput.files = e.dataTransfer.files;
+    performerPreviewImg.src = URL.createObjectURL(performerImageInput.files[0]);
+    performerPreviewWrap.style.display = '';
 });
 
-}
-
+performerImageInput.addEventListener('change', function () {
+    performerPreviewImg.src = URL.createObjectURL(performerImageInput.files[0]);
+    performerPreviewWrap.style.display = '';
+});
 </script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

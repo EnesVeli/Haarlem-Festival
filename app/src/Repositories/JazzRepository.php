@@ -51,6 +51,26 @@ class JazzRepository extends Repository implements IJazzRepository
         );
     }
 
+    public function getHeroForCms(): ?JazzHero
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM jazz_hero LIMIT 1");
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return null;
+        }
+
+        return new JazzHero(
+            (int) $row['id'],
+            $row['title'] ?? '',
+            $row['subtitle'] ?? '',
+            $row['image_path'] ?? null,
+            (int) $row['is_active']
+        );
+    }
+
     public function updateHero(array $data): void
     {
         $stmt = $this->connection->prepare("
