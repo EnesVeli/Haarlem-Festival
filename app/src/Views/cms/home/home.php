@@ -64,7 +64,7 @@ require __DIR__ . '/../../partials/header.php';
                     <div class="col-md-6">
                         <?php if (!empty($viewModel->content['hero_image'])): ?>
                         <label class="form-label">Current Hero Image</label><br>
-                        <img src="/assets/uploads/History/<?= htmlspecialchars($viewModel->content['hero_image']) ?>"
+                        <img src="/assets/uploads/Home/<?= htmlspecialchars($viewModel->content['hero_image']) ?>"
                              alt="Hero" style="max-height:120px; border-radius:6px; object-fit:cover;">
                         <?php endif; ?>
                     </div>
@@ -164,7 +164,14 @@ require __DIR__ . '/../../partials/header.php';
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">                <input type="hidden" name="existing_image" id="modal-existing-image">
+            <form method="POST" action="/cms/home/save-event" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                <input type="hidden" name="id" id="modal-id">
+                <input type="hidden" name="existing_image" id="modal-existing-image">
+                <input type="hidden" name="long_description" id="modal-long">
+                <input type="hidden" name="venues" id="modal-venues">
+                <input type="hidden" name="icon" id="modal-icon">
+                <input type="hidden" name="bg_class" id="modal-bg-class">
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="eventModalLabel">Event Card</h5>
@@ -185,14 +192,6 @@ require __DIR__ . '/../../partials/header.php';
                             <label class="form-label">Short Description</label>
                             <textarea name="short_description" id="modal-short" class="form-control" rows="2"></textarea>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label">Long Description</label>
-                            <textarea name="long_description" id="modal-long" class="form-control" rows="3"></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Venues</label>
-                            <input type="text" name="venues" id="modal-venues" class="form-control">
-                        </div>
                         <div class="col-md-6">
                             <label class="form-label">URL / Link</label>
                             <input type="text" name="url" id="modal-url" class="form-control">
@@ -201,24 +200,16 @@ require __DIR__ . '/../../partials/header.php';
                             <label class="form-label">Button Label</label>
                             <input type="text" name="button_label" id="modal-button-label" class="form-control">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Bootstrap Icon class</label>
-                            <input type="text" name="icon" id="modal-icon" class="form-control" placeholder="bi-music-note">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Header BG class</label>
-                            <input type="text" name="bg_class" id="modal-bg-class" class="form-control" placeholder="bg-primary">
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Sort Order</label>
                             <input type="number" name="sort_order" id="modal-sort-order" class="form-control" value="0">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Card Image (optional)</label>
                             <input type="file" name="image" class="form-control" accept="image/jpeg,image/png,image/webp">
-                            <div class="form-text">Upload JPG, PNG or WEBP image. Max size 5 MB.</div>
+                            <div class="form-text" id="modal-image-hint"></div>
                         </div>
-                        <div class="col-md-6 d-flex align-items-end">
+                        <div class="col-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="is_active" id="modal-is-active" value="1">
                                 <label class="form-check-label" for="modal-is-active">Active (visible on website)</label>
