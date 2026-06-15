@@ -23,30 +23,38 @@ class HistoryController extends BaseController
         $this->service = HistoryService::getInstance();
     }
 
-    public function index()
+    public function getCsrfToken(): string
     {
-        $error_message = Session::popTempError();
+        if (empty($_SESSION['_csrf_token'])) {
+            $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['_csrf_token'];
+    }
+
+    public function index(): void
+    {
+        $errorMessage = Session::popTempError();
 
         try{
-            $time_slots = $this->service->getAllTimeSlots();
-            if($time_slots == null) throw new QueryExecutionException();
+            $timeSlots = $this->service->getAllTimeSlots();
+            if($timeSlots === null) throw new QueryExecutionException();
 
             $viewModel = new HistoryIndexViewModel(
                 $this->service->getHighlights(),
-                $time_slots,
+                $timeSlots,
                 $this->service->getContent(),
-                HistoryService::$max_date_offset
+                HistoryService::getMaxDateOffset()
             );
         }
         catch(Exception $ex){
-            $error_message = 'Something went wrong. Try again later.';
-            $viewModel = new HistoryIndexViewModel([], [], [], HistoryService::$max_date_offset);
+            $errorMessage = 'Something went wrong. Try again later.';
+            $viewModel = new HistoryIndexViewModel([], [], [], HistoryService::getMaxDateOffset());
         }
 
         require __DIR__ . '/../Views/history/index.php';
     }
 
-    public function detail($vars)
+    public function detail($vars): void
     {
         try {
             $slug = $vars['slug'] ?? '';
@@ -81,7 +89,10 @@ class HistoryController extends BaseController
             exit;
         }
 
-        $error_message = Session::popTempError();
+        // Ensure CSRF token is generated
+        $csrfToken = $this->getCsrfToken();
+
+        $errorMessage = Session::popTempError();
 
         try{
             if($reservation_id == null){
@@ -91,11 +102,11 @@ class HistoryController extends BaseController
 
                 $slotId = (int)$_GET['slot'];
                 $offset = (int)$_GET['offset'];
-                if($offset < 0 || $offset > HistoryService::$max_date_offset) {
+                if($offset < 0 || $offset > HistoryService::getMaxDateOffset()) {
                     throw new PostMismatchException();
                 }
 
-                $reservation = $this->service->getHistoryReservationBySlotIdAndDateOffset($slotId, $offset);
+                $reservation = $this->service->getOrCreateReservation($slotId, $offset);
                 if($reservation == null) throw new PostMismatchException("Failed to find reservation slot by slot_id and date_offset");
             }
             else{
@@ -103,15 +114,15 @@ class HistoryController extends BaseController
                 if($reservation == null) throw new PostMismatchException("Failed to find reservation slot by its id");
             }
 
-            $time_slot = $this->service->getHistoryTimeSlotById($reservation->slot_id);
-            if($time_slot == null) throw new PostMismatchException("No history time slot with given id.");
+            $timeSlot = $this->service->getHistoryTimeSlotById($reservation->slot_id);
+            if($timeSlot == null) throw new PostMismatchException("No history time slot with given id.");
 
-            $view_model = new HistoryBookViewModel();
-            $view_model->reservation_id = $reservation->reservation_id;
-            $view_model->date = $reservation->date->format("d.m.Y - F j");
-            $view_model->time = $time_slot->time->format("H:i");
-            $view_model->individual_cost = $this->service->getIndividualPrice();
-            $view_model->family_cost = $this->service->getFamilyPrice();
+            $viewModel = new HistoryBookViewModel();
+            $viewModel->reservation_id = $reservation->reservation_id;
+            $viewModel->date = $reservation->date->format("d.m.Y - F j");
+            $viewModel->time = $timeSlot->time->format("H:i");
+            $viewModel->individual_cost = $this->service->getIndividualPrice();
+            $viewModel->family_cost = $this->service->getFamilyPrice();
 
             require __DIR__ . '/../Views/history/booking.php';
             exit;
@@ -120,10 +131,10 @@ class HistoryController extends BaseController
             Session::setTempError("Something went wrong. Try again later.");
         }
 
-        header("location: /history");
+        header("Location: /history");
     }
 
-    public function book() : void 
+    public function book(): void 
     {
         if(!$this->isLoggedIn()){
             Session::setTempError("In order to book a route, you must login first.");
@@ -132,6 +143,13 @@ class HistoryController extends BaseController
         } 
 
         try{
+            // Validate CSRF token
+            $token = $_POST['_csrf_token'] ?? '';
+            $sessionToken = $_SESSION['_csrf_token'] ?? '';
+            if ($token === '' || $token !== $sessionToken) {
+                throw new Exception('CSRF token validation failed.');
+            }
+
             if(!isset($_POST['reservation_id'], $_POST['individual_count'], $_POST['family_count'], $_POST['language']) ||
                !is_numeric($_POST['reservation_id']) || !is_numeric($_POST['individual_count']) || !is_numeric($_POST['family_count'])) {
                 throw new EmptyPostException();
@@ -145,18 +163,19 @@ class HistoryController extends BaseController
 
             $this->service->bookHistoryBooking($booking, Session::user()['user_id']);
 
-            header("location: /cart");
+            header("Location: /cart");
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong. Try again later.");
+            Session::setTempError($ex->getMessage() !== '' ? $ex->getMessage() : "Something went wrong. Try again later.");
+            
+            // Redirect back to booking form if we have a valid reservation ID
+            if(isset($_POST['reservation_id']) && is_numeric($_POST['reservation_id'])) {
+                header("Location: /history/booking?reservation_id=" . (int)$_POST['reservation_id']);
+            } else {
+                header("Location: /history");
+            }
+            exit;
         }
-
-        if(isset($_POST['reservation_id'])){
-            $this->booking(null, $_POST['reservation_id']);
-        }
-        else{
-            header("location: /history");
-        }  
     }
 }

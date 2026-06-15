@@ -16,7 +16,7 @@ class HomeController
 
     public function index(): void
     {
-        $error_message = null;
+        $errorMessage = null;
 
         try {
             $viewModel = new HomeViewModel(
@@ -24,7 +24,7 @@ class HomeController
                 $this->homeService->getHomeEvents()
             );
         } catch (Exception $exception) {
-            $error_message = 'Something went wrong. Please try again later.';
+            $errorMessage = 'Something went wrong. Please try again later.';
             $viewModel = new HomeViewModel([], []);
         }
 

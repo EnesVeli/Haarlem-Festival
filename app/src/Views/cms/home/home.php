@@ -35,6 +35,7 @@ require __DIR__ . '/../../partials/header.php';
         <div class="card-header fw-semibold">Hero &amp; Program Section</div>
         <div class="card-body">
             <form method="POST" action="/cms/home/save-content" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Hero Title</label>
@@ -145,6 +146,7 @@ require __DIR__ . '/../../partials/header.php';
                         </button>
                         <form method="POST" action="/cms/home/delete-event" class="d-inline"
                               onsubmit="return confirm('Delete this event card?')">
+                            <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
                             <input type="hidden" name="id" value="<?= (int)$card['id'] ?>">
                             <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                         </form>
@@ -162,9 +164,7 @@ require __DIR__ . '/../../partials/header.php';
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-            <form method="POST" action="/cms/home/save-event" enctype="multipart/form-data">
-                <input type="hidden" name="id" id="modal-id">
-                <input type="hidden" name="existing_image" id="modal-existing-image">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">                <input type="hidden" name="existing_image" id="modal-existing-image">
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="eventModalLabel">Event Card</h5>

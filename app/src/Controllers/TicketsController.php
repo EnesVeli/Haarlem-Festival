@@ -121,7 +121,7 @@ class TicketsController extends BaseController
             // Calc total number of pages
             $offsets_per_page = ceil(self::$NUMBER_OF_TICKETS_PER_PAGE / count($time_slots));
 
-            $total_page_number = ceil(HistoryService::$max_date_offset / $offsets_per_page);
+            $total_page_number = ceil(HistoryService::getMaxDateOffset() / $offsets_per_page);
             if($cur_page > $total_page_number) $cur_page = $total_page_number;
 
             // Calc offset

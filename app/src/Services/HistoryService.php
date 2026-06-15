@@ -12,60 +12,70 @@ use App\Repositories\OrderRepository;
 
 class HistoryService
 {
-    public static int $max_date_offset = 31;
+    private const MAX_DATE_OFFSET = 31;
 
     private static ?HistoryService $_instance = null;
 
-    public static function getInstance() : HistoryService {
+    public static function getInstance(): HistoryService {
         if(self::$_instance === null) self::$_instance = new HistoryService(HistoryRepository::getInstance(), OrderRepository::getInstance(), OrderService::getInstance());
 
         return self::$_instance;
     }
 
-    private HistoryRepository $history_rep;
-    private OrderRepository $order_rep;
-    private OrderService $order_service;
+    private HistoryRepository $historyRepository;
+    private OrderRepository $orderRepository;
+    private OrderService $orderService;
 
-    private function __construct(HistoryRepository $history_rep, OrderRepository $order_rep, OrderService $order_service)
+    private function __construct(HistoryRepository $historyRepository, OrderRepository $orderRepository, OrderService $orderService)
     {
-        $this->history_rep = $history_rep;
-        $this->order_rep = $order_rep;
-        $this->order_service = $order_service;
+        $this->historyRepository = $historyRepository;
+        $this->orderRepository = $orderRepository;
+        $this->orderService = $orderService;
     }
 
-    public function getHighlights()
+    public static function getMaxDateOffset(): int
     {
-        return $this->history_rep->getAllHighlightsWithSlugs();
+        return self::MAX_DATE_OFFSET;
     }
 
-    public function getTickets()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getHighlights(): array
     {
-        return $this->history_rep->getAvailableTickets();
+        return $this->historyRepository->getAllHighlightsWithSlugs();
     }
 
-    public function getTicketPrices(): array
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getTickets(): array
     {
-        return $this->history_rep->getTicketPrices();
+        return $this->historyRepository->getAvailableTickets();
     }
 
-    public function updateTicketPrice(string $type, float $price): void
-    {
-        $this->history_rep->updateTicketPrice($type, $price);
-    }
-
+    /**
+     * @return array<string, mixed>
+     */
     public function getContent(): array
     {
-        return $this->history_rep->getAllContent();
+        return $this->historyRepository->getAllContent();
     }
 
-    public function getContentBySection($section)
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getContentBySection(string $section): ?array
     {
-        return $this->history_rep->getContentBySection($section);
+        return $this->historyRepository->getContentBySection($section);
     }
 
-    public function getDetailPage($slug)
+    /**
+     * @return array<string, array<string, mixed>>|null
+     */
+    public function getDetailPage(string $slug): ?array
     {
-        $detail = $this->history_rep->getDetailBySlug($slug);
+        $detail = $this->historyRepository->getDetailBySlug($slug);
 
         if (!$detail) {
             return null;
@@ -73,15 +83,18 @@ class HistoryService
 
         return [
             'detail'   => $detail,
-            'sections' => $this->history_rep->getDetailSections($detail['id']),
-            'gallery'  => $this->history_rep->getDetailGallery($detail['id']),
-            'facts'    => $this->history_rep->getDetailFacts($detail['id']),
+            'sections' => $this->historyRepository->getDetailSections($detail['id']),
+            'gallery'  => $this->historyRepository->getDetailGallery($detail['id']),
+            'facts'    => $this->historyRepository->getDetailFacts($detail['id']),
         ];
     }
 
-    public function getOtherHighlights($currentSlug, $limit = 2)
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function getOtherHighlights(string $currentSlug, int $limit = 2): array
     {
-        $allHighlights = $this->history_rep->getAllHighlightsWithSlugs();
+        $allHighlights = $this->historyRepository->getAllHighlightsWithSlugs();
 
         $others = array_filter($allHighlights, function ($h) use ($currentSlug) {
             return $h['slug'] !== $currentSlug && !empty($h['slug']);
@@ -90,63 +103,96 @@ class HistoryService
         return array_slice($others, 0, $limit);
     }
 
-    public function getHistoryReservationSlotById(int $reservation_id) : ?HistoryReservationSlot{
-        return $this->history_rep->getHistoryReservationSlotById($reservation_id);
+    public function getHistoryReservationSlotById(int $reservationId): ?HistoryReservationSlot
+    {
+        return $this->historyRepository->getHistoryReservationSlotById($reservationId);
     }
 
-    public function getHistoryTimeSlotById(int $slot_id) : ?HistoryTimeSlot{
-        return $this->history_rep->getHistoryTimeSlotById($slot_id);
-    }
-
-    public function getAllTimeSlots() : ?array {
-        return $this->history_rep->getAllTimeSlots();
-    }
-
-    public function getHistoryReservationBySlotIdAndDateOffset(int $slot_id, int $date_offset) : ?HistoryReservationSlot {
-        $res = $this->history_rep->getHistoryReservationBySlotIdAndDateOffset($slot_id, $date_offset);
-        if($res != null) return $res;
-
-        $new_reservation_id = $this->history_rep->addHistoryReservationBySlotIdAndDateOffset($slot_id, $date_offset);
-        if($new_reservation_id == null) throw new QueryExecutionException("Failed to add history reservation.");
-
-        return $this->history_rep->getHistoryReservationSlotById($new_reservation_id);
+    public function getHistoryTimeSlotById(int $slotId): ?HistoryTimeSlot
+    {
+        return $this->historyRepository->getHistoryTimeSlotById($slotId);
     }
 
     /**
-     * Added booking to db and to cart.
-     * @param HistoryBooking $booking booking that will be created (except booking_id and date).
-     * @param int $user_id id of currently logged int user.
-     * @throws QueryExecutionException thrown when there were errors during query execution.
-     * @throws OverBookingException thrown when booked space exceeds avaliable.
-     * @return void
+     * @return array<int, array<string, mixed>>|null
      */
-    public function bookHistoryBooking(HistoryBooking $booking, int $user_id) {
+    public function getAllTimeSlots(): ?array
+    {
+        return $this->historyRepository->getAllTimeSlots();
+    }
+
+    /**
+     * Get or create a reservation for the given slot and date offset.
+     * Note: This method has a side effect — it creates a reservation if one doesn't exist.
+     */
+    public function getOrCreateReservation(int $slotId, int $dateOffset): HistoryReservationSlot
+    {
+        if($dateOffset < 0 || $dateOffset > self::MAX_DATE_OFFSET) {
+            throw new \InvalidArgumentException("Date offset must be between 0 and " . self::MAX_DATE_OFFSET);
+        }
+
+        $reservation = $this->historyRepository->getHistoryReservationBySlotIdAndDateOffset($slotId, $dateOffset);
+        if($reservation !== null) {
+            return $reservation;
+        }
+
+        $newReservationId = $this->historyRepository->addHistoryReservationBySlotIdAndDateOffset($slotId, $dateOffset);
+        if($newReservationId === null) {
+            throw new QueryExecutionException("Failed to add history reservation.");
+        }
+
+        $reservation = $this->historyRepository->getHistoryReservationSlotById($newReservationId);
+        if($reservation === null) {
+            throw new QueryExecutionException("Failed to retrieve newly created reservation.");
+        }
+
+        return $reservation;
+    }
+
+    /**
+     * Book a history tour for a user.
+     * @param HistoryBooking $booking booking that will be created (except booking_id and date).
+     * @param int $userId id of currently logged in user.
+     * @throws QueryExecutionException thrown when there were errors during query execution.
+     * @throws OverBookingException thrown when booked space exceeds available.
+     * @throws \InvalidArgumentException thrown when booking data is invalid.
+     */
+    public function bookHistoryBooking(HistoryBooking $booking, int $userId): void
+    {
         // Get reservation
-        $reserv = $this->history_rep->getHistoryReservationSlotById($booking->reservation_id);
-        if($reserv == null) throw new QueryExecutionException();
+        $reservation = $this->historyRepository->getHistoryReservationSlotById($booking->reservation_id);
+        if($reservation === null) {
+            throw new QueryExecutionException("Reservation not found.");
+        }
         
         // Get time slot
-        $time_slot = $this->history_rep->getHistoryTimeSlotById($reserv->slot_id);
-        if($time_slot == null) throw new QueryExecutionException();
+        $timeSlot = $this->historyRepository->getHistoryTimeSlotById($reservation->slot_id);
+        if($timeSlot === null) {
+            throw new QueryExecutionException("Time slot not found.");
+        }
 
-        // Check if there are enough space for booking
-        if($reserv->booked + $booking->family_count * 4 + $booking->individual_count > $time_slot->capacity) throw new OverBookingException();
+        // Check if there are enough spaces for booking
+        $requiredSpaces = $booking->family_count * 4 + $booking->individual_count;
+        if($reservation->booked + $requiredSpaces > $timeSlot->capacity) {
+            throw new OverBookingException("Not enough available spaces for this booking.");
+        }
 
-        // Put date into booking
-        $date = clone $reserv->date; // Combine date from reservation and time from time slot
-        $date->setTime($time_slot->time->format('H'), $time_slot->time->format('i'), $time_slot->time->format('s'));
-
+        // Combine date from reservation and time from time slot
+        $date = clone $reservation->date;
+        $date->setTime($timeSlot->time->format('H'), $timeSlot->time->format('i'), $timeSlot->time->format('s'));
         $booking->date = $date;
 
         // Create booking in db, and add it to cart
-        $this->order_service->createAndAddBookingToCart($user_id, $booking);
+        $this->orderService->createAndAddBookingToCart($userId, $booking);
     }
 
-    public function getIndividualPrice() : int {
-        return $this->order_service->getHistoryIndividualPrice();
+    public function getIndividualPrice(): int
+    {
+        return $this->orderService->getHistoryIndividualPrice();
     }
 
-    public function getFamilyPrice() : int {
-        return $this->order_service->getHistoryFamilyPrice();
+    public function getFamilyPrice(): int
+    {
+        return $this->orderService->getHistoryFamilyPrice();
     }
 }

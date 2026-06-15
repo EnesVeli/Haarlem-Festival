@@ -6,6 +6,9 @@ use App\Repositories\HistoryCmsRepository;
 
 class HistoryCmsService
 {
+    private const TICKET_TYPE_INDIVIDUAL = 0;
+    private const TICKET_TYPE_FAMILY = 1;
+
     private static ?HistoryCmsService $_instance = null;
     private HistoryCmsRepository $repository;
 
@@ -189,7 +192,7 @@ class HistoryCmsService
 
     public function updateTicketPrice(int $type, int $priceInCents): void
     {
-        if ($type === 0) {
+        if ($type === self::TICKET_TYPE_INDIVIDUAL) {
             $this->repository->updateIndividualPrice($priceInCents);
             return;
         }
