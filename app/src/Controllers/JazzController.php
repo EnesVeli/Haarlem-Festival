@@ -153,7 +153,7 @@ class JazzController extends BaseController
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to book. Try again later." . $ex->getMessage());
+            Session::setTempError("Failed to book. Please try again later.");
         }
 
         if (!empty($_POST['performer_id'])) {
