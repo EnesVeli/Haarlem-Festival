@@ -86,13 +86,11 @@ class="jazz-cms-btn jazz-cms-btn-outline"
 Edit
 </a>
 
-<a
-href="/cms/jazz/locations/delete?id=<?= (int)$loc->id ?>"
-class="jazz-cms-btn jazz-cms-btn-danger"
-onclick="return confirm('Delete this location?')"
->
-Delete
-</a>
+<form method="POST" action="/cms/jazz/locations/delete" style="display:inline" onsubmit="return confirm('Delete this location?')">
+    <input type="hidden" name="id" value="<?= (int)$loc->id ?>">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Framework\Session::csrfToken()) ?>">
+    <button type="submit" class="jazz-cms-btn jazz-cms-btn-danger">Delete</button>
+</form>
 
 </td>
 
