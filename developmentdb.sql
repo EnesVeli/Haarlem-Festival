@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 08, 2026 at 12:53 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Jun 15, 2026 at 09:36 PM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -424,6 +424,19 @@ CREATE TABLE `JazzBookings` (
   `amount` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `JazzBookings`
+--
+
+INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
+(10, 3, 2),
+(11, 3, 2),
+(13, 3, 3),
+(14, 8, 2),
+(15, 3, 2),
+(16, 3, 2),
+(17, 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -469,7 +482,7 @@ CREATE TABLE `jazz_hero` (
 --
 
 INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
-(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1774369165_wallpaperflare.com_wallpaper.jpg', 1);
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/cf48614717e24d98.png', 1);
 
 -- --------------------------------------------------------
 
@@ -542,20 +555,20 @@ CREATE TABLE `jazz_performers` (
 --
 
 INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `date`, `start_time`, `end_time`, `sort_order`, `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`) VALUES
-(1, 'Evolve', 1590, 'wneqifhskjhdfwe', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
-(2, 'Fox & The Mayors q', 1091, '', '2026-05-03', '21:05:00', '23:05:00', 3, 1, '/assets/uploads/jazz/performers/1777298211_91048f798a8fa4ce7dd9f7ebe2593aba.png', 'Smooth, expressive q', 'Philharmonie Haarlem q', 'Lange Begijnestraat 11, 2011 HH Haarlem q', 'qqq', 'qqq', NULL),
+(1, 'Evolve', 1500, 'Amsterdam-based collective fusing modern jazz with electronic textures, hip-hop and soul. Known for high-energy live shows and immersive grooves that bridge the past and future of jazz.', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Electric, eclectic, energetic', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also performing FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
+(2, 'Fox & The Mayors q', 1091, '', '2026-05-03', '21:05:00', '23:05:00', 3, 0, '/assets/uploads/jazz/performers/1d5270f73ceda7b1.png', 'Smooth, expressive q', 'Philharmonie Haarlem q', 'Lange Begijnestraat 11, 2011 HH Haarlem q', 'qqq', 'qqq', '/assets/uploads/jazz/performers/e083cbddb28d9470.png'),
 (3, 'Gare du Nord', 1590, 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', '2026-04-27', '16:00:00', '19:00:00', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
-(4, 'Gumbo Kings', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
-(5, 'Han Bennink', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', NULL),
-(6, 'Jonna Frazer', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', NULL),
-(7, 'Chris Allen', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', NULL),
-(8, 'Lilith Merlot', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', NULL),
-(9, 'Myles Sanko', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', NULL),
-(13, 'Soul Six', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', NULL),
-(14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
-(15, 'The Nordanians', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', NULL),
-(17, 'Uncle Sue', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', NULL),
-(19, 'Ratatouille', 12, 'aaa', '1917-04-30', '03:00:00', '15:00:00', 3, 1, '/assets/uploads/jazz/performers/1777298414_55t.png', 'Smooth, expressiveaa', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '11', '111', '/assets/uploads/jazz/performers/1777298414_91048f798a8fa4ce7dd9f7ebe2593aba.png');
+(4, 'Gumbo Kings', 1500, 'Dutch blues, swing and gumbo band born in Amsterdam. They bring the street-party energy of New Orleans to every show, mixing roots music with effortless modern groove.', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', 'Blues, swing, New Orleans funk', '', '', 'Also performing FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', 1000, 'Legendary Dutch percussionist and one of the most influential improvising drummers in European jazz. A founding voice of free-improvised music, he has played with Eric Dolphy, Misha Mengelberg, and many giants of avant-garde jazz.', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', 'Free improvisation, avant-garde', '', '', 'Intimate Third Hall show — limited seating.', '', NULL),
+(6, 'Jonna Frazer', 1000, 'Surinamese-Dutch singer-songwriter blending soulful jazz, R&B and Caribbean influences. His warm voice and groove-rich productions have made him one of the most recognisable young voices of the Dutch scene.', '0000-00-00', '00:00:00', '00:00:00', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', 'Soul, R&B, modern jazz', '', '', NULL, '', NULL),
+(7, 'Chris Allen', 1500, 'Saxophonist and bandleader known for melodic phrasing and a deeply expressive tone. His quartet brings a contemporary take on hard-bop traditions with original compositions and tight interplay.', '0000-00-00', '00:00:00', '00:00:00', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', 'Hard-bop, contemporary jazz', '', '', NULL, '', NULL),
+(8, 'Lilith Merlot', 1000, 'Acclaimed Dutch jazz and soul vocalist with a rich, smoky voice. Her songwriting blends jazz tradition with modern intimacy, drawing audiences into emotional, story-driven performances.', '0000-00-00', '00:00:00', '00:00:00', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', 'Vocal jazz, soul', '', '', NULL, '', NULL),
+(9, 'Myles Sanko', 1000, 'British-Ghanaian vocalist celebrated for his timeless soul sound. Compared to legends like Marvin Gaye and Bill Withers, his music is heartfelt, warm and rooted in classic songwriting.', '0000-00-00', '00:00:00', '00:00:00', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', 'Soul-jazz, classic soul', '', '', NULL, '', NULL),
+(13, 'Soul Six', 1500, 'Six-piece Dutch ensemble dedicated to deep grooves and horn-driven arrangements. Their live shows are full-on soul parties drawing from funk, classic R&B and modern groove.', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', 'Funk, soul, party jazz', '', '', NULL, '', NULL),
+(14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 0, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
+(15, 'The Nordanians', 1000, 'Genre-bending instrumental trio drawing from Nordic folk, modern jazz and electronic textures. Their performances are cinematic, atmospheric and meditative.', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', 'Modern jazz, ambient, Nordic folk', '', '', 'Also performing FREE on Sunday at Grote Markt.', '', NULL),
+(17, 'Uncle Sue', 1500, 'Adventurous Dutch instrumental band crossing jazz, post-rock and progressive influences. Their compositions are intricate yet groovy — a wide-screen sound built for the live stage.', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', 'Instrumental jazz, post-rock', '', '', NULL, '', NULL),
+(19, 'Ratatouille', 12, 'aaa', '1917-04-30', '03:00:00', '15:00:00', 3, 0, '/assets/uploads/jazz/performers/0fab80e556cabebd.png', 'Smooth, expressiveaa', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '11', '111', '/assets/uploads/jazz/performers/7c62c1ce1c660694.png');
 
 -- --------------------------------------------------------
 
@@ -579,7 +592,20 @@ CREATE TABLE `jazz_performer_appearances` (
 
 INSERT INTO `jazz_performer_appearances` (`id`, `performer_id`, `day_text`, `time_text`, `location_text`, `note_text`, `sort_order`) VALUES
 (3, 3, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', '', 1),
-(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2);
+(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2),
+(5, 1, 'Thursday', '19:30 - 20:30', 'Patronaat - Main Hall', NULL, 1),
+(6, 1, 'Sunday', '17:00 - 18:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(7, 4, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', NULL, 1),
+(8, 4, 'Sunday', '19:00 - 20:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(9, 5, 'Saturday', '18:00 - 19:00', 'Patronaat - Third Hall', 'Intimate show — limited seats.', 1),
+(10, 6, 'Thursday', '21:00 - 22:00', 'Patronaat - Second Hall', NULL, 1),
+(11, 7, 'Friday', '21:00 - 22:00', 'Patronaat - Main Hall', NULL, 1),
+(12, 8, 'Saturday', '21:00 - 22:00', 'Patronaat - Third Hall', NULL, 1),
+(13, 9, 'Friday', '18:00 - 19:00', 'Patronaat - Second Hall', NULL, 1),
+(14, 13, 'Saturday', '21:00 - 22:00', 'Patronaat - Main Hall', NULL, 1),
+(15, 15, 'Saturday', '19:30 - 20:30', 'Patronaat - Third Hall', NULL, 1),
+(16, 15, 'Sunday', '18:00 - 19:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(17, 17, 'Friday', '19:30 - 20:30', 'Patronaat - Main Hall', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -604,7 +630,36 @@ INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `descrip
 (6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
 (7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
 (8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4),
-(10, 4, 'rhythm & blues', 'Gumbo Kings are a five-piece Dutch band with a modern take on soul, rhythm & blues, and roots music. Their live sound mixes the groove of New Orleans funk, the grit of blues, and a stylish, energetic stage presence. Official band material describes them as a sharply dressed group with their own modern view on soul and rhythm & blues, while other profiles describe their sound as blending New Orleans funk, Delta blues, and Memphis-style melodies.\r\n', -2);
+(11, 1, 'North Sea Jazz Festival', 'Standout set at the legendary Dutch festival celebrating their genre-crossing sound.', 1),
+(12, 1, 'Debut Album', 'Released their first full-length record to wide critical praise.', 2),
+(13, 1, 'European Tour', 'Sold-out shows across Germany, Belgium and France.', 3),
+(14, 4, 'Streetlife Anthem', 'Their breakout single became a Dutch festival favourite.', 1),
+(15, 4, 'Paradiso Headline', 'Sold-out Amsterdam show at the iconic Paradiso venue.', 2),
+(16, 4, 'Edison Award Nomination', 'Recognised in the Dutch music industry awards.', 3),
+(17, 5, 'ICP Orchestra Founder', 'Co-founded the Instant Composers Pool, a cornerstone of European free jazz.', 1),
+(18, 5, 'Eric Dolphy Collaborations', 'Played on Last Date, one of the most celebrated jazz records.', 2),
+(19, 5, 'Lifetime Achievement', 'Awarded for decades of innovation in improvised music.', 3),
+(20, 6, 'Mainstream Crossover', 'His sound bridged the worlds of jazz, R&B and Caribbean pop.', 1),
+(21, 6, 'Top of the Charts', 'Multiple singles reached the Dutch Top 40.', 2),
+(22, 6, 'Lowlands Performance', 'High-energy main-stage performance at Lowlands Festival.', 3),
+(23, 7, 'Hard-Bop Quartet', 'Founded a hard-bop quartet acclaimed for tight ensemble playing.', 1),
+(24, 7, 'Studio Recordings', 'Recorded with respected European jazz musicians.', 2),
+(25, 7, 'Conservatory Mentor', 'Teaches the next generation at one of Europe\'s top conservatories.', 3),
+(26, 8, 'Debut Album', 'Released a critically praised debut showcasing her songwriting.', 1),
+(27, 8, 'Festival Circuit', 'Toured major European jazz festivals with her band.', 2),
+(28, 8, 'Collaboration Album', 'Recorded an intimate collaboration project with leading Dutch musicians.', 3),
+(29, 9, 'Forever Dreaming', 'Beloved record that introduced his classic-soul sound to a new generation.', 1),
+(30, 9, 'Worldwide Tour', 'Toured the UK, Europe and Japan to growing audiences.', 2),
+(31, 9, 'BBC Radio Sessions', 'Performed live sessions on multiple BBC radio shows.', 3),
+(32, 13, 'Festival Favourites', 'Year-round headliners across Dutch summer festivals.', 1),
+(33, 13, 'Studio EP', 'Released a tight studio EP showcasing their party-funk identity.', 2),
+(34, 13, 'Club Residency', 'Long-running monthly residency at an Amsterdam soul club.', 3),
+(35, 15, 'Nordic Tour', 'Toured across Sweden, Norway and Finland.', 1),
+(36, 15, 'Debut Suite', 'Released a cinematic instrumental suite as their debut.', 2),
+(37, 15, 'Film Soundtrack', 'Contributed music to a Nordic short-film score.', 3),
+(38, 17, 'Live At Bimhuis', 'Acclaimed performance recorded at Amsterdam\'s legendary jazz venue.', 1),
+(39, 17, 'Studio Album', 'Released a full-length studio record praised for its ambition.', 2),
+(40, 17, 'European Showcase', 'Performed at jazzahead! in Bremen, the top European jazz showcase.', 3);
 
 -- --------------------------------------------------------
 
@@ -651,8 +706,36 @@ CREATE TABLE `jazz_performer_tracks` (
 INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
 (1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
 (2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2),
-(5, 4, 'In The Dark', '2018', 'ne fjbjfb', '', 'jqwfrbkwf', 1),
-(6, 4, 'Hotel Belvédère', '2018', 'erfhiebfnw', '', 'jwbjjwbjw', 5);
+(7, 1, 'Future Echo', '2023', 'A driving fusion of acoustic jazz and electronic textures.', NULL, 'https://open.spotify.com', 1),
+(8, 1, 'Night Patterns', '2022', 'Late-night groove with crisp horn arrangements.', NULL, 'https://open.spotify.com', 2),
+(9, 1, 'Liminal', '2024', 'A reflective opener built around looped piano.', NULL, 'https://open.spotify.com', 3),
+(10, 4, 'Crescent City', '2023', 'Anthem channeling New Orleans street energy.', NULL, 'https://open.spotify.com', 1),
+(11, 4, 'Sugar & Smoke', '2022', 'Mid-tempo blues with brass-heavy hooks.', NULL, 'https://open.spotify.com', 2),
+(12, 4, 'Strut', '2024', 'Hi-energy single made for the live stage.', NULL, 'https://open.spotify.com', 3),
+(13, 5, 'Sticks & Sand', '2018', 'A solo percussion meditation.', NULL, 'https://open.spotify.com', 1),
+(14, 5, 'Improvised Conversations', '2015', 'Live duo recording capturing his playful spontaneity.', NULL, 'https://open.spotify.com', 2),
+(15, 5, 'Open Form', '2020', 'Trio session with rising young improvisers.', NULL, 'https://open.spotify.com', 3),
+(16, 6, 'Golden Hour', '2024', 'Warm summer single with Caribbean flavours.', NULL, 'https://open.spotify.com', 1),
+(17, 6, 'No Worries', '2023', 'Smooth R&B duet that topped Dutch streaming charts.', NULL, 'https://open.spotify.com', 2),
+(18, 6, 'Sunset Drive', '2022', 'Lush, groove-led ballad.', NULL, 'https://open.spotify.com', 3),
+(19, 7, 'Blue Diamond', '2023', 'Lyrical ballad showcasing his rich tone.', NULL, 'https://open.spotify.com', 1),
+(20, 7, 'Hard-Bop Refrain', '2022', 'Driving uptempo number for the quartet.', NULL, 'https://open.spotify.com', 2),
+(21, 7, 'After Hours', '2024', 'A reflective late-night closer.', NULL, 'https://open.spotify.com', 3),
+(22, 8, 'Velvet Smoke', '2023', 'A signature slow burn with intimate vocal phrasing.', NULL, 'https://open.spotify.com', 1),
+(23, 8, 'Stories', '2022', 'Heartfelt original showcasing her songwriting.', NULL, 'https://open.spotify.com', 2),
+(24, 8, 'Late Light', '2024', 'A quiet duet ballad.', NULL, 'https://open.spotify.com', 3),
+(25, 9, 'Just Being Me', '2016', 'Soulful single that introduced his classic style.', NULL, 'https://open.spotify.com', 1),
+(26, 9, 'Forever Dreaming', '2016', 'Title track of his breakthrough album.', NULL, 'https://open.spotify.com', 2),
+(27, 9, 'Memories Of Love', '2014', 'A timeless slow groove.', NULL, 'https://open.spotify.com', 3),
+(28, 13, 'Six On The Floor', '2023', 'Crowd-favourite funk anthem.', NULL, 'https://open.spotify.com', 1),
+(29, 13, 'Pocket', '2022', 'Driving instrumental built around a deep bass line.', NULL, 'https://open.spotify.com', 2),
+(30, 13, 'Late Night Soul', '2024', 'Slower groove highlighting their horn section.', NULL, 'https://open.spotify.com', 3),
+(31, 15, 'Aurora', '2023', 'Atmospheric opener built on slow build-ups.', NULL, 'https://open.spotify.com', 1),
+(32, 15, 'Snowline', '2022', 'A meditative ambient piece.', NULL, 'https://open.spotify.com', 2),
+(33, 15, 'Northern Drift', '2024', 'Cinematic centerpiece of their live set.', NULL, 'https://open.spotify.com', 3),
+(34, 17, 'Tilted', '2022', 'Sharp instrumental groove combining post-rock and jazz.', NULL, 'https://open.spotify.com', 1),
+(35, 17, 'Salt Air', '2023', 'Spacious composition with shimmering melody lines.', NULL, 'https://open.spotify.com', 2),
+(36, 17, 'Echo Lane', '2024', 'Driving closer that showcases their rhythm section.', NULL, 'https://open.spotify.com', 3);
 
 -- --------------------------------------------------------
 
@@ -700,7 +783,13 @@ CREATE TABLE `OrderItems` (
 INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
 (42, 16, 30, b'010', 7000),
 (43, 17, 31, b'010', 5000),
-(44, 17, 6, b'000', 8084);
+(44, 17, 6, b'000', 8084),
+(45, 19, 11, b'011', 3180),
+(47, 20, 13, b'011', 4770),
+(48, 20, 14, b'011', 3180),
+(49, 21, 15, b'011', 3180),
+(50, 22, 16, b'011', 3180),
+(51, 23, 17, b'011', 1590);
 
 -- --------------------------------------------------------
 
@@ -723,7 +812,13 @@ CREATE TABLE `Orders` (
 
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`, `stripe_session`) VALUES
 (16, 5, '2026-05-07 18:39:14', b'010', 7000, 'cs_test_a1xWv5yRRcSq7MTsafx15J6T6XSMRiP9Pwc8qZ68u80NAFRlaIgeuk4csK'),
-(17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h');
+(17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h'),
+(18, 2, NULL, b'000', NULL, NULL),
+(19, 3, '2026-06-14 17:15:12', b'001', 3180, 'cs_test_a1BcxFpPCRXmR9U2Z0KGk4WFTpUWAwEvjLHusEgEbZVTPKF8NqygI9MvPn'),
+(20, 3, '2026-06-15 17:58:06', b'010', 7950, 'cs_test_a14Vqjl1WpyhXFPa03O2zCTYRsVIuIBfsQ4ZsJR5SXs0j5FOVgnL9LxWDg'),
+(21, 3, '2026-06-15 17:48:03', b'001', 3180, 'cs_test_a1GRJUSQfgJP1qxAOr43K5shB7ZctINaBllzEuPSAHegLJphMULdVzTPIT'),
+(22, 3, '2026-06-15 17:49:37', b'001', 3180, 'cs_test_a1C83YsJsQf37xUhY6zBKtsfkQEvCr8qXKBKo7EDwQQIFdEq7ivT8fQTYQ'),
+(23, 14, '2026-06-15 18:05:04', b'010', 1590, 'cs_test_a1RiYq13bRxaAUar5y0uyqb5qdDI48v2dng3U53m9oBv0nliD9rMZCxaDx');
 
 -- --------------------------------------------------------
 
@@ -823,7 +918,10 @@ CREATE TABLE `Tickets` (
 
 INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`) VALUES
 (27, 43, '3de5da835c4a8d63f83a5bc36170e65e32a8a73938b91006', 'HF-7239DF35BDDAC9DC1459E17E', NULL),
-(28, 44, '977cc473d8c324a23b0ed29a29cf041378eccd64fe6ebad0', 'HF-52B485066663B3B4079AD57B', NULL);
+(28, 44, '977cc473d8c324a23b0ed29a29cf041378eccd64fe6ebad0', 'HF-52B485066663B3B4079AD57B', NULL),
+(29, 47, 'fab5e5a8f2b1411ae85cb0e2e7877b430d5f75cf5ea390d7', 'HF-7EAFAD47C33B3B16CAAD4D1E', NULL),
+(30, 48, '9037d991385bcb84629fff2b383ac0110d0a2abba2a660bb', 'HF-4FBFFC71D779B52606DE14B6', NULL),
+(31, 51, 'fbd26df6852f5494af14e32b03b60a43bb05d41a742aaf34', 'HF-4BC38907FB5B8CC4F042D9C0', '2026-06-15 18:09:06');
 
 -- --------------------------------------------------------
 
@@ -857,7 +955,9 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
 (11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
 (12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
-(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
+(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09'),
+(14, 'achraf.modz05@gmail.com', '$2y$12$zn9mf0qHhKCMqmPYmf6H0ukp0SSxp60o1/7KdvAYBgTHoV.dSjviK', 'Achraf', 'customer', NULL, '2026-06-15 18:02:45'),
+(15, 'achraf@employee.com', '$2y$12$R.6.JXQY1eTn93JykWeQ7OMOJxPcWzuqdlO/M/1CVnCHYBf7OVqR2', 'Achraf', 'employee', NULL, '2026-06-15 18:08:15');
 
 -- --------------------------------------------------------
 
@@ -1735,7 +1835,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1771,13 +1871,13 @@ ALTER TABLE `jazz_performers`
 -- AUTO_INCREMENT for table `jazz_performer_appearances`
 --
 ALTER TABLE `jazz_performer_appearances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_highlights`
 --
 ALTER TABLE `jazz_performer_highlights`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_locations`
@@ -1789,7 +1889,7 @@ ALTER TABLE `jazz_performer_locations`
 -- AUTO_INCREMENT for table `jazz_performer_tracks`
 --
 ALTER TABLE `jazz_performer_tracks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `jazz_recommendations`
@@ -1801,13 +1901,13 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
@@ -1831,13 +1931,13 @@ ALTER TABLE `StoryEvents`
 -- AUTO_INCREMENT for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `Venue`
