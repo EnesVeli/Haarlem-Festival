@@ -1,8 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Enums\UserRole;
 use App\Models\Exceptions\EmailAlreadyRegisteredException;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 
@@ -39,20 +41,28 @@ class UserService
         $this->userRepository->create($name, $email, $hashedPassword, 'customer');
     }
 
-    public function authenticate(string $email, string $password): array
+    public function authenticate(string $email, string $password): User
     {
-        $user = $this->userRepository->findByEmail($email);
+        $row = $this->userRepository->findByEmail($email);
 
-        if (!$user || !password_verify($password, $user['password'])) {
+        if (!$row || !password_verify($password, $row['password'])) {
             throw new Exception("Invalid email or password.");
         }
 
-        return [
-            'user_id' => $user['user_id'],
-            'email'   => $user['email'],
-            'name'    => $user['name'],
-            'role'    => $user['role'],
-        ];
+        $user = new User();
+        $user->user_id = (int)$row['user_id'];
+        $user->email   = $row['email'];
+        $user->name    = $row['name'];
+
+        $raw = $row['role'] ?? null;
+        if (is_numeric($raw)) {
+            $user->role = UserRole::from((int)$raw);
+        } else {
+            $map = ['customer' => UserRole::Customer, 'admin' => UserRole::Admin, 'employee' => UserRole::Employee];
+            $user->role = $map[strtolower((string)$raw)] ?? UserRole::Customer;
+        }
+
+        return $user;
     }
 
     public function getById(int $userId): array

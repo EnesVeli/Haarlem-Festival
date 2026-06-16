@@ -46,12 +46,12 @@ class Session
         return self::pop(self::$temp_success_session_name);
     }
 
-    public static function login(array $user): void
+    public static function login(\App\Models\User $user): void
     {
-        $_SESSION['user_id'] = $user['user_id'] ?? $user['id'] ?? null;
-        $_SESSION['email']   = $user['email'] ?? null;
-        $_SESSION['name']    = $user['name'] ?? null;
-        $_SESSION['role']    = $user['role'] ?? null;
+        $_SESSION['user_id'] = $user->user_id;
+        $_SESSION['email']   = $user->email;
+        $_SESSION['name']    = $user->name;
+        $_SESSION['role']    = strtolower($user->role->name);
     }
 
     public static function logout(): void
