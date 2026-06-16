@@ -92,13 +92,11 @@ require __DIR__ . '/../partials/cmsHero.php';
                                         Edit
                                     </a>
 
-                                    <a
-                                        href="/cms/jazz/experiences/delete?id=<?= (int) ($experience->id ?? 0) ?>"
-                                        class="jazz-cms-btn jazz-cms-btn-danger"
-                                        onclick="return confirm('Delete this experience?')"
-                                    >
-                                        Delete
-                                    </a>
+                                    <form method="POST" action="/cms/jazz/experiences/delete" style="display:inline" onsubmit="return confirm('Delete this experience?')">
+                                        <input type="hidden" name="id" value="<?= (int) ($experience->id ?? 0) ?>">
+                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Framework\Session::csrfToken()) ?>">
+                                        <button type="submit" class="jazz-cms-btn jazz-cms-btn-danger">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

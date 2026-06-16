@@ -3,6 +3,7 @@
 namespace App\Controllers\Cms\Jazz;
 
 use App\Controllers\Cms\BaseCmsController;
+use App\Framework\Session;
 use App\Interfaces\Services\IJazzCmsService;
 use App\Services\Jazz\JazzCmsService;
 use App\ViewModels\Jazz\JazzCmsViewModels\JazzDashboardCmsViewModel;
@@ -129,7 +130,13 @@ class AdminJazzController extends BaseCmsController
 
     public function deleteExperience(): void
     {
-        $id = (int)($_GET['id'] ?? 0);
+        if (!Session::checkCsrfToken($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
+            echo 'Invalid CSRF token';
+            return;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
 
         if ($id > 0) {
             $this->service->deleteExperience($id);
@@ -204,7 +211,13 @@ class AdminJazzController extends BaseCmsController
 
     public function deletePerformer(): void
     {
-        $id = (int)($_GET['id'] ?? 0);
+        if (!Session::checkCsrfToken($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
+            echo 'Invalid CSRF token';
+            return;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
 
         if ($id > 0) {
             $this->service->deletePerformer($id);
@@ -271,7 +284,13 @@ class AdminJazzController extends BaseCmsController
 
     public function deleteRecommendation(): void
     {
-        $id = (int)($_GET['id'] ?? 0);
+        if (!Session::checkCsrfToken($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
+            echo 'Invalid CSRF token';
+            return;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
 
         if ($id > 0) {
             $this->service->deleteRecommendation($id);
@@ -332,7 +351,13 @@ class AdminJazzController extends BaseCmsController
 
     public function deleteLocation(): void
     {
-        $id = (int)($_GET['id'] ?? 0);
+        if (!Session::checkCsrfToken($_POST['csrf_token'] ?? null)) {
+            http_response_code(403);
+            echo 'Invalid CSRF token';
+            return;
+        }
+
+        $id = (int)($_POST['id'] ?? 0);
 
         if ($id > 0) {
             $this->service->deleteLocation($id);

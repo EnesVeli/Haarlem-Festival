@@ -1,24 +1,20 @@
 <?php
-$eventsByDay = [
-    'Thursday'  => [],
-    'Friday'    => [],
-    'Saturday'  => [],
-    'Sunday'    => []
-];
-
-$typeLabels = [
-    'stories for the whole family'    => 'Stories for the whole family',
-    'recording podcast with audience' => 'Recording podcast with audience',
-    'stories with impact'             => 'Stories with impact',
-    'best of'                         => 'Best of'
-];
-
-foreach ($events as $event) {
-    $day = date('l', strtotime($event->start_time));
-    if (isset($eventsByDay[$day])) {
-        $eventsByDay[$day][] = $event;
-    }
-}
+/**
+ * @var string                              $pageTitle
+ * @var string                              $pageSubtitle
+ * @var string                              $pageDescription
+ * @var string                              $bodyHtml
+ * @var string                              $heroImage
+ * @var string                              $quoteText
+ * @var string                              $ctaText
+ * @var string                              $ticketInfoTitle1
+ * @var string                              $ticketInfoBody1
+ * @var string                              $ticketInfoNote1
+ * @var string                              $ticketInfoTitle2
+ * @var string                              $ticketInfoBody2
+ * @var string                              $ctaDescription
+ * @var array<string, \App\Models\StoryEvent[]> $eventsByDay
+ */
 ?>
 
 <div class="stories-page">
@@ -46,17 +42,19 @@ foreach ($events as $event) {
             <h2 class="stories-section-title stories-section-title--left">Info About Tickets</h2>
             <div class="stories-ticket-grid">
                 <article class="stories-ticket-card">
-                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_1 ?? 'Pay as you like') ?></h3>
-                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_1 ?? 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.') ?></p>
-                    <?php if (!empty($homepageContent->ticket_info_note_1)): ?>
-                    <p><em><?= htmlspecialchars($homepageContent->ticket_info_note_1) ?></em></p>
+                    <h3><?= htmlspecialchars($ticketInfoTitle1) ?></h3>
+                    <p><?= htmlspecialchars($ticketInfoBody1) ?>
+                    </p>
+                    <?php if (!empty($ticketInfoNote1)): ?>
+                    <p><em><?= htmlspecialchars($ticketInfoNote1) ?></em></p>
                     <?php else: ?>
                     <p><em>A reservation is required to guarantee entry.</em></p>
                     <?php endif; ?>
                 </article>
                 <article class="stories-ticket-card">
-                    <h3><?= htmlspecialchars($homepageContent->ticket_info_title_2 ?? 'HaarlemPas discount') ?></h3>
-                    <p><?= htmlspecialchars($homepageContent->ticket_info_body_2 ?? 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.') ?></p>
+                    <h3><?= htmlspecialchars($ticketInfoTitle2) ?></h3>
+                    <p><?= htmlspecialchars($ticketInfoBody2) ?>
+                    </p>
                 </article>
             </div>
         </div>
@@ -92,7 +90,7 @@ foreach ($events as $event) {
                         <select id="filter-lang" class="stories-filter-select">
                             <option value="">Any language</option>
                             <option value="NL">NL</option>
-                            <option value="ENG">EN</option>
+                            <option value="EN">EN</option>
                         </select>
                     </div>
                     <div class="stories-filter-group">
@@ -122,7 +120,7 @@ foreach ($events as $event) {
                 <div class="stories-card-grid">
                     <?php foreach ($dayEvents as $event): ?>
                     <?php
-                            $typeText  = $typeLabels[$event->story_type] ?? ucfirst($event->story_type);
+                            $typeText  = $event->getTypeLabel();
                             $imagePath = !empty($event->image_path) ? $event->image_path : '/assets/images/stories/venue-placeholder.jpg';
                             ?>
                     <article class="stories-event-card" data-age="<?= htmlspecialchars($event->age_group) ?>"
@@ -169,7 +167,8 @@ foreach ($events as $event) {
             <div class="stories-cta-box">
                 <div class="stories-cta-text">
                     <h2><?= htmlspecialchars($ctaText) ?></h2>
-                    <p><?= htmlspecialchars($homepageContent->cta_description ?? 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.') ?></p>
+                    <p><?= htmlspecialchars($ctaDescription) ?>
+                    </p>
                 </div>
                 <div class="stories-cta-buttons">
                     <a href="/tickets" class="stories-cta-button stories-cta-button--dark">Book tickets</a>

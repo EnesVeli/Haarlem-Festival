@@ -1,13 +1,20 @@
 <?php
+/**
+ * @var array<string, mixed> $detail
+ * @var array<int, array<string, mixed>> $highlights
+ * @var array<int, array<string, mixed>> $sections
+ * @var array<int, array<string, mixed>> $gallery
+ * @var array<int, array<string, mixed>> $facts
+ */
 $isNew     = empty($detail);
 $detailId  = $detail['id'] ?? 0;
 $pageTitle = $isNew ? "New Detail Page" : "Edit: " . ($detail['page_title'] ?? '');
+$pageCSS = 'cms-home-history.css';
 require __DIR__ . '/../../partials/header.php';
 ?>
 
-<div class="container-fluid py-4">
+<div class="cms-page container-fluid py-4">
 
-  <!-- Flash -->
   <?php if (!empty($_SESSION['flash'])): ?>
     <div class="alert alert-success alert-dismissible fade show">
       <?= htmlspecialchars($_SESSION['flash']) ?>
@@ -16,24 +23,35 @@ require __DIR__ . '/../../partials/header.php';
     <?php unset($_SESSION['flash']); ?>
   <?php endif; ?>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h4 mb-0"><?= $isNew ? '➕ New Detail Page' : '✏️ ' . htmlspecialchars($detail['page_title']) ?></h1>
-    <a href="/cms/history#tab-details" class="btn btn-sm btn-outline-secondary">← Back to Dashboard</a>
+  <?php if (!empty($_SESSION['flash_error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show">
+      <?= htmlspecialchars($_SESSION['flash_error']) ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['flash_error']); ?>
+  <?php endif; ?>
+
+  <div class="cms-title-row">
+    <div>
+      <p class="cms-eyebrow">History detail page</p>
+      <h1><?= $isNew ? 'New Detail Page' : htmlspecialchars($detail['page_title']) ?></h1>
+    </div>
+    <a href="/cms/history#tab-details" class="btn btn-outline-secondary">Back to dashboard</a>
   </div>
 
-  <!-- ── BASIC INFO ──────────────────────────────────────────────────────── -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-header bg-dark text-white fw-semibold">🏛 Basic Information</div>
+  <div class="card cms-card mb-4">
+    <div class="card-header fw-semibold">Basic Information</div>
     <div class="card-body">
       <form method="POST" action="/cms/history/action" enctype="multipart/form-data">
         <input type="hidden" name="_action" value="save_detail">
+        <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
         <input type="hidden" name="id" value="<?= $detailId ?>">
 
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label fw-semibold">Linked Highlight <span class="text-danger">*</span></label>
             <select name="highlight_id" class="form-select" required>
-              <option value="">– Select –</option>
+              <option value="">Select</option>
               <?php foreach ($highlights as $h): ?>
                 <option value="<?= $h['id'] ?>"
                   <?= ($detail['highlight_id'] ?? $_GET['highlight_id'] ?? '') == $h['id'] ? 'selected' : '' ?>>
@@ -74,7 +92,7 @@ require __DIR__ . '/../../partials/header.php';
             <label class="form-label fw-semibold">Hero Image</label>
             <?php if (!empty($detail['hero_image'])): ?>
               <img src="/assets/uploads/History/<?= htmlspecialchars($detail['hero_image']) ?>"
-                   class="d-block img-thumbnail mb-1" style="height:52px;object-fit:cover">
+                   class="d-block img-thumbnail mb-1 cms-preview-img" alt="">
             <?php endif; ?>
             <input type="file" name="hero_image" class="form-control" accept="image/*">
           </div>
@@ -85,7 +103,7 @@ require __DIR__ . '/../../partials/header.php';
         </div>
 
         <button type="submit" class="btn btn-dark mt-3">
-          <?= $isNew ? '➕ Create Page' : '💾 Save Changes' ?>
+          <?= $isNew ? 'Create page' : 'Save changes' ?>
         </button>
       </form>
     </div>
@@ -93,11 +111,10 @@ require __DIR__ . '/../../partials/header.php';
 
   <?php if (!$isNew): ?>
 
-  <!-- ── SECTIONS ──────────────────────────────────────────────────────────── -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-secondary text-white">
-      <strong>📄 Content Sections</strong>
-      <button class="btn btn-sm btn-light" onclick="openSectionModal()">+ Add Section</button>
+  <div class="card cms-card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Content Sections</strong>
+      <button class="btn btn-sm btn-light" onclick="openSectionModal()">Add section</button>
     </div>
     <div class="card-body p-0">
       <table class="table table-hover mb-0 align-middle">
@@ -117,8 +134,10 @@ require __DIR__ . '/../../partials/header.php';
               <form method="POST" action="/cms/history/action" class="d-inline"
                     onsubmit="return confirm('Delete section?')">
                 <input type="hidden" name="_action" value="delete_section">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                <input type="hidden" name="detail_id" value="<?= $detailId ?>">
                 <input type="hidden" name="id" value="<?= $s['id'] ?>">
-                <button class="btn btn-sm btn-outline-danger">Del</button>
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
               </form>
             </td>
           </tr>
@@ -131,18 +150,17 @@ require __DIR__ . '/../../partials/header.php';
     </div>
   </div>
 
-  <!-- ── GALLERY ───────────────────────────────────────────────────────────── -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-secondary text-white">
-      <strong>🖼 Photo Gallery</strong>
-      <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#galleryUpload">+ Add Image</button>
+  <div class="card cms-card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Photo Gallery</strong>
+      <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#galleryUpload">Add image</button>
     </div>
     <div class="card-body">
 
-      <!-- Upload form (collapsible) -->
       <div class="collapse mb-3" id="galleryUpload">
         <form method="POST" action="/cms/history/action" enctype="multipart/form-data"
-              class="border rounded p-3 bg-light">
+              class="border rounded p_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+          <input type="hidden" name="-3 bg-light">
           <input type="hidden" name="_action" value="add_gallery">
           <input type="hidden" name="detail_id" value="<?= $detailId ?>">
           <div class="row g-2 align-items-end">
@@ -165,7 +183,6 @@ require __DIR__ . '/../../partials/header.php';
         </form>
       </div>
 
-      <!-- Gallery grid -->
       <div class="d-flex flex-wrap gap-3">
         <?php foreach ($gallery as $img): ?>
           <div class="text-center" style="width:110px">
@@ -175,6 +192,7 @@ require __DIR__ . '/../../partials/header.php';
               <?= htmlspecialchars($img['caption'] ?? '') ?>
             </p>
             <form method="POST" action="/cms/history/action" onsubmit="return confirm('Delete image?')">
+              <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
               <input type="hidden" name="_action" value="delete_gallery">
               <input type="hidden" name="id" value="<?= $img['id'] ?>">
               <button class="btn btn-sm btn-outline-danger" style="font-size:.7rem;padding:1px 6px">Delete</button>
@@ -188,11 +206,10 @@ require __DIR__ . '/../../partials/header.php';
     </div>
   </div>
 
-  <!-- ── QUICK FACTS ───────────────────────────────────────────────────────── -->
-  <div class="card shadow-sm mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center bg-secondary text-white">
-      <strong>📌 Quick Facts</strong>
-      <button class="btn btn-sm btn-light" onclick="openFactModal()">+ Add Fact</button>
+  <div class="card cms-card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>Quick Facts</strong>
+      <button class="btn btn-sm btn-light" onclick="openFactModal()">Add fact</button>
     </div>
     <div class="card-body p-0">
       <table class="table table-hover mb-0 align-middle">
@@ -212,8 +229,10 @@ require __DIR__ . '/../../partials/header.php';
               <form method="POST" action="/cms/history/action" class="d-inline"
                     onsubmit="return confirm('Delete fact?')">
                 <input type="hidden" name="_action" value="delete_fact">
+                <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
+                <input type="hidden" name="detail_id" value="<?= $detailId ?>">
                 <input type="hidden" name="id" value="<?= $f['id'] ?>">
-                <button class="btn btn-sm btn-outline-danger">Del</button>
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
               </form>
             </td>
           </tr>
@@ -229,18 +248,16 @@ require __DIR__ . '/../../partials/header.php';
   <?php endif; ?>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════
-     MODAL – SECTION
-══════════════════════════════════════════════════════════════════════════ -->
 <div class="modal fade" id="sectionModal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <form method="POST" action="/cms/history/action" enctype="multipart/form-data" class="modal-content">
       <input type="hidden" name="_action" value="save_section">
+      <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
       <input type="hidden" name="id" id="s_id" value="0">
       <input type="hidden" name="detail_id" value="<?= $detailId ?>">
-      <div class="modal-header bg-secondary text-white">
+      <div class="modal-header">
         <h5 class="modal-title" id="s_modalTitle">Add Section</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row g-3">
@@ -280,18 +297,16 @@ require __DIR__ . '/../../partials/header.php';
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════════════
-     MODAL – FACT
-══════════════════════════════════════════════════════════════════════════ -->
 <div class="modal fade" id="factModal" tabindex="-1">
   <div class="modal-dialog">
     <form method="POST" action="/cms/history/action" class="modal-content">
+      <input type="hidden" name="_csrf_token" value="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>">
       <input type="hidden" name="_action" value="save_fact">
       <input type="hidden" name="id" id="f_id" value="0">
       <input type="hidden" name="detail_id" value="<?= $detailId ?>">
-      <div class="modal-header bg-secondary text-white">
+      <div class="modal-header">
         <h5 class="modal-title" id="f_modalTitle">Add Quick Fact</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row g-3">

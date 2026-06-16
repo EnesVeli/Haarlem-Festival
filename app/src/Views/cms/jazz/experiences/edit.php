@@ -82,11 +82,12 @@ required
 
 <label class="jazz-cms-label">Experience Image</label>
 
-<div class="jazz-cms-upload-box">
+<div class="jazz-cms-upload-box" id="experienceUploadBox">
 
 <input
 type="file"
 name="experience_image"
+id="experienceImageInput"
 class="jazz-cms-file-input"
 accept="image/*"
 >
@@ -98,28 +99,14 @@ accept="image/*"
 
 </div>
 
-<small class="jazz-cms-help-text">
-Upload path: <code>/public/uploads/experiences/</code>
-</small>
-
-<?php if (!empty($experience?->imagePath)): ?>
-
-<div class="jazz-cms-image-preview-wrap">
-
+<div class="jazz-cms-image-preview-wrap" id="experiencePreviewWrap" style="<?= empty($experience?->imagePath) ? 'display:none;' : '' ?>">
 <p class="jazz-cms-preview-label">Current Image</p>
-
 <img
-src="<?= htmlspecialchars($experience->imagePath) ?>"
+id="experiencePreviewImg"
+src="<?= htmlspecialchars($experience?->imagePath ?? '') ?>"
 class="jazz-cms-image-preview"
 >
-
-<p class="jazz-cms-image-path">
-<?= htmlspecialchars($experience->imagePath) ?>
-</p>
-
 </div>
-
-<?php endif; ?>
 
 </div>
 
@@ -144,5 +131,32 @@ Save Changes
 </div>
 
 </div>
+
+<script>
+const experienceUploadBox = document.getElementById('experienceUploadBox');
+const experienceImageInput = document.getElementById('experienceImageInput');
+const experiencePreviewWrap = document.getElementById('experiencePreviewWrap');
+const experiencePreviewImg = document.getElementById('experiencePreviewImg');
+
+experienceUploadBox.addEventListener('click', function () {
+    experienceImageInput.click();
+});
+
+experienceUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
+});
+
+experienceUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    experienceImageInput.files = e.dataTransfer.files;
+    experiencePreviewImg.src = URL.createObjectURL(experienceImageInput.files[0]);
+    experiencePreviewWrap.style.display = '';
+});
+
+experienceImageInput.addEventListener('change', function () {
+    experiencePreviewImg.src = URL.createObjectURL(experienceImageInput.files[0]);
+    experiencePreviewWrap.style.display = '';
+});
+</script>
 
 <?php require __DIR__ . '/../../../partials/footer.php'; ?>

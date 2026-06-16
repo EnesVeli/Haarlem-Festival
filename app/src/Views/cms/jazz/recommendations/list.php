@@ -105,13 +105,11 @@ class="jazz-cms-btn jazz-cms-btn-outline"
 Edit
 </a>
 
-<a
-href="/cms/jazz/recommendations/delete?id=<?= (int)$rec->id ?>"
-class="jazz-cms-btn jazz-cms-btn-danger"
-onclick="return confirm('Delete this recommendation?')"
->
-Delete
-</a>
+<form method="POST" action="/cms/jazz/recommendations/delete" style="display:inline" onsubmit="return confirm('Delete this recommendation?')">
+    <input type="hidden" name="id" value="<?= (int)$rec->id ?>">
+    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(\App\Framework\Session::csrfToken()) ?>">
+    <button type="submit" class="jazz-cms-btn jazz-cms-btn-danger">Delete</button>
+</form>
 
 </td>
 

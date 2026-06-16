@@ -129,6 +129,22 @@ class Session
         return $role === 'employee' || (int)$role === \App\Enums\UserRole::Employee->value;
     }
 
+    public static function csrfToken(): string
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    public static function checkCsrfToken(?string $token): bool
+    {
+        if ($token === null || empty($_SESSION['csrf_token'])) {
+            return false;
+        }
+        return hash_equals($_SESSION['csrf_token'], $token);
+    }
+
     public static function getCartItemsCount() : int{
         return self::get(self::$cart_count_name) ?? 0;
     }

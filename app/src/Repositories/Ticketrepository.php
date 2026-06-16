@@ -82,4 +82,21 @@ class TicketRepository extends Repository
 
         return $stmt->execute();
     }
+
+    public function findOwnerUserId(int $ticket_id): ?int
+    {
+        $sql = "SELECT o.`user_id`
+                FROM `Tickets` t
+                JOIN `OrderItems` i ON t.`item_id` = i.`item_id`
+                JOIN `Orders` o ON i.`order_id` = o.`order_id`
+                WHERE t.`ticket_id` = :ticket_id
+                LIMIT 1;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue('ticket_id', $ticket_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $res = $stmt->fetchColumn();
+        return $res === false ? null : (int)$res;
+    }
 }
