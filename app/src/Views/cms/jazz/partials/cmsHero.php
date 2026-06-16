@@ -1,4 +1,10 @@
 <?php
+/**
+ * @var string $title
+ * @var string $subtitle
+ * @var string $buttonText
+ * @var string $buttonLink
+ */
 $title = $title ?? '';
 $subtitle = $subtitle ?? '';
 $buttonText = $buttonText ?? null;
