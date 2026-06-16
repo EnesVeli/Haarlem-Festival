@@ -3,10 +3,13 @@
 namespace App\Services\Yummy;
 
 use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\DBDataFetchException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
 use App\Models\Exceptions\QueryExecutionException;
 use App\Models\Exceptions\UserNotLoggedInException;
+use App\Models\OpeningHours;
+use App\Models\Restaurant;
 use App\Models\YummyBooking;
 use App\Repositories\OrderRepository;
 use App\Repositories\RestaurantSortingOption;
@@ -26,6 +29,8 @@ use RoundingMode;
 
 class YummyService
 {
+    public static int $max_date_offset = 12;
+
     private static ?YummyService $_instance = null;
 
     public static function getInstance() : YummyService {
@@ -54,61 +59,82 @@ class YummyService
         $this->order_service = $order_service;
     }
     
-    public function getActiveRestaurantsForTickets(int $page, int $res_per_page) : array|null|bool {
-        return $this->restaurant_repository->getActiveRestaurantsForTickets($page, $res_per_page);
+    public function getActiveRestaurantsForTickets(int $page, int $res_per_page) : array {
+        $res = $this->restaurant_repository->getActiveRestaurantsForTickets($page, $res_per_page);
+
+        if($res === false) throw new DBDataFetchException("Failed to get active restaurants for tickets.");
+
+        if($res === null) return [];
+
+        return $res;
     }
 
     public function getNumberOfActiveRestaurants() : int|bool {
-        return $this->restaurant_repository->getNumberOfActiveRestaurants();
+        $res = $this->restaurant_repository->getNumberOfActiveRestaurants();
+
+        if($res === false) throw new DBDataFetchException("Failed to number of active restaurants.");
+
+        return $res;
     }
 
-    public function getHomeViewModel() : YummyHomeViewModel {
-        $view_model = new YummyHomeViewModel();
+    public function getTopActiveRestaurants() : array {
+        $res = $this->restaurant_repository->getTopActiveRestaurants();
 
-        $view_model->restaurants = $this->restaurant_repository->getTopActiveRestaurants();
-        $view_model->guides = $this->guide_repository->getTopActiveGuides();
+        if($res === false) throw new DBDataFetchException("Failed to get top active restaurants.");
 
-        $home_data = $this->cms_repository->getHomeData();
+        if($res === null) return [];
 
-        if($home_data == null) throw new DBAccessException();
-
-        $view_model->title = $home_data['home_title'];
-        $view_model->subtitle = $home_data['home_subtitle'];
-        $view_model->topper_path = $home_data['home_image'];
-
-        return $view_model;
+        return $res;
     }
 
-    public function getListViewModel(?string $place_type, ?string $meal_type, ?string $food_type, ?string $cuisine_type, ?int $sorting, ?int $page) : YummyListViewModel {
-        $view_model = new YummyListViewModel();
+    public function getTopActiveGuides() : array {
+        $res = $this->guide_repository->getTopActiveGuides();
 
-        // Get data from yummy cms
-        $list_data = $this->cms_repository->getListData();
+        if($res === false) throw new DBDataFetchException("Failed to get top active guides.");
 
-        if($list_data == null) throw new DBAccessException();
+        if($res === null) return [];
 
-        $view_model->title = $list_data['list_title'];
-        $view_model->subtitle = $list_data['list_subtitle'];
-        $view_model->topper_path = $list_data['list_image'];
+        return $res;
+    }
 
-        // Get Filtering and Sorting
-        $view_model->current_place_types = isset($place_type) ? explode(',', $place_type) : [];
-        $view_model->current_meal_types = isset($meal_type) ? explode(',', $meal_type) : [];
-        $view_model->current_food_types = isset($food_type) ? explode(',', $food_type) : [];
-        $view_model->current_cuisine_types = isset($cuisine_type) ? explode(',', $cuisine_type) : [];
+    public function getHomeData() : array {
+        $res = $this->cms_repository->getHomeData();
+        
+        if($res == null) throw new DBDataFetchException("Failed to get home page data.");
 
-        $view_model->sorting = $sorting ?? 0;
+        return $res;
+    }
 
-        $view_model->current_page = $page ?? 0;
+    public function getListData() : array {
+        $res = $this->cms_repository->getListData();
 
-        // Load restaurants from db
-        $out = $this->restaurant_repository->getFilteredRestaurants($view_model->getAllCurrentTypes(), $view_model->current_page, RestaurantSortingOption::from($view_model->sorting));
+        if($res == null) throw new DBDataFetchException("Failed to get list page data.");
 
-        $view_model->restaurants = $out[1];
-        $view_model->total_found_restaurants_number = $out[0];
+        return $res;
+    }
 
+    public function getFilteredRestaurants(array $types, int $current_page, RestaurantSortingOption $sorting) : array {
+        $res = $this->restaurant_repository->getFilteredRestaurants($types, $current_page, $sorting);
+
+        if($res === false) throw new DBDataFetchException("Failed to get restaurants list.");
+
+        if($res === null) return [];
+
+        return $res;
+    }
+
+    public function countFilteredRestaurants(array $types) {
+        $res = $this->restaurant_repository->countFilteredRestaurants($types);
+
+        if($res === false) throw new DBDataFetchException("Failed to get total number of restaurants fiting the filter.");
+
+        return $res;
+    }
+
+    public function fillListViewPagiation(YummyListViewModel $view_model) {
         // Page calculations
-        $page_count = round($out[0] / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE, 0, RoundingMode::AwayFromZero);
+        $page_count = round(count($view_model->restaurants) / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE, 0, RoundingMode::AwayFromZero);
+        $page = $view_model->current_page;
 
         $offset = 0; // Left offset of pages button
         $limit = 0; // Right offset of pages button
@@ -136,9 +162,13 @@ class YummyService
         $view_model->total_pages_number = $page_count;
         $view_model->page_offset = $offset;
         $view_model->page_limit = $limit;
+    }
 
+    public function fillListViewTypes(YummyListViewModel $view_model){
         // Load types form db
-        $all_types = $this->type_repository->getAllTypes() ?? [];  
+        $all_types = $this->type_repository->getAllTypes();  
+
+        if($all_types === false) throw new DBDataFetchException("Failed to get all restaurant types.");
         
         for($i = 0; $i < count($all_types); $i++){ 
             switch($all_types[$i]->category){
@@ -156,48 +186,72 @@ class YummyService
                     break;
             }
         }
-
-        return $view_model;
     }
 
-    public function getRestaurantViewModel(string $id) : YummyRestaurantViewModel {
-        $view_model = new YummyRestaurantViewModel();
+    public function getRestaurantById(int $id) : Restaurant {
+        $res = $this->restaurant_repository->getRestaurantById($id);
 
-        $view_model->restaurant = $this->restaurant_repository->getRestaurantById((int)$id);
+        if($res === false) throw new DBDataFetchException("Failed to get restaurant by id.");
 
-        if(!$view_model->restaurant->active) throw new InvalidArgumentException();
+        if($res === null || !$res->active) throw new InvalidArgumentException("No restaurant with given id.");
 
-        $view_model->hours = $this->restaurant_repository->getRestaurantOpeningHours((int)$id);
-        $view_model->tags = $this->type_repository->getRestaurantTypes((int)$id);
-
-        $view_model->images = $this->restaurant_repository->getRestaurantImages((int)$id) ?? [];
-
-        $view_model->dishes = $this->restaurant_repository->getRestaurantDishes((int)$id) ?? [];
-
-        return $view_model;
+        return $res;
     }
 
-    public function GetBookingViewModel(string $id) : YummyBookViewModel {
-        $view_model = new YummyBookViewModel();
-        
-        $view_model->restaurant = $this->restaurant_repository->getRestaurantById($id);
+    public function getRestaurantOpeningHours(int $restaurant_id) : OpeningHours {
+        $res = $this->restaurant_repository->getRestaurantOpeningHours($restaurant_id);
 
-        $view_model->time_slots = [];
+        if($res === false) throw new DBDataFetchException("Failed to get restaurant opening hours.");
 
-        for($i = 0; $i < 14; $i++){
-            array_push($view_model->time_slots, $this->restaurant_repository->loadRestaurantTimeSlots($id, $i) ?? []);
+        if($res === null) throw new InvalidArgumentException("No opening hours with given restaurant id.");
+
+        return $res;
+    }
+
+    public function getRestaurantTypes(int $restaurant_id) : array {
+        $res = $this->type_repository->getRestaurantTypes($restaurant_id);
+
+        if($res === false) throw new DBDataFetchException("Failed to get restaurant food types.");
+
+        if($res === null) return [];
+
+        return $res;
+    }
+
+    public function getRestaurantImages(int $restaurant_id) : array {
+        $res = $this->restaurant_repository->getRestaurantImages($restaurant_id);
+
+        if($res === false) throw new DBDataFetchException("Failed to get restaurant images.");
+
+        if($res === null) return [];
+
+        return $res;
+    }
+
+    public function getRestaurantDishes(int $restaurant_id) : array {
+        $res = $this->restaurant_repository->getRestaurantDishes($restaurant_id);
+
+        if($res === false) throw new DBDataFetchException("Failed to get restaurant dishes.");
+
+        if($res === null) return [];
+
+        return $res;
+    }
+
+    public function loadRestaurantTimeSlots(int $id, array & $time_slots) {
+        for($i = 0; $i < self::$max_date_offset; $i++){
+            array_push($time_slots, $this->restaurant_repository->loadRestaurantTimeSlots($id, $i) ?? []);
         }
+    }
 
-        $view_model->dates = [];
+    public function fillInRestaurantTimeSlotDates(array & $dates) {
         $d = new DateTime();
 
         for ($i=0; $i < 14; $i++) { 
-            array_push($view_model->dates, $d->format('d.m.Y l'));
+            array_push($dates, $d->format('d.m.Y l'));
 
             $d->add(new DateInterval('P1D')); // Adding one day to the date
         }
-
-        return $view_model;
     }
 
     public function createBooking(?string $date_offset, ?int $adult_count, ?int $child_count, ?int $slot_id, ?string $comment){

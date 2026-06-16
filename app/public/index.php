@@ -113,6 +113,7 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
 
     // Yummy
     $r->addRoute('GET', '/yummy',            [\App\Controllers\YummyController::class, 'index']);
+    $r->addRoute('GET', '/yummy/guide',      [\App\Controllers\YummyController::class, 'guide']);
     $r->addRoute('GET', '/yummy/list',       [\App\Controllers\YummyController::class, 'list']);
     $r->addRoute('GET', '/yummy/restaurant', [\App\Controllers\YummyController::class, 'restaurant']);
     $r->addRoute('GET', '/yummy/book',       [\App\Controllers\YummyController::class, 'bookingPage']);

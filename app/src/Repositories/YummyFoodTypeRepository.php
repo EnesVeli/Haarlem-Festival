@@ -20,7 +20,7 @@ class YummyFoodTypeRepository extends Repository
         return self::$_instance;
     }
 
-    public function getRestaurantTypes(string $restaurant_id) : ?array
+    public function getRestaurantTypes(string $restaurant_id) : mixed
     {
         $stmt = $this->connection->prepare("SELECT `YummyFoodTypes`.`type_id`, `YummyFoodTypes`.`name`, `YummyFoodTypes`.`category` FROM `YummyFoodTypes` INNER JOIN 
         (SELECT * FROM `YummyRestaurantFoodTypes` WHERE `restaurant_id` = :restaurant_id) AS `R` ON `YummyFoodTypes`.`type_id` = `R`.`type_id`");
@@ -32,16 +32,14 @@ class YummyFoodTypeRepository extends Repository
         return $stmt->fetchAll();
     }
 
-    public function getAllTypes(): ?array
+    public function getAllTypes(): mixed
     {
         $stmt = $this->connection->prepare("SELECT `type_id`, `name`, `category` FROM `YummyFoodTypes`");
         $stmt->execute();
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, FoodType::class);
 
-        $res = $stmt->fetchAll();
-
-        return $res == false ? null : $res;
+        return $stmt->fetchAll();
     }
 
     public function createRestaurantType(int $restaurant_id, int $type_id) : bool {
