@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: Jun 15, 2026 at 09:36 PM
--- Server version: 12.0.2-MariaDB-ubu2404
--- PHP Version: 8.3.27
+-- Generation Time: Jun 16, 2026 at 12:13 PM
+-- Server version: 12.1.2-MariaDB-ubu2404
+-- PHP Version: 8.3.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -126,7 +126,8 @@ CREATE TABLE `HistoryBookings` (
 --
 
 INSERT INTO `HistoryBookings` (`booking_id`, `reservation_id`, `date`, `language`, `individual_count`, `family_count`) VALUES
-(6, 10, '2026-05-10 13:00:00', 'nl', 3, 1);
+(6, 10, '2026-05-10 13:00:00', 'nl', 3, 1),
+(7, 18, '2026-06-16 13:00:00', 'nl', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -174,7 +175,15 @@ INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `boo
 (7, 1, '2026-04-25', 0),
 (8, 1, '2026-04-27', 0),
 (9, 1, '2026-05-09', 0),
-(10, 2, '2026-05-10', 0);
+(10, 2, '2026-05-10', 0),
+(11, 2, '2026-05-09', 0),
+(12, 3, '2026-05-19', 0),
+(13, 1, '2026-05-08', 0),
+(14, 1, '2026-05-12', 0),
+(15, 1, '2026-05-10', 0),
+(16, 3, '2026-05-21', 0),
+(17, 2, '2026-05-21', 0),
+(18, 2, '2026-06-16', 0);
 
 -- --------------------------------------------------------
 
@@ -429,13 +438,10 @@ CREATE TABLE `JazzBookings` (
 --
 
 INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
-(10, 3, 2),
-(11, 3, 2),
-(13, 3, 3),
-(14, 8, 2),
-(15, 3, 2),
-(16, 3, 2),
-(17, 1, 1);
+(10, 3, 5),
+(11, 3, 4),
+(12, 3, 4),
+(14, 3, 4);
 
 -- --------------------------------------------------------
 
@@ -784,12 +790,11 @@ INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `
 (42, 16, 30, b'010', 7000),
 (43, 17, 31, b'010', 5000),
 (44, 17, 6, b'000', 8084),
-(45, 19, 11, b'011', 3180),
-(47, 20, 13, b'011', 4770),
-(48, 20, 14, b'011', 3180),
-(49, 21, 15, b'011', 3180),
-(50, 22, 16, b'011', 3180),
-(51, 23, 17, b'011', 1590);
+(46, 18, 15, b'001', 1350),
+(47, 18, 7, b'000', 14828),
+(48, 18, 32, b'010', 5000),
+(49, 18, 14, b'011', 6360),
+(50, 30, 33, b'010', 8000);
 
 -- --------------------------------------------------------
 
@@ -813,12 +818,19 @@ CREATE TABLE `Orders` (
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`, `stripe_session`) VALUES
 (16, 5, '2026-05-07 18:39:14', b'010', 7000, 'cs_test_a1xWv5yRRcSq7MTsafx15J6T6XSMRiP9Pwc8qZ68u80NAFRlaIgeuk4csK'),
 (17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h'),
-(18, 2, NULL, b'000', NULL, NULL),
-(19, 3, '2026-06-14 17:15:12', b'001', 3180, 'cs_test_a1BcxFpPCRXmR9U2Z0KGk4WFTpUWAwEvjLHusEgEbZVTPKF8NqygI9MvPn'),
-(20, 3, '2026-06-15 17:58:06', b'010', 7950, 'cs_test_a14Vqjl1WpyhXFPa03O2zCTYRsVIuIBfsQ4ZsJR5SXs0j5FOVgnL9LxWDg'),
-(21, 3, '2026-06-15 17:48:03', b'001', 3180, 'cs_test_a1GRJUSQfgJP1qxAOr43K5shB7ZctINaBllzEuPSAHegLJphMULdVzTPIT'),
-(22, 3, '2026-06-15 17:49:37', b'001', 3180, 'cs_test_a1C83YsJsQf37xUhY6zBKtsfkQEvCr8qXKBKo7EDwQQIFdEq7ivT8fQTYQ'),
-(23, 14, '2026-06-15 18:05:04', b'010', 1590, 'cs_test_a1RiYq13bRxaAUar5y0uyqb5qdDI48v2dng3U53m9oBv0nliD9rMZCxaDx');
+(18, 5, '2026-06-14 17:38:10', b'001', 27538, 'cs_test_a1WCKBOUcLvJN3rSnjuVG5ac4YU754V34WCY8hib7IWa0Llq4W9iTQn1yl'),
+(19, 2, '2026-05-11 16:22:48', b'001', 19300, NULL),
+(20, 2, '2026-05-11 16:23:02', b'001', 19300, NULL),
+(21, 2, '2026-05-11 16:23:04', b'001', 19300, NULL),
+(22, 2, '2026-05-11 16:23:32', b'001', 330, NULL),
+(23, 3, '2026-05-11 16:23:32', b'010', 1320, NULL),
+(24, 4, '2026-05-11 16:23:32', b'011', 19301, NULL),
+(25, 5, '2026-05-11 16:23:32', b'010', 138300, NULL),
+(26, 2, '2026-05-11 16:23:50', b'001', 130, NULL),
+(27, 3, '2026-05-11 16:23:50', b'010', 3820, NULL),
+(28, 4, '2026-05-11 16:23:50', b'011', 13311, NULL),
+(29, 5, '2026-05-11 16:23:50', b'010', 39257, NULL),
+(30, 5, NULL, b'000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -848,6 +860,13 @@ CREATE TABLE `StoryBookings` (
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `StoryBookings`
+--
+
+INSERT INTO `StoryBookings` (`booking_id`, `pay_as_you_like`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
+(15, NULL, 1, 3, b'1', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -948,7 +967,7 @@ INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_pic
 (2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
 (3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
 (4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$hn3z4x0E55UTyIQSkbnNu.1ouAnMxByNFdog/lgNhi0iDE0D9S1ga', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
+(5, 'tim.sadko@gmail.com', '$2y$12$hzBw.ImKafW81o7rH24/R.jF.eTMO160omao6pwSDmHLhdYezVkle', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
 (7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
 (8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15'),
 (9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39'),
@@ -1028,7 +1047,9 @@ CREATE TABLE `YummyBookings` (
 
 INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
 (30, 196, '2026-05-07 19:00:00', 4, 3, 'fff'),
-(31, 205, '2026-05-10 19:00:00', 2, 3, '');
+(31, 205, '2026-05-10 19:00:00', 2, 3, ''),
+(32, 253, '2026-06-17 19:00:00', 2, 3, 'msg'),
+(33, 262, '2026-06-20 19:00:00', 4, 4, 'Some comment');
 
 -- --------------------------------------------------------
 
@@ -1293,7 +1314,70 @@ INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booke
 (236, 3, '2026-05-20', 0),
 (237, 1, '2026-05-21', 0),
 (238, 2, '2026-05-21', 0),
-(239, 3, '2026-05-21', 0);
+(239, 3, '2026-05-21', 0),
+(240, 1, '2026-05-22', 0),
+(241, 2, '2026-05-22', 0),
+(242, 3, '2026-05-22', 0),
+(243, 1, '2026-06-14', 0),
+(244, 2, '2026-06-14', 0),
+(245, 3, '2026-06-14', 0),
+(246, 1, '2026-06-15', 0),
+(247, 2, '2026-06-15', 0),
+(248, 3, '2026-06-15', 0),
+(249, 1, '2026-06-16', 0),
+(250, 2, '2026-06-16', 0),
+(251, 3, '2026-06-16', 0),
+(252, 1, '2026-06-17', 0),
+(253, 2, '2026-06-17', 0),
+(254, 3, '2026-06-17', 0),
+(255, 1, '2026-06-18', 0),
+(256, 2, '2026-06-18', 0),
+(257, 3, '2026-06-18', 0),
+(258, 1, '2026-06-19', 0),
+(259, 2, '2026-06-19', 0),
+(260, 3, '2026-06-19', 0),
+(261, 1, '2026-06-20', 0),
+(262, 2, '2026-06-20', 0),
+(263, 3, '2026-06-20', 0),
+(264, 1, '2026-06-21', 0),
+(265, 2, '2026-06-21', 0),
+(266, 3, '2026-06-21', 0),
+(267, 1, '2026-06-22', 0),
+(268, 2, '2026-06-22', 0),
+(269, 3, '2026-06-22', 0),
+(270, 1, '2026-06-23', 0),
+(271, 2, '2026-06-23', 0),
+(272, 3, '2026-06-23', 0),
+(273, 1, '2026-06-24', 0),
+(274, 2, '2026-06-24', 0),
+(275, 3, '2026-06-24', 0),
+(276, 1, '2026-06-25', 0),
+(277, 2, '2026-06-25', 0),
+(278, 3, '2026-06-25', 0),
+(279, 1, '2026-06-26', 0),
+(280, 2, '2026-06-26', 0),
+(281, 3, '2026-06-26', 0),
+(282, 1, '2026-06-27', 0),
+(283, 2, '2026-06-27', 0),
+(284, 3, '2026-06-27', 0),
+(285, 1, '2026-06-28', 0),
+(286, 2, '2026-06-28', 0),
+(287, 3, '2026-06-28', 0),
+(288, 1, '2026-06-29', 0),
+(289, 2, '2026-06-29', 0),
+(290, 3, '2026-06-29', 0),
+(291, 12, '2026-06-16', 0),
+(292, 12, '2026-06-17', 0),
+(293, 12, '2026-06-18', 0),
+(294, 12, '2026-06-19', 0),
+(295, 12, '2026-06-20', 0),
+(296, 12, '2026-06-21', 0),
+(297, 12, '2026-06-22', 0),
+(298, 12, '2026-06-23', 0),
+(299, 12, '2026-06-24', 0),
+(300, 12, '2026-06-25', 0),
+(301, 12, '2026-06-26', 0),
+(302, 12, '2026-06-27', 0);
 
 -- --------------------------------------------------------
 
@@ -1439,7 +1523,14 @@ CREATE TABLE `YummyRestaurantTimeSlots` (
 INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`, `duration`) VALUES
 (1, 1, '17:00:00', 30, 120),
 (2, 1, '19:00:00', 30, 120),
-(3, 1, '21:00:00', 30, 120);
+(3, 1, '21:00:00', 30, 120),
+(12, 2, '17:00:00', 35, 90),
+(17, 4, '17:00:00', 35, 90),
+(18, 5, '17:00:00', 35, 90),
+(19, 6, '17:00:00', 35, 90),
+(20, 7, '17:00:00', 35, 90),
+(21, 8, '17:00:00', 35, 90),
+(22, 9, '17:00:00', 35, 90);
 
 --
 -- Indexes for dumped tables
@@ -1769,13 +1860,13 @@ ALTER TABLE `CMS_Content`
 -- AUTO_INCREMENT for table `HistoryBookings`
 --
 ALTER TABLE `HistoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
 ALTER TABLE `HistoryReservationSlots`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `HistoryTimeSlot`
@@ -1835,7 +1926,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1901,25 +1992,25 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `StoryBookings`
 --
 ALTER TABLE `StoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `StoryEvents`
@@ -1949,7 +2040,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -1973,7 +2064,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -1997,7 +2088,7 @@ ALTER TABLE `YummyRestaurants`
 -- AUTO_INCREMENT for table `YummyRestaurantTimeSlots`
 --
 ALTER TABLE `YummyRestaurantTimeSlots`
-  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

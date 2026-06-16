@@ -1,14 +1,18 @@
-<?php require '/app/src/Views/partials/header.php';?>
+<?php
+/** @var  \App\ViewModels\Yummy\YummyBookViewModel $view_model */
+/** @var ?string $error_message */
 
-<style>
-    <?php include '/app/public/assets/css/yummy.css'; ?>
-</style>
+$pageTitle = 'Yummy - Book - ' . $view_model->restaurant->name;
+$pageCSS = 'yummy.css'; 
+?>
+
+<?php require '/app/src/Views/partials/header.php';?>
 
 <main class="book-main">
     <a class="book-back-link" href="<? echo '/yummy/restaurant?id=' . $view_model->restaurant->restaurant_id; ?>">← Back to Restaurant</a>
     <div class="book-card">
         <?php if(!empty($error_message)): ?>
-            <div class="alert alert-danger" role="alert">
+            <div class="main-error" role="alert">
                 <?= htmlspecialchars($error_message) ?>
             </div>
         <?php endif; ?>
@@ -46,13 +50,13 @@
             <div>
                 <div class="book-label">Select Date:</div>
                 <select class="book-select-date" id="date" onchange="selectedDateChanged()">
-                    <? for($i = 0; $i < 14; $i++): ?>
+                    <? for($i = 0; $i < count($view_model->time_slots); $i++): ?>
                         <option id="<? echo 'sel_date_' . $i; ?>" value="<? echo $i; ?>"><? echo htmlspecialchars($view_model->dates[$i])?></option>
                     <? endfor; ?>
                 </select>
             </div>
             
-                <? for($i = 0; $i < 14; $i++): ?>
+                <? for($i = 0; $i < count($view_model->time_slots); $i++): ?>
                     <div id="<? echo 'slots_' . $i; ?>" style="display: none;">
                         <div class="book-label">Time Slots:</div>
                         <? if(count($view_model->time_slots[$i]) > 0): ?>         

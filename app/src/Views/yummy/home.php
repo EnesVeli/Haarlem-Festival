@@ -1,14 +1,12 @@
 <?php
+/** @var \App\ViewModels\Yummy\YummyHomeViewModel $view_model */
+/** @var ?string $error_message */
 
-use App\Models\Restaurant;
+$pageTitle = 'Yummy - Haarlem Festival';
+$pageCSS = 'yummy.css';
+?>
 
- require '/app/src/Views/partials/header.php';?>
-
-
-<style>
-    <?php include '/app/public/assets/css/yummy.css'; ?>
-</style>
-<!-- <link href="/assets/css/yummy.css" rel="stylesheet"> -->
+<?php require '/app/src/Views/partials/header.php'; ?>
 
 <main class="home-main">
     <section class="home-topper">
@@ -25,14 +23,14 @@ use App\Models\Restaurant;
     <section class="home-restaurant-section">
         <div class="home-restaurants-title-container">
             <h1 class="home-restaurants-title">Places in Haarlem:</h1>
-            <a class="home-restaurants-view-all-top" href="/yummy/list">view all</a>
-        </div>      
-
+            <a class="home-restaurants-view-all-top" href="/yummy/list">view all</a>        
+        </div>  
+        
         <?php if(!empty($error_message)): ?>
-            <div class="alert alert-danger" role="alert">
+            <div class="main-error" role="alert">
                 <?= htmlspecialchars($error_message) ?>
             </div>
-        <?php endif; ?>
+        <?php endif; ?>    
    
         <?php if(count($view_model->restaurants) > 0):?>
             <div class="home-restaurant-list">

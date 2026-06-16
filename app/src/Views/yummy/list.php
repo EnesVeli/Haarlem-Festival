@@ -1,8 +1,12 @@
-<?php require '/app/src/Views/partials/header.php';?>
+<?php
+/** @var  \App\ViewModels\Yummy\YummyListViewModel $view_model */
+/** @var ?string $error_message */
 
-<style>
-    <?php include '/app/public/assets/css/yummy.css'; ?>
-</style>
+$pageTitle = 'Yummy - Restaurant List';
+$pageCSS = 'yummy.css'; 
+?>
+
+<?php require '/app/src/Views/partials/header.php';?>
 
 <main class="list-main">
     <section class="list-topper">
@@ -19,7 +23,7 @@
     </section> 
 
     <?php if(!empty($error_message)): ?>
-        <div class="alert alert-danger" role="alert">
+        <div class="main-error" role="alert">
             <?= htmlspecialchars($error_message) ?>
         </div>
     <?php endif; ?>
@@ -75,7 +79,7 @@
                 </select>
 
         <button class="list-filter-all-button" onclick="reloadFilterSortPage()">Filter</button>
-    </section>
+    </section>  
 
     <section class="list-restaurants-section">
         <div class="list-place-found-label"><? echo $view_model->total_found_restaurants_number; ?> palces found</div>

@@ -1,15 +1,19 @@
-<?php require '/app/src/Views/partials/header.php';?>
+<?php
+/** @var  \App\ViewModels\Yummy\YummyRestaurantViewModel $view_model */
+/** @var ?string $error_message */
 
-<style>
-    <?php include '/app/public/assets/css/yummy.css'; ?>
-</style>
+$pageTitle = 'Yummy - Restaurant - ' . $view_model->restaurant->name;
+$pageCSS = 'yummy.css'; 
+?>
+
+<?php require '/app/src/Views/partials/header.php';?>
 
 <main class="restaurant-main">
     <div class="restaurant-main-container">     
         <div class="restaurant-main-left">
             <a class="restaurant-go-back-link" href="/yummy/list">← Back to Restaurants List</a>
             <?php if(!empty($error_message)): ?>
-                <div class="alert alert-danger" role="alert">
+                <div class="main-error" role="alert">
                     <?= htmlspecialchars($error_message) ?>
                 </div>
             <?php endif; ?>

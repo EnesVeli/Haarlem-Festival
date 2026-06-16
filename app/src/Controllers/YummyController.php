@@ -1,13 +1,18 @@
 <?php
 namespace App\Controllers;
 
-use App\Config;
 use App\Framework\Session;
 use App\Models\Exceptions\DBAccessException;
+use App\Models\Exceptions\EmptyPostException;
 use App\Models\Exceptions\FormDataException;
 use App\Models\Exceptions\OverBookingException;
 use App\Models\Exceptions\UserNotLoggedInException;
+use App\Repositories\RestaurantSortingOption;
 use App\Services\Yummy\YummyService;
+use App\ViewModels\Yummy\YummyBookViewModel;
+use App\ViewModels\Yummy\YummyHomeViewModel;
+use App\ViewModels\Yummy\YummyListViewModel;
+use App\ViewModels\Yummy\YummyRestaurantViewModel;
 use Exception;
 
 class YummyController
@@ -21,13 +26,19 @@ class YummyController
 
     public function index()
     {
-        $pageTitle = 'Yummy - Haarlem Festival';
-
-        $error_message = Session::pop("temp_error");
-        $success_message = Session::pop("temp_success");
+        $error_message = Session::popTempError();
 
         try{
-            $view_model = $this->service->getHomeViewModel();
+            $view_model = new YummyHomeViewModel();
+
+            $view_model->restaurants = $this->service->getTopActiveRestaurants();
+            $view_model->guides = $this->service->getTopActiveGuides();
+
+            $home_data = $this->service->getHomeData();
+
+            $view_model->title = $home_data['home_title'];
+            $view_model->subtitle = $home_data['home_subtitle'];
+            $view_model->topper_path = $home_data['home_image'];
         } 
         catch(Exception $ex){
             $error_message = 'Something went wrong, try again later';
@@ -36,35 +47,75 @@ class YummyController
         require __DIR__ . '/../Views/yummy/home.php';
     }
 
-    public function list(){
-        $pageTitle = 'Yummy - Restaurant List';
+    public function guide(){
+        header("Location: /yummy");
+    }
 
-        $error_message = Session::pop("temp_error");
-        $success_message = Session::pop("temp_success");
+    public function list(){
+        $error_message = Session::popTempError();
 
         try{
-            $view_model = $this->service->getListViewModel($_GET['place_type'] ?? null, $_GET['meal_type'] ?? null, $_GET['food_type'] ?? null, $_GET['cuisine_type'] ?? null, $_GET['sorting'] ?? null, $_GET['page'] ?? null);
+            $view_model = new YummyListViewModel();
+
+            // Get data from yummy cms
+            $list_data = $this->service->getListData();          
+
+            $view_model->title = $list_data['list_title'];
+            $view_model->subtitle = $list_data['list_subtitle'];
+            $view_model->topper_path = $list_data['list_image'];
+
+            // Get Filtering and Sorting
+            $view_model->current_place_types = isset($_GET['place_type']) ? explode(',', $_GET['place_type']) : [];
+            $view_model->current_meal_types = isset($_GET['meal_type']) ? explode(',', $_GET['meal_type']) : [];
+            $view_model->current_food_types = isset($_GET['food_type']) ? explode(',', $_GET['food_type']) : [];
+            $view_model->current_cuisine_types = isset($_GET['cuisine_type']) ? explode(',', $_GET['cuisine_type']) : [];
+
+            $view_model->sorting = $_GET['sorting'] ?? 0;
+
+            $view_model->current_page = $_GET['page'] ?? 0;
+
+            // Load restaurants from db
+            $all_types = $view_model->getAllCurrentTypes();
+
+            $view_model->restaurants = $this->service->getFilteredRestaurants($all_types, $view_model->current_page, RestaurantSortingOption::from($view_model->sorting));     
+
+            $view_model->total_found_restaurants_number = $this->service->countFilteredRestaurants($all_types);
+            
+            // Fill in other data
+            $this->service->fillListViewPagiation($view_model);
+
+            $this->service->fillListViewTypes($view_model);
         } 
         catch(Exception $ex){
-            Session::set('temp_error', 'Something went wrong, try again later');
+            Session::setTempError('Something went wrong, try again later');
         }          
+
+        $error_message = 'Something went wrong, try again later';
 
         require __DIR__ . '/../Views/yummy/list.php';
     }
 
     public function restaurant(){
         try{
-            $id = $_GET['id'] ?? null;
+            if(!isset($_GET['id']) || !is_numeric($_GET['id'])) throw new EmptyPostException();
+            $restaurant_id = $_GET['id'];
 
-            $view_model = $this->service->getRestaurantViewModel($id);
+            $view_model = new YummyRestaurantViewModel();
 
-            $pageTitle = 'Yummy - Restaurant List';
+            $view_model->restaurant = $this->service->getRestaurantById($restaurant_id);
+            
+            $view_model->hours = $this->service->getRestaurantOpeningHours($restaurant_id);
+            $view_model->tags = $this->service->getRestaurantTypes($restaurant_id);
+
+            $view_model->images = $this->service->getRestaurantImages($restaurant_id);
+
+            $view_model->dishes = $this->service->getRestaurantDishes($restaurant_id);
 
             require __DIR__ . '/../Views/yummy/restaurant.php';
             exit;
         } 
         catch(Exception $ex){
-            Session::set('temp_error', 'Something went wrong, try again later');
+            Session::setTempError('Something went wrong, try again later');
         }          
 
         header('location: /yummy/list');
@@ -72,22 +123,29 @@ class YummyController
 
     public function bookingPage(){
         if(!$this->isLoggedIn()){
-            //$error = "In order to book a table you need to login first.";
+            Session::setTempError("In order to book a table you need to login first.");
             header("Location: /login");
             exit;
         }
 
+        $error_message = Session::popTempError();
+
         try{
-            $id = $_GET['id'] ?? null;
+            if(!isset($_GET['id']) || !is_numeric($_GET['id'])) throw new EmptyPostException();
+            $restaurant_id = $_GET['id'];
 
-            $view_model = $this->service->GetBookingViewModel($id);
+            $view_model = new YummyBookViewModel();
+        
+            $view_model->restaurant = $this->service->getRestaurantById($restaurant_id);
 
-            $pageTitle = 'Yummy - Restaurant List';
+            $view_model->time_slots = [];
+            $view_model->dates = [];
 
-            $error_message = $_GET['err'] ?? null;
+            $this->service->loadRestaurantTimeSlots($restaurant_id, $view_model->time_slots);
+            $this->service->fillInRestaurantTimeSlotDates($view_model->dates);
         }
         catch(Exception $ex){
-            Session::set('temp_error', 'Something went wrong, try again later');
+            Session::setTempError('Something went wrong, try again later');
         }  
 
         require __DIR__ . '/../Views/yummy/book.php';
