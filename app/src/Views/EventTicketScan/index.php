@@ -16,18 +16,20 @@ require __DIR__ . '/../partials/header.php';
         <h1 class="scanner-title">Ticket Scanner</h1>
         <p class="scanner-subtitle">Scan a QR code or enter the ticket code manually</p>
 
-        <div id="reader"></div>
+        <?php if (empty($result)): ?>
+            <div id="reader"></div>
 
-        <form method="POST" action="/employee/scan" class="scanner-form">
-            <input
-                type="text"
-                name="scan_value"
-                id="scan_value"
-                placeholder="Enter ticket code"
-                required
-            >
-            <button type="submit">Check Ticket</button>
-        </form>
+            <form method="POST" action="/employee/scan" class="scanner-form">
+                <input
+                    type="text"
+                    name="scan_value"
+                    id="scan_value"
+                    placeholder="Enter ticket code"
+                    required
+                >
+                <button type="submit">Check Ticket</button>
+            </form>
+        <?php endif; ?>
 
         <?php if (!empty($result)): ?>
             <div class="scanner-result scanner-result--<?= htmlspecialchars($result->status) ?>">
