@@ -42,9 +42,10 @@ class YummyRestaurantsRepository extends Repository
 
     /**
      * @param int $restaurant_id id of searched restaurant.
+     * @param bool $admin (if false will return null if restaurant is unactive).
      * @return Restaurant|null|bool returns restaurant object if found, null if not. False if there were errors during query execution.
      */
-    public function getRestaurantById(string $restaurant_id, bool $admin = true): Restaurant|null|bool
+    public function getRestaurantById(int $restaurant_id, bool $admin = true): Restaurant|null|bool
     {
         if($admin){
             $sql = "SELECT `restaurant_id`, `main_img_path`, `name`, `mini_text`, `rating`, `cost_rating`, `active`, `text`, `address_text`, `address_uri`, `website_link` FROM `YummyRestaurants` WHERE `restaurant_id` = :restaurant_id;";
@@ -121,7 +122,7 @@ class YummyRestaurantsRepository extends Repository
      */
     public function countFilteredRestaurants(array $all_types) : int|bool{
         // Make filter string
-        if($all_types == null || count($all_types) == 0){
+        if($all_types === null || count($all_types) == 0){
             $filter = null;
         }      
         else{
@@ -137,7 +138,7 @@ class YummyRestaurantsRepository extends Repository
         }      
 
         // Make query
-        if($filter == null){
+        if($filter === null){
             $query = "SELECT COUNT(*) FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1";
         }
         else {
@@ -176,7 +177,7 @@ class YummyRestaurantsRepository extends Repository
      */
     public function getFilteredRestaurants(array $all_types, int $page, RestaurantSortingOption $sorting = RestaurantSortingOption::NameASC) : array|null|bool {    
         // Make filter string
-        if($all_types == null || count($all_types) == 0){
+        if($all_types === null || count($all_types) == 0){
             $filter = null;
         }      
         else{
@@ -199,7 +200,7 @@ class YummyRestaurantsRepository extends Repository
         $offset = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE * $page;
 
         // Make query
-        if($filter == null){
+        if($filter === null){
             $query = "SELECT `R`.`restaurant_id`, `R`.`main_img_path`, `R`.`name`, `R`.`mini_text`, `R`.`rating`, `R`.`cost_rating`, `R`.`active` FROM `YummyRestaurants` AS `R` WHERE `R`.`active` = 1 $sort_string LIMIT $limit OFFSET $offset";          
         }
         else{
@@ -448,9 +449,9 @@ class YummyRestaurantsRepository extends Repository
      * @param int $sort number representing one of the restaurant fields (e.g. 0 - name, 1 - mini_text, etc.).
      * @param int $order if 0 than ASC otherwise DESC.
      * @param int $page list page number (e.g. if page is 0 will return resturants 0-24, if page is 1 will return 25-48 retaurants, etc.)
-     * @return ?array returns an array of restaurants. If there are any error returns null.
+     * @return ?array returns an array of restaurants. Null if none foung. And false if there are any errors.
      */
-    public function getRestaurantListCms(int $sort, int $order, int $page) : ?array {
+    public function getRestaurantListCms(int $sort, int $order, int $page) : array|null|bool {
         $limit = YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS;
         $offset = $limit * $page;
 
@@ -465,9 +466,8 @@ class YummyRestaurantsRepository extends Repository
         $stmt->execute();
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Restaurant::class);
-        $list = $stmt->fetchAll();
 
-        return $list == false ? null : $list;
+        return $stmt->fetchAll();
     }  
 
     private function getSortFieldCMS(int $sort, string $order){
@@ -487,14 +487,14 @@ class YummyRestaurantsRepository extends Repository
         return '';
     }
 
-    public function countAllRestaurants() : ?int {
+    public function countAllRestaurants() : int|false {
         $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `YummyRestaurants`;");
 
         $stmt->execute();
 
         $res = $stmt->fetch(PDO::FETCH_DEFAULT);
 
-        return $res == false ? null : $res[0];
+        return $res === false ? false : $res[0];
     }
 
     /**

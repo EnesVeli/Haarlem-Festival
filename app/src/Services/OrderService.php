@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\Ticket;
+use App\Models\User;
 use App\Models\YummyBooking;
 use App\Repositories\HistoryCmsRepository;
 use App\Repositories\HistoryRepository;
@@ -420,7 +421,7 @@ class OrderService
                 ],
                 'quantity' => 1,
             ]],
-            'customer_email' => $user['email'],
+            'customer_email' => $user->email,
             'metadata'   => ['user_id' => $user_id, 'order_id' => $order->order_id ],
             'success_url' => 'http://127.0.0.1/payment?session_id={CHECKOUT_SESSION_ID}&order_id=' . $order->order_id,
             'cancel_url' => 'http://127.0.0.1/payment/fail'
@@ -584,9 +585,9 @@ class OrderService
      * Sends tickets and invoice by mail.
      * @param Order $order filled in order.
      * @param Ticket[] $tickets list of order tickets.
-     * @param array $user asc array representing user.
+     * @param User $user asc array representing user.
      */
-    private function sendTicketsAndInvoice(Order $order, array $tickets, array $user){
+    private function sendTicketsAndInvoice(Order $order, array $tickets, User $user){
         $ticket_pdfs = [];
 
         // Get ticket pdfs
@@ -607,6 +608,6 @@ class OrderService
         $invoice_pdf = $this->pdf_service->generateInvoice($order, $user);
 
         // Send emails
-        $this->mail_service->sendOrderConfirmation($user['email'], $user['name'], $ticket_pdfs, $invoice_pdf, $tickets);
+        $this->mail_service->sendOrderConfirmation($user->email, $user->name, $ticket_pdfs, $invoice_pdf, $tickets);
     }
 }

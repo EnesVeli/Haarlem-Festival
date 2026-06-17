@@ -2,7 +2,7 @@
 
 namespace App\ViewModels\Yummy\Cms;
 
-class YummyRestaurantListViewModel{
+class YummyRestaurantListViewModel {
     public YummyTopper $topper;
     public array $restaurants;
 

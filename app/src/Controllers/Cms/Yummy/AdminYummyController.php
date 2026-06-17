@@ -185,7 +185,6 @@ class AdminYummyController extends BaseCmsController {
 
             $view_model->all_types = $this->service->getAllTypes($view_model->types);
 
-
             // Setup topper
             $view_model->topper = new YummyTopper();
             $view_model->topper->title = "Yummy CMS - Restaurant - " . $view_model->res->name;

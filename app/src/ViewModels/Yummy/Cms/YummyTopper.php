@@ -2,7 +2,7 @@
 
 namespace App\ViewModels\Yummy\Cms;
 
-class YummyTopper{
+class YummyTopper {
     public string $title;
     public ?string $subtitle;
     public string $button_text;
