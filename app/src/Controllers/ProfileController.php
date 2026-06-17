@@ -60,7 +60,7 @@ class ProfileController
             $_SESSION['profile_error'] = "Enter a valid email";
         }
         catch (\Exception $e) {
-            $_SESSION['profile_error'] = $e->getMessage();
+            $_SESSION['profile_error'] = 'Something went wrong, try again later.';
         }
 
         header('Location: /profile');

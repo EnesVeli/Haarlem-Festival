@@ -101,7 +101,7 @@ $this->mustBeAdmin();
             $this->homepageService->saveStoriesContent($data);
             $_SESSION['cms_success'] = 'Stories homepage content updated successfully.';
         } catch (\Exception $e) {
-            $_SESSION['cms_error'] = 'Failed to update content: ' . $e->getMessage();
+            $_SESSION['cms_error'] = 'Failed to update content.';
         }
 
         header('Location: /cms/stories/homepage');

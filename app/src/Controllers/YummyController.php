@@ -163,19 +163,19 @@ class YummyController
             exit;
         }
         catch(FormDataException $ex){
-            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
+            $this->redirectToBook("Something went wrong try again later.");
             exit;
         } 
         catch(OverBookingException $ex){
-            $this->redirectToBook("You are trying to book more seats than are avaliable." . $ex->getMessage());
+            $this->redirectToBook("You are trying to book more seats than are avaliable.");
             exit;
         } 
         catch(DBAccessException $ex){
-            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
+            $this->redirectToBook("Something went wrong try again later.");
             exit;
         } 
         catch(Exception $ex){
-            $this->redirectToBook("Something went wrong try again later." . $ex->getMessage());
+            $this->redirectToBook("Something went wrong try again later.");
             exit;
         } 
 

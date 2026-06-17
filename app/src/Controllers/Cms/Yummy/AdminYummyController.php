@@ -373,13 +373,13 @@ class AdminYummyController extends BaseCmsController {
             exit;
         }
         catch(RestaurantAlreadyHasTagException $ex){
-            Session::setTempError("Faild to add tag to restaurant. Restaurant already has selected tag." . $ex->getMessage());
+            Session::setTempError("Faild to add tag to restaurant. Restaurant already has selected tag.");
         }
         catch(DBAccessException $ex){
-            Session::setTempError("Faild to add tag to restaurant. Something went wrong try again later." . $ex->getMessage());
+            Session::setTempError("Faild to add tag to restaurant. Something went wrong try again later.");
         }
         catch(Exception $ex){
-            Session::setTempError("Faild to add tag to restaurant. Something went wrong try again later." . $ex->getMessage());
+            Session::setTempError("Faild to add tag to restaurant. Something went wrong try again later.");
         }
 
         header('location: /cms/yummy/restaurant/add');     

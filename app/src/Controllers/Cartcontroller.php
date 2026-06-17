@@ -64,7 +64,7 @@ class CartController extends BaseController
             $this->order_service->removeOrderItemFromCart($_POST['order_id'], $_POST['item_id'], $user_id);
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to remove cart item. Something went wrong, try again later." . $ex->getMessage());
+            Session::setTempError("Failed to remove cart item. Something went wrong, try again later.");
         }
 
         header("location: /cart");
@@ -85,7 +85,7 @@ class CartController extends BaseController
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to complete order." . $ex->getMessage());
+            Session::setTempError("Failed to complete order.");
         }
 
         header("Location: /cart");
@@ -123,13 +123,13 @@ class CartController extends BaseController
             exit;
         }
         catch(EmptyPostException $ex){
-            Session::setTempError("Incorrect url parameters." . $ex->getMessage());
+            Session::setTempError("Incorrect url parameters.");
         }
         catch(PostMismatchException $ex){
-            Session::setTempError("Incorrect url parameters." . $ex->getMessage());
+            Session::setTempError("Incorrect url parameters.");
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to finish order." . $ex->getMessage());
+            Session::setTempError("Failed to finish order.");
         }
 
         header('location: /program');
@@ -155,7 +155,7 @@ class CartController extends BaseController
             Session::setTempSuccess("Successfully cancelled order.");
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to cancel order." . $ex->getMessage());
+            Session::setTempError("Failed to cancel order.");
         }
 
         header('location: /program');

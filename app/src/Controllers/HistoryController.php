@@ -164,7 +164,7 @@ class HistoryController extends BaseController
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError($ex->getMessage() !== '' ? $ex->getMessage() : "Something went wrong. Try again later.");
+            Session::setTempError("Something went wrong. Try again later.");
             
             if(isset($_POST['reservation_id']) && is_numeric($_POST['reservation_id'])) {
                 header("Location: /history/booking?reservation_id=" . (int)$_POST['reservation_id']);

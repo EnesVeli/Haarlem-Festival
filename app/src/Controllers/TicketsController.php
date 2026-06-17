@@ -66,7 +66,7 @@ class TicketsController extends BaseController
             if($events === false) throw new QueryExecutionException("Failed to get story events for ticekt page.");         
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong. try again later." . $ex->getMessage());
+            Session::setTempError("Something went wrong. try again later.");
         }
 
         $this->renderCategory('stories', $events, $cur_page, $total_page_number);
@@ -95,7 +95,7 @@ class TicketsController extends BaseController
             if($performers === false) throw new QueryExecutionException("Failed to get performers for ticekt page.");           
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong. try again later." . $ex->getMessage());
+            Session::setTempError("Something went wrong. try again later.");
         }
 
         $this->renderCategory('jazz', $performers, $cur_page, $total_page_number);
