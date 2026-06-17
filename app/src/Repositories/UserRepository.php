@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Framework\Repository;
+use App\Models\User;
 use PDO;
 
 class UserRepository extends Repository
@@ -55,36 +56,36 @@ class UserRepository extends Repository
     }
 
     public function findById(int $userId): ?array
-{
-    $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE user_id = :id LIMIT 1");
-    $stmt->execute(['id' => $userId]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $user ?: null;
-}
+    {
+        $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE user_id = :id LIMIT 1");
+        $stmt->execute(['id' => $userId]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ?: null;
+    }
 
-public function updateName(int $userId, string $name): void
-{
-    $stmt = $this->connection->prepare("UPDATE `User` SET name = :name WHERE user_id = :id");
-    $stmt->execute(['name' => $name, 'id' => $userId]);
-}
+    public function updateName(int $userId, string $name): void
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET name = :name WHERE user_id = :id");
+        $stmt->execute(['name' => $name, 'id' => $userId]);
+    }
 
-public function updateEmail(int $userId, string $email): void
-{
-    $stmt = $this->connection->prepare("UPDATE `User` SET email = :email WHERE user_id = :id");
-    $stmt->execute(['email' => $email, 'id' => $userId]);
-}
+    public function updateEmail(int $userId, string $email): void
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET email = :email WHERE user_id = :id");
+        $stmt->execute(['email' => $email, 'id' => $userId]);
+    }
 
-public function updatePassword(int $userId, string $hash): void
-{
-    $stmt = $this->connection->prepare("UPDATE `User` SET password = :p WHERE user_id = :id");
-    $stmt->execute(['p' => $hash, 'id' => $userId]);
-}
+    public function updatePassword(int $userId, string $hash): void
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET password = :p WHERE user_id = :id");
+        $stmt->execute(['p' => $hash, 'id' => $userId]);
+    }
 
-public function updateProfilePictureUrl(int $userId, string $url): void
-{
-    $stmt = $this->connection->prepare("UPDATE `User` SET profile_picture_url = :u WHERE user_id = :id");
-    $stmt->execute(['u' => $url, 'id' => $userId]);
-}
+    public function updateProfilePictureUrl(int $userId, string $url): void
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET profile_picture_url = :u WHERE user_id = :id");
+        $stmt->execute(['u' => $url, 'id' => $userId]);
+    }
 
     public function changePassword(int $user_id, string $password) : bool{
         $stmt = $this->connection->prepare(
@@ -95,5 +96,49 @@ public function updateProfilePictureUrl(int $userId, string $url): void
             'password' => $password,
             'user_id'  => $user_id
         ]);
+    }
+
+    public function getUserListCms(int $sort, int $order, int $page, int $per_page) : array|null|bool {
+        $limit = $per_page;
+        $offset = $limit * $page;
+
+        $sorting = $this->getSortFieldCMS($sort, $order === 0 ? 'ASC' : 'DESC');
+
+        $sql = "SELECT `user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`
+        FROM `User`
+        $sorting
+        LIMIT $limit OFFSET $offset;";
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute();
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
+
+        return $stmt->fetchAll();
+    }  
+
+    private function getSortFieldCMS(int $sort, string $order){
+        switch($sort){
+            case 0:
+                return 'ORDER BY `registered_at` ' . $order;
+            case 1:
+                return 'ORDER BY `role` ' . $order . ', `registered_at` ' . $order;
+            case 2:
+                return 'ORDER BY `name` ' . $order;
+            case 3:
+                return 'ORDER BY `email` ' . $order;
+        }
+
+        return '';
+    }
+
+     public function countAllUsers() : int|false {
+        $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `User`;");
+
+        $stmt->execute();
+
+        $res = $stmt->fetch(PDO::FETCH_DEFAULT);
+
+        return $res === false ? false : $res[0];
     }
 }
