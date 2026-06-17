@@ -47,7 +47,7 @@ class PdfService
         return $this->makePdf($html);
     }
 
-    public function generateInvoice(Order $order, array $user): string
+    public function generateInvoice(Order $order, User $user): string
     {
         $rows = '';
 
@@ -74,8 +74,8 @@ class PdfService
         <h1>Invoice - Festival Haarlem</h1>
         <hr>
         <p><span class="label">Payment Date:</span> ' . $order->date->format('d.m.Y H:i:s') . '</p>
-        <p><span class="label">Customer:</span> ' . htmlspecialchars($user['name']) . '</p>
-        <p><span class="label">Email:</span> ' . htmlspecialchars($user['email']) . '</p>
+        <p><span class="label">Customer:</span> ' . htmlspecialchars($user->name) . '</p>
+        <p><span class="label">Email:</span> ' . htmlspecialchars($user->email) . '</p>
         <table>
             <tr>
                 <th>Event</th><th>Qty</th><th>Total</th>

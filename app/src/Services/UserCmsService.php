@@ -39,14 +39,8 @@ class UserCmsService
         if($sort < 0 || $sort > 4) throw new InvalidArgumentException('Invalid sorting value.');
 
         if($page < 0) throw new InvalidArgumentException('Invalid page number.');
-
-        $users = $this->userRepository->getUserListCms($sort, $order, $page, self::$USERS_PER_PAGE);
-
-        if($users === false) throw new DBDataFetchException("Failed to get users for cms.");
-
-        if($users === null) return null;
-
-        return $users;
+        
+        return $this->userRepository->getUserListCms($sort, $order, $page, self::$USERS_PER_PAGE);
     }
 
     public function countUsers() : int {
@@ -94,26 +88,18 @@ class UserCmsService
 
     public function getByUserId(int $user_id) : ?User
     {
-        $user = $this->userRepository->findById($user_id);
-
-        if($user === false) return null;
-
-        return $user;
+        return $this->userRepository->findById($user_id);
     }
 
     
     public function getByEmail(string $email) : ?User
     {
-        $user = $this->userRepository->findByEmail($email);
-
-        if($user === false) return null;
-
-        return $user;
+        return $this->userRepository->findByEmail($email);
     }
 
     public function editUser(User $edit, mixed $profile_pic) {
         // Get user
-        $user = $this->getByUserId($edit->user_id);
+        $user = $this->userRepository->findById($edit->user_id);
         if($user === null) throw new DBDataNotFoundException('Failed to find user to edit.');
 
         // Check email
@@ -122,7 +108,7 @@ class UserCmsService
             $this->verification_service->verifyEmail($edit->email);
 
             // Check if email is in use
-            $m_u = $this->getByEmail($edit->email);
+            $m_u = $this->userRepository->findByEmail($edit->email);
 
             if($m_u !== null) throw new EmailAlreadyRegisteredException();
         }

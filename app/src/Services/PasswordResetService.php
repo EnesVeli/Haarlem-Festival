@@ -41,12 +41,12 @@ class PasswordResetService
 
         if($user == null)throw new IncorrectEmailException('Unable to find user by email!');
         
-        $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
+        $token = $this->password_reset_token_repository->getTokenByUserId($user->user_id);
 
         $key = Config::generateKey();
 
         if($token == null){
-            if(!$this->password_reset_token_repository->createNewToken($user['user_id'], password_hash($key, PASSWORD_DEFAULT))){
+            if(!$this->password_reset_token_repository->createNewToken($user->user_id, password_hash($key, PASSWORD_DEFAULT))){
                 throw new DBAccessException("Cannot create a password reset token!");
             }         
         }
@@ -56,19 +56,19 @@ class PasswordResetService
             } 
         }
 
-        $this->mail_service->sendPasswordReset($email, $user['name'], $key);    
+        $this->mail_service->sendPasswordReset($email, $user->name, $key);    
     }  
 
     public function startPasswordReset(?string $key, ?string $email)
     {
         $this->verify_service->verifyEmail($email);
         
-        if($key == null) throw new InvalidKeyException();
+        if($key === null) throw new InvalidKeyException();
 
         $user = $this->user_repository->findByEmail($email);
-        if($user == null) throw new IncorrectEmailException('Unable to find user by email!');   
+        if($user === null) throw new IncorrectEmailException('Unable to find user by email!');   
 
-        $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
+        $token = $this->password_reset_token_repository->getTokenByUserId($user->user_id);
         if($token == null || !password_verify($key, $token->key)) throw new InvalidKeyException();
 
         if((time() - $token->creation_date->getTimestamp()) / 60 > Config::RESET_LINK_TIMEOUT) throw new ExpiredKeyException();      
@@ -82,7 +82,7 @@ class PasswordResetService
         $user = $this->user_repository->findByEmail($email);
         if($user == null) throw new IncorrectEmailException('Unable to find user by email!');   
 
-        $token = $this->password_reset_token_repository->getTokenByUserId($user['user_id']);
+        $token = $this->password_reset_token_repository->getTokenByUserId($user->user_id);
         if($token == null || !password_verify($key, $token->key)) throw new InvalidKeyException();
 
         if($token->activation_date == null || (time() - $token->activation_date->getTimestamp()) / 60 > Config::RESET_LINK_SET_TIMEOUT){

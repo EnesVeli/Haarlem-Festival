@@ -148,7 +148,7 @@ class UserCmsController extends BaseCmsController
            Session::setTempError("Enter a valid email address.");
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong, try again later." . $ex->getMessage());
+            Session::setTempError("Something went wrong, try again later.");
         }
 
         if(isset($_POST['user_id'])) header('Location: /cms/user/view?id=' . $_POST['user_id']);
@@ -217,7 +217,7 @@ class UserCmsController extends BaseCmsController
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Something went wrong, try again later." . $ex->getMessage());
+            Session::setTempError("Something went wrong, try again later.");
         }
 
         header('Location: /cms/user');

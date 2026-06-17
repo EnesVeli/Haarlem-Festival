@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Enums\UserRole;
 use App\Models\Exceptions\AccountNotActiveException;
 use App\Models\Exceptions\DBDataFetchException;
+use App\Models\Exceptions\DBDataNotFoundException;
 use App\Models\Exceptions\EmailAlreadyRegisteredException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\QueryExecutionException;
@@ -53,24 +54,20 @@ class UserService
     {
         $user = $this->userRepository->findByEmail($email);
 
-        if($user === false) throw new DBDataFetchException('Failed to get user by eamil');
+        if($user === null) throw new DBDataFetchException('Failed to get user by eamil.');
 
         if ($user === null || !password_verify($password, $user->password)) {
             throw new Exception("Invalid email or password.");
         }
 
-        if($user->active === false) throw new AccountNotActiveException('Failed to get user by eamil');
+        if($user->active === false) throw new AccountNotActiveException('Failed to get user by eamil.');
 
         return $user;
     }
 
     public function getById(int $userId) : ?User
     {
-        $user = $this->userRepository->findById($userId);
-
-        if ($user === false) throw new DBDataFetchException("Failed to get user by id.");
-
-        return $user;
+        return $this->userRepository->findById($userId);
     }
 
     public function updateProfile(int $userId, array $data, array $files): void
@@ -81,6 +78,7 @@ class UserService
         $this->verification_service->verifyEmail($email);
 
         $user = $this->getById($userId);
+        if($user === null) throw new DBDataNotFoundException('Failed to get user by id.');
 
         // name
         if ($name !== '' && $name !== $user->name) {

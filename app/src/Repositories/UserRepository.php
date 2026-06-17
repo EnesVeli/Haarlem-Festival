@@ -23,9 +23,9 @@ class UserRepository extends Repository
 
     /**
      * @param string $email of searched user.
-     * @return User|bool|null returns user object if found, null if not. False if there were errors during query execution.
+     * @return ?User returns user object if found, null if not.
      */
-    public function findByEmail(string $email) : User|bool|null
+    public function findByEmail(string $email) : ?User
     {
         $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE email = ? LIMIT 1;");
         $stmt->bindValue(1, $email, PDO::PARAM_STR);
@@ -34,21 +34,25 @@ class UserRepository extends Repository
         
         $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $stmt->fetch();
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
     }
 
     /**
      * @param int $user_id id of searched user.
-     * @return User|bool|null returns user object if found, null if not. False if there were errors during query execution.
+     * @return ?User returns user object if found, null if not.
      */
-    public function findById(int $user_id): User|bool|null
+    public function findById(int $user_id): ?User
     {
         $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE `user_id` = :user_id LIMIT 1;");
         $stmt->execute(['user_id' => $user_id]);
         
         $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $stmt->fetch();
+        $res = $stmt->fetch();
+
+        return $res == false ? null : $res;
     }
 
     /**
@@ -127,7 +131,7 @@ class UserRepository extends Repository
         ]);
     }
 
-    public function getUserListCms(int $sort, int $order, int $page, int $per_page) : array|null|bool {
+    public function getUserListCms(int $sort, int $order, int $page, int $per_page) : array|null {
         $limit = $per_page;
         $offset = $limit * $page;
 
@@ -143,7 +147,9 @@ class UserRepository extends Repository
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $stmt->fetchAll();
+        $res = $stmt->fetchAll();
+
+        return $res == false ? null : $res;
     }  
 
     private function getSortFieldCMS(int $sort, string $order){
