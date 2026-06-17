@@ -1,8 +1,13 @@
-<?php require __DIR__ . '/../../partials/header.php'; ?>
+<?php
+/** @var  \App\ViewModels\Yummy\Cms\YummyRestaurantListViewModel $view_model */
+/** @var ?string $error_message */
+/** @var ?string $success_message */
 
-<style>
-    <?php include '/app/public/assets/css/yummy.css'; ?>
-</style>
+$pageTitle = 'Yummy CMS - Restaurants';
+$pageCSS = 'yummy.css'; 
+?>
+
+<?php require __DIR__ . '/../../partials/header.php'; ?>
 
 <div class="container py-4 jazz-cms-page">
     <?php include __DIR__ . '/partials/topper.php'; ?>
