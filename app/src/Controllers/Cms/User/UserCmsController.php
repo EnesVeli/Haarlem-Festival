@@ -3,10 +3,13 @@
 namespace App\Controllers\Cms\User;
 
 use App\Controllers\Cms\BaseCmsController;
+use App\Enums\UserRole;
 use App\Framework\Session;
+use App\Models\Exceptions\DBDataNotFoundException;
 use App\Services\UserCmsService;
 use App\ViewModels\User\UserListViewModel;
 use App\ViewModels\User\UserTopper;
+use App\ViewModels\User\ViewUserViewModel;
 use Exception;
 use Uri\InvalidUriException;
 
@@ -64,5 +67,45 @@ class UserCmsController extends BaseCmsController
         }
 
         require __DIR__ . '/../../../Views/cms/user/list.php';
+    }
+
+    public function view(){
+        $this->requireAdmin();
+
+        try{
+            if(!isset($_GET['id']) || !is_numeric($_GET['id'])) throw new InvalidUriException();
+
+            $view_model = new ViewUserViewModel();
+
+            // Get user
+            $u = $this->service->getByUserId($_GET['id']);
+            if($u === null) throw new DBDataNotFoundException('User with given id was not found.');
+            $view_model->user = $u;
+
+            // Setup topper
+            $view_model->topper = new UserTopper();
+            $view_model->topper->title = "User CMS - View - " . $u->name;
+            $view_model->topper->subtitle = "Manage festival users.";
+            $view_model->topper->active_tab = -1;
+
+            // Setup roles
+            $view_model->roles = [];
+
+            array_push($view_model->roles, UserRole::Customer->value);
+            array_push($view_model->roles, UserRole::Admin->value);
+            array_push($view_model->roles, UserRole::Employee->value);
+
+            require __DIR__ . '/../../../Views/cms/user/view.php';
+            exit;
+        }
+        catch(Exception $ex){
+            $error_message = "Something went wrong, try again later.";
+        }
+
+        header('Location: /cms/user');
+    }
+
+    public function edit(){
+        print_r($_POST); exit;
     }
 }

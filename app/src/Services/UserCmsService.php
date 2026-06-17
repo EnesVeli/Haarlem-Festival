@@ -33,7 +33,7 @@ class UserCmsService
     }
 
     public function getUsersList(int $sort, int $order, int $page) : ?array {
-        if($sort < 0 || $sort > 3) throw new InvalidArgumentException('Invalid sorting value.');
+        if($sort < 0 || $sort > 4) throw new InvalidArgumentException('Invalid sorting value.');
 
         if($page < 0) throw new InvalidArgumentException('Invalid page number.');
 
@@ -87,5 +87,14 @@ class UserCmsService
         $out['page_count'] = $page_count;
 
         return $out;
+    }
+
+    public function getByUserId(int $user_id) : ?User
+    {
+        $user = $this->userRepository->findById($user_id);
+
+        if ($user === false) throw new DBDataFetchException("Failed to get user by id.");
+
+        return $user;
     }
 }

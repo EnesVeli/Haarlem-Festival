@@ -5,10 +5,10 @@
   --warm:#E9DED8;
   --ink:#1b1f24;
   --buttercup: #F59E0B;
-  --cms-main: #133d14;
-  --cms-main-light: #174d18;
-  --cms-alt-main: #0d2a0f;
-  --cms-sel: #309531;
+  --cms-main: #821315;
+  --cms-main-light: #981517;
+  --cms-alt-main: #47090a;
+  --cms-sel: #bf2123;
 }
 
 /* ========== Topper ========== */
@@ -769,13 +769,10 @@
 }
 
 .cms-res-list-image-container{
-    display: flex;
+    display: block;
 
-    justify-items: center;
-    align-items: center;
-
-    width: 146px;
-    height: 96px;
+    width: 54px;
+    height: 54px;
 
     border-radius: 12px;
 
@@ -785,10 +782,21 @@
 }
 
 .cms-res-list-image{
-    display: flex;
+    display: block;  
 
-    justify-self: center;
-    align-self: center;    
+    max-height: 100%;
+    max-width: 5000%;
+
+    width: auto;
+    height: auto;
+
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cms-res-list-active-no{
@@ -798,7 +806,7 @@
 .cms-res-list-view-button{
     display: inline-block;
 
-    padding: 11px 20px;
+    padding: 7px 20px;
 
     border-radius: 18px;
     border-style: none;

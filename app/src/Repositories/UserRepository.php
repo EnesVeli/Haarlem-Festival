@@ -62,7 +62,7 @@ class UserRepository extends Repository
         $stmt->bindValue(1, $user->email, PDO::PARAM_STR);
         $stmt->bindValue(2, $user->password, PDO::PARAM_STR);
         $stmt->bindValue(3, $user->name, PDO::PARAM_STR);
-        $stmt->bindValue(4, $user->role, PDO::PARAM_STR);
+        $stmt->bindValue(4, $user->role->value, PDO::PARAM_STR);
         $stmt->bindValue(5, $user->profile_picture_url, PDO::PARAM_INT);
         $stmt->bindValue(6, $user->active, PDO::PARAM_INT);
 
@@ -130,13 +130,15 @@ class UserRepository extends Repository
     private function getSortFieldCMS(int $sort, string $order){
         switch($sort){
             case 0:
-                return 'ORDER BY `registered_at` ' . $order;
-            case 1:
-                return 'ORDER BY `role` ' . $order . ', `registered_at` ' . $order;
-            case 2:
                 return 'ORDER BY `name` ' . $order;
-            case 3:
+            case 1:
                 return 'ORDER BY `email` ' . $order;
+            case 2:
+                return 'ORDER BY `role` ' . $order . ', `registered_at` ' . $order;
+            case 3:
+                return 'ORDER BY `registered_at` ' . $order;    
+            case 4:
+                return 'ORDER BY `active` ' . $order . ', `registered_at` ' . $order;
         }
 
         return '';
