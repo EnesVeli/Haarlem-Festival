@@ -18,7 +18,7 @@ class User
 
     function __set($name, $value) {
         if($name == "registered_at_"){
-            $this->registation_date = new DateTime($value);
+            $this->registered_at = new DateTime($value);
         }
         else if($name == 'role_'){
             $this->role = UserRole::from($value);

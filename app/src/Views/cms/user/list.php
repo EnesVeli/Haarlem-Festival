@@ -72,16 +72,20 @@ $pageCSS = 'user.css';
                             <? foreach($view_model->users as $user): ?>
                                 <tr>
                                     <th>
-                                        <div class="cms-res-list-image-container">
-                                            <img class="cms-res-list-image" src="<? echo '/assets/uploads/yummy/restaurants/' . $res->main_img_path ?>">
-                                        </div>
+                                        <? if($user->profile_picture_url !== null): ?>
+                                            <div class="cms-res-list-image-container">
+                                                <img class="cms-res-list-image" src="<? echo $user->profile_picture_url ?>">
+                                            </div>
+                                        <? else: ?>
+                                            <div>*</div>
+                                        <? endif; ?>          
                                     </th>
-                                    <th><? echo htmlspecialchars($res->name); ?></th>
-                                    <th><? echo htmlspecialchars($res->mini_text); ?></th>
-                                    <th><? echo $res->getRatingFormated(); ?></th>
-                                    <th><? echo $res->getCostRatingString(); ?></th>
-                                    <th <? echo $res->active ? '' : 'class="cms-res-list-active-no"'; ?>><? echo $res->active == true ? 'Yes' : 'No'; ?></th>
-                                    <th><a class="cms-res-list-view-button" href="<? echo '/cms/yummy/restaurant?id=' . $res->restaurant_id; ?>">View</a></th>
+                                    <th><? echo htmlspecialchars($user->name); ?></th>
+                                    <th><? echo htmlspecialchars($user->email); ?></th>
+                                    <th><? echo htmlspecialchars(ucfirst($user->role->value)) ?></th>
+                                    <th><? echo $user->registered_at->format('d.m.Y H:i:s') ?></th>
+                                    <th <? echo $user->active ? '' : 'class="cms-res-list-active-no"'; ?>><? echo $user->active == true ? 'Yes' : 'No'; ?></th>
+                                    <th><a class="cms-res-list-view-button" href="<? echo '/cms/user/view?id=' . $user->user_id; ?>">View</a></th>
                                 </tr>
                             <? endforeach; ?>
                         <? endif; ?>
@@ -89,7 +93,7 @@ $pageCSS = 'user.css';
                 </table>
             </div>
 
-            <? if($view_model->page_number > 1): ?>   
+            <? if($view_model->total_page_number > 1): ?>   
                 <div class="cms-res-list-line"></div>               
                 <div class="cms-res-list-pages-container">
                     <? if($view_model->cur_page != 0):?>
@@ -101,7 +105,7 @@ $pageCSS = 'user.css';
                         <button id="page-<? echo $i?>" class="cms-res-list-page-button cms-res-list-page-button-unsel" onclick="pageButtonClick(<? echo $i;?>)"><? echo $i + 1; ?></button>
                     <? endfor; ?>
                     
-                    <? if($view_model->cur_page != $view_model->page_number - 1):?>
+                    <? if($view_model->cur_page != $view_model->total_page_number - 1):?>
                         <button class="cms-res-list-page-button cms-res-list-page-button-unsel" onclick="nextPageClick()">&gt;</button>
                         <button class="cms-res-list-page-button cms-res-list-page-button-unsel" onclick="pageButtonClick(<? echo $view_model->page_number - 1;?>)">&gt;&gt;</button>
                     <? endif; ?>

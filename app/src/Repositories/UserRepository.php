@@ -114,7 +114,7 @@ class UserRepository extends Repository
 
         $sorting = $this->getSortFieldCMS($sort, $order === 0 ? 'ASC' : 'DESC');
 
-        $sql = "SELECT `user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`
+        $sql = "SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active`
         FROM `User`
         $sorting
         LIMIT $limit OFFSET $offset;";
