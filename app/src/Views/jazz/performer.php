@@ -65,12 +65,6 @@ $heroBannerImage = $performer->hero_image_path ?? $performer->image_path ?? '';
                             <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($name) ?>">
                         <?php endif; ?>
                     </div>
-
-                    <div class="perf-stack-image">
-                        <?php if (!empty($imagePath)): ?>
-                            <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($name) ?>">
-                        <?php endif; ?>
-                    </div>
                 </div>
 
                 <div class="perf-black-text">
