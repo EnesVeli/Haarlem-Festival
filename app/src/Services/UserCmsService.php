@@ -164,6 +164,32 @@ class UserCmsService
         }
     }
 
+    public function addUser(User $add, mixed $profile_pic) {
+        // Check email
+        $this->verification_service->verifyEmail($add->email);
+
+        $m_u = $this->getByEmail($add->email);
+
+        if($m_u !== null) throw new EmailAlreadyRegisteredException();
+        
+        // Check password
+        $this->verification_service->verifyPassword($add->password, $add->password);
+        $add->password = password_hash($add->password, PASSWORD_DEFAULT);
+
+        // Add user
+        $new_user_id = $this->userRepository->create($add);
+        if($new_user_id === false) throw new QueryExecutionException('Failed to create user.');
+
+        // Add profile picture
+        if($profile_pic !== null) {
+            $file_name = $this->addImageToDir('', $new_user_id , $profile_pic['name'], $profile_pic['tmp_name']);
+
+            if($file_name === null) throw new FilesystemException('Failed to add profile picture to uploads.');
+
+            if(!$this->userRepository->updateProfilePictureUrl($new_user_id, '/assets/uploads/' . $file_name)) throw new QueryExecutionException('Failed to edit users profile picture.');
+        }
+    }
+
     /**
      * Moves file from uploads to specified directory in uploads folder.
      * @param string $end_dir relative to uploads folder path do directory (e.g. 'yummy/topper/'), path must end with '/'.

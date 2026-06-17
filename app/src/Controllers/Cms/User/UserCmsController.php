@@ -12,6 +12,7 @@ use App\Models\Exceptions\InappropriatePasswordLengthException;
 use App\Models\Exceptions\IncorrectEmailException;
 use App\Models\User;
 use App\Services\UserCmsService;
+use App\ViewModels\User\AddUserViewModel;
 use App\ViewModels\User\UserListViewModel;
 use App\ViewModels\User\UserTopper;
 use App\ViewModels\User\ViewUserViewModel;
@@ -152,5 +153,73 @@ class UserCmsController extends BaseCmsController
 
         if(isset($_POST['user_id'])) header('Location: /cms/user/view?id=' . $_POST['user_id']);
         else header('Location: /cms/user');
+    }
+
+    public function addPage(){
+        $this->requireAdmin();
+
+        $error_message = Session::popTempError();
+
+        $view_model = new AddUserViewModel();
+
+        // Setup topper
+        $view_model->topper = new UserTopper();
+        $view_model->topper->title = "User CMS - Add User";
+        $view_model->topper->subtitle = "Manage festival users.";
+        $view_model->topper->active_tab = 1;
+
+        // Setup roles
+        $view_model->roles = [];
+
+        array_push($view_model->roles, UserRole::Customer->value);
+        array_push($view_model->roles, UserRole::Admin->value);
+        array_push($view_model->roles, UserRole::Employee->value);
+
+        require __DIR__ . '/../../../Views/cms/user/add.php';
+    }
+
+    public function add(){
+        $this->requireAdmin();
+
+        try{
+            // Get data from post
+            $edit = new User();
+
+            $edit->name = $_POST['name'];
+            $edit->email = $_POST['email'];
+            $edit->password = $_POST['password'];
+            $edit->active = $_POST['active'];
+            $edit->role = UserRole::from($_POST['role']);
+
+            // Edit user
+            $this->service->addUser($edit, empty($_FILES['profile_pic']['name']) ? null : $_FILES['profile_pic']);
+
+            Session::setTempSuccess('User was successfully created.');
+        }
+        catch(EmailAlreadyRegisteredException $ex){
+            Session::setTempError("This email is already registered.");
+            header('Location: /cms/user/add');
+            exit;
+        }
+        catch(EmptyPasswordException $ex){
+            Session::setTempError("The password must not be empty");
+            header('Location: /cms/user/add');
+            exit;
+        }
+        catch(InappropriatePasswordLengthException $ex){
+            Session::setTempError("Your password must be at least 8 and maximum 255 characters.");
+            header('Location: /cms/user/add');
+            exit;
+        }
+        catch(IncorrectEmailException $ex){
+           Session::setTempError("Enter a valid email address.");
+           header('Location: /cms/user/add');
+            exit;
+        }
+        catch(Exception $ex){
+            Session::setTempError("Something went wrong, try again later." . $ex->getMessage());
+        }
+
+        header('Location: /cms/user');
     }
 }

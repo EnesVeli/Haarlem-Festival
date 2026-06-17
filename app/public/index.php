@@ -169,9 +169,11 @@ $dispatcher = FastRoute\simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('POST',  '/cms/order/export', [\App\Controllers\Cms\Orders\OrderCmsController::class, 'export']);
 
     // User Cms
-    $r->addRoute('GET',  '/cms/user',      [\App\Controllers\Cms\User\UserCmsController::class, 'list']);
-    $r->addRoute('GET',  '/cms/user/view', [\App\Controllers\Cms\User\UserCmsController::class, 'view']);
+    $r->addRoute('GET',   '/cms/user',      [\App\Controllers\Cms\User\UserCmsController::class, 'list']);
+    $r->addRoute('GET',   '/cms/user/view', [\App\Controllers\Cms\User\UserCmsController::class, 'view']);
     $r->addRoute('POST',  '/cms/user/edit', [\App\Controllers\Cms\User\UserCmsController::class, 'edit']);
+    $r->addRoute('GET',   '/cms/user/add', [\App\Controllers\Cms\User\UserCmsController::class, 'addPage']);
+    $r->addRoute('POST',  '/cms/user/add', [\App\Controllers\Cms\User\UserCmsController::class, 'add']);
 
     // Cart
     $r->addRoute('GET',  '/cart',         [\App\Controllers\CartController::class, 'index']);
