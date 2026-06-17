@@ -89,9 +89,7 @@ class YummyController
         catch(Exception $ex){
             Session::setTempError('Something went wrong, try again later');
         }          
-
-        $error_message = 'Something went wrong, try again later';
-
+        
         require __DIR__ . '/../Views/yummy/list.php';
     }
 

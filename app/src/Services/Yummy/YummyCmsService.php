@@ -4,10 +4,14 @@ namespace App\Services\Yummy;
 
 use App\Models\Exceptions\DBAccessException;
 use App\Models\Exceptions\DBDataException;
+use App\Models\Exceptions\DBDataFetchException;
+use App\Models\Exceptions\DBDataNotFoundException;
+use App\Models\Exceptions\DBNotFoundException;
 use App\Models\Exceptions\EmptyFieldException;
 use App\Models\Exceptions\FileToLargeException;
 use App\Models\Exceptions\MaxCountExceededException;
 use App\Models\Exceptions\RestaurantAlreadyHasTagException;
+use App\Models\OpeningHours;
 use App\Models\Restaurant;
 use App\Repositories\YummyCmsRepository;
 use App\Repositories\YummyFoodTypeRepository;
@@ -43,33 +47,18 @@ class YummyCmsService {
         $this->type_rep = $type_rep;
     }
 
-    public function getHomeViewModel() : YummyHomeViewModel{
-        $view_model = new YummyHomeViewModel();
-
-        $view_model->topper = new YummyTopper();
-        $view_model->topper->title = "Yummy CMS - Home";
-        $view_model->topper->subtitle = "Manage yummy home page.";
-        $view_model->topper->button_text = "View page";
-        $view_model->topper->button_link = '/yummy';
-        $view_model->topper->active_tab = 0;
-
+    public function getHomeData() : array {
         $home_data = $this->cms_rep->getHomeData();
 
-        if($home_data == null) throw new DBAccessException();
+        if($home_data === false || $home_data === null) throw new DBDataFetchException();
 
-        $view_model->home_title = $home_data['home_title'];
-        $view_model->home_subtitle = $home_data['home_subtitle'];
-        $view_model->topper_path = $home_data['home_image'];
-
-        return $view_model;
+        return $home_data;
     }
 
-    public function editHome(string $title, string $subtitle, $image){
-        if($image != null){
-            $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
-            
-            $old_image_path = $this->cms_rep->getHomeImage();
-        }     
+    public function editHome(string $title, string $subtitle, array $image){
+        $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
+        
+        $old_image_path = $this->cms_rep->getHomeImage();          
 
         $this->cms_rep->updateHomeData($title, $subtitle, $img_path);
 
@@ -78,33 +67,18 @@ class YummyCmsService {
         }
     }
 
-    public function getListViewModel() : YummyListViewModel{
-        $view_model = new YummyListViewModel();
+    public function getListData() : array {
+        $list_data = $this->cms_rep->getListData();
 
-        $view_model->topper = new YummyTopper();
-        $view_model->topper->title = "Yummy CMS - List";
-        $view_model->topper->subtitle = "Manage yummy restaurant list page.";
-        $view_model->topper->button_text = "View page";
-        $view_model->topper->button_link = '/yummy/list';
-        $view_model->topper->active_tab = 1;
+        if($list_data === false || $list_data === null) throw new DBDataFetchException();
 
-        $home_data = $this->cms_rep->getListData();
-
-        if($home_data == null) throw new DBAccessException();
-
-        $view_model->list_title = $home_data['list_title'];
-        $view_model->list_subtitle = $home_data['list_subtitle'];
-        $view_model->list_image = $home_data['list_image'];
-
-        return $view_model;
+        return $list_data;
     }
 
     public function editList(string $title, string $subtitle, ?array $image){
-        if($image != null){
-            $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
-            
-            $old_image_path = $this->cms_rep->getListImage();
-        }     
+        $img_path = $this->addImageToDir('yummy/topper/', $image['name'], $image['tmp_name']);   
+        
+        $old_image_path = $this->cms_rep->getListImage();  
 
         $this->cms_rep->updateListData($title, $subtitle, $img_path);
 
@@ -113,30 +87,27 @@ class YummyCmsService {
         }
     }
 
-    public function getRestaurantListViewModel(int $sort, int $order, int $page) : YummyRestaurantListViewModel {
-        // Check parameters
-        if($sort < 0 || $sort > 4 || $page < 0) throw new InvalidUriException("Invalid uri parameters.");
-
-        $view_model = new YummyRestaurantListViewModel();
-
-        // Load restaurants
+    public function getRestaurantList(int $sort, int $order, int $page) : array {
         $list = $this->restaurant_rep->getRestaurantListCms($sort, $order, $page);
 
-        if($list == null) throw new DBAccessException("Could not load restaurant list from db.");
-        $view_model->restaurants = $list;
+        if($list === false) throw new DBDataFetchException("Failed to get restaurant list for cms");
 
-        // Put params into view model
-        $view_model->cur_page = $page;
+        if($list === null) return [];
 
+        return $list;
+    }
+
+    public function countRestaurants() : int {
         $count = $this->restaurant_rep->countAllRestaurants();
-        if($count == null) throw new DBAccessException("Could not get total restaurant count from db.");
 
-        $page_count = round($count / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS, 0, RoundingMode::AwayFromZero);
+        if($count === false) throw new DBDataFetchException("Failed to get restaurant count for cms");
 
-        $view_model->page_number = $page_count;
+        return $count;
+    }
 
-        $view_model->sort_field = $sort;
-        $view_model->sort_order = $order;
+    public function fillInRestaurantViewModelPagination(YummyRestaurantListViewModel $view_model, int $restaurant_count){
+        $page = $view_model->cur_page;
+        $page_count = round($restaurant_count / YummyRestaurantsRepository::NUMBER_OF_RESTAURANTS_PER_PAGE_CMS, 0, RoundingMode::AwayFromZero);
 
         // Calculate offset and limit for page number selection
         $offset = 0; // Left offset of pages button
@@ -163,41 +134,64 @@ class YummyCmsService {
 
         $view_model->page_offset = $offset;
         $view_model->page_limit = $limit;
-
-        // Setup topper
-        $view_model->topper = new YummyTopper();
-        $view_model->topper->title = "Yummy CMS - Restaurants";
-        $view_model->topper->subtitle = "Manage yummy restaurants.";
-        $view_model->topper->button_text = "View restaurants";
-        $view_model->topper->button_link = '/yummy/list';
-        $view_model->topper->active_tab = 2;
-
-        return $view_model;
+        $view_model->page_number = $page_count;
     }
 
-    public function getRestaurantViewModel(int $res_id) : YummyRestaurantViewModel {
-        $view_model = new YummyRestaurantViewModel();
+    public function getRestaurantById(int $restaurant_id) : Restaurant {
+        $res = $this->restaurant_rep->getRestaurantById($restaurant_id);
 
-        $res = $this->restaurant_rep->getRestaurantById($res_id);
-        if($res == null) throw new DBAccessException();
-        $view_model->res = $res;
+        if($res === false) throw new DBDataFetchException('Failed to get restaurant by id for cms.');
 
-        $hours = $this->restaurant_rep->getRestaurantOpeningHours($res_id);
-        if($hours == null) throw new DBAccessException();
-        $view_model->hours = $hours;
+        if($res === null) throw new DBDataNotFoundException('No restaurant with given id.');
 
-        $view_model->images = $this->restaurant_rep->getRestaurantImages($res_id);
+        return $res;
+    }
 
-        $view_model->types = $this->type_rep->getRestaurantTypes($res_id);
+    public function getRestaurantOpeningHours(int $restaurant_id) : OpeningHours {
+        $hours = $this->restaurant_rep->getRestaurantOpeningHours($restaurant_id);
 
+        if($hours === false) throw new DBDataFetchException('Failed to get opening hours for cms.');
+
+        if($hours === null) throw new DBDataNotFoundException('No opening hours with given id.');
+
+        return $hours;
+    }
+
+    public function getRestaurantImages(int $restaurant_id) : array {
+        $images = $this->restaurant_rep->getRestaurantImages($restaurant_id);
+
+        if($images === false) throw new DBDataFetchException('Failed to get restaurant images for cms.');
+
+        if($images === null) return [];
+
+        return $images;
+    }
+
+    public function getRestaurantTypes(int $restaurant_id) : array {
+        $types = $this->type_rep->getRestaurantTypes($restaurant_id);
+
+        if($types === false) throw new DBDataFetchException('Failed to get restaurant types for cms.');
+
+        if($types === null) return [];
+
+        return $types;
+    }
+
+    public function getAllTypes(array $excluded_types) : array {
         $all_types = $this->type_rep->getAllTypes();
-        if($all_types == null) throw new DBAccessException();
+
+        if($all_types === false) throw new DBDataFetchException('Failed to get all restaurants types for cms');
+
+        if($all_types === null) return [];
+
+        if($excluded_types === null || count($excluded_types) == 0) return $all_types;
         
+        // Remove excluded types from all_types
         for ($i = 0; $i < count($all_types); $i++){
             $duplicate = false;
 
-            for ($j = 0; $j < count($view_model->types); $j++) { 
-                if($all_types[$i]->type_id == $view_model->types[$j]->type_id){
+            for ($j = 0; $j < count($excluded_types); $j++) { 
+                if($all_types[$i]->type_id == $excluded_types[$j]->type_id){
                     $duplicate = true;
                     break;
                 }
@@ -210,18 +204,7 @@ class YummyCmsService {
             }
         }
 
-        $view_model->all_types = $all_types;
-
-
-        // Setup topper
-        $view_model->topper = new YummyTopper();
-        $view_model->topper->title = "Yummy CMS - Restaurant - " . $res->name;
-        $view_model->topper->subtitle = "Manage yummy restaurant.";
-        $view_model->topper->button_text = "View restaurant";
-        $view_model->topper->button_link = '/yummy/restaurant?id=' . $res->restaurant_id;
-        $view_model->topper->active_tab = -1;
-
-        return $view_model;
+        return $all_types;
     }
 
     public function addRestaurantImage(int $restaurant_id, $image) : bool {
@@ -373,19 +356,6 @@ class YummyCmsService {
         array_push($values, $new_value);
         array_push($fields, $field_query);
         array_push($types, $type);
-    }
-
-    public function getAddRestaurantViewModel() : YummyAddViewModel {
-        $view_model = new YummyAddViewModel();
-
-        $view_model->topper = new YummyTopper();
-        $view_model->topper->title = 'Yummy CMS - New Restaurant';
-        $view_model->topper->subtitle = "Create a new yummy restaurant.";
-        $view_model->topper->button_text = "View list";
-        $view_model->topper->button_link = '/cms/yummy/restaurant-list';
-        $view_model->topper->active_tab = 3;
-
-        return $view_model;
     }
 
     public function addRestaurant($post, $files){

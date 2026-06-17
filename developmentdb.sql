@@ -935,13 +935,6 @@ CREATE TABLE `Tickets` (
 -- Dumping data for table `Tickets`
 --
 
-INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`) VALUES
-(27, 43, '3de5da835c4a8d63f83a5bc36170e65e32a8a73938b91006', 'HF-7239DF35BDDAC9DC1459E17E', NULL),
-(28, 44, '977cc473d8c324a23b0ed29a29cf041378eccd64fe6ebad0', 'HF-52B485066663B3B4079AD57B', NULL),
-(29, 47, 'fab5e5a8f2b1411ae85cb0e2e7877b430d5f75cf5ea390d7', 'HF-7EAFAD47C33B3B16CAAD4D1E', NULL),
-(30, 48, '9037d991385bcb84629fff2b383ac0110d0a2abba2a660bb', 'HF-4FBFFC71D779B52606DE14B6', NULL),
-(31, 51, 'fbd26df6852f5494af14e32b03b60a43bb05d41a742aaf34', 'HF-4BC38907FB5B8CC4F042D9C0', '2026-06-15 18:09:06');
-
 -- --------------------------------------------------------
 
 --
