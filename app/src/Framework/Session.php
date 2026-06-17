@@ -51,7 +51,8 @@ class Session
         $_SESSION['user_id'] = $user->user_id;
         $_SESSION['email']   = $user->email;
         $_SESSION['name']    = $user->name;
-        $_SESSION['role']    = strtolower($user->role->name);
+        $_SESSION['role']    = $user->role->value;
+        $_SESSION['profile_picture'] = $user->profile_picture_url;
     }
 
     public static function logout(): void
@@ -75,14 +76,12 @@ class Session
         $user->user_id = (int)$_SESSION['user_id'];
         $user->email   = $_SESSION['email'] ?? '';
         $user->name    = $_SESSION['name'] ?? '';
+        $user->profile_picture_url = $_SESSION['profile_picture'] ?? '';
 
         $raw = $_SESSION['role'] ?? null;
-        if (is_numeric($raw)) {
-            $user->role = \App\Enums\UserRole::from((int)$raw);
-        } else {
-            $map = ['customer' => \App\Enums\UserRole::Customer, 'admin' => \App\Enums\UserRole::Admin, 'employee' => \App\Enums\UserRole::Employee];
-            $user->role = $map[strtolower((string)$raw)] ?? \App\Enums\UserRole::Customer;
-        }
+
+        $map = ['customer' => \App\Enums\UserRole::Customer, 'admin' => \App\Enums\UserRole::Admin, 'employee' => \App\Enums\UserRole::Employee];
+        $user->role = $map[strtolower((string)$raw)] ?? \App\Enums\UserRole::Customer;
 
         return $user;
     }
@@ -98,6 +97,7 @@ class Session
             'email'   => $_SESSION['email'] ?? null,
             'name'    => $_SESSION['name'] ?? null,
             'role'    => $_SESSION['role'] ?? null,
+            'profile_picture'    => $_SESSION['profile_picture'] ?? null
         ];
     }
     public static function role(): ?string

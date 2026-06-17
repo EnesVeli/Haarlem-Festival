@@ -79,13 +79,13 @@ class CartController extends BaseController
         }
 
         try{
-            $stripe_session = $this->order_service->startOrderPayment(Session::user()['user_id']);
+            $stripe_session = $this->order_service->startOrderPayment(Session::currentUser()->user_id);
 
             header('Location: ' . $stripe_session->url);
             exit;
         }
         catch(Exception $ex){
-            Session::setTempError("Failed to complete order.");
+            Session::setTempError("Failed to complete order." . $ex->getMessage());
         }
 
         header("Location: /cart");

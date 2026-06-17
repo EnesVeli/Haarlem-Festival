@@ -1,12 +1,15 @@
 <?php
+
+use App\Models\User;
+
 /**
- * @var array  $user
+ * @var User  $user
  * @var ?string $success
  * @var ?string $error
  */
 $pageTitle = 'Manage Profile — The Festival Haarlem';
 $mainClass = 'profile-main';
-$sessionUser = \App\Framework\Session::user();
+$sessionUser = \App\Framework\Session::currentUser();
 
 require __DIR__ . '/../partials/header.php';
 ?>
@@ -16,16 +19,16 @@ require __DIR__ . '/../partials/header.php';
 
         <a href="/" class="profile-back">&larr; Back to home</a>
 
-        <?php if (!empty($user['profile_picture_url'])): ?>
+        <?php if (!empty($user->profile_picture_url)): ?>
         <div class="profile-avatar-row">
             <img
-                src="<?= htmlspecialchars($user['profile_picture_url']) ?>"
+                src="<?= htmlspecialchars($user->profile_picture_url) ?>"
                 alt="Profile picture"
                 class="profile-avatar"
             >
             <div>
-                <p class="profile-avatar-name"><?= htmlspecialchars($user['name']) ?></p>
-                <p class="profile-avatar-email"><?= htmlspecialchars($user['email']) ?></p>
+                <p class="profile-avatar-name"><?= htmlspecialchars($user->name) ?></p>
+                <p class="profile-avatar-email"><?= htmlspecialchars($user->email) ?></p>
             </div>
         </div>
         <?php endif; ?>
@@ -53,7 +56,7 @@ require __DIR__ . '/../partials/header.php';
                     id="name"
                     name="name"
                     type="text"
-                    value="<?= htmlspecialchars($user['name']) ?>"
+                    value="<?= htmlspecialchars($user->name) ?>"
                 >
             </div>
 
@@ -63,7 +66,7 @@ require __DIR__ . '/../partials/header.php';
                     id="email"
                     name="email"
                     type="email"
-                    value="<?= htmlspecialchars($user['email']) ?>"
+                    value="<?= htmlspecialchars($user->email) ?>"
                 >
             </div>
 
@@ -86,10 +89,10 @@ require __DIR__ . '/../partials/header.php';
                     accept=".jpg,.jpeg,.png,.webp"
                     class="profile-file-input"
                 >
-                <?php if (!empty($user['profile_picture_url'])): ?>
+                <?php if (!empty($user->profile_picture_url)): ?>
                     <div class="profile-picture-preview">
                         <img
-                            src="<?= htmlspecialchars($user['profile_picture_url']) ?>"
+                            src="<?= htmlspecialchars($user->profile_picture_url) ?>"
                             alt="Current profile picture"
                         >
                     </div>

@@ -23,9 +23,7 @@
 
 <body>
 <?php
-if (!isset($user) || !$user) {
-    $user = \App\Framework\Session::user();
-}
+$user = \App\Framework\Session::currentUser();
 
 $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0);
 ?>
@@ -42,7 +40,7 @@ $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0
             <li><a href="/yummy">Yummy</a></li>
             <li><a href="/jazz">Jazz</a></li>
 
-            <?php if ($user && strtolower($user['role'] ?? '') === 'admin'): ?>
+            <?php if ($user && strtolower($user->role->value ?? '') === 'admin'): ?>
                 <li><a href="/cms">Dashboard</a></li>
             <?php endif; ?>
         </ul>
@@ -58,9 +56,9 @@ $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0
                 <div class="profile-dropdown">
                     <button class="profile-trigger" id="profileToggle" aria-expanded="false">
                         <div class="profile-avatar profile-avatar-initials">
-                            <?= htmlspecialchars(mb_strtoupper(mb_substr($user['name'] ?? 'A', 0, 1))) ?>
+                            <?= htmlspecialchars(mb_strtoupper(mb_substr($user->name ?? 'A', 0, 1))) ?>
                         </div>
-                        <span class="profile-name"><?= htmlspecialchars($user['name'] ?? 'Account') ?></span>
+                        <span class="profile-name"><?= htmlspecialchars($user->name ?? 'Account') ?></span>
                         <i class="bi bi-chevron-down profile-chevron"></i>
                     </button>
 
@@ -69,7 +67,7 @@ $cartCount = (int)($cartCount ?? App\Framework\Session::getCartItemsCount() ?? 0
                             <i class="bi bi-person"></i> My Profile
                         </a>
 
-                        <?php if (strtolower($user['role'] ?? '') === 'admin'): ?>
+                        <?php if (strtolower($user->role->value ?? '') === 'admin'): ?>
                             <div class="profile-menu-divider"></div>
 
                             <a href="/cms" class="profile-menu-item">

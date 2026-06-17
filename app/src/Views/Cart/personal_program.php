@@ -17,7 +17,7 @@ $pageTitle = 'My Personal Program - The Festival Haarlem';
 <div class="stories-page">
     <div class="stories-container" style="padding: 2rem 0 3rem;">
         <?php if (!isset($view_model) || !isset($view_model->orders) || count($view_model->orders) <= 0): ?>
-            <div style="text-align:center; padding:3rem 0;">
+            <div style="text-align:center; padding:3rem 0; margin-bottom: 80px;">
                 <i class="bi bi-calendar-event" style="font-size:3rem; color:#ccc;"></i>
                 <p style="margin:1rem 0 0.5rem; color:#888;">Your personal program is empty.</p>
                 <a href="/" class="stories-primary-button">Browse Events</a>

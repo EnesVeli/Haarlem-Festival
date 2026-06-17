@@ -173,7 +173,7 @@ class OrderService
 
                 if($booking->pay_as_you_like != null) return $booking->pay_as_you_like;
 
-                if($booking->haarlem_pass) return $booking->quantity * $event->price * 75 / 100;
+                if($booking->haarlem_pass) return (int)($booking->quantity * $event->price * 75 / 100);
 
                 return $booking->quantity * $event->price;
             case BookingType::Jazz:
@@ -394,7 +394,7 @@ class OrderService
     public function startOrderPayment(int $user_id) : \Stripe\Checkout\Session {
         // Get user
         $user = $this->user_rep->findById($user_id);
-        if($user == null) throw new QueryExecutionException("Failed to get user with id.");
+        if($user === null) throw new QueryExecutionException("Failed to get user with id." . $user_id);   
 
         // Get order 
         $order = $this->getOrderWithOrderItemsByUserId($user_id);
@@ -436,10 +436,6 @@ class OrderService
         if($update === false) throw new QueryExecutionException("Failed to update order status.");
 
         return $stripe_session;
-    }
-
-    private function generateLineItemsForStripe(Order $order){
-        
     }
 
     /**
