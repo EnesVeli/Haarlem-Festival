@@ -28,9 +28,9 @@ $pageCSS = 'yummy.css';
                 </div>
             <?php endif; ?>
 
-            <? if(isset($view_model)): ?>  
-                <form id="main_form" action="/cms/yummy/restaurant" enctype="multipart/form-data" method="post">
-                    <div class="cms-main-subsection-container">
+            <? if(isset($view_model)): ?>            
+                <div class="cms-main-subsection-container">
+                    <form id="main_form" action="/cms/yummy/restaurant" enctype="multipart/form-data" method="post">
                         <input id="restaurant_id" name="restaurant_id" type="hidden" value="<? echo $view_model->res->restaurant_id; ?>">
 
                         <div class="cms-form-subsection">
@@ -154,132 +154,139 @@ $pageCSS = 'yummy.css';
                                     </div>
                                 </div>
                             </div>  
-                        </div>                       
-                            <div class="cms-form-subsection">
-                                <div>
-                                    <h1 class="cms-form-subsection-big-label">Additional Images:</h1>
-                                    <a></a>
-                                </div>                   
-                                <table class="cms-restaurant-images-table">
-                                    <thead>
+                        </div> 
+                    </form>       
+
+                    <div class="cms-form-subsection">
+                        <div>
+                            <h1 class="cms-form-subsection-big-label">Additional Images:</h1>
+                            <a></a>
+                        </div>       
+
+                        <table class="cms-restaurant-images-table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Change</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <? if($view_model->images != null): ?>
+                                    <? for($i = 0; $i < count($view_model->images); $i++): ?>
                                         <tr>
-                                            <th>Image</th>
-                                            <th>Change</th>
-                                            <th>Actions</th>
+                                            <th>
+                                                <div class="cms-retaurant-image-container">
+                                                    <img src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="cms-file-image-input" id="<? echo 'upload_' . $i; ?>">
+                                                    <input id="<? echo 'image_' . $i; ?>" name="<? echo 'additional_image_' . $i;?>" type="file" onchange="previewImagesFile(<? echo $i; ?>)">
+                                                    <input type="hidden" name="<? echo 'additional_image_id_' . $i; ?>" value="<? echo $view_model->images[$i]->image_id; ?>">
+                                                    <div id="<? echo 'image_perview_' . $i; ?>" class="cms-file-image-input-preview" style="display: none;">
+                                                        <img id="<? echo 'image_perview_image_' . $i; ?>" src="#">
+                                                    </div>
+                                                    <div id="<? echo 'image_text_' . $i; ?>" class="cms-file-image-input-text">
+                                                        <strong>Change image</strong>
+                                                        <span>Choose a file</span>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="cms-restaurant-images-actions-container">
+                                                    <form action="/cms/yummy/restaurant/images/delete" method="post">
+                                                        <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
+                                                        <input type="hidden" name="image_id" value="<? echo $view_model->images[$i]->image_id; ?>">
+
+                                                        <button type="submit" class="cms-restaurant-images-delete-button">Delete</button>
+                                                    </form>
+                                                </div>
+                                            </th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <? if($view_model->images != null): ?>
-                                            <? for($i = 0; $i < count($view_model->images); $i++): ?>
-                                                <tr>
-                                                    <th>
-                                                        <div class="cms-retaurant-image-container">
-                                                            <img src="<? echo '/assets/uploads/yummy/restaurants/' . $view_model->images[$i]->path; ?>">
-                                                        </div>
-                                                    </th>
-                                                    <th>
-                                                        <div class="cms-file-image-input" id="<? echo 'upload_' . $i; ?>">
-                                                            <input id="<? echo 'image_' . $i; ?>" name="<? echo 'additional_image_' . $i;?>" type="file" onchange="previewImagesFile(<? echo $i; ?>)">
-                                                            <input type="hidden" name="<? echo 'additional_image_id_' . $i; ?>" value="<? echo $view_model->images[$i]->image_id; ?>">
-                                                            <div id="<? echo 'image_perview_' . $i; ?>" class="cms-file-image-input-preview" style="display: none;">
-                                                                <img id="<? echo 'image_perview_image_' . $i; ?>" src="#">
-                                                            </div>
-                                                            <div id="<? echo 'image_text_' . $i; ?>" class="cms-file-image-input-text">
-                                                                <strong>Change image</strong>
-                                                                <span>Choose a file</span>
-                                                            </div>
-                                                        </div>
-                                                    </th>
-                                                    <th>
-                                                        <div class="cms-restaurant-images-actions-container">
-                                                            <form action="/cms/yummy/restaurant/images/delete" method="post">
-                                                                <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
-                                                                <input type="hidden" name="image_id" value="<? echo $view_model->images[$i]->image_id; ?>">
+                                    <? endfor; ?>
+                                <? endif; ?>
 
-                                                                <button type="submit" class="cms-restaurant-images-delete-button">Delete</button>
-                                                            </form>
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            <? endfor; ?>
-                                        <? endif; ?>
-
-                                        <? if($view_model->images == null || count($view_model->images) < 10): ?>
-                                            <form action="/cms/yummy/restaurant/image" enctype="multipart/form-data" method="post">
-                                                <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
-                                                <tr>
-                                                    <th class="cms-add-new-image"><span>New image</span></th>
-                                                    <th>
-                                                        <div class="cms-file-image-input" id="upload_add">
-                                                            <input id="image_add" name="image_add" type="file" onchange="previewAddFile()">
-                                                            <div id="image_perview_add" class="cms-file-image-input-preview" style="display: none;">
-                                                                <img id="image_perview_image_add" src="#">
-                                                            </div>
-                                                            <div id="image_text_add" class="cms-file-image-input-text">
-                                                                <strong>Change image</strong>
-                                                                <span>Choose a file</span>
-                                                            </div>
-                                                        </div>
-                                                    </th>
-                                                    <th>
-                                                        <div class="cms-restaurant-images-actions-container">
-                                                            <button class="cms-restaurant-images-add-button" onclick="mainSubmitButtonClick()">Add</button>
-                                                        </div>
-                                                    </th>
-                                                </tr>
-                                            </form>
-                                        <? endif; ?>
-                                    </tbody>
-                                </table>
-                            </div> 
-                            
-                            <div class="cms-form-subsection">
-                                <div>
-                                    <h1 class="cms-form-subsection-big-label">Tags:</h1>
-                                    <a></a>
-                                </div>                   
-                                <table class="cms-restaurant-images-table">
-                                    <thead>
+                                <? if($view_model->images == null || count($view_model->images) < 10): ?>
+                                    <form id="add_imga_form" action="/cms/yummy/restaurant/image" enctype="multipart/form-data" method="post">
+                                        <input type="hidden" name="restaurant_id" value="<?= $view_model->res->restaurant_id ?>">
                                         <tr>
-                                            <th>Tag</th>
-                                            <th>Actions</th>
+                                            <th class="cms-add-new-image">
+                                                <span>New image</span>
+                                            </th>
+                                            <th>
+                                                <div class="cms-file-image-input" id="upload_add">
+                                                    <input id="image_add" name="image_add" type="file" onchange="previewAddFile()">
+                                                    <div id="image_perview_add" class="cms-file-image-input-preview" style="display: none;">
+                                                        <img id="image_perview_image_add" src="#">
+                                                    </div>
+                                                    <div id="image_text_add" class="cms-file-image-input-text">
+                                                        <strong>Change image</strong>
+                                                        <span>Choose a file</span>
+                                                    </div>
+                                                </div>
+                                            </th>
+                                            <th>
+                                                <div class="cms-restaurant-images-actions-container">
+                                                    <button type="button" class="cms-restaurant-images-add-button" onclick="addImgSubmitButtonClick()">Add</button>
+                                                </div>
+                                            </th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <? if($view_model->types != null): ?>
-                                            <? for($i = 0; $i < count($view_model->types); $i++): ?>
-                                                <form action="/cms/yummy/restaurant/tag/delete" enctype="multipart/form-data" method="post">
-                                                    <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
-                                                    <input type="hidden" name="type_id" value="<? echo $view_model->types[$i]->type_id; ?>">
-                                                    <tr>
-                                                        <th><? echo $view_model->types[$i]->name; ?></th>
-                                                        <th><button type="submit" class="cms-restaurant-images-delete-button">Delete</button></th>
-                                                    </tr>
-                                                </form>
-                                            <? endfor; ?>
-                                        <? endif; ?>
-
-                                        <form action="/cms/yummy/restaurant/tag" enctype="multipart/form-data" method="post">
+                                    </form>
+                                <? endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                        
+                    <div class="cms-form-subsection">
+                        <div>
+                            <h1 class="cms-form-subsection-big-label">Tags:</h1>
+                            <a></a>
+                        </div>                   
+                        <table class="cms-restaurant-images-table">
+                            <thead>
+                                <tr>
+                                    <th>Tag</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <? if($view_model->types != null): ?>
+                                    <? for($i = 0; $i < count($view_model->types); $i++): ?>
+                                        <form action="/cms/yummy/restaurant/tag/delete" enctype="multipart/form-data" method="post">
                                             <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
-                                            <input type="hidden" name="tag_id" id="new_tag_input" value="-1">
+                                            <input type="hidden" name="type_id" value="<? echo $view_model->types[$i]->type_id; ?>">
                                             <tr>
-                                                <th>
-                                                    <select onchange="newTagSelectValueChanged(this)">
-                                                        <option value="" disabled selected>Select tag</option>
-                                                        <? foreach($view_model->all_types as $tag): ?>
-                                                            <option value="<? echo $tag->type_id; ?>"><? echo $tag->name; ?></option>
-                                                        <? endforeach; ?>
-                                                    </select>
-                                                </th>
-                                                <th><button type="submit" class="cms-restaurant-images-add-button">Add</button></th>
+                                                <th><? echo $view_model->types[$i]->name; ?></th>
+                                                <th><button type="submit" class="cms-restaurant-images-delete-button">Delete</button></th>
                                             </tr>
                                         </form>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <button class="cms-submit-button" type="submit">Save Changes</button>
+                                    <? endfor; ?>
+                                <? endif; ?>
+
+                                <form action="/cms/yummy/restaurant/tag" enctype="multipart/form-data" method="post">
+                                    <input type="hidden" name="restaurant_id" value="<? echo $view_model->res->restaurant_id; ?>">
+                                    <input type="hidden" name="tag_id" id="new_tag_input" value="-1">
+                                    <tr>
+                                        <th>
+                                            <select onchange="newTagSelectValueChanged(this)">
+                                                <option value="" disabled selected>Select tag</option>
+                                                <? foreach($view_model->all_types as $tag): ?>
+                                                    <option value="<? echo $tag->type_id; ?>"><? echo $tag->name; ?></option>
+                                                <? endforeach; ?>
+                                            </select>
+                                        </th>
+                                        <th>
+                                            <button type="submit" class="cms-restaurant-images-add-button">Add</button>
+                                        </th>
+                                    </tr>
+                                </form>
+                            </tbody>
+                        </table>
                     </div>
-                </form>      
+
+                    <button class="cms-submit-button" type="submit">Save Changes</button>
+                </div>                
             <? endif; ?>
         </div>
     </div>
@@ -291,9 +298,9 @@ $pageCSS = 'yummy.css';
     initImageInput('upload_box', 'main_img_path', previewMain) // Init change image input for main image
 
     
-    let addintional_image_count = <? echo count($view_model->images); ?>;
+    let addintional_image_count = <? echo $view_model->images == null ? 0 : count($view_model->images); ?>;
 
-    if(addintional_image_count > 0){
+    if(addintional_image_count >= 0){
         let images_preview = []; // List of is preview images is shown for images list
 
         for (let i = 0; i < addintional_image_count; i++) {
@@ -406,6 +413,10 @@ $pageCSS = 'yummy.css';
 
     function mainSubmitButtonClick(){
         document.getElementById('main_form').submit();
+    }
+
+    function addImgSubmitButtonClick(){
+        document.getElementById('add_imga_form').submit();
     }
 </script>
 
