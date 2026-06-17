@@ -6,6 +6,11 @@ use App\Controllers\Cms\BaseCmsController;
 use App\Enums\UserRole;
 use App\Framework\Session;
 use App\Models\Exceptions\DBDataNotFoundException;
+use App\Models\Exceptions\EmailAlreadyRegisteredException;
+use App\Models\Exceptions\EmptyPasswordException;
+use App\Models\Exceptions\InappropriatePasswordLengthException;
+use App\Models\Exceptions\IncorrectEmailException;
+use App\Models\User;
 use App\Services\UserCmsService;
 use App\ViewModels\User\UserListViewModel;
 use App\ViewModels\User\UserTopper;
@@ -72,6 +77,9 @@ class UserCmsController extends BaseCmsController
     public function view(){
         $this->requireAdmin();
 
+        $error_message = Session::popTempError();
+        $success_message = Session::popTempSuccess();
+
         try{
             if(!isset($_GET['id']) || !is_numeric($_GET['id'])) throw new InvalidUriException();
 
@@ -106,6 +114,43 @@ class UserCmsController extends BaseCmsController
     }
 
     public function edit(){
-        print_r($_POST); exit;
+        //print_r($_FILES); exit;
+
+        $this->requireAdmin();
+
+        try{
+            // Get data from post
+            $edit = new User();
+
+            $edit->user_id = $_POST['user_id'];
+            $edit->name = $_POST['name'];
+            $edit->email = $_POST['email'];
+            $edit->password = $_POST['password'];
+            $edit->active = $_POST['active'];
+            $edit->role = UserRole::from($_POST['role']);
+
+            // Edit user
+            $this->service->editUser($edit, empty($_FILES['profile_pic']['name']) ? null : $_FILES['profile_pic']);
+
+            Session::setTempSuccess('User was successfully edited.');
+        }
+        catch(EmailAlreadyRegisteredException $ex){
+            Session::setTempError("This email is already registered.");
+        }
+        catch(EmptyPasswordException $ex){
+            Session::setTempError("The password must not be empty");
+        }
+        catch(InappropriatePasswordLengthException $ex){
+            Session::setTempError("Your password must be at least 8 and maximum 255 characters.");
+        }
+        catch(IncorrectEmailException $ex){
+           Session::setTempError("Enter a valid email address.");
+        }
+        catch(Exception $ex){
+            Session::setTempError("Something went wrong, try again later." . $ex->getMessage());
+        }
+
+        if(isset($_POST['user_id'])) header('Location: /cms/user/view?id=' . $_POST['user_id']);
+        else header('Location: /cms/user');
     }
 }

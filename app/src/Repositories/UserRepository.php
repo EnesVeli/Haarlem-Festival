@@ -1,6 +1,7 @@
 <?php
 namespace App\Repositories;
 
+use App\Enums\UserRole;
 use App\Framework\Repository;
 use App\Models\User;
 use PDO;
@@ -22,12 +23,14 @@ class UserRepository extends Repository
 
     /**
      * @param string $email of searched user.
-     * @return User|null|bool returns user object if found, null if not. False if there were errors during query execution.
+     * @return User|bool|null returns user object if found, null if not. False if there were errors during query execution.
      */
-    public function findByEmail(string $email): User|null|bool
+    public function findByEmail(string $email) : User|bool|null
     {
-        $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE `email` = :email LIMIT 1;");
-        $stmt->execute(['email' => $email]);
+        $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE email = ? LIMIT 1;");
+        $stmt->bindValue(1, $email, PDO::PARAM_STR);
+        
+        $stmt->execute();
         
         $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
@@ -36,9 +39,9 @@ class UserRepository extends Repository
 
     /**
      * @param int $user_id id of searched user.
-     * @return User|null|bool returns user object if found, null if not. False if there were errors during query execution.
+     * @return User|bool|null returns user object if found, null if not. False if there were errors during query execution.
      */
-    public function findById(int $user_id): User|null|bool
+    public function findById(int $user_id): User|bool|null
     {
         $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE `user_id` = :user_id LIMIT 1;");
         $stmt->execute(['user_id' => $user_id]);
@@ -73,28 +76,44 @@ class UserRepository extends Repository
         return (int) $this->connection->lastInsertId();
     }
 
-    public function updateName(int $userId, string $name): void
+    public function updateName(int $userId, string $name) : bool
     {
         $stmt = $this->connection->prepare("UPDATE `User` SET name = :name WHERE user_id = :id");
-        $stmt->execute(['name' => $name, 'id' => $userId]);
+        return $stmt->execute(['name' => $name, 'id' => $userId]);
     }
 
-    public function updateEmail(int $userId, string $email): void
+    public function updateEmail(int $userId, string $email) : bool
     {
         $stmt = $this->connection->prepare("UPDATE `User` SET email = :email WHERE user_id = :id");
-        $stmt->execute(['email' => $email, 'id' => $userId]);
+        return $stmt->execute(['email' => $email, 'id' => $userId]);
     }
 
-    public function updatePassword(int $userId, string $hash): void
+    public function updatePassword(int $userId, string $hash) : bool
     {
         $stmt = $this->connection->prepare("UPDATE `User` SET password = :p WHERE user_id = :id");
-        $stmt->execute(['p' => $hash, 'id' => $userId]);
+        return $stmt->execute(['p' => $hash, 'id' => $userId]);
     }
 
-    public function updateProfilePictureUrl(int $userId, string $url): void
+    public function updateProfilePictureUrl(int $userId, string $url) : bool
     {
         $stmt = $this->connection->prepare("UPDATE `User` SET profile_picture_url = :u WHERE user_id = :id");
-        $stmt->execute(['u' => $url, 'id' => $userId]);
+        return $stmt->execute(['u' => $url, 'id' => $userId]);
+    }
+
+    public function updateActive(int $userId, bool $active) : bool
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET active = ? WHERE user_id = ?");
+
+        $stmt->bindValue(1, (int)$active, PDO::PARAM_INT);
+        $stmt->bindValue(2, $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+     public function updateRole(int $userId, UserRole $role) : bool
+    {
+        $stmt = $this->connection->prepare("UPDATE `User` SET role = :role WHERE user_id = :id");
+        return $stmt->execute(['role' => $role->value, 'id' => $userId]);
     }
 
     public function changePassword(int $user_id, string $password) : bool{

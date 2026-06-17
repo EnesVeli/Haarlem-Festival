@@ -79,7 +79,7 @@ $pageCSS = 'user.css';
                             </div>
                             <div class="cms-image-subsection-container">
                                 <div class="cms-upload-box" id="upload_box">
-                                    <input type="file" name="main_img_path" id="main_img_path" class="cms-file-input" accept="image/*" onchange="previewMain()">
+                                    <input type="file" name="profile_pic" id="profile_pic" class="cms-file-input" accept="image/*" onchange="previewMain()">
 
                                     <div class="cms-upload-inner">
                                         <div id="img_none">
@@ -92,7 +92,7 @@ $pageCSS = 'user.css';
                                         <div id="img_is" class="cms-upload-container" style="display: none;">
                                             <strong>Change Profile</strong>
                                             <div class="cms-upload-preview-container">
-                                                <img id="topper_image_preview" class="cms-upload-preview" src="#">
+                                                <img id="profile_pic_preview" class="cms-upload-preview" src="#">
                                             </div>             
                                         </div>              
                                     </div>
@@ -111,7 +111,7 @@ $pageCSS = 'user.css';
 <script type="text/javascript">
     let show_preview = false; // Is preview image of main image displayed.
 
-    initImageInput('upload_box', 'main_img_path', previewMain) // Init change image input for main image
+    initImageInput('upload_box', 'profile_pic', previewMain) // Init change image input for main image
 
     // Init image input for image change
     function initImageInput(upload_container, input, preview_func){
@@ -144,7 +144,7 @@ $pageCSS = 'user.css';
 
     // Update preview image of main image
     function previewMain() {
-        preview('topper_image_preview', 'main_img_path', 'img_is', 'img_none');
+        preview('profile_pic_preview', 'profile_pic', 'img_is', 'img_none');
     }
 
     // Update preview image of one of the inputs

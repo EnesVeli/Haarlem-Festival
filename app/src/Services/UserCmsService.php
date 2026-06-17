@@ -3,13 +3,16 @@ namespace App\Services;
 
 use App\Enums\UserRole;
 use App\Models\Exceptions\DBDataFetchException;
+use App\Models\Exceptions\DBDataNotFoundException;
 use App\Models\Exceptions\EmailAlreadyRegisteredException;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\QueryExecutionException;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
 use InvalidArgumentException;
 use RoundingMode;
+use Safe\Exceptions\FilesystemException;
 
 class UserCmsService
 {
@@ -93,8 +96,107 @@ class UserCmsService
     {
         $user = $this->userRepository->findById($user_id);
 
-        if ($user === false) throw new DBDataFetchException("Failed to get user by id.");
+        if($user === false) return null;
 
         return $user;
+    }
+
+    
+    public function getByEmail(string $email) : ?User
+    {
+        $user = $this->userRepository->findByEmail($email);
+
+        if($user === false) return null;
+
+        return $user;
+    }
+
+    public function editUser(User $edit, mixed $profile_pic) {
+        // Get user
+        $user = $this->getByUserId($edit->user_id);
+        if($user === null) throw new DBDataNotFoundException('Failed to find user to edit.');
+
+        // Check email
+        if($user->email !== $edit->email){
+            // Check if email is ok
+            $this->verification_service->verifyEmail($edit->email);
+
+            // Check if email is in use
+            $m_u = $this->getByEmail($edit->email);
+
+            if($m_u !== null) throw new EmailAlreadyRegisteredException();
+        }
+
+        // Check password
+        if($edit->password !== '' && !password_verify($edit->password, $user->password)){
+            $this->verification_service->verifyPassword($edit->password, $edit->password);
+        }
+
+        // Edit user
+        if($user->name !== $edit->name) {
+            if(!$this->userRepository->updateName($edit->user_id, $edit->name)) throw new QueryExecutionException('Failed to edit users name.');
+        }
+
+        if($user->email !== $edit->email) {
+            if(!$this->userRepository->updateEmail($edit->user_id, $edit->email)) throw new QueryExecutionException('Failed to edit users email.');
+        }
+
+        if($edit->password !== '' && !password_verify($edit->password, $user->password)) {
+            if(!$this->userRepository->updatePassword($edit->user_id, password_hash($edit->password, PASSWORD_DEFAULT))) throw new QueryExecutionException('Failed to edit users password.');
+        }
+
+        if($user->active !== $edit->active) {
+            if(!$this->userRepository->updateActive($edit->user_id, $edit->active)) throw new QueryExecutionException('Failed to edit users active status.');
+        }
+
+        if($user->role !== $edit->role) {
+            if(!$this->userRepository->updateRole($edit->user_id, $edit->role)) throw new QueryExecutionException('Failed to edit users role.');
+        }
+
+        if($profile_pic !== null) {
+            $file_name = $this->addImageToDir('', $edit->user_id , $profile_pic['name'], $profile_pic['tmp_name']);
+
+            if($file_name === null) throw new FilesystemException('Failed to add profile picture to uploads.');
+
+            if(!$this->userRepository->updateProfilePictureUrl($edit->user_id, '/assets/uploads/' . $file_name)) throw new QueryExecutionException('Failed to edit users profile picture.');
+
+            $this->deleteImageFromDir($user->profile_picture_url);
+        }
+    }
+
+    /**
+     * Moves file from uploads to specified directory in uploads folder.
+     * @param string $end_dir relative to uploads folder path do directory (e.g. 'yummy/topper/'), path must end with '/'.
+     * @param int $user_id Id of the user.
+     * @param mixed $origin_name name of origin file.
+     * @param mixed $tmp_name tmp name of uploded file.
+     * @return ?string on success returns new file name with extention. On fail returns null.
+     */
+    private function addImageToDir(string $end_dir, int $user_id , $origin_name, $tmp_name) : ?string {
+        if($tmp_name == null) return null;
+
+        // Crafting path
+        $file_name = 'user_' . $user_id . '_' . bin2hex(openssl_random_pseudo_bytes(16)) . '.' . pathinfo($origin_name, PATHINFO_EXTENSION);
+        $path = __DIR__ . '/../../public/assets/uploads/' . $end_dir . $file_name;
+
+        if(move_uploaded_file($tmp_name, $path)) return $file_name;
+        
+        return null;
+    }
+
+    /**
+     * Deletes file from specified directory in uploads folder.
+     * @param mixed $file_path name of origin file.
+     * @return bool true on success, false on failure.
+     */
+    private function deleteImageFromDir($file_path) : bool {
+        if($file_path == null) return false;
+
+        // Crafting path
+        $path = __DIR__ . '/../../public' . $file_path;
+
+        if(!file_exists($path)) return false;
+
+        return unlink($path);
     }
 }
