@@ -2,8 +2,11 @@
 namespace App\Services;
 
 use App\Enums\UserRole;
+use App\Models\Exceptions\AccountNotActiveException;
+use App\Models\Exceptions\DBDataFetchException;
 use App\Models\Exceptions\EmailAlreadyRegisteredException;
 use App\Models\Exceptions\EmptyFieldException;
+use App\Models\Exceptions\QueryExecutionException;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
@@ -36,39 +39,37 @@ class UserService
 
         if ($this->userRepository->findByEmail($email)) throw new EmailAlreadyRegisteredException();
 
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $user = new User();
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->role = UserRole::Customer;
+        $user->active = true;
 
-        $this->userRepository->create($name, $email, $hashedPassword, 'customer');
+        if(!$this->userRepository->create($user)) throw new QueryExecutionException('Failed to create new user'); 
     }
 
-    public function authenticate(string $email, string $password): User
+    public function authenticate(string $email, string $password) : User
     {
-        $row = $this->userRepository->findByEmail($email);
+        $user = $this->userRepository->findByEmail($email);
 
-        if (!$row || !password_verify($password, $row['password'])) {
+        if($user === false) throw new DBDataFetchException('Failed to get user by eamil');
+
+        if ($user === null || !password_verify($password, $user->password)) {
             throw new Exception("Invalid email or password.");
         }
 
-        $user = new User();
-        $user->user_id = (int)$row['user_id'];
-        $user->email   = $row['email'];
-        $user->name    = $row['name'];
-
-        $raw = $row['role'] ?? null;
-        if (is_numeric($raw)) {
-            $user->role = UserRole::from((int)$raw);
-        } else {
-            $map = ['customer' => UserRole::Customer, 'admin' => UserRole::Admin, 'employee' => UserRole::Employee];
-            $user->role = $map[strtolower((string)$raw)] ?? UserRole::Customer;
-        }
+        if($user->active === false) throw new AccountNotActiveException('Failed to get user by eamil');
 
         return $user;
     }
 
-    public function getById(int $userId): array
+    public function getById(int $userId) : ?User
     {
         $user = $this->userRepository->findById($userId);
-        if (!$user) throw new Exception("User not found.");
+
+        if ($user === false) throw new DBDataFetchException("Failed to get user by id.");
+
         return $user;
     }
 
@@ -82,12 +83,12 @@ class UserService
         $user = $this->getById($userId);
 
         // name
-        if ($name !== '' && $name !== $user['name']) {
+        if ($name !== '' && $name !== $user->name) {
             $this->userRepository->updateName($userId, $name);
         }
 
         // email 
-        if ($email !== '' && $email !== $user['email']) {
+        if ($email !== '' && $email !== $user->email) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 throw new Exception("Invalid email format.");
             }
@@ -102,7 +103,7 @@ class UserService
         if ($newPass !== '') {
             $current = trim($data['current_password'] ?? '');
 
-            if ($current === '' || !password_verify($current, $user['password'])) {
+            if ($current === '' || !password_verify($current, $user->password)) {
                 throw new Exception("Current password is incorrect.");
             }
             if (strlen($newPass) < 8) {
@@ -111,6 +112,7 @@ class UserService
             $hash = password_hash($newPass, PASSWORD_DEFAULT);
             $this->userRepository->updatePassword($userId, $hash);
         }
+
         // profile picture upload (store path in profile_picture_url)
         if (!empty($files['profile_picture']['name'])) {
             $tmp  = $files['profile_picture']['tmp_name'];

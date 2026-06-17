@@ -20,47 +20,57 @@ class UserRepository extends Repository
         return self::$_instance;
     }
 
-    public function findByEmail(string $email): ?array
+    /**
+     * @param string $email of searched user.
+     * @return User|null|bool returns user object if found, null if not. False if there were errors during query execution.
+     */
+    public function findByEmail(string $email): User|null|bool
     {
-        $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE email = :email LIMIT 1");
+        $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE `email` = :email LIMIT 1;");
         $stmt->execute(['email' => $email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $user ?: null;
+        return $stmt->fetch();
     }
 
-    public function findByUserId(string $user_id): ?array
+    /**
+     * @param int $user_id id of searched user.
+     * @return User|null|bool returns user object if found, null if not. False if there were errors during query execution.
+     */
+    public function findById(int $user_id): User|null|bool
     {
-        $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE `user_id` = :user_id LIMIT 1");
+        $stmt = $this->connection->prepare("SELECT `user_id`, `email`, `password`, `name`, `role` AS `role_`, `profile_picture_url`, `registered_at` AS `registered_at_`, `active` FROM `User` WHERE `user_id` = :user_id LIMIT 1;");
         $stmt->execute(['user_id' => $user_id]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 
-        return $user ?: null;
+        return $stmt->fetch();
     }
 
-    public function create(string $name, string $email, string $password, string $role = 'customer'): int
+    /**
+     * @param User $user user to be created (user-id and registered_at fields are ignored).
+     * @return int|bool On succes returns id of created user, on failure returns false.
+     */
+    public function create(User $user): int|bool
     {
         $stmt = $this->connection->prepare(
-            "INSERT INTO `User` (name, email, password, role, registered_at)
-             VALUES (:name, :email, :password, :role, NOW())"
+            "INSERT INTO `User`(`email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`, `active`) VALUES 
+            (?, ?, ?, ?, ?, NOW(), ?);"
         );
 
-        $stmt->execute([
-            'name'     => $name,
-            'email'    => $email,
-            'password' => $password,
-            'role'     => $role
-        ]);
+        $stmt->bindValue(1, $user->email, PDO::PARAM_STR);
+        $stmt->bindValue(2, $user->password, PDO::PARAM_STR);
+        $stmt->bindValue(3, $user->name, PDO::PARAM_STR);
+        $stmt->bindValue(4, $user->role, PDO::PARAM_STR);
+        $stmt->bindValue(5, $user->profile_picture_url, PDO::PARAM_INT);
+        $stmt->bindValue(6, $user->active, PDO::PARAM_INT);
+
+        $res = $stmt->execute();
+
+        if($res === false) return false;
 
         return (int) $this->connection->lastInsertId();
-    }
-
-    public function findById(int $userId): ?array
-    {
-        $stmt = $this->connection->prepare("SELECT * FROM `User` WHERE user_id = :id LIMIT 1");
-        $stmt->execute(['id' => $userId]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $user ?: null;
     }
 
     public function updateName(int $userId, string $name): void
@@ -132,7 +142,7 @@ class UserRepository extends Repository
         return '';
     }
 
-     public function countAllUsers() : int|false {
+    public function countAllUsers() : int|false {
         $stmt = $this->connection->prepare("SELECT COUNT(*) FROM `User`;");
 
         $stmt->execute();
