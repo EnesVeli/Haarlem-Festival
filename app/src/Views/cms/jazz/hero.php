@@ -74,23 +74,15 @@ require __DIR__ . '/partials/cmsHero.php';
                         </div>
                     </div>
 
-                    <small class="jazz-cms-help-text">
-                        Upload path: <code>/public/uploads/hero/</code>
-                    </small>
-
-                    <?php if (!empty($hero?->imagePath)): ?>
-                        <div class="jazz-cms-image-preview-wrap">
-                            <p class="jazz-cms-preview-label">Current Image</p>
-                            <img
-                                src="<?= htmlspecialchars($hero->imagePath) ?>"
-                                alt="Hero image"
-                                class="jazz-cms-image-preview"
-                            >
-                            <p class="jazz-cms-image-path">
-                                <?= htmlspecialchars($hero->imagePath) ?>
-                            </p>
-                        </div>
-                    <?php endif; ?>
+                    <div class="jazz-cms-image-preview-wrap" id="heroPreviewWrap" style="<?= empty($hero?->imagePath) ? 'display:none;' : '' ?>">
+                        <p class="jazz-cms-preview-label">Current Image</p>
+                        <img
+                            id="heroPreviewImg"
+                            src="<?= htmlspecialchars($hero?->imagePath ?? '') ?>"
+                            alt="Hero image"
+                            class="jazz-cms-image-preview"
+                        >
+                    </div>
                 </div>
 
                 <div class="jazz-cms-form-row">
@@ -117,30 +109,28 @@ require __DIR__ . '/partials/cmsHero.php';
 <script>
 const heroUploadBox = document.getElementById('heroUploadBox');
 const heroImageInput = document.getElementById('heroImageInput');
+const heroPreviewWrap = document.getElementById('heroPreviewWrap');
+const heroPreviewImg = document.getElementById('heroPreviewImg');
 
-if (heroUploadBox && heroImageInput) {
-    heroUploadBox.addEventListener('click', function () {
-        heroImageInput.click();
-    });
+heroUploadBox.addEventListener('click', function () {
+    heroImageInput.click();
+});
 
-    heroUploadBox.addEventListener('dragover', function (e) {
-        e.preventDefault();
-        heroUploadBox.classList.add('is-dragover');
-    });
+heroUploadBox.addEventListener('dragover', function (e) {
+    e.preventDefault();
+});
 
-    heroUploadBox.addEventListener('dragleave', function () {
-        heroUploadBox.classList.remove('is-dragover');
-    });
+heroUploadBox.addEventListener('drop', function (e) {
+    e.preventDefault();
+    heroImageInput.files = e.dataTransfer.files;
+    heroPreviewImg.src = URL.createObjectURL(heroImageInput.files[0]);
+    heroPreviewWrap.style.display = '';
+});
 
-    heroUploadBox.addEventListener('drop', function (e) {
-        e.preventDefault();
-        heroUploadBox.classList.remove('is-dragover');
-
-        if (e.dataTransfer.files.length > 0) {
-            heroImageInput.files = e.dataTransfer.files;
-        }
-    });
-}
+heroImageInput.addEventListener('change', function () {
+    heroPreviewImg.src = URL.createObjectURL(heroImageInput.files[0]);
+    heroPreviewWrap.style.display = '';
+});
 </script>
 
 <?php require __DIR__ . '/../../partials/footer.php'; ?>

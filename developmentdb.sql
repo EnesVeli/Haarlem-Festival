@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql
--- Generation Time: May 08, 2026 at 12:53 PM
--- Server version: 12.1.2-MariaDB-ubu2404
--- PHP Version: 8.3.30
+-- Generation Time: Jun 17, 2026 at 11:43 AM
+-- Server version: 12.0.2-MariaDB-ubu2404
+-- PHP Version: 8.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,36 @@ SET time_zone = "+00:00";
 --
 -- Database: `developmentdb`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `CMS_Content`
+--
+
+CREATE TABLE `CMS_Content` (
+  `content_id` int(11) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
+  `image_path` varchar(500) DEFAULT NULL,
+  `subtitle` varchar(255) DEFAULT NULL,
+  `quote_text` varchar(500) DEFAULT NULL,
+  `cta_text` varchar(255) DEFAULT NULL,
+  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
+  `ticket_info_body_1` text DEFAULT NULL,
+  `ticket_info_note_1` varchar(500) DEFAULT NULL,
+  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
+  `ticket_info_body_2` text DEFAULT NULL,
+  `cta_description` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `CMS_Content`
+--
+
+INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
+(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
 
 -- --------------------------------------------------------
 
@@ -79,36 +109,6 @@ INSERT INTO `cms_content` (`id`, `page_key`, `block_type`, `performer_id`, `titl
 -- --------------------------------------------------------
 
 --
--- Table structure for table `CMS_Content`
---
-
-CREATE TABLE `CMS_Content` (
-  `content_id` int(11) NOT NULL,
-  `slug` varchar(255) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `body_html` text DEFAULT NULL COMMENT 'WYSIWYG editable content',
-  `image_path` varchar(500) DEFAULT NULL,
-  `subtitle` varchar(255) DEFAULT NULL,
-  `quote_text` varchar(500) DEFAULT NULL,
-  `cta_text` varchar(255) DEFAULT NULL,
-  `ticket_info_title_1` varchar(255) DEFAULT 'Pay as you like',
-  `ticket_info_body_1` text DEFAULT NULL,
-  `ticket_info_note_1` varchar(500) DEFAULT NULL,
-  `ticket_info_title_2` varchar(255) DEFAULT 'HaarlemPas discount',
-  `ticket_info_body_2` text DEFAULT NULL,
-  `cta_description` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `CMS_Content`
---
-
-INSERT INTO `CMS_Content` (`content_id`, `slug`, `title`, `body_html`, `image_path`, `subtitle`, `quote_text`, `cta_text`, `ticket_info_title_1`, `ticket_info_body_1`, `ticket_info_note_1`, `ticket_info_title_2`, `ticket_info_body_2`, `cta_description`) VALUES
-(1, 'stories', 'Stories in Haarlem', '<p>During the last weekend of July, the streets of Haarlem transform into a living library. Stories in Haarlem brings a mix of live performances, intimate podcast recordings, and immersive family shows to unique locations across the city. From the whimsical adventures of Winnie the Pooh for our youngest listeners to the moving history of the Ten Boom family and the forward-thinking ideas of local circular entrepreneurs. Whether you are a history buff, a curious thinker, or a family seeking magic, there is a tale waiting for you.</p>', '/assets/images/stories/32c8142c12f271ca8980dce932be8fd7.jpeg', 'Last Weekend of July | Multiple Locations across Haarlem', 'Every street has a sound. Every building has a memory', 'Ready to plan your festival weekend?', 'Pay as you like', 'Some activities are priced pay as you like. We aim to keep these events as accessible as possible so that everyone has the opportunity to participate. We encourage visitors to donate based on how they valued the experience.', 'A reservation is required to guarantee entry.', 'HaarlemPas discount', 'People with the HaarlemPas receive a 25% discount on entry fees for all stories events with a fixed ticket price.', 'Combine Stories in Haarlem with other festival events across the city and build your perfect weekend program.');
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `HistoryBookings`
 --
 
@@ -126,7 +126,8 @@ CREATE TABLE `HistoryBookings` (
 --
 
 INSERT INTO `HistoryBookings` (`booking_id`, `reservation_id`, `date`, `language`, `individual_count`, `family_count`) VALUES
-(6, 10, '2026-05-10 13:00:00', 'nl', 3, 1);
+(6, 10, '2026-05-10 13:00:00', 'nl', 3, 1),
+(7, 18, '2026-06-16 13:00:00', 'nl', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -174,7 +175,15 @@ INSERT INTO `HistoryReservationSlots` (`reservation_id`, `slot_id`, `date`, `boo
 (7, 1, '2026-04-25', 0),
 (8, 1, '2026-04-27', 0),
 (9, 1, '2026-05-09', 0),
-(10, 2, '2026-05-10', 0);
+(10, 2, '2026-05-10', 0),
+(11, 2, '2026-05-09', 0),
+(12, 3, '2026-05-19', 0),
+(13, 1, '2026-05-08', 0),
+(14, 1, '2026-05-12', 0),
+(15, 1, '2026-05-10', 0),
+(16, 3, '2026-05-21', 0),
+(17, 2, '2026-05-21', 0),
+(18, 2, '2026-06-16', 0);
 
 -- --------------------------------------------------------
 
@@ -424,6 +433,16 @@ CREATE TABLE `JazzBookings` (
   `amount` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
+--
+-- Dumping data for table `JazzBookings`
+--
+
+INSERT INTO `JazzBookings` (`booking_id`, `performer_id`, `amount`) VALUES
+(10, 3, 5),
+(11, 3, 4),
+(12, 3, 4),
+(14, 3, 4);
+
 -- --------------------------------------------------------
 
 --
@@ -469,7 +488,7 @@ CREATE TABLE `jazz_hero` (
 --
 
 INSERT INTO `jazz_hero` (`id`, `title`, `subtitle`, `image_path`, `is_active`) VALUES
-(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/1774369165_wallpaperflare.com_wallpaper.jpg', 1);
+(1, 'Haarlem Jazz', 'Experience the rhythm of Haarlem’s vibrant jazz scene.', '/assets/uploads/jazz/hero/cf48614717e24d98.png', 1);
 
 -- --------------------------------------------------------
 
@@ -542,20 +561,20 @@ CREATE TABLE `jazz_performers` (
 --
 
 INSERT INTO `jazz_performers` (`id`, `name`, `price`, `bio`, `date`, `start_time`, `end_time`, `sort_order`, `is_active`, `image_path`, `performance_style`, `venue_name`, `venue_address`, `note_text`, `audio_url`, `hero_image_path`) VALUES
-(1, 'Evolve', 1590, 'wneqifhskjhdfwe', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Chill', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'baducjkdsca', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
-(2, 'Fox & The Mayors q', 1091, '', '2026-05-03', '21:05:00', '23:05:00', 3, 1, '/assets/uploads/jazz/performers/1777298211_91048f798a8fa4ce7dd9f7ebe2593aba.png', 'Smooth, expressive q', 'Philharmonie Haarlem q', 'Lange Begijnestraat 11, 2011 HH Haarlem q', 'qqq', 'qqq', NULL),
+(1, 'Evolve', 1500, 'Amsterdam-based collective fusing modern jazz with electronic textures, hip-hop and soul. Known for high-energy live shows and immersive grooves that bridge the past and future of jazz.', '0000-00-00', '00:00:00', '00:00:00', 1, 1, '/assets/uploads/jazz/performers/1773533302_GareDuNord.png', 'Electric, eclectic, energetic', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also performing FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1775428465_Screenshot 2026-04-06 at 00.34.18.png'),
+(2, 'Fox & The Mayors q', 1091, '', '2026-05-03', '21:05:00', '23:05:00', 3, 0, '/assets/uploads/jazz/performers/1d5270f73ceda7b1.png', 'Smooth, expressive q', 'Philharmonie Haarlem q', 'Lange Begijnestraat 11, 2011 HH Haarlem q', 'qqq', 'qqq', '/assets/uploads/jazz/performers/e083cbddb28d9470.png'),
 (3, 'Gare du Nord', 1590, 'Gare du Nord emerged as a Dutch-Belgian lounge-jazz collective known for mixing smoky soul elements with cinematic jazz grooves. Over the years, the group released several successful albums that shaped their recognizable late-night sound. Their collaborations with guest vocalists and instrumentalists helped refine the warm, intimate energy they bring to the stage.', '2026-04-27', '16:00:00', '19:00:00', 3, 1, '/assets/uploads/jazz/performers/1773534810_1773533302_GareDuNord.png', 'Smooth, expressive, intimate', 'Patronaat - Main Hall', 'Zijlsingel 2, 2013 DN Haarlem', 'Also available for FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773537511_gareDuNordHero.png'),
-(4, 'Gumbo Kings', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', '', '', '', '', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
-(5, 'Han Bennink', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', '', '', '', '', '', NULL),
-(6, 'Jonna Frazer', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', '', '', '', '', '', NULL),
-(7, 'Chris Allen', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', '', '', '', '', '', NULL),
-(8, 'Lilith Merlot', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', '', '', '', '', '', NULL),
-(9, 'Myles Sanko', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', '', '', '', '', '', NULL),
-(13, 'Soul Six', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', '', '', '', '', '', NULL),
-(14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 1, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
-(15, 'The Nordanians', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', '', '', '', '', '', NULL),
-(17, 'Uncle Sue', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', '', '', '', '', '', NULL),
-(19, 'Ratatouille', 12, 'aaa', '1917-04-30', '03:00:00', '15:00:00', 3, 1, '/assets/uploads/jazz/performers/1777298414_55t.png', 'Smooth, expressiveaa', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '11', '111', '/assets/uploads/jazz/performers/1777298414_91048f798a8fa4ce7dd9f7ebe2593aba.png');
+(4, 'Gumbo Kings', 1500, 'Dutch blues, swing and gumbo band born in Amsterdam. They bring the street-party energy of New Orleans to every show, mixing roots music with effortless modern groove.', '0000-00-00', '00:00:00', '00:00:00', 4, 1, '/assets/uploads/jazz/performers/1773540222_GumboKings.png', 'Blues, swing, New Orleans funk', '', '', 'Also performing FREE on Sunday at Grote Markt.', '', '/assets/uploads/jazz/performers/1773540285_2ade9cbd4cd817824d3d1ed94771912c.jpg'),
+(5, 'Han Bennink', 1000, 'Legendary Dutch percussionist and one of the most influential improvising drummers in European jazz. A founding voice of free-improvised music, he has played with Eric Dolphy, Misha Mengelberg, and many giants of avant-garde jazz.', '0000-00-00', '00:00:00', '00:00:00', 5, 1, '/assets/uploads/jazz/performers/1773540676_HanBenink.png', 'Free improvisation, avant-garde', '', '', 'Intimate Third Hall show — limited seating.', '', NULL),
+(6, 'Jonna Frazer', 1000, 'Surinamese-Dutch singer-songwriter blending soulful jazz, R&B and Caribbean influences. His warm voice and groove-rich productions have made him one of the most recognisable young voices of the Dutch scene.', '0000-00-00', '00:00:00', '00:00:00', 6, 1, '/assets/uploads/jazz/performers/1773540698_JonnaFrazer.png', 'Soul, R&B, modern jazz', '', '', NULL, '', NULL),
+(7, 'Chris Allen', 1500, 'Saxophonist and bandleader known for melodic phrasing and a deeply expressive tone. His quartet brings a contemporary take on hard-bop traditions with original compositions and tight interplay.', '0000-00-00', '00:00:00', '00:00:00', 7, 1, '/assets/uploads/jazz/performers/1773540716_ChrisAllen.png', 'Hard-bop, contemporary jazz', '', '', NULL, '', NULL),
+(8, 'Lilith Merlot', 1000, 'Acclaimed Dutch jazz and soul vocalist with a rich, smoky voice. Her songwriting blends jazz tradition with modern intimacy, drawing audiences into emotional, story-driven performances.', '0000-00-00', '00:00:00', '00:00:00', 8, 1, '/assets/uploads/jazz/performers/1773540729_LilithMerlot.png', 'Vocal jazz, soul', '', '', NULL, '', NULL),
+(9, 'Myles Sanko', 1000, 'British-Ghanaian vocalist celebrated for his timeless soul sound. Compared to legends like Marvin Gaye and Bill Withers, his music is heartfelt, warm and rooted in classic songwriting.', '0000-00-00', '00:00:00', '00:00:00', 9, 1, '/assets/uploads/jazz/performers/1773540744_MylesSanko.png', 'Soul-jazz, classic soul', '', '', NULL, '', NULL),
+(13, 'Soul Six', 1500, 'Six-piece Dutch ensemble dedicated to deep grooves and horn-driven arrangements. Their live shows are full-on soul parties drawing from funk, classic R&B and modern groove.', '0000-00-00', '00:00:00', '00:00:00', 13, 1, '/assets/uploads/jazz/performers/1773540813_SoulSix.png', 'Funk, soul, party jazz', '', '', NULL, '', NULL),
+(14, 'The Family XL', 1590, '', '0000-00-00', '00:00:00', '00:00:00', 14, 0, '/assets/uploads/jazz/performers/1773540829_TheFamilyXl.png', '', '', '', '', '', NULL),
+(15, 'The Nordanians', 1000, 'Genre-bending instrumental trio drawing from Nordic folk, modern jazz and electronic textures. Their performances are cinematic, atmospheric and meditative.', '0000-00-00', '00:00:00', '00:00:00', 15, 1, '/assets/uploads/jazz/performers/1773540846_TheNordanians.png', 'Modern jazz, ambient, Nordic folk', '', '', 'Also performing FREE on Sunday at Grote Markt.', '', NULL),
+(17, 'Uncle Sue', 1500, 'Adventurous Dutch instrumental band crossing jazz, post-rock and progressive influences. Their compositions are intricate yet groovy — a wide-screen sound built for the live stage.', '0000-00-00', '00:00:00', '00:00:00', 17, 1, '/assets/uploads/jazz/performers/1773540894_UncleSue.png', 'Instrumental jazz, post-rock', '', '', NULL, '', NULL),
+(19, 'Ratatouille', 12, 'aaa', '1917-04-30', '03:00:00', '15:00:00', 3, 0, '/assets/uploads/jazz/performers/0fab80e556cabebd.png', 'Smooth, expressiveaa', 'Philharmonie Haarlem', 'Lange Begijnestraat 11, 2011 HH Haarlem', '11', '111', '/assets/uploads/jazz/performers/7c62c1ce1c660694.png');
 
 -- --------------------------------------------------------
 
@@ -579,7 +598,20 @@ CREATE TABLE `jazz_performer_appearances` (
 
 INSERT INTO `jazz_performer_appearances` (`id`, `performer_id`, `day_text`, `time_text`, `location_text`, `note_text`, `sort_order`) VALUES
 (3, 3, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', '', 1),
-(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2);
+(4, 3, 'Sunday', '20:00 - 21:00', 'Grote Markt (Free Show)', '', 2),
+(5, 1, 'Thursday', '19:30 - 20:30', 'Patronaat - Main Hall', NULL, 1),
+(6, 1, 'Sunday', '17:00 - 18:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(7, 4, 'Thursday', '18:00 - 19:00', 'Patronaat - Main Hall', NULL, 1),
+(8, 4, 'Sunday', '19:00 - 20:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(9, 5, 'Saturday', '18:00 - 19:00', 'Patronaat - Third Hall', 'Intimate show — limited seats.', 1),
+(10, 6, 'Thursday', '21:00 - 22:00', 'Patronaat - Second Hall', NULL, 1),
+(11, 7, 'Friday', '21:00 - 22:00', 'Patronaat - Main Hall', NULL, 1),
+(12, 8, 'Saturday', '21:00 - 22:00', 'Patronaat - Third Hall', NULL, 1),
+(13, 9, 'Friday', '18:00 - 19:00', 'Patronaat - Second Hall', NULL, 1),
+(14, 13, 'Saturday', '21:00 - 22:00', 'Patronaat - Main Hall', NULL, 1),
+(15, 15, 'Saturday', '19:30 - 20:30', 'Patronaat - Third Hall', NULL, 1),
+(16, 15, 'Sunday', '18:00 - 19:00', 'Grote Markt (Free Show)', 'Free for all visitors.', 2),
+(17, 17, 'Friday', '19:30 - 20:30', 'Patronaat - Main Hall', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -604,7 +636,36 @@ INSERT INTO `jazz_performer_highlights` (`id`, `performer_id`, `title`, `descrip
 (6, 3, 'Debut Release', 'Their early releases introduced listeners to a warm, cinematic sound built on expressive vocals, mellow grooves, and refined instrumentation. This helped establish Gare du Nord as a recognizable name within the Dutch lounge-jazz scene.', 2),
 (7, 3, 'Growing Recognition', 'As their popularity increased, Gare du Nord appeared at a wide range of venues and cultural events, gaining recognition for performances that balance emotion, groove, and sophistication. Their music became closely associated with stylish late-evening festival settings.', 3),
 (8, 3, 'International Appeal', 'Gare du Nord reached audiences beyond the Netherlands through recordings, collaborations, and international performances. Their elegant mix of jazz, soul, and lounge textures gave them a broad appeal and a lasting presence in the European music scene.', 4),
-(10, 4, 'rhythm & blues', 'Gumbo Kings are a five-piece Dutch band with a modern take on soul, rhythm & blues, and roots music. Their live sound mixes the groove of New Orleans funk, the grit of blues, and a stylish, energetic stage presence. Official band material describes them as a sharply dressed group with their own modern view on soul and rhythm & blues, while other profiles describe their sound as blending New Orleans funk, Delta blues, and Memphis-style melodies.\r\n', -2);
+(11, 1, 'North Sea Jazz Festival', 'Standout set at the legendary Dutch festival celebrating their genre-crossing sound.', 1),
+(12, 1, 'Debut Album', 'Released their first full-length record to wide critical praise.', 2),
+(13, 1, 'European Tour', 'Sold-out shows across Germany, Belgium and France.', 3),
+(14, 4, 'Streetlife Anthem', 'Their breakout single became a Dutch festival favourite.', 1),
+(15, 4, 'Paradiso Headline', 'Sold-out Amsterdam show at the iconic Paradiso venue.', 2),
+(16, 4, 'Edison Award Nomination', 'Recognised in the Dutch music industry awards.', 3),
+(17, 5, 'ICP Orchestra Founder', 'Co-founded the Instant Composers Pool, a cornerstone of European free jazz.', 1),
+(18, 5, 'Eric Dolphy Collaborations', 'Played on Last Date, one of the most celebrated jazz records.', 2),
+(19, 5, 'Lifetime Achievement', 'Awarded for decades of innovation in improvised music.', 3),
+(20, 6, 'Mainstream Crossover', 'His sound bridged the worlds of jazz, R&B and Caribbean pop.', 1),
+(21, 6, 'Top of the Charts', 'Multiple singles reached the Dutch Top 40.', 2),
+(22, 6, 'Lowlands Performance', 'High-energy main-stage performance at Lowlands Festival.', 3),
+(23, 7, 'Hard-Bop Quartet', 'Founded a hard-bop quartet acclaimed for tight ensemble playing.', 1),
+(24, 7, 'Studio Recordings', 'Recorded with respected European jazz musicians.', 2),
+(25, 7, 'Conservatory Mentor', 'Teaches the next generation at one of Europe\'s top conservatories.', 3),
+(26, 8, 'Debut Album', 'Released a critically praised debut showcasing her songwriting.', 1),
+(27, 8, 'Festival Circuit', 'Toured major European jazz festivals with her band.', 2),
+(28, 8, 'Collaboration Album', 'Recorded an intimate collaboration project with leading Dutch musicians.', 3),
+(29, 9, 'Forever Dreaming', 'Beloved record that introduced his classic-soul sound to a new generation.', 1),
+(30, 9, 'Worldwide Tour', 'Toured the UK, Europe and Japan to growing audiences.', 2),
+(31, 9, 'BBC Radio Sessions', 'Performed live sessions on multiple BBC radio shows.', 3),
+(32, 13, 'Festival Favourites', 'Year-round headliners across Dutch summer festivals.', 1),
+(33, 13, 'Studio EP', 'Released a tight studio EP showcasing their party-funk identity.', 2),
+(34, 13, 'Club Residency', 'Long-running monthly residency at an Amsterdam soul club.', 3),
+(35, 15, 'Nordic Tour', 'Toured across Sweden, Norway and Finland.', 1),
+(36, 15, 'Debut Suite', 'Released a cinematic instrumental suite as their debut.', 2),
+(37, 15, 'Film Soundtrack', 'Contributed music to a Nordic short-film score.', 3),
+(38, 17, 'Live At Bimhuis', 'Acclaimed performance recorded at Amsterdam\'s legendary jazz venue.', 1),
+(39, 17, 'Studio Album', 'Released a full-length studio record praised for its ambition.', 2),
+(40, 17, 'European Showcase', 'Performed at jazzahead! in Bremen, the top European jazz showcase.', 3);
 
 -- --------------------------------------------------------
 
@@ -651,8 +712,36 @@ CREATE TABLE `jazz_performer_tracks` (
 INSERT INTO `jazz_performer_tracks` (`id`, `performer_id`, `title`, `release_date_text`, `description`, `image_path`, `listen_url`, `sort_order`) VALUES
 (1, 3, 'Sex \'n\' jazz', '4 May 2007', 'Seductive groove-jazz classic', NULL, '', 1),
 (2, 3, 'Lilywhite Soul', '16 September 2011', 'Velvet lounge-soul shimmer', NULL, '', 2),
-(5, 4, 'In The Dark', '2018', 'ne fjbjfb', '', 'jqwfrbkwf', 1),
-(6, 4, 'Hotel Belvédère', '2018', 'erfhiebfnw', '', 'jwbjjwbjw', 5);
+(7, 1, 'Future Echo', '2023', 'A driving fusion of acoustic jazz and electronic textures.', NULL, 'https://open.spotify.com', 1),
+(8, 1, 'Night Patterns', '2022', 'Late-night groove with crisp horn arrangements.', NULL, 'https://open.spotify.com', 2),
+(9, 1, 'Liminal', '2024', 'A reflective opener built around looped piano.', NULL, 'https://open.spotify.com', 3),
+(10, 4, 'Crescent City', '2023', 'Anthem channeling New Orleans street energy.', NULL, 'https://open.spotify.com', 1),
+(11, 4, 'Sugar & Smoke', '2022', 'Mid-tempo blues with brass-heavy hooks.', NULL, 'https://open.spotify.com', 2),
+(12, 4, 'Strut', '2024', 'Hi-energy single made for the live stage.', NULL, 'https://open.spotify.com', 3),
+(13, 5, 'Sticks & Sand', '2018', 'A solo percussion meditation.', NULL, 'https://open.spotify.com', 1),
+(14, 5, 'Improvised Conversations', '2015', 'Live duo recording capturing his playful spontaneity.', NULL, 'https://open.spotify.com', 2),
+(15, 5, 'Open Form', '2020', 'Trio session with rising young improvisers.', NULL, 'https://open.spotify.com', 3),
+(16, 6, 'Golden Hour', '2024', 'Warm summer single with Caribbean flavours.', NULL, 'https://open.spotify.com', 1),
+(17, 6, 'No Worries', '2023', 'Smooth R&B duet that topped Dutch streaming charts.', NULL, 'https://open.spotify.com', 2),
+(18, 6, 'Sunset Drive', '2022', 'Lush, groove-led ballad.', NULL, 'https://open.spotify.com', 3),
+(19, 7, 'Blue Diamond', '2023', 'Lyrical ballad showcasing his rich tone.', NULL, 'https://open.spotify.com', 1),
+(20, 7, 'Hard-Bop Refrain', '2022', 'Driving uptempo number for the quartet.', NULL, 'https://open.spotify.com', 2),
+(21, 7, 'After Hours', '2024', 'A reflective late-night closer.', NULL, 'https://open.spotify.com', 3),
+(22, 8, 'Velvet Smoke', '2023', 'A signature slow burn with intimate vocal phrasing.', NULL, 'https://open.spotify.com', 1),
+(23, 8, 'Stories', '2022', 'Heartfelt original showcasing her songwriting.', NULL, 'https://open.spotify.com', 2),
+(24, 8, 'Late Light', '2024', 'A quiet duet ballad.', NULL, 'https://open.spotify.com', 3),
+(25, 9, 'Just Being Me', '2016', 'Soulful single that introduced his classic style.', NULL, 'https://open.spotify.com', 1),
+(26, 9, 'Forever Dreaming', '2016', 'Title track of his breakthrough album.', NULL, 'https://open.spotify.com', 2),
+(27, 9, 'Memories Of Love', '2014', 'A timeless slow groove.', NULL, 'https://open.spotify.com', 3),
+(28, 13, 'Six On The Floor', '2023', 'Crowd-favourite funk anthem.', NULL, 'https://open.spotify.com', 1),
+(29, 13, 'Pocket', '2022', 'Driving instrumental built around a deep bass line.', NULL, 'https://open.spotify.com', 2),
+(30, 13, 'Late Night Soul', '2024', 'Slower groove highlighting their horn section.', NULL, 'https://open.spotify.com', 3),
+(31, 15, 'Aurora', '2023', 'Atmospheric opener built on slow build-ups.', NULL, 'https://open.spotify.com', 1),
+(32, 15, 'Snowline', '2022', 'A meditative ambient piece.', NULL, 'https://open.spotify.com', 2),
+(33, 15, 'Northern Drift', '2024', 'Cinematic centerpiece of their live set.', NULL, 'https://open.spotify.com', 3),
+(34, 17, 'Tilted', '2022', 'Sharp instrumental groove combining post-rock and jazz.', NULL, 'https://open.spotify.com', 1),
+(35, 17, 'Salt Air', '2023', 'Spacious composition with shimmering melody lines.', NULL, 'https://open.spotify.com', 2),
+(36, 17, 'Echo Lane', '2024', 'Driving closer that showcases their rhythm section.', NULL, 'https://open.spotify.com', 3);
 
 -- --------------------------------------------------------
 
@@ -700,7 +789,12 @@ CREATE TABLE `OrderItems` (
 INSERT INTO `OrderItems` (`item_id`, `order_id`, `booking_id`, `booking_type`, `price`) VALUES
 (42, 16, 30, b'010', 7000),
 (43, 17, 31, b'010', 5000),
-(44, 17, 6, b'000', 8084);
+(44, 17, 6, b'000', 8084),
+(46, 18, 15, b'001', 1350),
+(47, 18, 7, b'000', 14828),
+(48, 18, 32, b'010', 5000),
+(49, 18, 14, b'011', 6360),
+(50, 30, 33, b'010', 8000);
 
 -- --------------------------------------------------------
 
@@ -723,7 +817,20 @@ CREATE TABLE `Orders` (
 
 INSERT INTO `Orders` (`order_id`, `user_id`, `date`, `status`, `total_price`, `stripe_session`) VALUES
 (16, 5, '2026-05-07 18:39:14', b'010', 7000, 'cs_test_a1xWv5yRRcSq7MTsafx15J6T6XSMRiP9Pwc8qZ68u80NAFRlaIgeuk4csK'),
-(17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h');
+(17, 5, '2026-05-08 12:11:11', b'010', 13084, 'cs_test_a161KTjniWhjjSwnOLWp5lxxZRGRjODdfmY1f6yEQyTf6zgOeNaIB9Jo8h'),
+(18, 5, '2026-06-14 17:38:10', b'001', 27538, 'cs_test_a1WCKBOUcLvJN3rSnjuVG5ac4YU754V34WCY8hib7IWa0Llq4W9iTQn1yl'),
+(19, 2, '2026-05-11 16:22:48', b'001', 19300, NULL),
+(20, 2, '2026-05-11 16:23:02', b'001', 19300, NULL),
+(21, 2, '2026-05-11 16:23:04', b'001', 19300, NULL),
+(22, 2, '2026-05-11 16:23:32', b'001', 330, NULL),
+(23, 3, '2026-05-11 16:23:32', b'010', 1320, NULL),
+(24, 4, '2026-05-11 16:23:32', b'011', 19301, NULL),
+(25, 5, '2026-05-11 16:23:32', b'010', 138300, NULL),
+(26, 2, '2026-05-11 16:23:50', b'001', 130, NULL),
+(27, 3, '2026-05-11 16:23:50', b'010', 3820, NULL),
+(28, 4, '2026-05-11 16:23:50', b'011', 13311, NULL),
+(29, 5, '2026-05-11 16:23:50', b'010', 39257, NULL),
+(30, 5, NULL, b'000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -753,6 +860,13 @@ CREATE TABLE `StoryBookings` (
   `haarlem_pass` bit(1) NOT NULL,
   `haarlem_pass_code` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `StoryBookings`
+--
+
+INSERT INTO `StoryBookings` (`booking_id`, `pay_as_you_like`, `event_id`, `quantity`, `haarlem_pass`, `haarlem_pass_code`) VALUES
+(15, NULL, 1, 3, b'1', '1234567890');
 
 -- --------------------------------------------------------
 
@@ -817,14 +931,6 @@ CREATE TABLE `Tickets` (
   `scanned_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
---
--- Dumping data for table `Tickets`
---
-
-INSERT INTO `Tickets` (`ticket_id`, `item_id`, `qr_token`, `code`, `scanned_at`) VALUES
-(27, 43, '3de5da835c4a8d63f83a5bc36170e65e32a8a73938b91006', 'HF-7239DF35BDDAC9DC1459E17E', NULL),
-(28, 44, '977cc473d8c324a23b0ed29a29cf041378eccd64fe6ebad0', 'HF-52B485066663B3B4079AD57B', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -838,26 +944,29 @@ CREATE TABLE `User` (
   `name` varchar(255) NOT NULL,
   `role` enum('customer','employee','admin') NOT NULL DEFAULT 'customer',
   `profile_picture_url` varchar(255) DEFAULT NULL,
-  `registered_at` datetime DEFAULT current_timestamp()
+  `registered_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `active` bit(1) NOT NULL DEFAULT b'1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `User`
 --
 
-INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`) VALUES
-(1, 'Enes@gmail.com', '$2y$12$ykWvBL0DARXSigoiMGxw3.4ow.YKd/BUidn/IApoOEwgVz7RFQe/W', 'Enes', 'customer', NULL, '2026-02-06 18:36:26'),
-(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01'),
-(3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34'),
-(4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09'),
-(5, 'tim.sadko@gmail.com', '$2y$12$hn3z4x0E55UTyIQSkbnNu.1ouAnMxByNFdog/lgNhi0iDE0D9S1ga', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00'),
-(7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31'),
-(8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15'),
-(9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39'),
-(10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54'),
-(11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05'),
-(12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18'),
-(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09');
+INSERT INTO `User` (`user_id`, `email`, `password`, `name`, `role`, `profile_picture_url`, `registered_at`, `active`) VALUES
+(1, 'Enes@gmail.com', '$2y$12$ykWvBL0DARXSigoiMGxw3.4ow.YKd/BUidn/IApoOEwgVz7RFQe/W', 'Enes', 'customer', NULL, '2026-02-06 18:36:26', b'1'),
+(2, 'achraf@admin.com', '$2y$12$b8feJtwJ9Vg02pXHbV44gOvCuQKGwSeNwA0l9ug32ovMr3PEqR/Am', 'achraf derouich', 'admin', '/assets/uploads/user_2_1773057263.jpeg', '2026-02-07 04:07:01', b'1'),
+(3, 'achraf@custumer.com', '$2y$12$xNRPBJ1/XOl6sG6z4rNkFeOG3TlzWpbqAdieirQsXVXFjXlpRSmX.', 'achraf derouich', 'customer', NULL, '2026-02-08 02:52:34', b'1'),
+(4, 'hasan@costumer.com', '$2y$12$zP1tpSnNx/OP95eNm921t.VJb9sVhAEvJfdCYLXZmHo0kbGL25Zma', 'Hasan zaz', 'customer', NULL, '2026-02-09 09:44:09', b'1'),
+(5, 'tim.sadko@gmail.com', '$2y$12$hzBw.ImKafW81o7rH24/R.jF.eTMO160omao6pwSDmHLhdYezVkle', 'Timofii Sadko', 'customer', NULL, '2026-02-27 12:38:00', b'1'),
+(7, 'fff.fff@gmail.com', '$2y$12$FgVzZeZQ9wBDZsRRTdclReF782iykFNhv11yDmOLHK/hVYCPo91k.', 'ffff', 'customer', NULL, '2026-02-27 12:44:31', b'1'),
+(8, 'enesveliyigit0@gmail.com', '$2y$12$ZN.EsKd.ZksHkuMFzeRxqe1pnPLOU9G87z7NFm1ql.JZ2EnjS2FwK', 'Enes Veli Yigit', 'admin', '/assets/uploads/user_8_1774543422.jpg', '2026-03-09 14:38:15', b'1'),
+(9, 'earnest@gmail.com', '$2y$12$J6rfVP2MlTYmHpwS/nZBzOxETojIYb8bAdEtj4vj23EUE.ZdDQvNu', 'Earnest', 'customer', NULL, '2026-03-26 16:26:39', b'1'),
+(10, 'ILOVEACHRAF@GMAIL.COM', '$2y$12$9kf46vzoS67gld1ioCvDGeb69rqvMpOnHalG2cBkVB/gaaqo7TfTG', 'Earnest', 'employee', NULL, '2026-03-26 16:32:54', b'1'),
+(11, 'hotman@gmail.com', '$2y$12$mPNOa3kGlHmmJbRgVcT6KOjoBhsufbETgjDaq8gcDaFLXf83.216y', 'hotman@gmail.com', 'customer', NULL, '2026-03-31 14:40:05', b'1'),
+(12, 'enesvelia8@gmail.com', '$2y$12$P1wcqIl5deGdRXZuCtbM8umhDBxf7dc2MdOH7HhlkA22Sm6URiYQe', 'Enes Veli Yigit', 'customer', NULL, '2026-04-04 15:21:18', b'1'),
+(13, 'hello1@gmail.com', '$2y$12$BL6ERlVokQXgNf/3KgQ0JexSEsL2t8ow2F96kuzHz/cf77ZuT202C', 'hello', 'customer', NULL, '2026-04-05 13:06:09', b'1'),
+(14, 'achraf.modz05@gmail.com', '$2y$12$zn9mf0qHhKCMqmPYmf6H0ukp0SSxp60o1/7KdvAYBgTHoV.dSjviK', 'Achraf', 'customer', NULL, '2026-06-15 18:02:45', b'1'),
+(15, 'achraf@employee.com', '$2y$12$R.6.JXQY1eTn93JykWeQ7OMOJxPcWzuqdlO/M/1CVnCHYBf7OVqR2', 'Achraf', 'employee', NULL, '2026-06-15 18:08:15', b'1');
 
 -- --------------------------------------------------------
 
@@ -928,7 +1037,9 @@ CREATE TABLE `YummyBookings` (
 
 INSERT INTO `YummyBookings` (`booking_id`, `reservation_id`, `date`, `adult_number`, `child_number`, `comment`) VALUES
 (30, 196, '2026-05-07 19:00:00', 4, 3, 'fff'),
-(31, 205, '2026-05-10 19:00:00', 2, 3, '');
+(31, 205, '2026-05-10 19:00:00', 2, 3, ''),
+(32, 253, '2026-06-17 19:00:00', 2, 3, 'msg'),
+(33, 262, '2026-06-20 19:00:00', 4, 4, 'Some comment');
 
 -- --------------------------------------------------------
 
@@ -1193,7 +1304,70 @@ INSERT INTO `YummyReservationSlots` (`reservation_id`, `slot_id`, `date`, `booke
 (236, 3, '2026-05-20', 0),
 (237, 1, '2026-05-21', 0),
 (238, 2, '2026-05-21', 0),
-(239, 3, '2026-05-21', 0);
+(239, 3, '2026-05-21', 0),
+(240, 1, '2026-05-22', 0),
+(241, 2, '2026-05-22', 0),
+(242, 3, '2026-05-22', 0),
+(243, 1, '2026-06-14', 0),
+(244, 2, '2026-06-14', 0),
+(245, 3, '2026-06-14', 0),
+(246, 1, '2026-06-15', 0),
+(247, 2, '2026-06-15', 0),
+(248, 3, '2026-06-15', 0),
+(249, 1, '2026-06-16', 0),
+(250, 2, '2026-06-16', 0),
+(251, 3, '2026-06-16', 0),
+(252, 1, '2026-06-17', 0),
+(253, 2, '2026-06-17', 0),
+(254, 3, '2026-06-17', 0),
+(255, 1, '2026-06-18', 0),
+(256, 2, '2026-06-18', 0),
+(257, 3, '2026-06-18', 0),
+(258, 1, '2026-06-19', 0),
+(259, 2, '2026-06-19', 0),
+(260, 3, '2026-06-19', 0),
+(261, 1, '2026-06-20', 0),
+(262, 2, '2026-06-20', 0),
+(263, 3, '2026-06-20', 0),
+(264, 1, '2026-06-21', 0),
+(265, 2, '2026-06-21', 0),
+(266, 3, '2026-06-21', 0),
+(267, 1, '2026-06-22', 0),
+(268, 2, '2026-06-22', 0),
+(269, 3, '2026-06-22', 0),
+(270, 1, '2026-06-23', 0),
+(271, 2, '2026-06-23', 0),
+(272, 3, '2026-06-23', 0),
+(273, 1, '2026-06-24', 0),
+(274, 2, '2026-06-24', 0),
+(275, 3, '2026-06-24', 0),
+(276, 1, '2026-06-25', 0),
+(277, 2, '2026-06-25', 0),
+(278, 3, '2026-06-25', 0),
+(279, 1, '2026-06-26', 0),
+(280, 2, '2026-06-26', 0),
+(281, 3, '2026-06-26', 0),
+(282, 1, '2026-06-27', 0),
+(283, 2, '2026-06-27', 0),
+(284, 3, '2026-06-27', 0),
+(285, 1, '2026-06-28', 0),
+(286, 2, '2026-06-28', 0),
+(287, 3, '2026-06-28', 0),
+(288, 1, '2026-06-29', 0),
+(289, 2, '2026-06-29', 0),
+(290, 3, '2026-06-29', 0),
+(291, 12, '2026-06-16', 0),
+(292, 12, '2026-06-17', 0),
+(293, 12, '2026-06-18', 0),
+(294, 12, '2026-06-19', 0),
+(295, 12, '2026-06-20', 0),
+(296, 12, '2026-06-21', 0),
+(297, 12, '2026-06-22', 0),
+(298, 12, '2026-06-23', 0),
+(299, 12, '2026-06-24', 0),
+(300, 12, '2026-06-25', 0),
+(301, 12, '2026-06-26', 0),
+(302, 12, '2026-06-27', 0);
 
 -- --------------------------------------------------------
 
@@ -1339,11 +1513,26 @@ CREATE TABLE `YummyRestaurantTimeSlots` (
 INSERT INTO `YummyRestaurantTimeSlots` (`slot_id`, `restaurant_id`, `time`, `capacity`, `duration`) VALUES
 (1, 1, '17:00:00', 30, 120),
 (2, 1, '19:00:00', 30, 120),
-(3, 1, '21:00:00', 30, 120);
+(3, 1, '21:00:00', 30, 120),
+(12, 2, '17:00:00', 35, 90),
+(17, 4, '17:00:00', 35, 90),
+(18, 5, '17:00:00', 35, 90),
+(19, 6, '17:00:00', 35, 90),
+(20, 7, '17:00:00', 35, 90),
+(21, 8, '17:00:00', 35, 90),
+(22, 9, '17:00:00', 35, 90);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `CMS_Content`
+--
+ALTER TABLE `CMS_Content`
+  ADD PRIMARY KEY (`content_id`),
+  ADD UNIQUE KEY `slug` (`slug`),
+  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `cms_content`
@@ -1354,14 +1543,6 @@ ALTER TABLE `cms_content`
   ADD UNIQUE KEY `uq_cms_uniq_key` (`uniq_key`),
   ADD KEY `idx_page_block` (`page_key`,`block_type`),
   ADD KEY `idx_active_sort` (`is_active`,`sort_order`);
-
---
--- Indexes for table `CMS_Content`
---
-ALTER TABLE `CMS_Content`
-  ADD PRIMARY KEY (`content_id`),
-  ADD UNIQUE KEY `slug` (`slug`),
-  ADD KEY `idx_slug` (`slug`);
 
 --
 -- Indexes for table `HistoryBookings`
@@ -1654,28 +1835,28 @@ ALTER TABLE `YummyRestaurantTimeSlots`
 --
 
 --
--- AUTO_INCREMENT for table `cms_content`
---
-ALTER TABLE `cms_content`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
-
---
 -- AUTO_INCREMENT for table `CMS_Content`
 --
 ALTER TABLE `CMS_Content`
   MODIFY `content_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `cms_content`
+--
+ALTER TABLE `cms_content`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+
+--
 -- AUTO_INCREMENT for table `HistoryBookings`
 --
 ALTER TABLE `HistoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `HistoryReservationSlots`
 --
 ALTER TABLE `HistoryReservationSlots`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `HistoryTimeSlot`
@@ -1735,7 +1916,7 @@ ALTER TABLE `home_events`
 -- AUTO_INCREMENT for table `JazzBookings`
 --
 ALTER TABLE `JazzBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `jazz_experiences`
@@ -1771,13 +1952,13 @@ ALTER TABLE `jazz_performers`
 -- AUTO_INCREMENT for table `jazz_performer_appearances`
 --
 ALTER TABLE `jazz_performer_appearances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_highlights`
 --
 ALTER TABLE `jazz_performer_highlights`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `jazz_performer_locations`
@@ -1789,7 +1970,7 @@ ALTER TABLE `jazz_performer_locations`
 -- AUTO_INCREMENT for table `jazz_performer_tracks`
 --
 ALTER TABLE `jazz_performer_tracks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `jazz_recommendations`
@@ -1801,25 +1982,25 @@ ALTER TABLE `jazz_recommendations`
 -- AUTO_INCREMENT for table `OrderItems`
 --
 ALTER TABLE `OrderItems`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `PasswordResetToken`
 --
 ALTER TABLE `PasswordResetToken`
-  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `token_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `StoryBookings`
 --
 ALTER TABLE `StoryBookings`
-  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `StoryEvents`
@@ -1831,13 +2012,13 @@ ALTER TABLE `StoryEvents`
 -- AUTO_INCREMENT for table `Tickets`
 --
 ALTER TABLE `Tickets`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `User`
 --
 ALTER TABLE `User`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `Venue`
@@ -1849,7 +2030,7 @@ ALTER TABLE `Venue`
 -- AUTO_INCREMENT for table `YummyBookings`
 --
 ALTER TABLE `YummyBookings`
-  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `booking_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `YummyFoodTypes`
@@ -1873,7 +2054,7 @@ ALTER TABLE `YummyOpeningHours`
 -- AUTO_INCREMENT for table `YummyReservationSlots`
 --
 ALTER TABLE `YummyReservationSlots`
-  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
+  MODIFY `reservation_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
 
 --
 -- AUTO_INCREMENT for table `YummyRestaurantFoodTypes`
@@ -1897,7 +2078,7 @@ ALTER TABLE `YummyRestaurants`
 -- AUTO_INCREMENT for table `YummyRestaurantTimeSlots`
 --
 ALTER TABLE `YummyRestaurantTimeSlots`
-  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `slot_id` int(16) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- Constraints for dumped tables

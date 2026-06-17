@@ -46,12 +46,13 @@ class Session
         return self::pop(self::$temp_success_session_name);
     }
 
-    public static function login(array $user): void
+    public static function login(\App\Models\User $user): void
     {
-        $_SESSION['user_id'] = $user['user_id'] ?? $user['id'] ?? null;
-        $_SESSION['email']   = $user['email'] ?? null;
-        $_SESSION['name']    = $user['name'] ?? null;
-        $_SESSION['role']    = $user['role'] ?? null;
+        $_SESSION['user_id'] = $user->user_id;
+        $_SESSION['email']   = $user->email;
+        $_SESSION['name']    = $user->name;
+        $_SESSION['role']    = $user->role->value;
+        $_SESSION['profile_picture'] = $user->profile_picture_url;
     }
 
     public static function logout(): void
@@ -75,14 +76,12 @@ class Session
         $user->user_id = (int)$_SESSION['user_id'];
         $user->email   = $_SESSION['email'] ?? '';
         $user->name    = $_SESSION['name'] ?? '';
+        $user->profile_picture_url = $_SESSION['profile_picture'] ?? '';
 
         $raw = $_SESSION['role'] ?? null;
-        if (is_numeric($raw)) {
-            $user->role = \App\Enums\UserRole::from((int)$raw);
-        } else {
-            $map = ['customer' => \App\Enums\UserRole::Customer, 'admin' => \App\Enums\UserRole::Admin, 'employee' => \App\Enums\UserRole::Employee];
-            $user->role = $map[strtolower((string)$raw)] ?? \App\Enums\UserRole::Customer;
-        }
+
+        $map = ['customer' => \App\Enums\UserRole::Customer, 'admin' => \App\Enums\UserRole::Admin, 'employee' => \App\Enums\UserRole::Employee];
+        $user->role = $map[strtolower((string)$raw)] ?? \App\Enums\UserRole::Customer;
 
         return $user;
     }
@@ -98,6 +97,7 @@ class Session
             'email'   => $_SESSION['email'] ?? null,
             'name'    => $_SESSION['name'] ?? null,
             'role'    => $_SESSION['role'] ?? null,
+            'profile_picture'    => $_SESSION['profile_picture'] ?? null
         ];
     }
     public static function role(): ?string
@@ -127,6 +127,22 @@ class Session
         $role = $user['role'] ?? null;
 
         return $role === 'employee' || (int)$role === \App\Enums\UserRole::Employee->value;
+    }
+
+    public static function csrfToken(): string
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    public static function checkCsrfToken(?string $token): bool
+    {
+        if ($token === null || empty($_SESSION['csrf_token'])) {
+            return false;
+        }
+        return hash_equals($_SESSION['csrf_token'], $token);
     }
 
     public static function getCartItemsCount() : int{

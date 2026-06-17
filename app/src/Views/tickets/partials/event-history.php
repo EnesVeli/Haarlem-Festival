@@ -6,7 +6,7 @@
 
 <article class="tickets-event" aria-label="<?= 'history guided tour' ?>">
     <div class="tickets-event__time">
-        <img class="ticekt-event__img" src="<?= '/assets/uploads/history/bavo-church.jpg' ?>" alt="restaurant image">
+        <img class="ticekt-event__img" src="<?= '/assets/uploads/History/bavo-church.jpg' ?>" alt="restaurant image">
     </div>
     <div class="tickets-event__info">
         <h4 class="tickets-event__name">

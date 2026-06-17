@@ -56,4 +56,9 @@ class TicketScanService implements ITicketScanService
         if ($ticket === null) return null;
         return (new QRCode())->render($ticket->qr_token);
     }
+
+    public function getTicketOwnerId(int $ticketId): ?int
+    {
+        return $this->repository->findOwnerUserId($ticketId);
+    }
 }

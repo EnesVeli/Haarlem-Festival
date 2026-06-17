@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Framework\Session;
 use App\Models\Exceptions\IncorrectEmailException;
 use App\Services\UserService;
 
@@ -15,7 +16,7 @@ class ProfileController
 
     private function mustBeLoggedIn(): void //base controllr
     {
-        if (empty($_SESSION['user_id'])) {
+        if (empty(Session::currentUser())) {
             header('Location: /login');
             exit;
         }
@@ -25,7 +26,7 @@ class ProfileController
     {
         $this->mustBeLoggedIn();
 
-        $user = $this->userService->getById((int)$_SESSION['user_id']);
+        $user = $this->userService->getById(Session::currentUser()->user_id);
 
         // Optional: show feedback messages (if you later add them in update())
         $success = $_SESSION['profile_success'] ?? null;
@@ -41,7 +42,7 @@ class ProfileController
 
         try {
             $this->userService->updateProfile(
-                (int)$_SESSION['user_id'],
+                Session::currentUser()->user_id,
                 $_POST,
                 $_FILES
             );
@@ -60,7 +61,7 @@ class ProfileController
             $_SESSION['profile_error'] = "Enter a valid email";
         }
         catch (\Exception $e) {
-            $_SESSION['profile_error'] = $e->getMessage();
+            $_SESSION['profile_error'] = 'Something went wrong, try again later.';
         }
 
         header('Location: /profile');

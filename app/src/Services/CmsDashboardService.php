@@ -55,6 +55,11 @@ class CmsDashboardService
                     'title' => 'Orders',
                     'description' => 'Manage festival orders.',
                     'url' => '/cms/order',
+                ],
+                [
+                    'title' => 'Users',
+                    'description' => 'Manage festival users.',
+                    'url' => '/cms/user',
                 ]
             ],
         ];

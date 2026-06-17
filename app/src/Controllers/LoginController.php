@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use App\Services\UserService;
 use App\Framework\Session;
+use App\Models\Exceptions\AccountNotActiveException;
 use Exception;
 
 class LoginController extends BaseController
@@ -33,7 +34,7 @@ class LoginController extends BaseController
         $password = $_POST['password'] ?? '';
 
         if ($email === '' || $password === '') {
-            Session::set('login_error', 'Email and password are required.');
+            Session::setTempError('Email and password are required.');
             header('Location: /login');
             exit;
         }
@@ -51,12 +52,15 @@ class LoginController extends BaseController
             }
 
             exit;
-
-        } catch (Exception $e) {
-            Session::setTempError('Invalid email or password.');
-            header('Location: /login');
-            exit;
         }
+        catch (AccountNotActiveException $e) {
+            Session::setTempError('Your account has been diactivated.');            
+        }
+        catch (Exception $e) {
+            Session::setTempError('Invalid email or password.');
+        }
+
+        header('Location: /login');
     }
 
     public function logout(): void

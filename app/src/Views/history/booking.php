@@ -186,6 +186,7 @@ require __DIR__ . '/../partials/header.php';;
       form.method = 'POST';
       form.action = '/history/book';
       const fields = {
+          _csrf_token:      '<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '') ?>',
           individual_count: qty.individual,
           family_count:     qty.family,
           reservation_id:   <?= $view_model->reservation_id ?>,

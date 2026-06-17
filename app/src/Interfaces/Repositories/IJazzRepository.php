@@ -5,6 +5,7 @@ namespace App\Interfaces\Repositories;
 interface IJazzRepository
 {
     public function getHero(): ?object;
+    public function getHeroForCms(): ?object;
     public function updateHero(array $data): void;
 
     public function getIntro(): ?object;
@@ -39,4 +40,6 @@ interface IJazzRepository
     public function storeLocation(array $data): void;
     public function updateLocation(array $data): void;
     public function deleteLocation(int $id): void;
+    public function getActivePerformersForTickets(int $page, int $perf_per_page): array|null|bool;
+    public function getNumberOfActivePerformers(): int|bool;
 }

@@ -17,6 +17,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\StoryBooking;
 use App\Models\Ticket;
+use App\Models\User;
 use App\Models\YummyBooking;
 use App\Repositories\HistoryCmsRepository;
 use App\Repositories\HistoryRepository;
@@ -172,13 +173,13 @@ class OrderService
 
                 if($booking->pay_as_you_like != null) return $booking->pay_as_you_like;
 
-                if($booking->haarlem_pass) return $booking->quantity * $event->price * 75 / 100;
+                if($booking->haarlem_pass) return (int)($booking->quantity * $event->price * 75 / 100);
 
                 return $booking->quantity * $event->price;
             case BookingType::Jazz:
                 $booking = (fn($booking):JazzBooking=>$booking)($booking);
 
-                $perf = $this->jazz_rep->getPerformerById($booking->booking_id);
+                $perf = $this->jazz_rep->getPerformerById($booking->performer_id);
                 if($perf == null) throw new QueryExecutionException("Failed to get jazz performer.");
 
                 return $booking->amount * $perf->price;
@@ -393,7 +394,7 @@ class OrderService
     public function startOrderPayment(int $user_id) : \Stripe\Checkout\Session {
         // Get user
         $user = $this->user_rep->findById($user_id);
-        if($user == null) throw new QueryExecutionException("Failed to get user with id.");
+        if($user === null) throw new QueryExecutionException("Failed to get user with id." . $user_id);   
 
         // Get order 
         $order = $this->getOrderWithOrderItemsByUserId($user_id);
@@ -420,7 +421,7 @@ class OrderService
                 ],
                 'quantity' => 1,
             ]],
-            'customer_email' => $user['email'],
+            'customer_email' => $user->email,
             'metadata'   => ['user_id' => $user_id, 'order_id' => $order->order_id ],
             'success_url' => 'http://127.0.0.1/payment?session_id={CHECKOUT_SESSION_ID}&order_id=' . $order->order_id,
             'cancel_url' => 'http://127.0.0.1/payment/fail'
@@ -435,10 +436,6 @@ class OrderService
         if($update === false) throw new QueryExecutionException("Failed to update order status.");
 
         return $stripe_session;
-    }
-
-    private function generateLineItemsForStripe(Order $order){
-        
     }
 
     /**
@@ -584,9 +581,9 @@ class OrderService
      * Sends tickets and invoice by mail.
      * @param Order $order filled in order.
      * @param Ticket[] $tickets list of order tickets.
-     * @param array $user asc array representing user.
+     * @param User $user asc array representing user.
      */
-    private function sendTicketsAndInvoice(Order $order, array $tickets, array $user){
+    private function sendTicketsAndInvoice(Order $order, array $tickets, User $user){
         $ticket_pdfs = [];
 
         // Get ticket pdfs
@@ -607,6 +604,6 @@ class OrderService
         $invoice_pdf = $this->pdf_service->generateInvoice($order, $user);
 
         // Send emails
-        $this->mail_service->sendOrderConfirmation($user['email'], $user['name'], $ticket_pdfs, $invoice_pdf, $tickets);
+        $this->mail_service->sendOrderConfirmation($user->email, $user->name, $ticket_pdfs, $invoice_pdf, $tickets);
     }
 }

@@ -42,6 +42,17 @@ class RegisterController extends BaseController
     public function register(): void
     {
         try {
+            // Use hash_equals() instead of === to compare tokens in constant time,
+            // preventing timing side-channel attacks that could let an attacker
+            // brute-force or oracle the correct CSRF token byte-by-byte.
+            if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['csrf_token'] ?? '')) {
+                $this->render('register', [
+                    'error_message' => 'Invalid form submission.',
+                    'csrfToken'     => $this->ensureCsrfToken(),
+                ]);
+                return;
+            }
+
             if (!$this->captchaService->isValidRegistrationCaptcha($_POST['g-recaptcha-response'] ?? '')) {
                 $error_message = "Please check the 'I am not a robot' box.";
                 $this->render('register', [

@@ -36,15 +36,14 @@ class YummyGuidesRepository extends Repository
     }
 
     /**
-     * @return ?array returns list of 8 or less guide objects, or null if something went wrong.
+     * @return ?array returns list of 8 or less guide objects, or null if nothing were fount, or false if something went wrong.
      */
-    public function getTopActiveGuides() : ?array {
+    public function getTopActiveGuides() : array|null|bool {
         $stmt = $this->connection->prepare("SELECT `guide_id`, `mini_img_path`, `mini_title`, `mini_text`, `active` FROM `YummyGuides` WHERE `active` = 1 LIMIT 8");
         $stmt->execute();
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, Guide::class);
-        $res = $stmt->fetchAll();  
-
-        return $res == false ? null : $res; 
+        
+        return $stmt->fetchAll();
     }
 }

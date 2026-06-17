@@ -36,11 +36,11 @@ class PasswordResetController
             require __DIR__ . '/../Views/password-reset/request.php';
         }
         catch(DBAccessException $ex){
-            $error_message = 'Something went wrong try again later. ' . $ex->getMessage();
+            $error_message = 'Something went wrong try again later. ';
             require __DIR__ . '/../Views/password-reset/request.php';
         }
         catch(Throwable $ex){       
-            $error_message = 'Something went wrong try again later. ' . $ex->getMessage(); 
+            $error_message = 'Something went wrong try again later. '; 
             require __DIR__ . '/../Views/password-reset/request.php';
         }
     }

@@ -1,0 +1,75 @@
+.cms-page {
+    background: #f5f7fb;
+    min-height: 80vh;
+}
+
+.cms-title-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cms-title-row h1 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.cms-eyebrow {
+    margin: 0 0 .25rem;
+    color: #6b7280;
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.cms-card {
+    border: 1px solid #dfe5ef;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(31, 41, 55, .06);
+}
+
+.cms-card .card-header {
+    background: #243043;
+    color: #fff;
+    border-bottom: 0;
+}
+
+.cms-tabs {
+    border-bottom: 1px solid #d7dee9;
+}
+
+.cms-tabs .nav-link {
+    color: #4b5563;
+    font-weight: 600;
+}
+
+.cms-tabs .nav-link.active {
+    color: #243043;
+    border-color: #d7dee9 #d7dee9 #fff;
+}
+
+.cms-section-panel {
+    border: 1px solid #dfe5ef;
+    border-radius: 8px;
+    background: #fff;
+    padding: 1rem;
+}
+
+.cms-preview-img {
+    width: 56px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+    .cms-title-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

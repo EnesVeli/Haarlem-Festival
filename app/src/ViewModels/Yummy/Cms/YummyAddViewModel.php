@@ -2,6 +2,6 @@
 
 namespace App\ViewModels\Yummy\Cms;
 
-class YummyAddViewModel{
+class YummyAddViewModel {
     public YummyTopper $topper;
 }

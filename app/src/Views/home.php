@@ -2,13 +2,12 @@
 /** @var \App\ViewModels\HomeViewModel $viewModel */
 $user      = $user ?? null;
 $pageTitle = $viewModel->pageTitle;
+$pageCSS   = 'home.css';
 
 require __DIR__ . '/partials/header.php';
 ?>
-<link href="/assets/css/home.css" rel="stylesheet">
 
-<!-- ===== HERO ===== -->
-<section class="hero-main" style="background-image: url('/assets/uploads/History/<?= htmlspecialchars($viewModel->heroImage) ?>');">
+<section class="hero-main" style="background-image: url('/assets/uploads/Home/<?= htmlspecialchars($viewModel->heroImage) ?>');">
     <div class="hero-overlay"></div>
     <div class="hero-content-wrapper">
         <h1 class="hero-title"><?= htmlspecialchars($viewModel->heroTitle) ?></h1>
@@ -25,7 +24,6 @@ require __DIR__ . '/partials/header.php';
     </div>
 </section>
 
-<!-- ===== WHAT IS MY PROGRAM ===== -->
 <section class="how-to-use">
     <div class="container">
         <h2 class="section-heading"><?= htmlspecialchars($viewModel->programTitle) ?></h2>
@@ -50,7 +48,6 @@ require __DIR__ . '/partials/header.php';
     </div>
 </section>
 
-<!-- ===== FESTIVAL EVENTS ===== -->
 <section class="festival-events" id="events">
     <div class="container">
         <h2 class="section-heading">Festival Events</h2>
@@ -62,7 +59,7 @@ require __DIR__ . '/partials/header.php';
                 <div class="event-card-header <?= htmlspecialchars($card['bg_class']) ?>">
                     <span class="event-category-label"><?= htmlspecialchars($card['category']) ?></span>
                     <?php if (!empty($card['image'])): ?>
-                        <img src="/assets/uploads/History/<?= htmlspecialchars($card['image']) ?>"
+                        <img src="/assets/uploads/Home/<?= htmlspecialchars($card['image']) ?>"
                              alt="<?= htmlspecialchars($card['title']) ?>" class="event-card-img" loading="lazy">
                     <?php else: ?>
                         <i class="bi <?= htmlspecialchars($card['icon']) ?> event-card-icon"></i>
@@ -81,20 +78,6 @@ require __DIR__ . '/partials/header.php';
                 </div>
             </div>
             <?php endforeach; ?>
-        </div>
-    </div>
-</section>
-
-<!-- ===== NEWSLETTER ===== -->
-<section class="newsletter-section">
-    <div class="container">
-        <div class="newsletter-box">
-            <h3>Stay Updated</h3>
-            <p>Subscribe to our newsletter for the latest updates</p>
-            <form class="newsletter-form" method="POST" action="/newsletter/subscribe">
-                <input type="email" name="email" placeholder="Your email" required>
-                <button type="submit" class="btn btn-primary-custom">Subscribe</button>
-            </form>
         </div>
     </div>
 </section>
